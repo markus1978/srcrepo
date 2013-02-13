@@ -1,6 +1,7 @@
 *.class
 *.swp
 target/
+.cache
 bin/
 *.out
 out.*
