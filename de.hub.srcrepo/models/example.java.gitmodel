@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<gitmodel:SourceRepository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:gitmodel="http://gitmodel/1.0">
+  <allRefs referencedCommit="//@allCommits.0" isSymbolic="true" name="HEAD"/>
+  <allRefs referencedCommit="//@allCommits.0" name="refs/heads/master"/>
+  <allRefs referencedCommit="//@allCommits.0" name="refs/tags/test_tag"/>
+  <allCommits time="2013-02-08T10:01:05.000+0100" message="Initial commit of the Hello World example project.">
+    <diffs newPath="example.java/.classpath" type="ADD" oldPath="/dev/null"/>
+    <diffs newPath="example.java/.project" type="ADD" oldPath="/dev/null"/>
+    <diffs newPath="example.java/.settings/org.eclipse.jdt.core.prefs" type="ADD" oldPath="/dev/null"/>
+    <diffs newPath="example.java/bin/de/hub/example/java/HelloWorld.class" type="ADD" oldPath="/dev/null"/>
+    <diffs newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="ADD" oldPath="/dev/null"/>
+  </allCommits>
+</gitmodel:SourceRepository>

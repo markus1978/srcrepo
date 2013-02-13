@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.hub.srcrepo/src"
+    modelPluginID="de.hub.srcrepo" modelName="GitModelNoFrag" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>GitModel.ecore</foreignModel>
+  <genPackages prefix="GitModel" basePackage="de.hub.srcrepo.nofrag" disposableProviderFactory="true"
+      ecorePackage="GitModel.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="GitModel.ecore#//DiffType">
+      <genEnumLiterals ecoreEnumLiteral="GitModel.ecore#//DiffType/add"/>
+      <genEnumLiterals ecoreEnumLiteral="GitModel.ecore#//DiffType/delete"/>
+      <genEnumLiterals ecoreEnumLiteral="GitModel.ecore#//DiffType/move"/>
+      <genEnumLiterals ecoreEnumLiteral="GitModel.ecore#//DiffType/modified"/>
+    </genEnums>
+    <genClasses ecoreClass="GitModel.ecore#//SourceRepository">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GitModel.ecore#//SourceRepository/allRefs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GitModel.ecore#//SourceRepository/allCommits"/>
+    </genClasses>
+    <genClasses ecoreClass="GitModel.ecore#//Commit">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Commit/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Commit/commiter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Commit/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Commit/time"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Commit/message"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference GitModel.ecore#//Commit/parents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference GitModel.ecore#//Commit/diffs"/>
+    </genClasses>
+    <genClasses ecoreClass="GitModel.ecore#//Ref">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference GitModel.ecore#//Ref/referencedCommit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Ref/isPeeled"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Ref/isSymbolic"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Ref/name"/>
+    </genClasses>
+    <genClasses ecoreClass="GitModel.ecore#//Diff">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Diff/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute GitModel.ecore#//Diff/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference GitModel.ecore#//Diff/compilationUnit"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="EmfFrag" basePackage="de.hub.srcrepo.nofrag" disposableProviderFactory="true"
+      ecorePackage="emffrag.ecore#/">
+    <genDataTypes ecoreDataType="emffrag.ecore#//Iterator">
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//Iterator/E"/>
+    </genDataTypes>
+    <genClasses ecoreClass="emffrag.ecore#//IndexedMap">
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//IndexedMap/K"/>
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//IndexedMap/V"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute emffrag.ecore#//IndexedMap/firstKey"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute emffrag.ecore#//IndexedMap/lastKey"/>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/iterator"/>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/iterator.1">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/iterator.1/from"/>
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/iterator.1/to"/>
+      </genOperations>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/exact">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/exact/key"/>
+      </genOperations>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/next">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/next/key"/>
+      </genOperations>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/put">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/put/key"/>
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/put/value"/>
+      </genOperations>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/keyToBytes">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/keyToBytes/key"/>
+      </genOperations>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedMap/bytesToKey">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedMap/bytesToKey/bytes"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="emffrag.ecore#//IndexedList">
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//IndexedList/V"/>
+      <genOperations ecoreOperation="emffrag.ecore#//IndexedList/add">
+        <genParameters ecoreParameter="emffrag.ecore#//IndexedList/add/value"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="emffrag.ecore#//IsContainment"/>
+    <genClasses ecoreClass="emffrag.ecore#//ContainmentIndexedMap">
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//ContainmentIndexedMap/K"/>
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//ContainmentIndexedMap/V"/>
+    </genClasses>
+    <genClasses ecoreClass="emffrag.ecore#//ContainmentIndexedList">
+      <genTypeParameters ecoreTypeParameter="emffrag.ecore#//ContainmentIndexedList/V"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
