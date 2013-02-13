@@ -3,11 +3,13 @@
   <allRefs referencedCommit="//@allCommits.0" isSymbolic="true" name="HEAD"/>
   <allRefs referencedCommit="//@allCommits.0" name="refs/heads/master"/>
   <allRefs referencedCommit="//@allCommits.0" name="refs/remotes/origin/master"/>
-  <allCommits time="2013-02-08T10:01:05.000+0100" message="Initial commit of the Hello World example project.">
-    <diffs newPath="example.java/.classpath" type="ADD" oldPath="/dev/null"/>
-    <diffs newPath="example.java/.project" type="ADD" oldPath="/dev/null"/>
-    <diffs newPath="example.java/.settings/org.eclipse.jdt.core.prefs" type="ADD" oldPath="/dev/null"/>
-    <diffs newPath="example.java/bin/de/hub/example/java/HelloWorld.class" type="ADD" oldPath="/dev/null"/>
-    <diffs newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="ADD" oldPath="/dev/null"/>
+  <allCommits name="4e238b9752b33e18301bb0849ec9b5319a8cfa09" time="2013-02-08T10:01:05.000+0100" message="Initial commit of the Hello World example project.">
+    <parentRelations>
+      <diffs newPath="example.java/.classpath" type="ADD" oldPath="/dev/null"/>
+      <diffs newPath="example.java/.project" type="ADD" oldPath="/dev/null"/>
+      <diffs newPath="example.java/.settings/org.eclipse.jdt.core.prefs" type="ADD" oldPath="/dev/null"/>
+      <diffs newPath="example.java/bin/de/hub/example/java/HelloWorld.class" type="ADD" oldPath="/dev/null"/>
+      <diffs newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="ADD" oldPath="/dev/null"/>
+    </parentRelations>
   </allCommits>
 </gitmodel:SourceRepository>

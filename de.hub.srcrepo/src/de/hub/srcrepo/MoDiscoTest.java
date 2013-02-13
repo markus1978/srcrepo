@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
 import org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromClassFile;
 import org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromJavaProject;
@@ -42,6 +43,59 @@ import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.junit.Test;
 
 public class MoDiscoTest implements IApplication {
+	
+	@Test
+	public void testImportJavaGitModel() {
+		ResourceSet rs = new ResourceSetImpl();
+		final Resource resource = rs.createResource(URI.createURI("models/example.java.modiscogitmodel"));
+		IResourceHandler resourceHandler = new IResourceHandler() {			
+			@Override
+			public void addContents(EObject contents) {
+				resource.getContents().add(contents);
+			}
+		};
+		
+		Git git = null;
+		try {
+			git = JGitUtil.clone("https://github.com/markus1978/srcrepo.example.git", "../../../01_tmp/srcrepo/clones/srcrepo.example.git");
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+		
+		
+		JGitModelImport modelImport = new JGitModelImport(git, resourceHandler);
+		IJavaProject javaProject = null;
+		try {
+			String path = ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toURL().getFile() + "/../01_tmp/srcrepo/clones/srcrepo.example.git/example.java";
+			javaProject = importExistingJavaProject(path);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+		MoDiscoGitModelImportHandler handler = new MoDiscoGitModelImportHandler(resourceHandler, javaProject);
+		try {
+			handler.init();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+		modelImport.setJavaHandler(handler);
+		
+		try {
+			modelImport.runImport();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+		
+		try {
+			resource.save(null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+	}
 	
 	@Test
 	public void testJavaProjectDiscoverer() {		
@@ -157,17 +211,20 @@ public class MoDiscoTest implements IApplication {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 	    IWorkspaceRoot root = workspace.getRoot();
 	    IProject project = root.getProject("example.java");
+	    IJavaProject javaProject = null;
 	    
 	    Assert.assertNotNull("The example project is not there", project);	
 	    if (!project.exists()) {
 	    	try {
-				project = importExistingExampleJavaProject();
+				javaProject = importExistingExampleJavaProject();
+				project = javaProject.getProject();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Assert.fail("Could not import example project.");
 			}
+	    } else {
+	    	javaProject = JavaCore.create(project);
 	    }
-	    IJavaProject javaProject = JavaCore.create(project);	
 		
 		if (!javaProject.isOpen()) {
 			try {
@@ -181,14 +238,24 @@ public class MoDiscoTest implements IApplication {
 		return javaProject;
 	}
 	
-	private IProject importExistingExampleJavaProject() throws Exception {
+	private IJavaProject importExistingExampleJavaProject() throws Exception {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		String file = workspace.getRoot().getLocationURI().toURL().getFile() + "/../02_workspace/de.hub.srcrepo/example.git/example.java/";
-		IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(file + "/.project")); 
+		String path = workspace.getRoot().getLocationURI().toURL().getFile() + "/../02_workspace/de.hub.srcrepo/example.git/example.java/";
+		return importExistingJavaProject(path);
+	}
+	
+	private IJavaProject importExistingJavaProject(String path) throws Exception {		
+		IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(path + "/.project")); 
 	    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
 	    project.create(description, null);
 	    project.open(null);
-	    return project;
+
+	    IJavaProject javaProject = JavaCore.create(project);
+	    if (!javaProject.isOpen()) {
+			javaProject.open(new NullProgressMonitor());
+	    				
+		}
+		return javaProject;
 	}
 	
 	@SuppressWarnings("unused")

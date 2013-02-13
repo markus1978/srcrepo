@@ -28,8 +28,8 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.junit.Test;
 
-import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
-import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
+import de.hub.srcrepo.emffrag.EmfFragPackage;
+import de.hub.srcrepo.gitmodel.GitModelPackage;
 
 public class JGitTest {
 	
@@ -60,12 +60,13 @@ public class JGitTest {
 		
 		ResourceSet rs = new ResourceSetImpl();
 		final Resource resource = rs.createResource(URI.createURI("models/example.java.gitmodel"));
-		JGitModelImport modelImport = new JGitModelImport(git) {			
+		IResourceHandler resourceHandler = new IResourceHandler() {
 			@Override
-			public void addContent(EObject eObject) {
+			public void addContents(EObject eObject) {
 				resource.getContents().add(eObject);
 			}
 		};
+		JGitModelImport modelImport = new JGitModelImport(git, resourceHandler);
 		
 		try {
 			modelImport.runImport();

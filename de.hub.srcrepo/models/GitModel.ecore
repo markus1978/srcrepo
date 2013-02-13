@@ -12,6 +12,7 @@
         <details key="Fragmentation" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model"/>
     <eGenericSuperTypes eClassifier="ecore:EClass emffrag.ecore#//IndexedMap">
       <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eTypeArguments eClassifier="#//Commit"/>
@@ -23,10 +24,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="time" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parents" upperBound="-1"
-        eType="#//Commit"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diffs" upperBound="-1"
-        eType="#//Diff" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentRelations" upperBound="-1"
+        eType="#//ParentRelation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ref">
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedCommit" eType="#//Commit"/>
@@ -37,12 +36,25 @@
   <eClassifiers xsi:type="ecore:EClass" name="Diff">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ChangeType"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="ChangeType" instanceClassName="org.eclipse.jgit.diff.DiffEntry.ChangeType"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaDiff" eSuperTypes="#//Diff">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
       <eAnnotations source="de.hub.emffrag">
         <details key="Fragmentation" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="ChangeType" instanceClassName="org.eclipse.jgit.diff.DiffEntry.ChangeType"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RevCompilationUnit" eSuperTypes="platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" upperBound="-1"
+        eType="#//RevCompilationUnit" eOpposite="#//RevCompilationUnit/children"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//RevCompilationUnit" eOpposite="#//RevCompilationUnit/parent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParentRelation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diffs" upperBound="-1"
+        eType="#//Diff" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Commit"/>
+  </eClassifiers>
 </ecore:EPackage>
