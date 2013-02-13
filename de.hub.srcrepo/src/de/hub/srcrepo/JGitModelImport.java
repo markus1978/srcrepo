@@ -25,15 +25,33 @@ import de.hub.srcrepo.nofrag.gitmodel.SourceRepository;
 
 public abstract class JGitModelImport {
 
-	private final String repoURI;
-	private SourceRepository repositoryModel;
-	private Git git;
+	private final Git git;
+	private SourceRepository repositoryModel;	
 	private DiffFormatter df;
 	private RevWalk rw;
 
 	public JGitModelImport(String repoURI) {
 		super();
-		this.repoURI = repoURI;
+		File file = new File(repoURI);
+		git = Git.init().setDirectory(file).call();		
+		init();
+	}
+	
+	public JGitModelImport(Git git) {
+		super();
+		this.git = git;
+		init();
+	}
+	
+	private void init() {
+		rw = new RevWalk(git.getRepository());
+		
+		df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+		df.setRepository(git.getRepository());
+		df.setDiffComparator(RawTextComparator.DEFAULT);
+		df.setDetectRenames(true);
+		
+		repositoryModel = GitModelFactory.eINSTANCE.createSourceRepository();	
 	}
 	
 	private Commit addCommit(RevCommit commit) throws Exception {
@@ -72,16 +90,6 @@ public abstract class JGitModelImport {
 	}
 	
 	public void runImport() throws Exception {
-		File file = new File(repoURI);
-		git = Git.init().setDirectory(file).call();
-		rw = new RevWalk(git.getRepository());
-		
-		df = new DiffFormatter(DisabledOutputStream.INSTANCE);
-		df.setRepository(git.getRepository());
-		df.setDiffComparator(RawTextComparator.DEFAULT);
-		df.setDetectRenames(true);
-		
-		repositoryModel = GitModelFactory.eINSTANCE.createSourceRepository();	
 		addContent(repositoryModel);
 		
 		for (Ref ref: git.getRepository().getAllRefs().values()) {

@@ -34,15 +34,33 @@ import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
 public class JGitTest {
 	
 	@Test
+	public void testClone() {
+		try {
+			JGitUtil.clone("https://github.com/markus1978/srcrepo.example.git", "../../../01_tmp/srcrepo/clones/srcrepo.example.git");
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+	}
+	
+	@Test
 	public void modelImportTest() {
 		EPackage.Registry.INSTANCE.put(GitModelPackage.eINSTANCE.getNsURI(), GitModelPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(EmfFragPackage.eINSTANCE.getNsURI(), EmfFragPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(EcorePackage.eINSTANCE.getNsURI(), EcorePackage.eINSTANCE);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("gitmodel", new XMIResourceFactoryImpl());
 		
+		Git git = null;
+		try {
+			git = JGitUtil.clone("https://github.com/markus1978/srcrepo.example.git", "../../../01_tmp/srcrepo/clones/srcrepo.example.git");
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+		
 		ResourceSet rs = new ResourceSetImpl();
 		final Resource resource = rs.createResource(URI.createURI("models/example.java.gitmodel"));
-		JGitModelImport modelImport = new JGitModelImport("example.git") {			
+		JGitModelImport modelImport = new JGitModelImport(git) {			
 			@Override
 			public void addContent(EObject eObject) {
 				resource.getContents().add(eObject);
