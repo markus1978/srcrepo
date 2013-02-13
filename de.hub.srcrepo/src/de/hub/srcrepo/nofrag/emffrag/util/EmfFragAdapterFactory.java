@@ -6,14 +6,17 @@
  */
 package de.hub.srcrepo.nofrag.emffrag.util;
 
-import de.hub.srcrepo.nofrag.emffrag.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedList;
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedMap;
+import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
+import de.hub.srcrepo.nofrag.emffrag.IndexedList;
+import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
+import de.hub.srcrepo.nofrag.emffrag.IsContainment;
 
 /**
  * <!-- begin-user-doc -->

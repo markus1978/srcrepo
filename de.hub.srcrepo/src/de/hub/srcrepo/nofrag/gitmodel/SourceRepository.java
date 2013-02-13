@@ -6,9 +6,9 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel;
 
-import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
-
 import org.eclipse.emf.common.util.EList;
+
+import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
 
 /**
  * <!-- begin-user-doc -->

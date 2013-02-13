@@ -6,18 +6,17 @@
  */
 package de.hub.srcrepo.nofrag.emffrag.impl;
 
-import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedList;
-import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
-import de.hub.srcrepo.nofrag.emffrag.IndexedList;
-import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
-
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedList;
+import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
+import de.hub.srcrepo.nofrag.emffrag.IndexedList;
+import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
 
 /**
  * <!-- begin-user-doc -->

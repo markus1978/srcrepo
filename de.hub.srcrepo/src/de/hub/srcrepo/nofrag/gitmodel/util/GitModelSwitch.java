@@ -6,14 +6,16 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.util;
 
-import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
-
-import de.hub.srcrepo.nofrag.gitmodel.*;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
+
+import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
+import de.hub.srcrepo.nofrag.gitmodel.Commit;
+import de.hub.srcrepo.nofrag.gitmodel.Diff;
+import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
+import de.hub.srcrepo.nofrag.gitmodel.Ref;
+import de.hub.srcrepo.nofrag.gitmodel.SourceRepository;
 
 /**
  * <!-- begin-user-doc -->

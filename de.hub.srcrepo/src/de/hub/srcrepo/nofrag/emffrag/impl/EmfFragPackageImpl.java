@@ -6,18 +6,6 @@
  */
 package de.hub.srcrepo.nofrag.emffrag.impl;
 
-import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedList;
-import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedMap;
-import de.hub.srcrepo.nofrag.emffrag.EmfFragFactory;
-import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
-import de.hub.srcrepo.nofrag.emffrag.IndexedList;
-import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
-import de.hub.srcrepo.nofrag.emffrag.IsContainment;
-
-import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
-
-import de.hub.srcrepo.nofrag.gitmodel.impl.GitModelPackageImpl;
-
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -27,8 +15,17 @@ import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.ETypeParameter;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedList;
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedMap;
+import de.hub.srcrepo.nofrag.emffrag.EmfFragFactory;
+import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
+import de.hub.srcrepo.nofrag.emffrag.IndexedList;
+import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
+import de.hub.srcrepo.nofrag.emffrag.IsContainment;
+import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
+import de.hub.srcrepo.nofrag.gitmodel.impl.GitModelPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

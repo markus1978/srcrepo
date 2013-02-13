@@ -6,27 +6,23 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.impl;
 
-import de.hub.srcrepo.nofrag.gitmodel.Commit;
-import de.hub.srcrepo.nofrag.gitmodel.Diff;
-import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
-
 import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import de.hub.srcrepo.nofrag.gitmodel.Commit;
+import de.hub.srcrepo.nofrag.gitmodel.Diff;
+import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
 
 /**
  * <!-- begin-user-doc -->

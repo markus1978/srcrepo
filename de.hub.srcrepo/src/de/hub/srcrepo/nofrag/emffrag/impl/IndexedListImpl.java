@@ -6,10 +6,10 @@
  */
 package de.hub.srcrepo.nofrag.emffrag.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
 import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
 import de.hub.srcrepo.nofrag.emffrag.IndexedList;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

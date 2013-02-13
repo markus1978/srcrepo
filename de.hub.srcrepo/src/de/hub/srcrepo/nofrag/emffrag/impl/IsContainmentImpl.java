@@ -6,12 +6,11 @@
  */
 package de.hub.srcrepo.nofrag.emffrag.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+
 import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
 import de.hub.srcrepo.nofrag.emffrag.IsContainment;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

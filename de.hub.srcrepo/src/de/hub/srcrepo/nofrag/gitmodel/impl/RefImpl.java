@@ -6,17 +6,15 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.impl;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+
 import de.hub.srcrepo.nofrag.gitmodel.Commit;
 import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
 import de.hub.srcrepo.nofrag.gitmodel.Ref;
-
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

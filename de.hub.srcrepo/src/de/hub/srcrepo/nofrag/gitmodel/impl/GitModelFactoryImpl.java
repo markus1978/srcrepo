@@ -6,17 +6,20 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.impl;
 
-import de.hub.srcrepo.nofrag.gitmodel.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+
+import de.hub.srcrepo.nofrag.gitmodel.Commit;
+import de.hub.srcrepo.nofrag.gitmodel.Diff;
+import de.hub.srcrepo.nofrag.gitmodel.GitModelFactory;
+import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
+import de.hub.srcrepo.nofrag.gitmodel.Ref;
+import de.hub.srcrepo.nofrag.gitmodel.SourceRepository;
 
 /**
  * <!-- begin-user-doc -->

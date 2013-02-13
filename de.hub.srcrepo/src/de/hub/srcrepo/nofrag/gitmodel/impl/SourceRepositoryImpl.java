@@ -6,24 +6,20 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.impl;
 
-import de.hub.srcrepo.nofrag.emffrag.impl.IndexedMapImpl;
+import java.util.Collection;
 
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import de.hub.srcrepo.nofrag.emffrag.impl.IndexedMapImpl;
 import de.hub.srcrepo.nofrag.gitmodel.Commit;
 import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
 import de.hub.srcrepo.nofrag.gitmodel.Ref;
 import de.hub.srcrepo.nofrag.gitmodel.SourceRepository;
-
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->

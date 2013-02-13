@@ -6,14 +6,13 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel;
 
-import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
+import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
 
 /**
  * <!-- begin-user-doc -->

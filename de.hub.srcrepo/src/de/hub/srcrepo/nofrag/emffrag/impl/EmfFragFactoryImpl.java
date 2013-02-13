@@ -6,16 +6,19 @@
  */
 package de.hub.srcrepo.nofrag.emffrag.impl;
 
-import de.hub.srcrepo.nofrag.emffrag.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedList;
+import de.hub.srcrepo.nofrag.emffrag.ContainmentIndexedMap;
+import de.hub.srcrepo.nofrag.emffrag.EmfFragFactory;
+import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
+import de.hub.srcrepo.nofrag.emffrag.IndexedList;
+import de.hub.srcrepo.nofrag.emffrag.IndexedMap;
 
 /**
  * <!-- begin-user-doc -->

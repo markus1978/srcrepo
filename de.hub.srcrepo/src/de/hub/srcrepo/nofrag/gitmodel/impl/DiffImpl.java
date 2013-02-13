@@ -6,19 +6,16 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.impl;
 
-import de.hub.srcrepo.nofrag.gitmodel.Diff;
-import de.hub.srcrepo.nofrag.gitmodel.DiffType;
-import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+
+import de.hub.srcrepo.nofrag.gitmodel.Diff;
+import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
 
 /**
  * <!-- begin-user-doc -->

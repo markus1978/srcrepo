@@ -9,7 +9,6 @@ package de.hub.srcrepo.nofrag.emffrag;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

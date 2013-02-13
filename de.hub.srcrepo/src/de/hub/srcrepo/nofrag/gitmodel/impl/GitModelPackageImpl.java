@@ -6,28 +6,23 @@
  */
 package de.hub.srcrepo.nofrag.gitmodel.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EGenericType;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+
 import de.hub.srcrepo.nofrag.emffrag.EmfFragPackage;
-
 import de.hub.srcrepo.nofrag.emffrag.impl.EmfFragPackageImpl;
-
 import de.hub.srcrepo.nofrag.gitmodel.Commit;
 import de.hub.srcrepo.nofrag.gitmodel.Diff;
-import de.hub.srcrepo.nofrag.gitmodel.DiffType;
 import de.hub.srcrepo.nofrag.gitmodel.GitModelFactory;
 import de.hub.srcrepo.nofrag.gitmodel.GitModelPackage;
 import de.hub.srcrepo.nofrag.gitmodel.Ref;
 import de.hub.srcrepo.nofrag.gitmodel.SourceRepository;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EGenericType;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 /**
  * <!-- begin-user-doc -->
