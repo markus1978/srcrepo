@@ -173,9 +173,6 @@ public class JGitModelImport {
 				refModel.setReferencedCommit(addCommit(commit));
 			}
 		}
-
-		// TODO temporary only visit the first commit
-//		visitCommit(rw.parseCommit(commitsToVisit.poll().getId()));
 		
 		while (!commitsToVisit.isEmpty()) {
 			RevCommit nextCommit = commitsToVisit.poll();

@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -22,6 +23,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
+import org.eclipse.modisco.java.discoverer.internal.io.java.binding.Binding;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManager;
 import org.eclipse.modisco.kdm.source.extension.discovery.AbstractRegionDiscoverer2;
 import org.eclipse.modisco.kdm.source.extension.discovery.SourceVisitListener;
@@ -35,6 +37,7 @@ public class MoDiscoGitModelImportHandler implements IGitModelImportHandler<Java
 	private CompilationUnit lastCU;
 	private JavaReader javaReader;
 	private Model javaModel;
+	
 	private AbstractRegionDiscoverer2<Object> abstractRegionDiscoverer;
 	private BindingManager javaBindings;
 
@@ -78,18 +81,30 @@ public class MoDiscoGitModelImportHandler implements IGitModelImportHandler<Java
 			// TODO log something
 			System.out.println("@ exception on refresh.");
 		}
-		javaReader = new JavaReader(JavaFactory.eINSTANCE, new HashMap<String,Object>(), abstractRegionDiscoverer);
+		javaReader = new JavaReader(JavaFactory.eINSTANCE, new HashMap<String,Object>(), abstractRegionDiscoverer) {
+			@Override
+			protected BindingManager getBindingManager() {
+				return getGlobalBindings();
+			}			
+		};
 		javaReader.setDeepAnalysis(true);
 		javaReader.setIncremental(true);
 		
-		javaBindings = new BindingManager(JavaFactory.eINSTANCE);
+		javaReader.setGlobalBindings(new BindingManager(JavaFactory.eINSTANCE));
 		if (javaReader.isIncremental()) {
-			javaBindings.enableIncrementalDiscovering(javaModel);
+			javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
 		}
 	}
 
 	@Override
 	public void onCompleteCommit() {
+		BindingManager commitBindings = javaReader.getGlobalBindings();
+		if (javaBindings == null) {
+			javaBindings = commitBindings;
+		} else {
+			javaBindings.addBindings(commitBindings);
+			javaReader.setGlobalBindings(javaBindings);
+		}
 		javaReader.terminate(new NullProgressMonitor());
 	}
 
@@ -122,7 +137,7 @@ public class MoDiscoGitModelImportHandler implements IGitModelImportHandler<Java
 			cu = (ICompilationUnit)element;
 			lastCU = null;
 			System.out.println("# import compilation unit " + element.getPath());
-			javaReader.readModel(cu, javaModel, javaBindings, new NullProgressMonitor());
+			javaReader.readModel(cu, javaModel, new NullProgressMonitor());
 			if (lastCU != null) {
 				diff.setCompilationUnit(lastCU);
 			} else {
