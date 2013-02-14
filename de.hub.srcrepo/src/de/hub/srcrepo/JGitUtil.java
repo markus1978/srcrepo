@@ -20,7 +20,7 @@ public class JGitUtil {
 		cloneCommand.setURI(uri);	
 		File directory = new File(localPath);
 		if (directory.exists()) {
-			FileUtils.delete(directory);
+			FileUtils.delete(directory, FileUtils.RECURSIVE);
 		}
 		cloneCommand.setDirectory(directory);
 		try {

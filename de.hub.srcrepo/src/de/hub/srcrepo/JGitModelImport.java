@@ -31,39 +31,39 @@ public class JGitModelImport {
 
 	private final Git git;
 	private final IResourceHandler resourceHandler;
-	
-	private SourceRepository repositoryModel;	
+
+	private SourceRepository repositoryModel;
 	private DiffFormatter df;
 	private RevWalk rw;
 	private boolean hasBeenRun = false;
 	private IGitModelImportHandler<JavaDiff> handler;
-	
+
 	private List<JavaDiff> tmp_javaDiffs = new ArrayList<JavaDiff>();
-	
+
 	private Queue<RevCommit> commitsToVisit = new LinkedList<RevCommit>();
-	
+
 	public JGitModelImport(Git git, IResourceHandler resourceHandler) {
 		super();
 		this.git = git;
 		this.resourceHandler = resourceHandler;
 		init();
 	}
-	
+
 	public void setJavaHandler(IGitModelImportHandler<JavaDiff> handler) {
 		this.handler = handler;
 	}
 
 	private void init() {
 		rw = new RevWalk(git.getRepository());
-		
+
 		df = new DiffFormatter(DisabledOutputStream.INSTANCE);
 		df.setRepository(git.getRepository());
 		df.setDiffComparator(RawTextComparator.DEFAULT);
 		df.setDetectRenames(true);
-		
-		repositoryModel = GitModelFactory.eINSTANCE.createSourceRepository();	
+
+		repositoryModel = GitModelFactory.eINSTANCE.createSourceRepository();
 	}
-	
+
 	private Commit addCommit(RevCommit commit) throws Exception {
 		String commitName = commit.getName();
 		Commit commitModel = repositoryModel.exact(commitName);
@@ -74,55 +74,56 @@ public class JGitModelImport {
 			repositoryModel.getAllCommits().add(commitModel); // TODO this is only for the no frag model
 			commitsToVisit.add(commit);
 		}
-		return commitModel;					
+		return commitModel;
 	}
-	
+
 	private void visitCommit(RevCommit commit) throws Exception {
+		System.out.println("# importing commit " + commit.getName());
 		Commit commitModel = repositoryModel.exact(commit.getName());
 		if (commitModel == null) {
 			commitModel = addCommit(commit);
 		}
-		
-		commitModel.setTime(new Date(((long)commit.getCommitTime())*1000));
+
+		commitModel.setTime(new Date(((long) commit.getCommitTime()) * 1000));
 		commitModel.setMessage(commit.getFullMessage());
-		
+
 		List<DiffEntry> diffs = null;
 		tmp_javaDiffs.clear();
-		if (commit.getParentCount() > 0) {				
-			for (RevCommit parent: commit.getParents()) {
-				diffs = df.scan(parent.getTree(), commit.getTree());
+		if (commit.getParentCount() > 0) {
+			for (RevCommit parent : commit.getParents()) {
+				diffs = df.scan(parent, commit);
 				Commit parentModel = addCommit(parent);
 				addParentRelation(commitModel, parentModel, diffs);
 			}
 		} else {
 			diffs = df.scan(new EmptyTreeIterator(), new CanonicalTreeParser(null, rw.getObjectReader(), commit.getTree()));
 			addParentRelation(commitModel, null, diffs);
-		}			
-		
+		}
+
 		onCommitAdded(commitModel);
 	}
-	
+
 	private void addParentRelation(Commit commitModel, Commit parentModel, List<DiffEntry> diffs) {
 		ParentRelation parentRelationModel = GitModelFactory.eINSTANCE.createParentRelation();
 		parentRelationModel.setParent(parentModel);
 		commitModel.getParentRelations().add(parentRelationModel);
-		for (DiffEntry diffEntry: diffs) {			
-			Diff diffModel = null;			
+		for (DiffEntry diffEntry : diffs) {
+			Diff diffModel = null;
 			String path = diffEntry.getNewPath();
 			if (path.endsWith(".java")) {
 				diffModel = GitModelFactory.eINSTANCE.createJavaDiff();
-				tmp_javaDiffs.add((JavaDiff)diffModel);
+				tmp_javaDiffs.add((JavaDiff) diffModel);
 			} else {
-				diffModel = GitModelFactory.eINSTANCE.createDiff();				
+				diffModel = GitModelFactory.eINSTANCE.createDiff();
 			}
 			diffModel.setNewPath(path);
 			diffModel.setOldPath(diffEntry.getOldPath());
 			diffModel.setType(diffEntry.getChangeType());
 			parentRelationModel.getDiffs().add(diffModel);
-			
+
 		}
 	}
-	
+
 	private void onCommitAdded(Commit commitModel) {
 		try {
 			git.checkout().setName(commitModel.getName()).call();
@@ -131,9 +132,10 @@ public class JGitModelImport {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		if (handler != null) {
-			for(JavaDiff diff: tmp_javaDiffs) {
+			handler.onStartCommit();
+			for (JavaDiff diff : tmp_javaDiffs) {
 				if (diff.getType() == ChangeType.ADD) {
 					handler.onAddedFile(diff);
 				} else if (diff.getType() == ChangeType.COPY) {
@@ -146,6 +148,7 @@ public class JGitModelImport {
 					handler.onRenamedFile(diff);
 				}
 			}
+			handler.onCompleteCommit();
 		}
 	}
 
@@ -153,26 +156,33 @@ public class JGitModelImport {
 		if (hasBeenRun) {
 			throw new IllegalStateException();
 		}
-		
+
 		hasBeenRun = true;
 		resourceHandler.addContents(repositoryModel);
-		
-		for (Ref ref: git.getRepository().getAllRefs().values()) {
+
+		for (Ref ref : git.getRepository().getAllRefs().values()) {
 			de.hub.srcrepo.gitmodel.Ref refModel = GitModelFactory.eINSTANCE.createRef();
 			refModel.setIsPeeled(ref.isPeeled());
 			refModel.setIsSymbolic(ref.isSymbolic());
 			refModel.setName(ref.getName());
 			repositoryModel.getAllRefs().add(refModel);
-			
+
 			RevObject revObject = rw.parseAny(ref.getObjectId());
 			if (revObject.getType() == Constants.OBJ_COMMIT) {
-				RevCommit commit = (RevCommit)revObject;
+				RevCommit commit = (RevCommit) revObject;
 				refModel.setReferencedCommit(addCommit(commit));
-			}			
+			}
 		}
+
+		// TODO temporary only visit the first commit
+//		visitCommit(rw.parseCommit(commitsToVisit.poll().getId()));
 		
 		while (!commitsToVisit.isEmpty()) {
-			visitCommit(commitsToVisit.poll());
+			RevCommit nextCommit = commitsToVisit.poll();
+			// reparse the commit. If I take the commits directly from
+			// RevCommit.getParents[], JGit starts to throw random exceptions.
+			nextCommit = rw.parseCommit(nextCommit.getId());
+			visitCommit(nextCommit);
 		}
 	}
 }
