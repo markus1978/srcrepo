@@ -34,6 +34,7 @@ import de.hub.srcrepo.gitmodel.SourceRepository;
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.SourceRepositoryImpl#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.SourceRepositoryImpl#getAllCommits <em>All Commits</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.SourceRepositoryImpl#getJavaModel <em>Java Model</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.impl.SourceRepositoryImpl#getRootCommit <em>Root Commit</em>}</li>
  * </ul>
  * </p>
  *
@@ -69,6 +70,16 @@ public class SourceRepositoryImpl extends IndexedMapImpl<String, Commit> impleme
 	 * @ordered
 	 */
 	protected Model javaModel;
+
+	/**
+	 * The cached value of the '{@link #getRootCommit() <em>Root Commit</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRootCommit()
+	 * @generated
+	 * @ordered
+	 */
+	protected Commit rootCommit;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -156,6 +167,44 @@ public class SourceRepositoryImpl extends IndexedMapImpl<String, Commit> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Commit getRootCommit() {
+		if (rootCommit != null && rootCommit.eIsProxy()) {
+			InternalEObject oldRootCommit = (InternalEObject)rootCommit;
+			rootCommit = (Commit)eResolveProxy(oldRootCommit);
+			if (rootCommit != oldRootCommit) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, GitModelPackage.SOURCE_REPOSITORY__ROOT_COMMIT, oldRootCommit, rootCommit));
+			}
+		}
+		return rootCommit;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Commit basicGetRootCommit() {
+		return rootCommit;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRootCommit(Commit newRootCommit) {
+		Commit oldRootCommit = rootCommit;
+		rootCommit = newRootCommit;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, GitModelPackage.SOURCE_REPOSITORY__ROOT_COMMIT, oldRootCommit, rootCommit));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -182,6 +231,9 @@ public class SourceRepositoryImpl extends IndexedMapImpl<String, Commit> impleme
 			case GitModelPackage.SOURCE_REPOSITORY__JAVA_MODEL:
 				if (resolve) return getJavaModel();
 				return basicGetJavaModel();
+			case GitModelPackage.SOURCE_REPOSITORY__ROOT_COMMIT:
+				if (resolve) return getRootCommit();
+				return basicGetRootCommit();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -206,6 +258,9 @@ public class SourceRepositoryImpl extends IndexedMapImpl<String, Commit> impleme
 			case GitModelPackage.SOURCE_REPOSITORY__JAVA_MODEL:
 				setJavaModel((Model)newValue);
 				return;
+			case GitModelPackage.SOURCE_REPOSITORY__ROOT_COMMIT:
+				setRootCommit((Commit)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -227,6 +282,9 @@ public class SourceRepositoryImpl extends IndexedMapImpl<String, Commit> impleme
 			case GitModelPackage.SOURCE_REPOSITORY__JAVA_MODEL:
 				setJavaModel((Model)null);
 				return;
+			case GitModelPackage.SOURCE_REPOSITORY__ROOT_COMMIT:
+				setRootCommit((Commit)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -245,6 +303,8 @@ public class SourceRepositoryImpl extends IndexedMapImpl<String, Commit> impleme
 				return allCommits != null && !allCommits.isEmpty();
 			case GitModelPackage.SOURCE_REPOSITORY__JAVA_MODEL:
 				return javaModel != null;
+			case GitModelPackage.SOURCE_REPOSITORY__ROOT_COMMIT:
+				return rootCommit != null;
 		}
 		return super.eIsSet(featureID);
 	}

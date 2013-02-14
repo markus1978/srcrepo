@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -38,6 +40,7 @@ import de.hub.srcrepo.gitmodel.ParentRelation;
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.CommitImpl#getTime <em>Time</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.CommitImpl#getMessage <em>Message</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.CommitImpl#getParentRelations <em>Parent Relations</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.impl.CommitImpl#getChildRelations <em>Child Relations</em>}</li>
  * </ul>
  * </p>
  *
@@ -153,6 +156,16 @@ public class CommitImpl extends EObjectImpl implements Commit {
 	 * @ordered
 	 */
 	protected EList<ParentRelation> parentRelations;
+
+	/**
+	 * The cached value of the '{@link #getChildRelations() <em>Child Relations</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildRelations()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ParentRelation> childRelations;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -285,9 +298,38 @@ public class CommitImpl extends EObjectImpl implements Commit {
 	 */
 	public EList<ParentRelation> getParentRelations() {
 		if (parentRelations == null) {
-			parentRelations = new EObjectContainmentEList<ParentRelation>(ParentRelation.class, this, GitModelPackage.COMMIT__PARENT_RELATIONS);
+			parentRelations = new EObjectContainmentWithInverseEList<ParentRelation>(ParentRelation.class, this, GitModelPackage.COMMIT__PARENT_RELATIONS, GitModelPackage.PARENT_RELATION__CHILD);
 		}
 		return parentRelations;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<ParentRelation> getChildRelations() {
+		if (childRelations == null) {
+			childRelations = new EObjectWithInverseResolvingEList<ParentRelation>(ParentRelation.class, this, GitModelPackage.COMMIT__CHILD_RELATIONS, GitModelPackage.PARENT_RELATION__PARENT);
+		}
+		return childRelations;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case GitModelPackage.COMMIT__PARENT_RELATIONS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getParentRelations()).basicAdd(otherEnd, msgs);
+			case GitModelPackage.COMMIT__CHILD_RELATIONS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildRelations()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -300,6 +342,8 @@ public class CommitImpl extends EObjectImpl implements Commit {
 		switch (featureID) {
 			case GitModelPackage.COMMIT__PARENT_RELATIONS:
 				return ((InternalEList<?>)getParentRelations()).basicRemove(otherEnd, msgs);
+			case GitModelPackage.COMMIT__CHILD_RELATIONS:
+				return ((InternalEList<?>)getChildRelations()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -324,6 +368,8 @@ public class CommitImpl extends EObjectImpl implements Commit {
 				return getMessage();
 			case GitModelPackage.COMMIT__PARENT_RELATIONS:
 				return getParentRelations();
+			case GitModelPackage.COMMIT__CHILD_RELATIONS:
+				return getChildRelations();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -356,6 +402,10 @@ public class CommitImpl extends EObjectImpl implements Commit {
 				getParentRelations().clear();
 				getParentRelations().addAll((Collection<? extends ParentRelation>)newValue);
 				return;
+			case GitModelPackage.COMMIT__CHILD_RELATIONS:
+				getChildRelations().clear();
+				getChildRelations().addAll((Collection<? extends ParentRelation>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -386,6 +436,9 @@ public class CommitImpl extends EObjectImpl implements Commit {
 			case GitModelPackage.COMMIT__PARENT_RELATIONS:
 				getParentRelations().clear();
 				return;
+			case GitModelPackage.COMMIT__CHILD_RELATIONS:
+				getChildRelations().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -410,6 +463,8 @@ public class CommitImpl extends EObjectImpl implements Commit {
 				return MESSAGE_EDEFAULT == null ? message != null : !MESSAGE_EDEFAULT.equals(message);
 			case GitModelPackage.COMMIT__PARENT_RELATIONS:
 				return parentRelations != null && !parentRelations.isEmpty();
+			case GitModelPackage.COMMIT__CHILD_RELATIONS:
+				return childRelations != null && !childRelations.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

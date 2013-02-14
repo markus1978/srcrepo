@@ -7,7 +7,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,7 +28,9 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.junit.Test;
 
 import de.hub.srcrepo.emffrag.EmfFragPackage;
+import de.hub.srcrepo.gitmodel.GitModelFactory;
 import de.hub.srcrepo.gitmodel.GitModelPackage;
+import de.hub.srcrepo.gitmodel.SourceRepository;
 
 public class JGitTest {
 	
@@ -60,13 +61,9 @@ public class JGitTest {
 		
 		ResourceSet rs = new ResourceSetImpl();
 		final Resource resource = rs.createResource(URI.createURI("models/example.java.gitmodel"));
-		IResourceHandler resourceHandler = new IResourceHandler() {
-			@Override
-			public void addContents(EObject eObject) {
-				resource.getContents().add(eObject);
-			}
-		};
-		JGitModelImport modelImport = new JGitModelImport(git, resourceHandler);
+		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
+		resource.getContents().add(gitModel);		
+		JGitModelImport modelImport = new JGitModelImport(git, gitModel);
 		
 		try {
 			modelImport.runImport();

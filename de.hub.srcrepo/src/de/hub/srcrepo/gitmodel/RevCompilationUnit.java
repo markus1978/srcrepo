@@ -19,7 +19,6 @@ import org.eclipse.gmt.modisco.java.CompilationUnit;
  * The following features are supported:
  * <ul>
  *   <li>{@link de.hub.srcrepo.gitmodel.RevCompilationUnit#getParent <em>Parent</em>}</li>
- *   <li>{@link de.hub.srcrepo.gitmodel.RevCompilationUnit#getCommit <em>Commit</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.RevCompilationUnit#getChildren <em>Children</em>}</li>
  * </ul>
  * </p>
@@ -46,32 +45,6 @@ public interface RevCompilationUnit extends CompilationUnit {
 	 * @generated
 	 */
 	EList<RevCompilationUnit> getParent();
-
-	/**
-	 * Returns the value of the '<em><b>Commit</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Commit</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Commit</em>' reference.
-	 * @see #setCommit(Commit)
-	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getRevCompilationUnit_Commit()
-	 * @model
-	 * @generated
-	 */
-	Commit getCommit();
-
-	/**
-	 * Sets the value of the '{@link de.hub.srcrepo.gitmodel.RevCompilationUnit#getCommit <em>Commit</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Commit</em>' reference.
-	 * @see #getCommit()
-	 * @generated
-	 */
-	void setCommit(Commit value);
 
 	/**
 	 * Returns the value of the '<em><b>Children</b></em>' reference list.

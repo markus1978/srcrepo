@@ -16,3 +16,5 @@ Require-Bundle: org.junit4;bundle-version="4.8.1",
  org.eclipse.jgit;bundle-version="1.3.0",
  de.hub.emffrag;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: de.hub.srcrepo.SrcRepoActivator
+Bundle-ActivationPolicy: lazy

@@ -119,13 +119,22 @@ public interface GitModelPackage extends EPackage {
 	int SOURCE_REPOSITORY__JAVA_MODEL = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Root Commit</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_REPOSITORY__ROOT_COMMIT = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Source Repository</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_REPOSITORY_FEATURE_COUNT = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 3;
+	int SOURCE_REPOSITORY_FEATURE_COUNT = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.CommitImpl <em>Commit</em>}' class.
@@ -192,13 +201,22 @@ public interface GitModelPackage extends EPackage {
 	int COMMIT__PARENT_RELATIONS = 5;
 
 	/**
+	 * The feature id for the '<em><b>Child Relations</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMIT__CHILD_RELATIONS = 6;
+
+	/**
 	 * The number of structural features of the '<em>Commit</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMMIT_FEATURE_COUNT = 6;
+	int COMMIT_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.RefImpl <em>Ref</em>}' class.
@@ -475,22 +493,13 @@ public interface GitModelPackage extends EPackage {
 	int REV_COMPILATION_UNIT__PARENT = JavaPackage.COMPILATION_UNIT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Commit</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REV_COMPILATION_UNIT__COMMIT = JavaPackage.COMPILATION_UNIT_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Children</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REV_COMPILATION_UNIT__CHILDREN = JavaPackage.COMPILATION_UNIT_FEATURE_COUNT + 2;
+	int REV_COMPILATION_UNIT__CHILDREN = JavaPackage.COMPILATION_UNIT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Rev Compilation Unit</em>' class.
@@ -499,7 +508,7 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REV_COMPILATION_UNIT_FEATURE_COUNT = JavaPackage.COMPILATION_UNIT_FEATURE_COUNT + 3;
+	int REV_COMPILATION_UNIT_FEATURE_COUNT = JavaPackage.COMPILATION_UNIT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.ParentRelationImpl <em>Parent Relation</em>}' class.
@@ -530,13 +539,22 @@ public interface GitModelPackage extends EPackage {
 	int PARENT_RELATION__PARENT = 1;
 
 	/**
+	 * The feature id for the '<em><b>Child</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARENT_RELATION__CHILD = 2;
+
+	/**
 	 * The number of structural features of the '<em>Parent Relation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARENT_RELATION_FEATURE_COUNT = 2;
+	int PARENT_RELATION_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
@@ -590,6 +608,17 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSourceRepository_JavaModel();
+
+	/**
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.gitmodel.SourceRepository#getRootCommit <em>Root Commit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Root Commit</em>'.
+	 * @see de.hub.srcrepo.gitmodel.SourceRepository#getRootCommit()
+	 * @see #getSourceRepository()
+	 * @generated
+	 */
+	EReference getSourceRepository_RootCommit();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.Commit <em>Commit</em>}'.
@@ -666,6 +695,17 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCommit_ParentRelations();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.gitmodel.Commit#getChildRelations <em>Child Relations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Child Relations</em>'.
+	 * @see de.hub.srcrepo.gitmodel.Commit#getChildRelations()
+	 * @see #getCommit()
+	 * @generated
+	 */
+	EReference getCommit_ChildRelations();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.Ref <em>Ref</em>}'.
@@ -807,17 +847,6 @@ public interface GitModelPackage extends EPackage {
 	EReference getRevCompilationUnit_Parent();
 
 	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.gitmodel.RevCompilationUnit#getCommit <em>Commit</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Commit</em>'.
-	 * @see de.hub.srcrepo.gitmodel.RevCompilationUnit#getCommit()
-	 * @see #getRevCompilationUnit()
-	 * @generated
-	 */
-	EReference getRevCompilationUnit_Commit();
-
-	/**
 	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.gitmodel.RevCompilationUnit#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -859,6 +888,17 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getParentRelation_Parent();
+
+	/**
+	 * Returns the meta object for the container reference '{@link de.hub.srcrepo.gitmodel.ParentRelation#getChild <em>Child</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Child</em>'.
+	 * @see de.hub.srcrepo.gitmodel.ParentRelation#getChild()
+	 * @see #getParentRelation()
+	 * @generated
+	 */
+	EReference getParentRelation_Child();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
@@ -928,6 +968,14 @@ public interface GitModelPackage extends EPackage {
 		EReference SOURCE_REPOSITORY__JAVA_MODEL = eINSTANCE.getSourceRepository_JavaModel();
 
 		/**
+		 * The meta object literal for the '<em><b>Root Commit</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SOURCE_REPOSITORY__ROOT_COMMIT = eINSTANCE.getSourceRepository_RootCommit();
+
+		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.gitmodel.impl.CommitImpl <em>Commit</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -984,6 +1032,14 @@ public interface GitModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMMIT__PARENT_RELATIONS = eINSTANCE.getCommit_ParentRelations();
+
+		/**
+		 * The meta object literal for the '<em><b>Child Relations</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMMIT__CHILD_RELATIONS = eINSTANCE.getCommit_ChildRelations();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.gitmodel.impl.RefImpl <em>Ref</em>}' class.
@@ -1098,14 +1154,6 @@ public interface GitModelPackage extends EPackage {
 		EReference REV_COMPILATION_UNIT__PARENT = eINSTANCE.getRevCompilationUnit_Parent();
 
 		/**
-		 * The meta object literal for the '<em><b>Commit</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REV_COMPILATION_UNIT__COMMIT = eINSTANCE.getRevCompilationUnit_Commit();
-
-		/**
 		 * The meta object literal for the '<em><b>Children</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1138,6 +1186,14 @@ public interface GitModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PARENT_RELATION__PARENT = eINSTANCE.getParentRelation_Parent();
+
+		/**
+		 * The meta object literal for the '<em><b>Child</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PARENT_RELATION__CHILD = eINSTANCE.getParentRelation_Child();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.

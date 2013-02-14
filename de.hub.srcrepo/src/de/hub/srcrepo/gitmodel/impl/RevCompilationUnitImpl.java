@@ -35,7 +35,6 @@ import org.eclipse.gmt.modisco.java.emf.impl.CompilationUnitImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.RevCompilationUnitImpl#getParent <em>Parent</em>}</li>
- *   <li>{@link de.hub.srcrepo.gitmodel.impl.RevCompilationUnitImpl#getCommit <em>Commit</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.RevCompilationUnitImpl#getChildren <em>Children</em>}</li>
  * </ul>
  * </p>
@@ -52,16 +51,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 	 * @ordered
 	 */
 	protected EList<RevCompilationUnit> parent;
-
-	/**
-	 * The cached value of the '{@link #getCommit() <em>Commit</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCommit()
-	 * @generated
-	 * @ordered
-	 */
-	protected Commit commit;
 
 	/**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
@@ -102,44 +91,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 			parent = new EObjectWithInverseResolvingEList.ManyInverse<RevCompilationUnit>(RevCompilationUnit.class, this, GitModelPackage.REV_COMPILATION_UNIT__PARENT, GitModelPackage.REV_COMPILATION_UNIT__CHILDREN);
 		}
 		return parent;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Commit getCommit() {
-		if (commit != null && commit.eIsProxy()) {
-			InternalEObject oldCommit = (InternalEObject)commit;
-			commit = (Commit)eResolveProxy(oldCommit);
-			if (commit != oldCommit) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, GitModelPackage.REV_COMPILATION_UNIT__COMMIT, oldCommit, commit));
-			}
-		}
-		return commit;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Commit basicGetCommit() {
-		return commit;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCommit(Commit newCommit) {
-		Commit oldCommit = commit;
-		commit = newCommit;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, GitModelPackage.REV_COMPILATION_UNIT__COMMIT, oldCommit, commit));
 	}
 
 	/**
@@ -197,9 +148,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 		switch (featureID) {
 			case GitModelPackage.REV_COMPILATION_UNIT__PARENT:
 				return getParent();
-			case GitModelPackage.REV_COMPILATION_UNIT__COMMIT:
-				if (resolve) return getCommit();
-				return basicGetCommit();
 			case GitModelPackage.REV_COMPILATION_UNIT__CHILDREN:
 				return getChildren();
 		}
@@ -218,9 +166,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 			case GitModelPackage.REV_COMPILATION_UNIT__PARENT:
 				getParent().clear();
 				getParent().addAll((Collection<? extends RevCompilationUnit>)newValue);
-				return;
-			case GitModelPackage.REV_COMPILATION_UNIT__COMMIT:
-				setCommit((Commit)newValue);
 				return;
 			case GitModelPackage.REV_COMPILATION_UNIT__CHILDREN:
 				getChildren().clear();
@@ -241,9 +186,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 			case GitModelPackage.REV_COMPILATION_UNIT__PARENT:
 				getParent().clear();
 				return;
-			case GitModelPackage.REV_COMPILATION_UNIT__COMMIT:
-				setCommit((Commit)null);
-				return;
 			case GitModelPackage.REV_COMPILATION_UNIT__CHILDREN:
 				getChildren().clear();
 				return;
@@ -261,8 +203,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 		switch (featureID) {
 			case GitModelPackage.REV_COMPILATION_UNIT__PARENT:
 				return parent != null && !parent.isEmpty();
-			case GitModelPackage.REV_COMPILATION_UNIT__COMMIT:
-				return commit != null;
 			case GitModelPackage.REV_COMPILATION_UNIT__CHILDREN:
 				return children != null && !children.isEmpty();
 		}

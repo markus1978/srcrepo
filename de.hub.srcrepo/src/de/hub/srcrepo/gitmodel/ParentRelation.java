@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link de.hub.srcrepo.gitmodel.ParentRelation#getDiffs <em>Diffs</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.ParentRelation#getParent <em>Parent</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.ParentRelation#getChild <em>Child</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,6 +47,7 @@ public interface ParentRelation extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Parent</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link de.hub.srcrepo.gitmodel.Commit#getChildRelations <em>Child Relations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parent</em>' reference isn't clear,
@@ -55,7 +57,8 @@ public interface ParentRelation extends EObject {
 	 * @return the value of the '<em>Parent</em>' reference.
 	 * @see #setParent(Commit)
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getParentRelation_Parent()
-	 * @model
+	 * @see de.hub.srcrepo.gitmodel.Commit#getChildRelations
+	 * @model opposite="childRelations"
 	 * @generated
 	 */
 	Commit getParent();
@@ -69,5 +72,33 @@ public interface ParentRelation extends EObject {
 	 * @generated
 	 */
 	void setParent(Commit value);
+
+	/**
+	 * Returns the value of the '<em><b>Child</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link de.hub.srcrepo.gitmodel.Commit#getParentRelations <em>Parent Relations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Child</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Child</em>' container reference.
+	 * @see #setChild(Commit)
+	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getParentRelation_Child()
+	 * @see de.hub.srcrepo.gitmodel.Commit#getParentRelations
+	 * @model opposite="parentRelations" transient="false"
+	 * @generated
+	 */
+	Commit getChild();
+
+	/**
+	 * Sets the value of the '{@link de.hub.srcrepo.gitmodel.ParentRelation#getChild <em>Child</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Child</em>' container reference.
+	 * @see #getChild()
+	 * @generated
+	 */
+	void setChild(Commit value);
 
 } // ParentRelation

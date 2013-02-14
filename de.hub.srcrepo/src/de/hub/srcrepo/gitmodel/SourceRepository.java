@@ -22,6 +22,7 @@ import de.hub.srcrepo.emffrag.IndexedMap;
  *   <li>{@link de.hub.srcrepo.gitmodel.SourceRepository#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.SourceRepository#getAllCommits <em>All Commits</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.SourceRepository#getJavaModel <em>Java Model</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.SourceRepository#getRootCommit <em>Root Commit</em>}</li>
  * </ul>
  * </p>
  *
@@ -88,5 +89,31 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * @generated
 	 */
 	void setJavaModel(Model value);
+
+	/**
+	 * Returns the value of the '<em><b>Root Commit</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Root Commit</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Root Commit</em>' reference.
+	 * @see #setRootCommit(Commit)
+	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository_RootCommit()
+	 * @model
+	 * @generated
+	 */
+	Commit getRootCommit();
+
+	/**
+	 * Sets the value of the '{@link de.hub.srcrepo.gitmodel.SourceRepository#getRootCommit <em>Root Commit</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Root Commit</em>' reference.
+	 * @see #getRootCommit()
+	 * @generated
+	 */
+	void setRootCommit(Commit value);
 
 } // SourceRepository

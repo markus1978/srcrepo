@@ -13,6 +13,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootCommit" eType="#//Commit"/>
     <eGenericSuperTypes eClassifier="ecore:EClass emffrag.ecore#//IndexedMap">
       <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eTypeArguments eClassifier="#//Commit"/>
@@ -25,7 +26,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="time" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentRelations" upperBound="-1"
-        eType="#//ParentRelation" containment="true"/>
+        eType="#//ParentRelation" containment="true" eOpposite="#//ParentRelation/child"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="childRelations" upperBound="-1"
+        eType="#//ParentRelation" eOpposite="#//ParentRelation/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ref">
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedCommit" eType="#//Commit"/>
@@ -55,6 +58,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="ParentRelation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="diffs" upperBound="-1"
         eType="#//Diff" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Commit"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Commit"
+        eOpposite="#//Commit/childRelations"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="child" eType="#//Commit"
+        eOpposite="#//Commit/parentRelations"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link de.hub.srcrepo.gitmodel.Commit#getTime <em>Time</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.Commit#getMessage <em>Message</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.Commit#getParentRelations <em>Parent Relations</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.Commit#getChildRelations <em>Child Relations</em>}</li>
  * </ul>
  * </p>
  *
@@ -166,6 +167,7 @@ public interface Commit extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Parent Relations</b></em>' containment reference list.
 	 * The list contents are of type {@link de.hub.srcrepo.gitmodel.ParentRelation}.
+	 * It is bidirectional and its opposite is '{@link de.hub.srcrepo.gitmodel.ParentRelation#getChild <em>Child</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parent Relations</em>' containment reference list isn't clear,
@@ -174,9 +176,28 @@ public interface Commit extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parent Relations</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getCommit_ParentRelations()
-	 * @model containment="true"
+	 * @see de.hub.srcrepo.gitmodel.ParentRelation#getChild
+	 * @model opposite="child" containment="true"
 	 * @generated
 	 */
 	EList<ParentRelation> getParentRelations();
+
+	/**
+	 * Returns the value of the '<em><b>Child Relations</b></em>' reference list.
+	 * The list contents are of type {@link de.hub.srcrepo.gitmodel.ParentRelation}.
+	 * It is bidirectional and its opposite is '{@link de.hub.srcrepo.gitmodel.ParentRelation#getParent <em>Parent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Child Relations</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Child Relations</em>' reference list.
+	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getCommit_ChildRelations()
+	 * @see de.hub.srcrepo.gitmodel.ParentRelation#getParent
+	 * @model opposite="parent"
+	 * @generated
+	 */
+	EList<ParentRelation> getChildRelations();
 
 } // Commit

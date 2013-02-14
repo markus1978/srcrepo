@@ -201,6 +201,15 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getSourceRepository_RootCommit() {
+		return (EReference)sourceRepositoryEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getCommit() {
 		return commitEClass;
 	}
@@ -257,6 +266,15 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 */
 	public EReference getCommit_ParentRelations() {
 		return (EReference)commitEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCommit_ChildRelations() {
+		return (EReference)commitEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -381,17 +399,8 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRevCompilationUnit_Commit() {
-		return (EReference)revCompilationUnitEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getRevCompilationUnit_Children() {
-		return (EReference)revCompilationUnitEClass.getEStructuralFeatures().get(2);
+		return (EReference)revCompilationUnitEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -419,6 +428,15 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 */
 	public EReference getParentRelation_Parent() {
 		return (EReference)parentRelationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getParentRelation_Child() {
+		return (EReference)parentRelationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -462,6 +480,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		createEReference(sourceRepositoryEClass, SOURCE_REPOSITORY__ALL_REFS);
 		createEReference(sourceRepositoryEClass, SOURCE_REPOSITORY__ALL_COMMITS);
 		createEReference(sourceRepositoryEClass, SOURCE_REPOSITORY__JAVA_MODEL);
+		createEReference(sourceRepositoryEClass, SOURCE_REPOSITORY__ROOT_COMMIT);
 
 		commitEClass = createEClass(COMMIT);
 		createEAttribute(commitEClass, COMMIT__AUTHOR);
@@ -470,6 +489,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		createEAttribute(commitEClass, COMMIT__TIME);
 		createEAttribute(commitEClass, COMMIT__MESSAGE);
 		createEReference(commitEClass, COMMIT__PARENT_RELATIONS);
+		createEReference(commitEClass, COMMIT__CHILD_RELATIONS);
 
 		refEClass = createEClass(REF);
 		createEReference(refEClass, REF__REFERENCED_COMMIT);
@@ -487,12 +507,12 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 
 		revCompilationUnitEClass = createEClass(REV_COMPILATION_UNIT);
 		createEReference(revCompilationUnitEClass, REV_COMPILATION_UNIT__PARENT);
-		createEReference(revCompilationUnitEClass, REV_COMPILATION_UNIT__COMMIT);
 		createEReference(revCompilationUnitEClass, REV_COMPILATION_UNIT__CHILDREN);
 
 		parentRelationEClass = createEClass(PARENT_RELATION);
 		createEReference(parentRelationEClass, PARENT_RELATION__DIFFS);
 		createEReference(parentRelationEClass, PARENT_RELATION__PARENT);
+		createEReference(parentRelationEClass, PARENT_RELATION__CHILD);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -544,6 +564,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		initEReference(getSourceRepository_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSourceRepository_AllCommits(), this.getCommit(), null, "allCommits", null, 0, -1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSourceRepository_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSourceRepository_RootCommit(), this.getCommit(), null, "rootCommit", null, 0, 1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commitEClass, Commit.class, "Commit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCommit_Author(), ecorePackage.getEString(), "author", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -551,7 +572,8 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		initEAttribute(getCommit_Name(), ecorePackage.getEString(), "name", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCommit_Time(), ecorePackage.getEDate(), "time", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCommit_Message(), ecorePackage.getEString(), "message", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCommit_ParentRelations(), this.getParentRelation(), null, "parentRelations", null, 0, -1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommit_ParentRelations(), this.getParentRelation(), this.getParentRelation_Child(), "parentRelations", null, 0, -1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommit_ChildRelations(), this.getParentRelation(), this.getParentRelation_Parent(), "childRelations", null, 0, -1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(refEClass, Ref.class, "Ref", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRef_ReferencedCommit(), this.getCommit(), null, "referencedCommit", null, 0, 1, Ref.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -569,12 +591,12 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 
 		initEClass(revCompilationUnitEClass, RevCompilationUnit.class, "RevCompilationUnit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRevCompilationUnit_Parent(), this.getRevCompilationUnit(), this.getRevCompilationUnit_Children(), "parent", null, 0, -1, RevCompilationUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRevCompilationUnit_Commit(), this.getCommit(), null, "commit", null, 0, 1, RevCompilationUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRevCompilationUnit_Children(), this.getRevCompilationUnit(), this.getRevCompilationUnit_Parent(), "children", null, 0, -1, RevCompilationUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parentRelationEClass, ParentRelation.class, "ParentRelation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParentRelation_Diffs(), this.getDiff(), null, "diffs", null, 0, -1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getParentRelation_Parent(), this.getCommit(), null, "parent", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getParentRelation_Parent(), this.getCommit(), this.getCommit_ChildRelations(), "parent", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getParentRelation_Child(), this.getCommit(), this.getCommit_ParentRelations(), "child", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

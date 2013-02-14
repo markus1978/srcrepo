@@ -42,18 +42,22 @@ import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.junit.Test;
 
+import de.hub.srcrepo.gitmodel.GitModelFactory;
+import de.hub.srcrepo.gitmodel.SourceRepository;
+import de.hub.srcrepo.gitmodel.util.GitModelUtil;
+import de.hub.srcrepo.gitmodel.util.GitModelUtil.Direction;
+
 public class MoDiscoTest implements IApplication {
 	
 	@Test
 	public void testImportJavaGitModel() {
 		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(URI.createURI("models/example.java.modiscogitmodel"));
-		IResourceHandler resourceHandler = new IResourceHandler() {			
-			@Override
-			public void addContents(EObject contents) {
-				resource.getContents().add(contents);
-			}
-		};
+		Resource resource = rs.createResource(URI.createURI("models/example.java.modiscogitmodel"));
+		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
+		Model javaModel = JavaFactory.eINSTANCE.createModel();
+		EList<EObject> resourceContents = resource.getContents();
+		resourceContents.add(gitModel);
+		resourceContents.add(javaModel);
 		
 		Git git = null;
 		try {
@@ -63,8 +67,8 @@ public class MoDiscoTest implements IApplication {
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
+		JGitModelImport modelImport = new JGitModelImport(git, gitModel);
 		
-		JGitModelImport modelImport = new JGitModelImport(git, resourceHandler);
 		IJavaProject javaProject = null;
 		try {
 			String path = ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toURL().getFile() + "/../01_tmp/srcrepo/clones/srcrepo.example.git/example.java";
@@ -73,14 +77,6 @@ public class MoDiscoTest implements IApplication {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
-		MoDiscoGitModelImportHandler handler = new MoDiscoGitModelImportHandler(resourceHandler, javaProject);
-		try {
-			handler.init();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-		}
-		modelImport.setJavaHandler(handler);
 		
 		try {
 			modelImport.runImport();
@@ -88,6 +84,9 @@ public class MoDiscoTest implements IApplication {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
+		
+		MoDiscoGitModelImportVisitor visitor = new MoDiscoGitModelImportVisitor(git, javaProject, javaModel);
+		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), Direction.FROM_PARENT, visitor);
 		
 		try {
 			resource.save(null);

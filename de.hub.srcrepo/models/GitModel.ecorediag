@@ -113,7 +113,7 @@
     <children xmi:type="notation:Node" xmi:id="_qYejAHXCEeKYFuf7SMCHWg" type="4009"/>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_qYct0XXCEeKYFuf7SMCHWg" fontColor="4210752" fontName="Lucida Grande" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EDataType" href="GitModel.ecore#//ChangeType"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_qYct0nXCEeKYFuf7SMCHWg" x="270" y="585"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_qYct0nXCEeKYFuf7SMCHWg" x="837" y="216"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_CoXgkXXmEeKixdT5hc7Tyw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_CoZ80HXmEeKixdT5hc7Tyw" type="4001"/>
@@ -148,7 +148,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_ZF7ycXXpEeKixdT5hc7Tyw" fontColor="4210752" fontName="Lucida Grande" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZF7ycnXpEeKixdT5hc7Tyw" x="765" y="657"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZF7ycnXpEeKixdT5hc7Tyw" x="792" y="657"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_f-EH4HXpEeKixdT5hc7Tyw" type="1001">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_f-toIHXpEeKixdT5hc7Tyw" source="Shortcut">
@@ -199,7 +199,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_KsOsgXXqEeKixdT5hc7Tyw" fontColor="4210752" fontName="Lucida Grande" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="GitModel.ecore#//ParentRelation"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_KsOsgnXqEeKixdT5hc7Tyw" x="585" y="396"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_KsOsgnXqEeKixdT5hc7Tyw" x="612" y="396"/>
   </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_c4jQonW2EeKR-9B7069x7A"/>
   <element xmi:type="ecore:EPackage" href="GitModel.ecore#/"/>
@@ -219,7 +219,7 @@
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_ibffUHW3EeKR-9B7069x7A" type="3002" source="_dz760HW2EeKR-9B7069x7A" target="_j_HDoHW2EeKR-9B7069x7A">
     <children xmi:type="notation:Node" xmi:id="_ibgGYXW3EeKR-9B7069x7A" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_ibgGYnW3EeKR-9B7069x7A" x="-1" y="-39"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_ibgGYnW3EeKR-9B7069x7A" x="-19" y="33"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_ibgGY3W3EeKR-9B7069x7A" type="4012">
       <layoutConstraint xmi:type="notation:Location" xmi:id="_ibgGZHW3EeKR-9B7069x7A" x="-1" y="15"/>
@@ -256,8 +256,8 @@
     <styles xmi:type="notation:FontStyle" xmi:id="_1hb1cnW3EeKR-9B7069x7A" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="GitModel.ecore#//ParentRelation/parent"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_1hb1c3W3EeKR-9B7069x7A" points="[-40, -7, 118, 66]$[-154, -7, 4, 66]$[-154, -7, 4, 66]$[-158, -7, 0, 66]$[-158, -46, 0, 27]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_1hff0HW3EeKR-9B7069x7A" id="(0.4019607843137255,0.7857142857142857)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_1hff0XW3EeKR-9B7069x7A" id="(0.29411764705882354,0.7610619469026548)"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_yuaOIHa9EeKwGKXdRhl6QQ" id="(0.4019607843137255,0.7857142857142857)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_yuaOIXa9EeKwGKXdRhl6QQ" id="(0.29411764705882354,0.7610619469026548)"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_DuB3AHW4EeKR-9B7069x7A" type="3002" source="_KsOsgHXqEeKixdT5hc7Tyw" target="_6xBfwHW3EeKR-9B7069x7A">
     <children xmi:type="notation:Node" xmi:id="_DuB3BHW4EeKR-9B7069x7A" type="4011">
@@ -300,7 +300,7 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_f-aGIXXpEeKixdT5hc7Tyw" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_f-aGInXpEeKixdT5hc7Tyw" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model/compilationUnits"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f-aGI3XpEeKixdT5hc7Tyw" points="[0, 30, -690, -537]$[0, 574, -690, 7]$[616, 574, -74, 7]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f-aGI3XpEeKixdT5hc7Tyw" points="[0, 26, -693, -541]$[0, 567, -693, 0]$[643, 567, -50, 0]"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_f-ciYHXpEeKixdT5hc7Tyw" type="3002" source="_dz760HW2EeKR-9B7069x7A" target="_f-EH4HXpEeKixdT5hc7Tyw">
     <children xmi:type="notation:Node" xmi:id="_f-dwgHXpEeKixdT5hc7Tyw" type="4011">
@@ -332,22 +332,22 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_r6vVQXXpEeKixdT5hc7Tyw" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_r6vVQnXpEeKixdT5hc7Tyw" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="GitModel.ecore#//RevCompilationUnit/parent"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_r6vVQ3XpEeKixdT5hc7Tyw" points="[0, 10, 2, 15]$[0, 72, 2, 77]$[160, 72, 162, 77]$[160, 0, 162, 5]$[98, 0, 100, 5]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_m8grQHXqEeKixdT5hc7Tyw" id="(0.15384615384615385,0.7619047619047619)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_m8grQXXqEeKixdT5hc7Tyw" id="(0.13675213675213677,0.6428571428571429)"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_r6vVQ3XpEeKixdT5hc7Tyw" points="[0, 10, 2, 15]$[0, 72, 2, 77]$[160, 72, 162, 77]$[160, 0, 162, 5]$[145, -12, 147, -7]$[98, -12, 100, -7]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Ow_IEHa-EeKwGKXdRhl6QQ" id="(0.15384615384615385,0.7619047619047619)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Ow_IEXa-EeKwGKXdRhl6QQ" id="(0.13675213675213677,0.6428571428571429)"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_SeWlAHXqEeKixdT5hc7Tyw" type="3002" source="_j_HDoHW2EeKR-9B7069x7A" target="_KsOsgHXqEeKixdT5hc7Tyw">
     <children xmi:type="notation:Node" xmi:id="_SeXMEXXqEeKixdT5hc7Tyw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_SeXMEnXqEeKixdT5hc7Tyw" x="11" y="-32"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_SeXMEnXqEeKixdT5hc7Tyw" x="-4" y="-47"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_SeXME3XqEeKixdT5hc7Tyw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_SeXMFHXqEeKixdT5hc7Tyw" x="14" y="-13"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_SeXMFHXqEeKixdT5hc7Tyw" x="14" y="-27"/>
     </children>
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_SeWlAXXqEeKixdT5hc7Tyw" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_SeWlAnXqEeKixdT5hc7Tyw" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="GitModel.ecore#//Commit/parentRelations"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_SeXMEHXqEeKixdT5hc7Tyw" points="[9, 7, -86, -63]$[97, 66, 2, -4]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_SeZoUHXqEeKixdT5hc7Tyw" id="(0.9256198347107438,0.5486725663716814)"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_SeXMEHXqEeKixdT5hc7Tyw" points="[9, 2, -113, -68]$[115, 21, -7, -49]$[115, 66, -7, -4]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_SeZoUHXqEeKixdT5hc7Tyw" id="(0.9917355371900827,0.7876106194690266)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_SeZoUXXqEeKixdT5hc7Tyw" id="(0.5294117647058824,0.11904761904761904)"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_kgy2wHXqEeKixdT5hc7Tyw" type="3002" source="_oQeqAHXpEeKixdT5hc7Tyw" target="_oQeqAHXpEeKixdT5hc7Tyw">
@@ -360,8 +360,50 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_kgy2wXXqEeKixdT5hc7Tyw" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_kgy2wnXqEeKixdT5hc7Tyw" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="GitModel.ecore#//RevCompilationUnit/children"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kgy2w3XqEeKixdT5hc7Tyw" points="[100, 5, 98, 0]$[162, 5, 160, 0]$[162, 77, 160, 72]$[2, 77, 0, 72]$[2, 15, 0, 10]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kgy2w3XqEeKixdT5hc7Tyw" points="[100, -7, 98, -12]$[147, -7, 145, -12]$[162, 5, 160, 0]$[162, 77, 160, 72]$[2, 77, 0, 72]$[2, 15, 0, 10]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kg16EHXqEeKixdT5hc7Tyw" id="(0.13675213675213677,0.6428571428571429)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kg16EXXqEeKixdT5hc7Tyw" id="(0.15384615384615385,0.7619047619047619)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_oB9SgXa9EeKwGKXdRhl6QQ" type="3002" source="_j_HDoHW2EeKR-9B7069x7A" target="_KsOsgHXqEeKixdT5hc7Tyw">
+    <children xmi:type="notation:Node" xmi:id="_oB_uwHa9EeKwGKXdRhl6QQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_oB_uwXa9EeKwGKXdRhl6QQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_oCAV0Ha9EeKwGKXdRhl6QQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_oCAV0Xa9EeKwGKXdRhl6QQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_oB9Sgna9EeKwGKXdRhl6QQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_oB9Sg3a9EeKwGKXdRhl6QQ" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="GitModel.ecore#//Commit/childRelations"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_oB9ShHa9EeKwGKXdRhl6QQ" points="[0, 27, -158, -46]$[0, 66, -158, -7]$[4, 66, -154, -7]$[4, 66, -154, -7]$[118, 66, -40, -7]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_yuYY8Ha9EeKwGKXdRhl6QQ" id="(0.29411764705882354,0.7610619469026548)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_yuYY8Xa9EeKwGKXdRhl6QQ" id="(0.4019607843137255,0.7857142857142857)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_zpbE4Ha9EeKwGKXdRhl6QQ" type="3002" source="_KsOsgHXqEeKixdT5hc7Tyw" target="_j_HDoHW2EeKR-9B7069x7A">
+    <children xmi:type="notation:Node" xmi:id="_zpbr8Ha9EeKwGKXdRhl6QQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_zpbr8Xa9EeKwGKXdRhl6QQ" x="7" y="-9"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_zpbr8na9EeKwGKXdRhl6QQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_zpbr83a9EeKwGKXdRhl6QQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_zpbE4Xa9EeKwGKXdRhl6QQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_zpbE4na9EeKwGKXdRhl6QQ" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="GitModel.ecore#//ParentRelation/child"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_zpbE43a9EeKwGKXdRhl6QQ" points="[-7, -4, 115, 66]$[-7, -49, 115, 21]$[-113, -68, 9, 2]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_csNFwHa-EeKwGKXdRhl6QQ" id="(0.5294117647058824,0.11904761904761904)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_csNs0Ha-EeKwGKXdRhl6QQ" id="(0.9917355371900827,0.7876106194690266)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_FdT9QHa-EeKwGKXdRhl6QQ" type="3002" source="_dz760HW2EeKR-9B7069x7A" target="_j_HDoHW2EeKR-9B7069x7A">
+    <children xmi:type="notation:Node" xmi:id="_FdVycHa-EeKwGKXdRhl6QQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_FdVycXa-EeKwGKXdRhl6QQ" x="-19" y="-40"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_FdVycna-EeKwGKXdRhl6QQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_FdVyc3a-EeKwGKXdRhl6QQ" x="-1" y="-20"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_FdUkUHa-EeKwGKXdRhl6QQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_FdUkUXa-EeKwGKXdRhl6QQ" fontColor="4210752" fontName="Lucida Grande" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="GitModel.ecore#//SourceRepository/rootCommit"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_FdUkUna-EeKwGKXdRhl6QQ" points="[2, 6, 2, -131]$[2, 137, 2, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_FdY1wHa-EeKwGKXdRhl6QQ" id="(0.8490566037735849,0.8571428571428571)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_FdY1wXa-EeKwGKXdRhl6QQ" id="(0.743801652892562,0.008849557522123894)"/>
   </edges>
 </notation:Diagram>
