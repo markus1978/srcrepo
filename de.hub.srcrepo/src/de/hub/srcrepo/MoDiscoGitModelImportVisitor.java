@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -114,7 +115,21 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 		// start with fresh bindings for each commit. These are later merged
 		// with the existing bindings from former commits.
-		javaReader.setGlobalBindings(new BindingManager(JavaFactory.eINSTANCE));
+		SrcRepoBindingManager bindings = new SrcRepoBindingManager(JavaFactory.eINSTANCE);
+		// resuse existing primitive types
+		if (javaBindings != null) {
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.INT.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.LONG.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.FLOAT.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.DOUBLE.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BOOLEAN.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.VOID.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.CHAR.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.SHORT.toString(), javaBindings, bindings);
+			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BYTE.toString(), javaBindings, bindings);
+		}
+
+		javaReader.setGlobalBindings(bindings);
 		if (javaReader.isIncremental()) {
 			javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
 		}
@@ -131,6 +146,13 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		return true;
 	}
 
+	private static void moveBinding(String name, BindingManager source, BindingManager target) {
+		NamedElement binding = source.getTarget(name);
+		if (binding != null) {
+			target.addTarget(name, binding);
+		}
+	}
+
 	@Override
 	public void onCompleteCommit(Commit commit) {
 		// merge bindings and then resolve all references (indirectly via
@@ -139,7 +161,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		if (javaBindings == null) {
 			javaBindings = commitBindings;
 		} else {
-			javaBindings.addBindings(commitBindings);
+			((SrcRepoBindingManager)javaBindings).addBindings((SrcRepoBindingManager)commitBindings);
 			javaReader.setGlobalBindings(javaBindings);
 		}
 		javaReader.terminate(new NullProgressMonitor());
@@ -209,8 +231,12 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				try {
 					IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(projectFile.getAbsolutePath())); 
 				    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
-				    project.create(description, null);
-				    project.open(null);
+				    if (!project.exists()) {
+				    	project.create(description, null);
+				    }
+				    if (!project.isOpen()) {
+				    	project.open(null);
+				    }
 	
 				    IJavaProject javaProject = JavaCore.create(project);
 				    if (!javaProject.isOpen()) {

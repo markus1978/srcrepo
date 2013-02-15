@@ -1,0 +1,10 @@
+# changes to existing plugins
+
+1. add de.hub.srcrepo to x-friends of org.eclipse.gmt.modisco.java.internal.util export in org.eclipse.gmt.modisco.java's Manifest
+
+# run configuration
+
+## plugins
+
+1. all required plug-ins of course
+1. org.eclipse.equinox.ds should be in the plugin-set or you get weird "Provisioning agent not found" errors
