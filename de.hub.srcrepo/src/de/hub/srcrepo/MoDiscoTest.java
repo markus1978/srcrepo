@@ -51,6 +51,7 @@ public class MoDiscoTest implements IApplication {
 	
 	@Test
 	public void testImportJavaGitModel() {
+		// create a mode resource and root elments for the git and java models
 		ResourceSet rs = new ResourceSetImpl();
 		Resource resource = rs.createResource(URI.createURI("models/example.java.modiscogitmodel"));
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
@@ -59,6 +60,7 @@ public class MoDiscoTest implements IApplication {
 		resourceContents.add(gitModel);
 		resourceContents.add(javaModel);
 		
+		// create git and clone repository
 		Git git = null;
 		try {
 			git = JGitUtil.clone("https://github.com/markus1978/srcrepo.example.git", "../../../01_tmp/srcrepo/clones/srcrepo.example.git");
@@ -67,17 +69,8 @@ public class MoDiscoTest implements IApplication {
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
+		// import the git commit structure
 		JGitModelImport modelImport = new JGitModelImport(git, gitModel);
-		
-		IJavaProject javaProject = null;
-		try {
-			String path = ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toURL().getFile() + "/../01_tmp/srcrepo/clones/srcrepo.example.git/example.java";
-			javaProject = importExistingJavaProject(path);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-		}
-		
 		try {
 			modelImport.runImport();
 		} catch (Exception e) {
@@ -85,9 +78,11 @@ public class MoDiscoTest implements IApplication {
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
-		MoDiscoGitModelImportVisitor visitor = new MoDiscoGitModelImportVisitor(git, javaProject, javaModel);
+		// visit the git commits and import java on the fly		
+		MoDiscoGitModelImportVisitor visitor = new MoDiscoGitModelImportVisitor(git, javaModel);
 		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), Direction.FROM_PARENT, visitor);
 		
+		// save the resulting model in its resource
 		try {
 			resource.save(null);
 		} catch (IOException e) {

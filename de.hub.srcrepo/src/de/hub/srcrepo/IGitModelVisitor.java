@@ -5,7 +5,7 @@ import de.hub.srcrepo.gitmodel.Diff;
 
 public interface IGitModelVisitor {
 	
-	public void onStartCommit(Commit commit);
+	public boolean onStartCommit(Commit commit);
 	
 	public void onCompleteCommit(Commit commit);
 

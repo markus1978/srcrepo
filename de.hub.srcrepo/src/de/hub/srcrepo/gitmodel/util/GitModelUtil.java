@@ -20,36 +20,37 @@ public class GitModelUtil {
 		while (!commitsToVisist.isEmpty()) {
 			Commit nextCommit = commitsToVisist.poll();
 			
-			visitor.onStartCommit(nextCommit);
-			for (ParentRelation parentRelation: nextCommit.getParentRelations()) {
-				for (Diff diff : parentRelation.getDiffs()) {
-					if (diff.getType() == ChangeType.ADD) {
-						visitor.onAddedFile(diff);
-					} else if (diff.getType() == ChangeType.COPY) {
-						visitor.onCopiedFile(diff);
-					} else if (diff.getType() == ChangeType.DELETE) {
-						visitor.onDeletedFile(diff);
-					} else if (diff.getType() == ChangeType.MODIFY) {
-						visitor.onModifiedFile(diff);
-					} else if (diff.getType() == ChangeType.RENAME) {
-						visitor.onRenamedFile(diff);
-					}
-				}
-			}
-			visitor.onCompleteCommit(nextCommit);
-			
-			if (direction == Direction.TO_PARENT) {
+			if (visitor.onStartCommit(nextCommit)) {
 				for (ParentRelation parentRelation: nextCommit.getParentRelations()) {
-					Commit parent = parentRelation.getParent();
-					if (parent != null) {
-						commitsToVisist.add(parent);
+					for (Diff diff : parentRelation.getDiffs()) {
+						if (diff.getType() == ChangeType.ADD) {
+							visitor.onAddedFile(diff);
+						} else if (diff.getType() == ChangeType.COPY) {
+							visitor.onCopiedFile(diff);
+						} else if (diff.getType() == ChangeType.DELETE) {
+							visitor.onDeletedFile(diff);
+						} else if (diff.getType() == ChangeType.MODIFY) {
+							visitor.onModifiedFile(diff);
+						} else if (diff.getType() == ChangeType.RENAME) {
+							visitor.onRenamedFile(diff);
+						}
 					}
 				}
-			} else { // if (direction == Direction.FROM_PARENT) {
-				for (ParentRelation parentRelation: nextCommit.getChildRelations()) {
-					Commit child = parentRelation.getChild();
-					if (child != null) {
-						commitsToVisist.add(child);
+				visitor.onCompleteCommit(nextCommit);
+				
+				if (direction == Direction.TO_PARENT) {
+					for (ParentRelation parentRelation: nextCommit.getParentRelations()) {
+						Commit parent = parentRelation.getParent();
+						if (parent != null) {
+							commitsToVisist.add(parent);
+						}
+					}
+				} else { // if (direction == Direction.FROM_PARENT) {
+					for (ParentRelation parentRelation: nextCommit.getChildRelations()) {
+						Commit child = parentRelation.getChild();
+						if (child != null) {
+							commitsToVisist.add(child);
+						}
 					}
 				}
 			}
