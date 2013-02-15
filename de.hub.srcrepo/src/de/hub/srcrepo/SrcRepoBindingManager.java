@@ -139,7 +139,15 @@ public class SrcRepoBindingManager extends BindingManager {
 		this.targets.putAll(aBindingManager.targets);
 		this.pendings.addAll(aBindingManager.pendings);
 	}
-
+	
+	public void addPackageBindings(final SrcRepoBindingManager aBindingManager) {
+		for (String binding: aBindingManager.targets.keySet()) {
+			NamedElement target = aBindingManager.targets.get(binding);
+			if (target instanceof Package) {
+				addTarget(binding, target);
+			}
+		}
+	}
 	// HUB end
 
 	/**
@@ -630,6 +638,7 @@ public class SrcRepoBindingManager extends BindingManager {
 	}
 
 	// create iterately a hierarchy of packages
+	// HUB changes throughout the whole method -> this is to create each package only once
 	private Package createProxiesPackageHierarchy(final PackageBinding binding, final Model model1) {
 		Package result = this.factory.createPackage();
 		result.setProxy(true);

@@ -53,7 +53,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	// state
 	private JavaReader javaReader;
-	private BindingManager javaBindings;
+	private SrcRepoBindingManager javaBindings;
 	private CompilationUnit lastCU;
 
 	public MoDiscoGitModelImportVisitor(Git git, Model targetModel) {
@@ -116,8 +116,9 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		// start with fresh bindings for each commit. These are later merged
 		// with the existing bindings from former commits.
 		SrcRepoBindingManager bindings = new SrcRepoBindingManager(JavaFactory.eINSTANCE);
-		// resuse existing primitive types
+		// resuse existing primitive types and packages
 		if (javaBindings != null) {
+			bindings.addPackageBindings(javaBindings);
 			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.INT.toString(), javaBindings, bindings);
 			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.LONG.toString(), javaBindings, bindings);
 			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.FLOAT.toString(), javaBindings, bindings);
@@ -157,11 +158,11 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	public void onCompleteCommit(Commit commit) {
 		// merge bindings and then resolve all references (indirectly via
 		// #terminate)
-		BindingManager commitBindings = javaReader.getGlobalBindings();
+		SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
 		if (javaBindings == null) {
 			javaBindings = commitBindings;
 		} else {
-			((SrcRepoBindingManager)javaBindings).addBindings((SrcRepoBindingManager)commitBindings);
+			javaBindings.addBindings(commitBindings);
 			javaReader.setGlobalBindings(javaBindings);
 		}
 		javaReader.terminate(new NullProgressMonitor());
