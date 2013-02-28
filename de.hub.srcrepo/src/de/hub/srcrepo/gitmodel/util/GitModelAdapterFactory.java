@@ -6,21 +6,20 @@
  */
 package de.hub.srcrepo.gitmodel.util;
 
+import de.hub.emffrag.model.emffrag.IndexedMap;
+
+import de.hub.srcrepo.gitmodel.*;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
+
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
+
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.NamedElement;
-import de.hub.srcrepo.emffrag.IndexedMap;
-import de.hub.srcrepo.gitmodel.*;
-import de.hub.srcrepo.gitmodel.Commit;
-import de.hub.srcrepo.gitmodel.Diff;
-import de.hub.srcrepo.gitmodel.GitModelPackage;
-import de.hub.srcrepo.gitmodel.Ref;
-import de.hub.srcrepo.gitmodel.SourceRepository;
 
 /**
  * <!-- begin-user-doc -->
@@ -241,13 +240,13 @@ public class GitModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.emffrag.IndexedMap <em>Indexed Map</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.hub.emffrag.model.emffrag.IndexedMap <em>Indexed Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.hub.srcrepo.emffrag.IndexedMap
+	 * @see de.hub.emffrag.model.emffrag.IndexedMap
 	 * @generated
 	 */
 	public Adapter createIndexedMapAdapter() {

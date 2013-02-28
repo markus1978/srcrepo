@@ -16,8 +16,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
-import de.hub.srcrepo.emffrag.EmfFragPackage;
-import de.hub.srcrepo.emffrag.impl.EmfFragPackageImpl;
+import de.hub.emffrag.model.emffrag.EmfFragPackage;
 import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.GitModelFactory;
@@ -127,7 +126,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
-	 * @generated
+	 * @generated NOT
 	 */
 	public static GitModelPackage init() {
 		if (isInited) return (GitModelPackage)EPackage.Registry.INSTANCE.getEPackage(GitModelPackage.eNS_URI);
@@ -138,18 +137,14 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		isInited = true;
 
 		// Initialize simple dependencies
+		EmfFragPackage.eINSTANCE.eClass();
 		JavaPackage.eINSTANCE.eClass();
-
-		// Obtain or create and register interdependencies
-		EmfFragPackageImpl theEmfFragPackage = (EmfFragPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(EmfFragPackage.eNS_URI) instanceof EmfFragPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(EmfFragPackage.eNS_URI) : EmfFragPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theGitModelPackage.createPackageContents();
-		theEmfFragPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theGitModelPackage.initializePackageContents();
-		theEmfFragPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theGitModelPackage.freeze();
@@ -561,8 +556,8 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(sourceRepositoryEClass, SourceRepository.class, "SourceRepository", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSourceRepository_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSourceRepository_AllCommits(), this.getCommit(), null, "allCommits", null, 0, -1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSourceRepository_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSourceRepository_AllCommits(), this.getCommit(), null, "allCommits", null, 0, -1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSourceRepository_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSourceRepository_RootCommit(), this.getCommit(), null, "rootCommit", null, 0, 1, SourceRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -572,7 +567,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		initEAttribute(getCommit_Name(), ecorePackage.getEString(), "name", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCommit_Time(), ecorePackage.getEDate(), "time", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCommit_Message(), ecorePackage.getEString(), "message", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCommit_ParentRelations(), this.getParentRelation(), this.getParentRelation_Child(), "parentRelations", null, 0, -1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommit_ParentRelations(), this.getParentRelation(), this.getParentRelation_Child(), "parentRelations", null, 0, -1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCommit_ChildRelations(), this.getParentRelation(), this.getParentRelation_Parent(), "childRelations", null, 0, -1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(refEClass, Ref.class, "Ref", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -594,9 +589,9 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		initEReference(getRevCompilationUnit_Children(), this.getRevCompilationUnit(), this.getRevCompilationUnit_Parent(), "children", null, 0, -1, RevCompilationUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parentRelationEClass, ParentRelation.class, "ParentRelation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getParentRelation_Diffs(), this.getDiff(), null, "diffs", null, 0, -1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getParentRelation_Diffs(), this.getDiff(), null, "diffs", null, 0, -1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getParentRelation_Parent(), this.getCommit(), this.getCommit_ChildRelations(), "parent", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getParentRelation_Child(), this.getCommit(), this.getCommit_ParentRelations(), "child", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getParentRelation_Child(), this.getCommit(), this.getCommit_ParentRelations(), "child", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -621,7 +616,8 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		  (getSourceRepository_AllCommits(), 
 		   source, 
 		   new String[] {
-			 "Fragmentation", "true"
+			 "Fragments", "true",
+			 "Indexes", "true"
 		   });		
 		addAnnotation
 		  (getJavaDiff_CompilationUnit(), 

@@ -7,9 +7,9 @@
 package de.hub.srcrepo.gitmodel;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.gmt.modisco.java.Model;
-import de.hub.srcrepo.emffrag.IndexedMap;
+
+import de.hub.emffrag.model.emffrag.IndexedMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +27,7 @@ import de.hub.srcrepo.emffrag.IndexedMap;
  * </p>
  *
  * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository()
- * @model superTypes="de.hub.srcrepo.emffrag.IndexedMap<org.eclipse.emf.ecore.EString, de.hub.srcrepo.gitmodel.Commit>"
+ * @model superTypes="de.hub.emffrag.model.emffrag.IndexedMap<org.eclipse.emf.ecore.EString, de.hub.srcrepo.gitmodel.Commit>"
  * @generated
  */
 public interface SourceRepository extends IndexedMap<String, Commit> {
@@ -42,7 +42,7 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>All Refs</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository_AllRefs()
-	 * @model containment="true"
+	 * @model containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	EList<Ref> getAllRefs();
@@ -58,8 +58,8 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>All Commits</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository_AllCommits()
-	 * @model containment="true"
-	 *        annotation="de.hub.emffrag Fragmentation='true'"
+	 * @model containment="true" resolveProxies="true"
+	 *        annotation="de.hub.emffrag Fragments='true' Indexes='true'"
 	 * @generated
 	 */
 	EList<Commit> getAllCommits();

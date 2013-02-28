@@ -27,7 +27,7 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.junit.Test;
 
-import de.hub.srcrepo.emffrag.EmfFragPackage;
+import de.hub.emffrag.model.emffrag.EmfFragPackage;
 import de.hub.srcrepo.gitmodel.GitModelFactory;
 import de.hub.srcrepo.gitmodel.GitModelPackage;
 import de.hub.srcrepo.gitmodel.SourceRepository;

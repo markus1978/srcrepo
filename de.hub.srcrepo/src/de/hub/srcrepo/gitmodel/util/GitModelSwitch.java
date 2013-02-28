@@ -6,20 +6,18 @@
  */
 package de.hub.srcrepo.gitmodel.util;
 
+import de.hub.emffrag.model.emffrag.IndexedMap;
+
+import de.hub.srcrepo.gitmodel.*;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.util.Switch;
 
 import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.NamedElement;
-import de.hub.srcrepo.emffrag.IndexedMap;
-import de.hub.srcrepo.gitmodel.*;
-import de.hub.srcrepo.gitmodel.Commit;
-import de.hub.srcrepo.gitmodel.Diff;
-import de.hub.srcrepo.gitmodel.GitModelPackage;
-import de.hub.srcrepo.gitmodel.Ref;
-import de.hub.srcrepo.gitmodel.SourceRepository;
 
 /**
  * <!-- begin-user-doc -->

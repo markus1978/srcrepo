@@ -7,7 +7,6 @@
 package de.hub.srcrepo.gitmodel;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 
 /**

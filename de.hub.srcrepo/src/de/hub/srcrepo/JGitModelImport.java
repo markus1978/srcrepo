@@ -58,8 +58,8 @@ public class JGitModelImport {
 		if (commitModel == null) {
 			commitModel = GitModelFactory.eINSTANCE.createCommit();
 			commitModel.setName(commit.getName());
-			targetModel.put(commit.getName(), commitModel);
-			targetModel.getAllCommits().add(commitModel); // TODO this is only for the no frag model
+			targetModel.getAllCommits().add(commitModel);
+			targetModel.put(commit.getName(), commitModel);			
 			commitsToImportParentsFrom.add(commit);
 		}
 		return commitModel;
@@ -95,8 +95,8 @@ public class JGitModelImport {
 
 	private void createParentRelation(Commit commitModel, Commit parentModel, List<DiffEntry> diffs) {
 		ParentRelation parentRelationModel = GitModelFactory.eINSTANCE.createParentRelation();
-		parentRelationModel.setParent(parentModel);
 		commitModel.getParentRelations().add(parentRelationModel);
+		parentRelationModel.setParent(parentModel);		
 		for (DiffEntry diffEntry : diffs) {
 			Diff diffModel = null;
 			String path = diffEntry.getNewPath();

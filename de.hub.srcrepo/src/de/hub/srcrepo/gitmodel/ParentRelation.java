@@ -7,7 +7,6 @@
 package de.hub.srcrepo.gitmodel;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -40,7 +39,7 @@ public interface ParentRelation extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Diffs</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getParentRelation_Diffs()
-	 * @model containment="true"
+	 * @model containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	EList<Diff> getDiffs();

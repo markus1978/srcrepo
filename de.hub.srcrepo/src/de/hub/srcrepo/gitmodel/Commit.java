@@ -177,7 +177,7 @@ public interface Commit extends EObject {
 	 * @return the value of the '<em>Parent Relations</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getCommit_ParentRelations()
 	 * @see de.hub.srcrepo.gitmodel.ParentRelation#getChild
-	 * @model opposite="child" containment="true"
+	 * @model opposite="child" containment="true" resolveProxies="true"
 	 * @generated
 	 */
 	EList<ParentRelation> getParentRelations();

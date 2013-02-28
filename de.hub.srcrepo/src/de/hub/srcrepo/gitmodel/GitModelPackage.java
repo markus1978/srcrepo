@@ -11,9 +11,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
-import de.hub.srcrepo.emffrag.EmfFragPackage;
+
+import de.hub.emffrag.model.emffrag.EmfFragPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -90,6 +90,24 @@ public interface GitModelPackage extends EPackage {
 	 * @ordered
 	 */
 	int SOURCE_REPOSITORY__LAST_KEY = EmfFragPackage.INDEXED_MAP__LAST_KEY;
+
+	/**
+	 * The feature id for the '<em><b>Prefix</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_REPOSITORY__PREFIX = EmfFragPackage.INDEXED_MAP__PREFIX;
+
+	/**
+	 * The feature id for the '<em><b>Keytype</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_REPOSITORY__KEYTYPE = EmfFragPackage.INDEXED_MAP__KEYTYPE;
 
 	/**
 	 * The feature id for the '<em><b>All Refs</b></em>' containment reference list.
@@ -565,6 +583,7 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 */
 	int CHANGE_TYPE = 7;
+
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.SourceRepository <em>Source Repository</em>}'.

@@ -9,12 +9,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="allCommits" upperBound="-1"
         eType="#//Commit" containment="true">
       <eAnnotations source="de.hub.emffrag">
-        <details key="Fragmentation" value="true"/>
+        <details key="Fragments" value="true"/>
+        <details key="Indexes" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootCommit" eType="#//Commit"/>
-    <eGenericSuperTypes eClassifier="ecore:EClass emffrag.ecore#//IndexedMap">
+    <eGenericSuperTypes eClassifier="ecore:EClass ../../de.hub.emffrag/metamodels/emffrag.ecore#//IndexedMap">
       <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eTypeArguments eClassifier="#//Commit"/>
     </eGenericSuperTypes>

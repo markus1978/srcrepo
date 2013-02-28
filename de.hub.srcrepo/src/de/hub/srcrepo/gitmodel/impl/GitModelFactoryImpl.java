@@ -6,7 +6,6 @@
  */
 package de.hub.srcrepo.gitmodel.impl;
 
-import de.hub.srcrepo.gitmodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -19,7 +18,10 @@ import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.GitModelFactory;
 import de.hub.srcrepo.gitmodel.GitModelPackage;
+import de.hub.srcrepo.gitmodel.JavaDiff;
+import de.hub.srcrepo.gitmodel.ParentRelation;
 import de.hub.srcrepo.gitmodel.Ref;
+import de.hub.srcrepo.gitmodel.RevCompilationUnit;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 
 /**

@@ -18,6 +18,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -25,6 +27,9 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
+import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.impl.JavaFactoryImpl;
+import org.eclipse.gmt.modisco.java.emffrag.impl.JavaPackageImpl;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -42,7 +47,11 @@ import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.junit.Test;
 
+import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.fragmentation.FragmentedModel;
+import de.hub.emffrag.fragmentation.ReflectiveMetaModelRegistry;
 import de.hub.srcrepo.gitmodel.GitModelFactory;
+import de.hub.srcrepo.gitmodel.GitModelPackage;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.util.GitModelUtil;
 import de.hub.srcrepo.gitmodel.util.GitModelUtil.Direction;
@@ -50,12 +59,27 @@ import de.hub.srcrepo.gitmodel.util.GitModelUtil.Direction;
 public class MoDiscoTest implements IApplication {
 	
 	@Test
-	public void testImportJavaGitModel() {
+	public void testImportJavaGitModel() throws Exception {		
+		// load dependencies
+		EmfFragActivator.class.getName();
+		
 		// create a mode resource and root elments for the git and java models
+		JavaPackage originalJavaPackage = JavaPackage.eINSTANCE;
+		JavaPackage javaPackage = JavaPackageImpl.init();	
+		JavaFactory javaFactory = JavaFactoryImpl.init();
+		((EPackageImpl)javaPackage).setEFactoryInstance(javaFactory);
+		EPackage.Registry.INSTANCE.put(JavaPackage.eINSTANCE.getNsURI(), javaPackage);
+		ReflectiveMetaModelRegistry.instance.registerUserMetaModel(GitModelPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(JavaPackage.eINSTANCE.getNsURI(), originalJavaPackage);
+		
+		Assert.assertTrue("Wrong instance.", javaPackage instanceof JavaPackageImpl);
+		Assert.assertTrue("Wrong instance.", javaFactory instanceof JavaFactoryImpl);
+		
 		ResourceSet rs = new ResourceSetImpl();
-		Resource resource = rs.createResource(URI.createURI("models/example.java.modiscogitmodel"));
+		Resource resource = rs.createResource(URI.createURI("memory://localhost/example.java.modiscogitmodel"));
+		Assert.assertTrue("Resource is not a fragmented model", resource instanceof FragmentedModel);
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
-		Model javaModel = JavaFactory.eINSTANCE.createModel();
+		Model javaModel = javaFactory.createModel();
 		EList<EObject> resourceContents = resource.getContents();
 		resourceContents.add(gitModel);
 		resourceContents.add(javaModel);
@@ -89,6 +113,8 @@ public class MoDiscoTest implements IApplication {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
+		
+		System.out.println(((FragmentedModel)resource).getDataStore());
 	}
 	
 	@Test
