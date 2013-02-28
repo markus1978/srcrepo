@@ -430,7 +430,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="unresolvedItems" ordered="false"
         upperBound="-1" eType="#//UnresolvedItem" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnits" ordered="false"
-        upperBound="-1" eType="#//CompilationUnit" containment="true"/>
+        upperBound="-1" eType="#//CompilationUnit" containment="true">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="indexes" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classFiles" ordered="false"
         upperBound="-1" eType="#//ClassFile" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="archives" ordered="false"
@@ -478,11 +482,19 @@
   <eClassifiers xsi:type="ecore:EClass" name="NullLiteral" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElements" ordered="false"
-        upperBound="-1" eType="#//AbstractTypeDeclaration" containment="true" eOpposite="#//AbstractTypeDeclaration/package"/>
+        upperBound="-1" eType="#//AbstractTypeDeclaration" containment="true" eOpposite="#//AbstractTypeDeclaration/package">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="indexes" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" ordered="false"
         eType="#//Model" eOpposite="#//Model/ownedElements"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedPackages" ordered="false"
-        upperBound="-1" eType="#//Package" containment="true" eOpposite="#//Package/package"/>
+        upperBound="-1" eType="#//Package" containment="true" eOpposite="#//Package/package">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="fragments" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="package" ordered="false"
         eType="#//Package" eOpposite="#//Package/ownedPackages"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="usagesInPackageAccess"
@@ -621,7 +633,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="usagesInTypeAccess" ordered="false"
-        upperBound="-1" eType="#//TypeAccess" eOpposite="#//TypeAccess/type"/>
+        upperBound="-1" eType="#//TypeAccess" eOpposite="#//TypeAccess/type">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="indexes" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TypeAccess" eSuperTypes="#//Expression #//NamespaceAccess">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1"

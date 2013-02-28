@@ -5316,6 +5316,44 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// de.hub.emffrag
+		createDeAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>de.hub.emffrag</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createDeAnnotations() {
+		String source = "de.hub.emffrag";		
+		addAnnotation
+		  (getModel_CompilationUnits(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
+		  (getPackage_OwnedElements(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
+		  (getPackage_OwnedPackages(), 
+		   source, 
+		   new String[] {
+			 "fragments", "true"
+		   });		
+		addAnnotation
+		  (getType_UsagesInTypeAccess(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });
 	}
 
 } //JavaPackageImpl

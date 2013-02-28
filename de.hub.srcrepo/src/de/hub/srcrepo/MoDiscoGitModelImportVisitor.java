@@ -36,6 +36,10 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManag
 import org.eclipse.modisco.kdm.source.extension.discovery.AbstractRegionDiscoverer2;
 import org.eclipse.modisco.kdm.source.extension.discovery.SourceVisitListener;
 
+import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.EmfFragActivator.ExtrinsicIdBehaviour;
+import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
+import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.JavaDiff;
@@ -59,6 +63,11 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	public MoDiscoGitModelImportVisitor(Git git, Model targetModel) {
 		super();
+		
+		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
+		EmfFragActivator.instance.extrinsicIdBehaviour = ExtrinsicIdBehaviour.defaultModel;
+		EmfFragActivator.instance.defaultModelForExtrinsicIdBehavior = (FragmentedModel)targetModel.eResource();
+		
 		this.javaModel = targetModel;
 		this.git = git;
 		this.javaProjectStructure = new JavaProjectStructure(new Path(git.getRepository().getWorkTree().getAbsolutePath()));

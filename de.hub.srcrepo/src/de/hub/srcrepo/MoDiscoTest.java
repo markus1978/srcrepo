@@ -76,13 +76,11 @@ public class MoDiscoTest implements IApplication {
 		Assert.assertTrue("Wrong instance.", javaFactory instanceof JavaFactoryImpl);
 		
 		ResourceSet rs = new ResourceSetImpl();
-		Resource resource = rs.createResource(URI.createURI("memory://localhost/example.java.modiscogitmodel"));
-		Assert.assertTrue("Resource is not a fragmented model", resource instanceof FragmentedModel);
+		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("memory://localhost/example.java.modiscogitmodel"));
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
 		Model javaModel = javaFactory.createModel();
-		EList<EObject> resourceContents = resource.getContents();
-		resourceContents.add(gitModel);
-		resourceContents.add(javaModel);
+		model.root().getContents().add(gitModel);
+		model.root().getContents().add(javaModel);
 		
 		// create git and clone repository
 		Git git = null;
@@ -107,14 +105,9 @@ public class MoDiscoTest implements IApplication {
 		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), Direction.FROM_PARENT, visitor);
 		
 		// save the resulting model in its resource
-		try {
-			resource.save(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-		}
+		model.save(null);
 		
-		System.out.println(((FragmentedModel)resource).getDataStore());
+		System.out.println(model.getDataStore());
 	}
 	
 	@Test
