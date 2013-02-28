@@ -14,9 +14,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="typeParameters" upperBound="-1"
         eType="#//TypeParameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="usagesInDocComments" ordered="false"
-        upperBound="-1" eType="#//MethodRef" eOpposite="#//MethodRef/method"/>
+        upperBound="-1" eType="#//MethodRef" eOpposite="#//MethodRef/method">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="indexes" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="usages" ordered="false"
-        upperBound="-1" eType="#//AbstractMethodInvocation" eOpposite="#//AbstractMethodInvocation/method"/>
+        upperBound="-1" eType="#//AbstractMethodInvocation" eOpposite="#//AbstractMethodInvocation/method">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="indexes" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractMethodInvocation" abstract="true"
       eSuperTypes="#//ASTNode">

@@ -50,6 +50,7 @@ import org.junit.Test;
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.ReflectiveMetaModelRegistry;
+import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.srcrepo.gitmodel.GitModelFactory;
 import de.hub.srcrepo.gitmodel.GitModelPackage;
 import de.hub.srcrepo.gitmodel.SourceRepository;
@@ -62,6 +63,10 @@ public class MoDiscoTest implements IApplication {
 	public void testImportJavaGitModel() throws Exception {		
 		// load dependencies
 		EmfFragActivator.class.getName();
+		EmfFragMongoDBActivator.class.getName();
+		
+		EmfFragActivator.instance.useBinaryFragments = true;
+		
 		
 		// create a mode resource and root elments for the git and java models
 		JavaPackage originalJavaPackage = JavaPackage.eINSTANCE;
@@ -76,7 +81,10 @@ public class MoDiscoTest implements IApplication {
 		Assert.assertTrue("Wrong instance.", javaFactory instanceof JavaFactoryImpl);
 		
 		ResourceSet rs = new ResourceSetImpl();
-		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("memory://localhost/example.java.modiscogitmodel"));
+//		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
+//		model.delete(null); // delete in case it already exists
+		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
+		
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
 		Model javaModel = javaFactory.createModel();
 		model.root().getContents().add(gitModel);
@@ -105,9 +113,7 @@ public class MoDiscoTest implements IApplication {
 		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), Direction.FROM_PARENT, visitor);
 		
 		// save the resulting model in its resource
-		model.save(null);
-		
-		System.out.println(model.getDataStore());
+		model.save(null);		
 	}
 	
 	@Test

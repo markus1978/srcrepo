@@ -5331,6 +5331,18 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
 	protected void createDeAnnotations() {
 		String source = "de.hub.emffrag";		
 		addAnnotation
+		  (getAbstractMethodDeclaration_UsagesInDocComments(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
+		  (getAbstractMethodDeclaration_Usages(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
 		  (getModel_CompilationUnits(), 
 		   source, 
 		   new String[] {
