@@ -616,8 +616,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		  (getSourceRepository_AllCommits(), 
 		   source, 
 		   new String[] {
-			 "Fragments", "true",
-			 "Indexes", "true"
+			 "indexes", "true"
 		   });		
 		addAnnotation
 		  (getJavaDiff_CompilationUnit(), 

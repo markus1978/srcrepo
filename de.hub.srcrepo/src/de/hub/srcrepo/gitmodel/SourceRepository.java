@@ -59,7 +59,7 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * @return the value of the '<em>All Commits</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository_AllCommits()
 	 * @model containment="true" resolveProxies="true"
-	 *        annotation="de.hub.emffrag Fragments='true' Indexes='true'"
+	 *        annotation="de.hub.emffrag indexes='true'"
 	 * @generated
 	 */
 	EList<Commit> getAllCommits();
