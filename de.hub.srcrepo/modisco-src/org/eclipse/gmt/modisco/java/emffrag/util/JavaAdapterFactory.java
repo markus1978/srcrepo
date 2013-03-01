@@ -11,14 +11,14 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.*;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.eclipse.gmt.modisco.java.emffrag.JavaPackage
+ * @see org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
  * @generated
  */
 public class JavaAdapterFactory extends AdapterFactoryImpl {

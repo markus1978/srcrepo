@@ -14,4 +14,15 @@
       </application>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://gitmodel/1.0"
+            class="de.hub.srcrepo.gitmodel.GitModelPackage"
+            genModel="models/GitModel.genmodel"/>
+      <package
+            class="org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage"
+            genModel="models/JavaModel.genmodel"
+            uri="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java/emffrag">
+      </package>
+   </extension>
 </plugin>

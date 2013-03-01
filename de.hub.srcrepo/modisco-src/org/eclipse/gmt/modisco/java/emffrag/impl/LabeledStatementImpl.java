@@ -12,7 +12,7 @@ import org.eclipse.gmt.modisco.java.BreakStatement;
 import org.eclipse.gmt.modisco.java.ContinueStatement;
 import org.eclipse.gmt.modisco.java.LabeledStatement;
 import org.eclipse.gmt.modisco.java.Statement;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->

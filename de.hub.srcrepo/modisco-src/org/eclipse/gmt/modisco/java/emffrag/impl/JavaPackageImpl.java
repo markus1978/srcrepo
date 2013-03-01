@@ -13,8 +13,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.gmt.modisco.java.*;
-import org.eclipse.gmt.modisco.java.emf.JavaFactory;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -958,7 +958,7 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see org.eclipse.gmt.modisco.java.emffrag.JavaPackage#eNS_URI
+	 * @see org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */

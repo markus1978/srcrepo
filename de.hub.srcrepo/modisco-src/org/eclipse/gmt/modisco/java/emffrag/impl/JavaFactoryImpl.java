@@ -9,10 +9,12 @@ package org.eclipse.gmt.modisco.java.emffrag.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.gmt.modisco.java.*;
-import org.eclipse.gmt.modisco.java.emf.JavaFactory;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,19 +24,23 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage;
  */
 public class JavaFactoryImpl extends EFactoryImpl implements JavaFactory {
 	
-	private static JavaFactory theJavaFactory;
-	
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public static JavaFactory init() {
-		if (theJavaFactory == null) {
-			theJavaFactory = new JavaFactoryImpl();
+		try {
+			JavaFactory theJavaFactory = (JavaFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/MoDisco/Java/0.2.incubation/java/emffrag"); 
+			if (theJavaFactory != null) {
+				return theJavaFactory;
+			}
 		}
-		return theJavaFactory;
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new JavaFactoryImpl();
 	}
 
 	/**

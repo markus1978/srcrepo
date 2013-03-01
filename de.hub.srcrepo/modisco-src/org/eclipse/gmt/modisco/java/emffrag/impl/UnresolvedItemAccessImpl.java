@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.UnresolvedItem;
 import org.eclipse.gmt.modisco.java.UnresolvedItemAccess;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->

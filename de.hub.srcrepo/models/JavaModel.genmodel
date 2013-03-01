@@ -7,7 +7,7 @@
     containmentProxies="true" complianceLevel="6.0" copyrightFields="false">
   <foreignModel>../../org.eclipse.gmt.modisco.java/model/java.ecore</foreignModel>
   <genPackages prefix="Java" basePackage="org.eclipse.gmt.modisco" disposableProviderFactory="true"
-      metaDataPackageSuffix="emffrag" classPackageSuffix="emffrag.impl" utilityPackageSuffix="emffrag.util"
+      metaDataPackageSuffix="emffrag.metadata" classPackageSuffix="emffrag.impl" utilityPackageSuffix="emffrag.util"
       providerPackageSuffix="emffrag.provider" presentationPackageSuffix="emffrag.presentation"
       testsPackageSuffix="emffrag.tests" literalsInterface="false" ecorePackage="java.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="java.ecore#//AssignmentKind">

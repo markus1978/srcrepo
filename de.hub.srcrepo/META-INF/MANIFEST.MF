@@ -8,6 +8,7 @@ Export-Package: de.hub.srcrepo,
  de.hub.srcrepo.gitmodel.impl,
  de.hub.srcrepo.gitmodel.util,
  org.eclipse.gmt.modisco.java.emffrag.impl,
+ org.eclipse.gmt.modisco.java.emffrag.metadata,
  org.eclipse.gmt.modisco.java.emffrag.util
 Require-Bundle: org.junit4;bundle-version="4.8.1",
  org.eclipse.core.runtime;bundle-version="3.7.0",

@@ -12,7 +12,7 @@ import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.ClassFile;
 import org.eclipse.gmt.modisco.java.Comment;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
 

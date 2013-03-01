@@ -34,6 +34,14 @@ class OclList[E >: Null <: AnyRef](val l: EList[E]) {
 		}
 		return result;
 	}
+	
+	def aggregate[T](seed:T, callback: (E,T)=> T): T = {
+		var result : T = seed;
+		for (val e <- l) {
+			result = callback(e,result);
+	    }
+		return result;
+	}
 
 	def join[F >: Null <: AnyRef, R](l: OclList[F], pred: (E, F) => R): EList[R] = {
 		val result = new BasicEList[R](this.l.size() * l.l.size())

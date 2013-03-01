@@ -81,7 +81,7 @@ public class JGitTest {
 	}
 
 	@Test
-	public void logTest() {
+	public void logTest() throws Exception {
 		File file = new File("example.git");
 		Git git = Git.init().setDirectory(file).call();
 		RevWalk rw = new RevWalk(git.getRepository());

@@ -18,18 +18,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.Model;
-import org.eclipse.gmt.modisco.java.emf.JavaFactory;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
-import org.eclipse.gmt.modisco.java.emffrag.impl.JavaFactoryImpl;
-import org.eclipse.gmt.modisco.java.emffrag.impl.JavaPackageImpl;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -60,33 +56,39 @@ import de.hub.srcrepo.gitmodel.util.GitModelUtil.Direction;
 public class MoDiscoTest implements IApplication {
 	
 	@Test
-	public void testImportJavaGitModel() throws Exception {		
+	public void testUseImportedJavaGitModel() throws Exception {
+		init();
+							
+		ResourceSet rs = new ResourceSetImpl();
+		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
+		
+		Assert.assertEquals(2, model.root().getContents().size());
+		
+		SourceRepository sourceRepository = (SourceRepository)model.root().getContents().get(0);
+		System.out.println("##: " + new ScalaTest().countJavaTypeDefs(sourceRepository));
+	}
+	
+	private void init() {
 		// load dependencies
 		EmfFragActivator.class.getName();
 		EmfFragMongoDBActivator.class.getName();
-		
+		// use binary fragments
 		EmfFragActivator.instance.useBinaryFragments = true;
 		
-		
-		// create a mode resource and root elments for the git and java models
-		JavaPackage originalJavaPackage = JavaPackage.eINSTANCE;
-		JavaPackage javaPackage = JavaPackageImpl.init();	
-		JavaFactory javaFactory = JavaFactoryImpl.init();
-		((EPackageImpl)javaPackage).setEFactoryInstance(javaFactory);
-		EPackage.Registry.INSTANCE.put(JavaPackage.eINSTANCE.getNsURI(), javaPackage);
+		// register the used meta-models (the right ones)		
 		ReflectiveMetaModelRegistry.instance.registerUserMetaModel(GitModelPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(JavaPackage.eINSTANCE.getNsURI(), originalJavaPackage);
-		
-		Assert.assertTrue("Wrong instance.", javaPackage instanceof JavaPackageImpl);
-		Assert.assertTrue("Wrong instance.", javaFactory instanceof JavaFactoryImpl);
+		ReflectiveMetaModelRegistry.instance.registerUserMetaModel(JavaPackage.eINSTANCE);
+	}
+	
+	@Test
+	public void testImportJavaGitModel() throws Exception {				
+		init();
 		
 		ResourceSet rs = new ResourceSetImpl();
-//		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
-//		model.delete(null); // delete in case it already exists
 		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
 		
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
-		Model javaModel = javaFactory.createModel();
+		Model javaModel = JavaFactory.eINSTANCE.createModel();
 		model.root().getContents().add(gitModel);
 		model.root().getContents().add(javaModel);
 		
@@ -307,6 +309,7 @@ public class MoDiscoTest implements IApplication {
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		System.out.println("# Start.");
+		testUseImportedJavaGitModel();
 		
 		return EXIT_OK;
 	}

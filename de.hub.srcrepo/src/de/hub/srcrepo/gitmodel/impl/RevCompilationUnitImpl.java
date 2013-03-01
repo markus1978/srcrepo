@@ -8,7 +8,7 @@ package de.hub.srcrepo.gitmodel.impl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.gmt.modisco.java.emf.impl.CompilationUnitImpl;
+import org.eclipse.gmt.modisco.java.emffrag.impl.CompilationUnitImpl;
 
 import de.hub.srcrepo.gitmodel.GitModelPackage;
 import de.hub.srcrepo.gitmodel.RevCompilationUnit;
@@ -45,16 +45,6 @@ public class RevCompilationUnitImpl extends CompilationUnitImpl implements RevCo
 	@Override
 	protected EClass eStaticClass() {
 		return GitModelPackage.Literals.REV_COMPILATION_UNIT;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 11;
 	}
 
 	/**

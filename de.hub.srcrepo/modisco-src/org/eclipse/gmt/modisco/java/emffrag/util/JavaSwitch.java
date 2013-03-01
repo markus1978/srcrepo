@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.gmt.modisco.java.*;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,7 +22,7 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.eclipse.gmt.modisco.java.emffrag.JavaPackage
+ * @see org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
  * @generated
  */
 public class JavaSwitch<T> extends Switch<T> {

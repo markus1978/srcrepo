@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.util.FileUtils;
 
 public class JGitUtil {
@@ -25,11 +24,11 @@ public class JGitUtil {
 		cloneCommand.setDirectory(directory);
 		try {
 			return cloneCommand.call();
-		} catch (JGitInternalException e) {
+		} catch (Exception e) {
 			if (e.getCause() != null && e.getCause() instanceof IOException) {
 				throw (IOException)e.getCause();
 			} else {
-				throw e;
+				throw new RuntimeException(e);
 			}
 		}
 	}

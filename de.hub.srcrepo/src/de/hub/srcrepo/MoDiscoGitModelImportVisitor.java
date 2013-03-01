@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
-import org.eclipse.gmt.modisco.java.emffrag.impl.JavaFactoryImpl;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -114,7 +114,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 		// TODO one JavaReader instance should be enough
 		// setup the JavaReader used to import the java model
-		javaReader = new JavaReader(JavaFactoryImpl.init(), new HashMap<String, Object>(), abstractRegionDiscoverer) {
+		javaReader = new JavaReader(JavaFactory.eINSTANCE, new HashMap<String, Object>(), abstractRegionDiscoverer) {
 			@Override
 			protected BindingManager getBindingManager() {
 				return getGlobalBindings();
@@ -125,7 +125,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 		// start with fresh bindings for each commit. These are later merged
 		// with the existing bindings from former commits.
-		SrcRepoBindingManager bindings = new SrcRepoBindingManager(JavaFactoryImpl.init());
+		SrcRepoBindingManager bindings = new SrcRepoBindingManager(JavaFactory.eINSTANCE);
 		// resuse existing primitive types and packages
 		if (javaBindings != null) {
 			bindings.addPackageBindings(javaBindings);

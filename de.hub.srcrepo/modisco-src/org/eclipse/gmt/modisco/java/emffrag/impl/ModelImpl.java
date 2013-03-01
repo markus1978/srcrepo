@@ -14,7 +14,7 @@ import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.Type;
 import org.eclipse.gmt.modisco.java.UnresolvedItem;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
 
