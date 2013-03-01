@@ -55,12 +55,15 @@ import de.hub.srcrepo.gitmodel.util.GitModelUtil.Direction;
 
 public class MoDiscoTest implements IApplication {
 	
+	private static final String uri = "mongodb://localhost/example.java.modiscogitmodel.xmi";
+	private static final boolean useBinary = false;
+	
 	@Test
 	public void testUseImportedJavaGitModel() throws Exception {
 		init();
 							
 		ResourceSet rs = new ResourceSetImpl();
-		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
+		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI(uri));
 		
 		Assert.assertEquals(2, model.root().getContents().size());
 		
@@ -73,7 +76,7 @@ public class MoDiscoTest implements IApplication {
 		EmfFragActivator.class.getName();
 		EmfFragMongoDBActivator.class.getName();
 		// use binary fragments
-		EmfFragActivator.instance.useBinaryFragments = true;
+		EmfFragActivator.instance.useBinaryFragments = useBinary;
 		
 		// register the used meta-models (the right ones)		
 		ReflectiveMetaModelRegistry.instance.registerUserMetaModel(GitModelPackage.eINSTANCE);
@@ -85,7 +88,7 @@ public class MoDiscoTest implements IApplication {
 		init();
 		
 		ResourceSet rs = new ResourceSetImpl();
-		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI("mongodb://localhost/example.java.modiscogitmodel"));
+		FragmentedModel model = (FragmentedModel)rs.createResource(URI.createURI(uri));
 		
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
 		Model javaModel = JavaFactory.eINSTANCE.createModel();
@@ -116,6 +119,7 @@ public class MoDiscoTest implements IApplication {
 		
 		// save the resulting model in its resource
 		model.save(null);		
+		System.out.println(model.getDataStore());
 	}
 	
 	@Test
