@@ -33,4 +33,8 @@ public class SrcRepoActivator extends Plugin {
 	public void error(String msg, Exception e) {
 		getLog().log(new Status(Status.ERROR, getBundle().getSymbolicName(), Status.OK, msg, e));
 	}	
+	
+	public static void standalone() {
+		INSTANCE = new SrcRepoActivator();
+	}
 }

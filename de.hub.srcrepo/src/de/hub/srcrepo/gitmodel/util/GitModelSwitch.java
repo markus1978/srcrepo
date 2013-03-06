@@ -6,18 +6,21 @@
  */
 package de.hub.srcrepo.gitmodel.util;
 
-import de.hub.emffrag.model.emffrag.IndexedMap;
-
-import de.hub.srcrepo.gitmodel.*;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
-
 import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.NamedElement;
+
+import de.hub.srcrepo.gitmodel.Commit;
+import de.hub.srcrepo.gitmodel.Diff;
+import de.hub.srcrepo.gitmodel.GitModelPackage;
+import de.hub.srcrepo.gitmodel.JavaDiff;
+import de.hub.srcrepo.gitmodel.ParentRelation;
+import de.hub.srcrepo.gitmodel.Ref;
+import de.hub.srcrepo.gitmodel.RevCompilationUnit;
+import de.hub.srcrepo.gitmodel.SourceRepository;
 
 /**
  * <!-- begin-user-doc -->
@@ -79,7 +82,6 @@ public class GitModelSwitch<T> extends Switch<T> {
 			case GitModelPackage.SOURCE_REPOSITORY: {
 				SourceRepository sourceRepository = (SourceRepository)theEObject;
 				T result = caseSourceRepository(sourceRepository);
-				if (result == null) result = caseIndexedMap(sourceRepository);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -229,21 +231,6 @@ public class GitModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseParentRelation(ParentRelation object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Indexed Map</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Indexed Map</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public <K, V> T caseIndexedMap(IndexedMap<K, V> object) {
 		return null;
 	}
 

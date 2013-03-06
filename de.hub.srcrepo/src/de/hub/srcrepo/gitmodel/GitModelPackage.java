@@ -11,9 +11,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
-
-import de.hub.emffrag.model.emffrag.EmfFragPackage;
+import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -74,49 +72,13 @@ public interface GitModelPackage extends EPackage {
 	int SOURCE_REPOSITORY = 0;
 
 	/**
-	 * The feature id for the '<em><b>First Key</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_REPOSITORY__FIRST_KEY = EmfFragPackage.INDEXED_MAP__FIRST_KEY;
-
-	/**
-	 * The feature id for the '<em><b>Last Key</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_REPOSITORY__LAST_KEY = EmfFragPackage.INDEXED_MAP__LAST_KEY;
-
-	/**
-	 * The feature id for the '<em><b>Prefix</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_REPOSITORY__PREFIX = EmfFragPackage.INDEXED_MAP__PREFIX;
-
-	/**
-	 * The feature id for the '<em><b>Keytype</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_REPOSITORY__KEYTYPE = EmfFragPackage.INDEXED_MAP__KEYTYPE;
-
-	/**
 	 * The feature id for the '<em><b>All Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_REPOSITORY__ALL_REFS = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 0;
+	int SOURCE_REPOSITORY__ALL_REFS = 0;
 
 	/**
 	 * The feature id for the '<em><b>All Commits</b></em>' containment reference list.
@@ -125,7 +87,7 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_REPOSITORY__ALL_COMMITS = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 1;
+	int SOURCE_REPOSITORY__ALL_COMMITS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Java Model</b></em>' reference.
@@ -134,7 +96,7 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_REPOSITORY__JAVA_MODEL = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 2;
+	int SOURCE_REPOSITORY__JAVA_MODEL = 2;
 
 	/**
 	 * The feature id for the '<em><b>Root Commit</b></em>' reference.
@@ -143,7 +105,7 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_REPOSITORY__ROOT_COMMIT = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 3;
+	int SOURCE_REPOSITORY__ROOT_COMMIT = 3;
 
 	/**
 	 * The number of structural features of the '<em>Source Repository</em>' class.
@@ -152,7 +114,7 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_REPOSITORY_FEATURE_COUNT = EmfFragPackage.INDEXED_MAP_FEATURE_COUNT + 4;
+	int SOURCE_REPOSITORY_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.CommitImpl <em>Commit</em>}' class.

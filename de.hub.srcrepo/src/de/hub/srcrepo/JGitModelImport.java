@@ -27,6 +27,7 @@ import de.hub.srcrepo.gitmodel.SourceRepository;
 public class JGitModelImport {
 
 	// parameters
+	private final GitModelFactory gitFactory;
 	private final Git git;
 	private final SourceRepository targetModel;
 
@@ -40,6 +41,7 @@ public class JGitModelImport {
 
 	public JGitModelImport(Git git, SourceRepository targetModel) {
 		super();
+		this.gitFactory = (GitModelFactory)targetModel.eClass().getEPackage().getEFactoryInstance();
 		this.git = git;
 		this.targetModel = targetModel;
 		
@@ -54,12 +56,12 @@ public class JGitModelImport {
 
 	private Commit getCommitModel(RevCommit commit) throws Exception {
 		String commitName = commit.getName();
-		Commit commitModel = targetModel.exact(commitName);
+		Commit commitModel = targetModel.getCommit(commitName);
 		if (commitModel == null) {
-			commitModel = GitModelFactory.eINSTANCE.createCommit();
+			commitModel = gitFactory.createCommit();
 			commitModel.setName(commit.getName());
 			targetModel.getAllCommits().add(commitModel);
-			targetModel.put(commit.getName(), commitModel);			
+			targetModel.putCommit(commit.getName(), commitModel);			
 			commitsToImportParentsFrom.add(commit);
 		}
 		return commitModel;
@@ -67,7 +69,7 @@ public class JGitModelImport {
 
 	private void importParentsForCommit(RevCommit commit) throws Exception {
 		SrcRepoActivator.INSTANCE.info("import commit " + commit.getName());
-		Commit commitModel = targetModel.exact(commit.getName());
+		Commit commitModel = targetModel.getCommit(commit.getName());
 		if (commitModel == null) {
 			commitModel = getCommitModel(commit);
 		}
@@ -94,16 +96,16 @@ public class JGitModelImport {
 	}
 
 	private void createParentRelation(Commit commitModel, Commit parentModel, List<DiffEntry> diffs) {
-		ParentRelation parentRelationModel = GitModelFactory.eINSTANCE.createParentRelation();
+		ParentRelation parentRelationModel = gitFactory.createParentRelation();
 		commitModel.getParentRelations().add(parentRelationModel);
 		parentRelationModel.setParent(parentModel);		
 		for (DiffEntry diffEntry : diffs) {
 			Diff diffModel = null;
 			String path = diffEntry.getNewPath();
 			if (path.endsWith(".java")) {
-				diffModel = GitModelFactory.eINSTANCE.createJavaDiff();
+				diffModel = gitFactory.createJavaDiff();
 			} else {
-				diffModel = GitModelFactory.eINSTANCE.createDiff();
+				diffModel = gitFactory.createDiff();
 			}
 			diffModel.setNewPath(path);
 			diffModel.setOldPath(diffEntry.getOldPath());
@@ -121,7 +123,7 @@ public class JGitModelImport {
 
 		// start to traverse the commits at the given refs
 		for (Ref ref : git.getRepository().getAllRefs().values()) {
-			de.hub.srcrepo.gitmodel.Ref refModel = GitModelFactory.eINSTANCE.createRef();
+			de.hub.srcrepo.gitmodel.Ref refModel = gitFactory.createRef();
 			refModel.setIsPeeled(ref.isPeeled());
 			refModel.setIsSymbolic(ref.isSymbolic());
 			refModel.setName(ref.getName());

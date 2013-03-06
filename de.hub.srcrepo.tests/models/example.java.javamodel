@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ASCII"?>
+<java:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java">
+  <ownedElements name="de">
+    <ownedPackages name="hub">
+      <ownedPackages name="example">
+        <ownedPackages name="java">
+          <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@compilationUnits.0" name="Referenced">
+            <modifier visibility="public"/>
+            <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.0" name="run">
+              <modifier visibility="public"/>
+              <body originalCompilationUnit="//@compilationUnits.0">
+                <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@compilationUnits.0">
+                  <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@compilationUnits.0">
+                    <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@compilationUnits.0" escapedValue="&quot;Hello world.&quot;"/>
+                    <expression xsi:type="java:UnresolvedItemAccess">
+                      <qualifier xsi:type="java:UnresolvedItemAccess"/>
+                    </expression>
+                  </expression>
+                </statements>
+                <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@compilationUnits.0">
+                  <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@compilationUnits.0">
+                    <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@compilationUnits.0" escapedValue="&quot;Hello world printed.&quot;"/>
+                  </expression>
+                </statements>
+              </body>
+              <returnType type="//@orphanTypes.5"/>
+            </bodyDeclarations>
+            <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.0" name="log">
+              <modifier visibility="public"/>
+              <body originalCompilationUnit="//@compilationUnits.0">
+                <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@compilationUnits.0">
+                  <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@compilationUnits.0">
+                    <arguments xsi:type="java:InfixExpression" originalCompilationUnit="//@compilationUnits.0" operator="+">
+                      <rightOperand xsi:type="java:UnresolvedItemAccess"/>
+                      <leftOperand xsi:type="java:StringLiteral" originalCompilationUnit="//@compilationUnits.0" escapedValue="&quot;# &quot;"/>
+                    </arguments>
+                    <expression xsi:type="java:UnresolvedItemAccess">
+                      <qualifier xsi:type="java:UnresolvedItemAccess"/>
+                    </expression>
+                  </expression>
+                </statements>
+              </body>
+              <parameters originalCompilationUnit="//@compilationUnits.0" name="msg">
+                <modifier/>
+                <type/>
+              </parameters>
+              <returnType type="//@orphanTypes.5"/>
+            </bodyDeclarations>
+          </ownedElements>
+        </ownedPackages>
+      </ownedPackages>
+    </ownedPackages>
+  </ownedElements>
+  <orphanTypes xsi:type="java:PrimitiveTypeInt" name="int"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeLong" name="long"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeFloat" name="float"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeDouble" name="double"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeBoolean" name="boolean"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeVoid" name="void" usagesInTypeAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@returnType //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@returnType"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
+  <compilationUnits name="Referenced.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/02_workspace/srcrepo.example.git/example.java/src/de/hub/example/java/Referenced.java" package="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+</java:Model>

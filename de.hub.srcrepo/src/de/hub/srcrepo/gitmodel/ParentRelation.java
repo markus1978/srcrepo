@@ -39,7 +39,7 @@ public interface ParentRelation extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Diffs</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getParentRelation_Diffs()
-	 * @model containment="true" resolveProxies="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Diff> getDiffs();

@@ -1,28 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         id="Hello World"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="singleton-global"
-            thread="main"
-            visible="true">
-         <run
-               class="de.hub.srcrepo.MoDiscoTest">
-         </run>
-      </application>
-   </extension>
-
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://gitmodel/1.0"
             class="de.hub.srcrepo.gitmodel.GitModelPackage"
             genModel="models/GitModel.genmodel"/>
-      <package
-            class="org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage"
-            genModel="models/JavaModel.genmodel"
-            uri="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java/emffrag">
-      </package>
    </extension>
 </plugin>

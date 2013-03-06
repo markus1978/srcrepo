@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory;
+import org.eclipse.gmt.modisco.java.emf.JavaFactory;
+import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -36,10 +36,6 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManag
 import org.eclipse.modisco.kdm.source.extension.discovery.AbstractRegionDiscoverer2;
 import org.eclipse.modisco.kdm.source.extension.discovery.SourceVisitListener;
 
-import de.hub.emffrag.EmfFragActivator;
-import de.hub.emffrag.EmfFragActivator.ExtrinsicIdBehaviour;
-import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
-import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.JavaDiff;
@@ -49,6 +45,8 @@ import de.hub.srcrepo.gitmodel.ParentRelation;
 public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVisitListener {
 
 	// parameter
+	private final JavaFactory javaFactory;
+	private final JavaPackage javaPackage;
 	private final Model javaModel;
 	private final Git git;
 
@@ -64,10 +62,8 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	public MoDiscoGitModelImportVisitor(Git git, Model targetModel) {
 		super();
 		
-		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
-		EmfFragActivator.instance.extrinsicIdBehaviour = ExtrinsicIdBehaviour.defaultModel;
-		EmfFragActivator.instance.defaultModelForExtrinsicIdBehavior = (FragmentedModel)targetModel.eResource();
-		
+		this.javaPackage = (JavaPackage)targetModel.eClass().getEPackage();
+		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
 		this.javaModel = targetModel;
 		this.git = git;
 		this.javaProjectStructure = new JavaProjectStructure(new Path(git.getRepository().getWorkTree().getAbsolutePath()));
@@ -90,7 +86,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	@Override
 	public void sourceRegionVisited(String filePath, int startOffset, int endOffset, int startLine, int endLine,
 			EObject targetNode) {
-		if (targetNode.eClass() == JavaPackage.eINSTANCE.getCompilationUnit()) {
+		if (targetNode.eClass() == javaPackage.getCompilationUnit()) {
 			lastCU = (CompilationUnit) targetNode;
 		}
 	}
@@ -114,7 +110,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 		// TODO one JavaReader instance should be enough
 		// setup the JavaReader used to import the java model
-		javaReader = new JavaReader(JavaFactory.eINSTANCE, new HashMap<String, Object>(), abstractRegionDiscoverer) {
+		javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer) {
 			@Override
 			protected BindingManager getBindingManager() {
 				return getGlobalBindings();
@@ -125,7 +121,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 		// start with fresh bindings for each commit. These are later merged
 		// with the existing bindings from former commits.
-		SrcRepoBindingManager bindings = new SrcRepoBindingManager(JavaFactory.eINSTANCE);
+		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
 		// resuse existing primitive types and packages
 		if (javaBindings != null) {
 			bindings.addPackageBindings(javaBindings);

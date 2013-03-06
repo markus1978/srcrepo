@@ -4,6 +4,13 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="gitmodel"
     nsURI="http://gitmodel/1.0" nsPrefix="gitmodel">
   <eClassifiers xsi:type="ecore:EClass" name="SourceRepository">
+    <eOperations name="getCommit" eType="#//Commit">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="putCommit">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eParameters name="commit" eType="#//Commit"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allRefs" upperBound="-1"
         eType="#//Ref" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allCommits" upperBound="-1"
@@ -12,12 +19,8 @@
         <details key="indexes" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass java.ecore#//Model"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass ../../org.eclipse.gmt.modisco.java/model/java.ecore#//Model"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootCommit" eType="#//Commit"/>
-    <eGenericSuperTypes eClassifier="ecore:EClass ../../de.hub.emffrag/metamodels/emffrag.ecore#//IndexedMap">
-      <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eTypeArguments eClassifier="#//Commit"/>
-    </eGenericSuperTypes>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Commit">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -43,13 +46,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ChangeType" instanceClassName="org.eclipse.jgit.diff.DiffEntry.ChangeType"/>
   <eClassifiers xsi:type="ecore:EClass" name="JavaDiff" eSuperTypes="#//Diff">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass java.ecore#//CompilationUnit">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass ../../org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
       <eAnnotations source="de.hub.emffrag">
         <details key="Fragmentation" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RevCompilationUnit" eSuperTypes="java.ecore#//CompilationUnit">
+  <eClassifiers xsi:type="ecore:EClass" name="RevCompilationUnit" eSuperTypes="../../org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" upperBound="-1"
         eType="#//RevCompilationUnit" eOpposite="#//RevCompilationUnit/children"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"

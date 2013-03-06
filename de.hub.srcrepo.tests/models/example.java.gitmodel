@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gitmodel="http://gitmodel/1.0" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java">
+  <gitmodel:SourceRepository rootCommit="/0/@allCommits.5">
+    <allRefs referencedCommit="/0/@allCommits.0" isSymbolic="true" name="HEAD"/>
+    <allRefs referencedCommit="/0/@allCommits.0" name="refs/heads/master"/>
+    <allRefs referencedCommit="/0/@allCommits.0" name="refs/remotes/origin/master"/>
+    <allCommits name="11fde116d121e19ca8d0b2cca0a9d99ffca4bc23" time="2013-02-15T11:16:53.000+0100" message="added a second project that contains references to the existing project.&#xA;">
+      <parentRelations parent="/0/@allCommits.1">
+        <diffs newPath="references.java/.classpath" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="references.java/.project" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="references.java/.settings/org.eclipse.jdt.core.prefs" type="ADD" oldPath="/dev/null"/>
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="references.java/src/de/hub/references/References.java" type="ADD" oldPath="/dev/null" compilationUnit="/1/@compilationUnits.6"/>
+      </parentRelations>
+    </allCommits>
+    <allCommits name="e5f7d8a5fc72cba971a34211cc49cf026ae9e7be" time="2013-02-14T18:16:44.000+0100" message="A new version of HelloWorld without any changes." childRelations="/0/@allCommits.0/@parentRelations.0">
+      <parentRelations parent="/0/@allCommits.2">
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="MODIFY" oldPath="example.java/src/de/hub/example/java/HelloWorld.java" compilationUnit="/1/@compilationUnits.5"/>
+      </parentRelations>
+    </allCommits>
+    <allCommits name="98f56da6e548af6d5660f0c42726a5cde17f23e3" time="2013-02-14T17:46:38.000+0100" message="changed the Referenced class without changing the HelloWorld class and&#xA;the respective reference between those classes." childRelations="/0/@allCommits.1/@parentRelations.0">
+      <parentRelations parent="/0/@allCommits.3">
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="example.java/src/de/hub/example/java/Referenced.java" type="MODIFY" oldPath="example.java/src/de/hub/example/java/Referenced.java" compilationUnit="/1/@compilationUnits.4"/>
+      </parentRelations>
+    </allCommits>
+    <allCommits name="5a5bd3147069798bcdbf10268e5169bc89018be5" time="2013-02-14T09:47:26.000+0100" message="Added a class Referenced.&#xA;The HelloWorld class now references the Referenced class." childRelations="/0/@allCommits.2/@parentRelations.0">
+      <parentRelations parent="/0/@allCommits.4">
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="MODIFY" oldPath="example.java/src/de/hub/example/java/HelloWorld.java" compilationUnit="/1/@compilationUnits.2"/>
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="example.java/src/de/hub/example/java/Referenced.java" type="ADD" oldPath="/dev/null" compilationUnit="/1/@compilationUnits.3"/>
+      </parentRelations>
+    </allCommits>
+    <allCommits name="c0ce5d3b134d07080570380bfc33105a640a27bb" time="2013-02-13T19:27:28.000+0100" message="Changed the &quot;Hello World!&quot; literal to &quot;Hello world.&quot;;&#xA;Added a .gitignore that ignores all .class files;&#xA;Removed the bin folder and all .class files;" childRelations="/0/@allCommits.3/@parentRelations.0">
+      <parentRelations parent="/0/@allCommits.5">
+        <diffs newPath=".gitignore" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="/dev/null" type="DELETE" oldPath="example.java/bin/de/hub/example/java/HelloWorld.class"/>
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="MODIFY" oldPath="example.java/src/de/hub/example/java/HelloWorld.java" compilationUnit="/1/@compilationUnits.1"/>
+      </parentRelations>
+    </allCommits>
+    <allCommits name="4e238b9752b33e18301bb0849ec9b5319a8cfa09" time="2013-02-08T10:01:05.000+0100" message="Initial commit of the Hello World example project." childRelations="/0/@allCommits.4/@parentRelations.0">
+      <parentRelations>
+        <diffs newPath="example.java/.classpath" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="example.java/.project" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="example.java/.settings/org.eclipse.jdt.core.prefs" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="example.java/bin/de/hub/example/java/HelloWorld.class" type="ADD" oldPath="/dev/null"/>
+        <diffs xsi:type="gitmodel:JavaDiff" newPath="example.java/src/de/hub/example/java/HelloWorld.java" type="ADD" oldPath="/dev/null" compilationUnit="/1/@compilationUnits.0"/>
+      </parentRelations>
+    </allCommits>
+  </gitmodel:SourceRepository>
+  <java:Model>
+    <ownedElements name="de">
+      <ownedPackages name="hub">
+        <ownedPackages name="example">
+          <ownedPackages name="java">
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.0" name="HelloWorld">
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.0" name="main">
+                <modifier visibility="public" static="true"/>
+                <body originalCompilationUnit="/1/@compilationUnits.0">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.0">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.0" method="/1/@unresolvedItems.3">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.0" escapedValue="&quot;Hello World!&quot;"/>
+                      <expression xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.2">
+                        <qualifier xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.1"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+                <parameters originalCompilationUnit="/1/@compilationUnits.0" name="args">
+                  <modifier/>
+                  <type type="/1/@unresolvedItems.0"/>
+                </parameters>
+                <returnType type="/1/@orphanTypes.5"/>
+              </bodyDeclarations>
+            </ownedElements>
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.1" name="HelloWorld">
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.1" name="main">
+                <modifier visibility="public" static="true"/>
+                <body originalCompilationUnit="/1/@compilationUnits.1">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.1">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.1" method="/1/@unresolvedItems.3">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.1" escapedValue="&quot;Hello world.&quot;"/>
+                      <expression xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.2">
+                        <qualifier xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.1"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+                <parameters originalCompilationUnit="/1/@compilationUnits.1" name="args">
+                  <modifier/>
+                  <type type="/1/@unresolvedItems.0"/>
+                </parameters>
+                <returnType type="/1/@orphanTypes.5"/>
+              </bodyDeclarations>
+            </ownedElements>
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.2" name="HelloWorld">
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.2" name="main">
+                <modifier visibility="public" static="true"/>
+                <body originalCompilationUnit="/1/@compilationUnits.2">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.2">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.2" method="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3/@bodyDeclarations.0">
+                      <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.2" method="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3/@bodyDeclarations.1">
+                        <type type="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+                <parameters originalCompilationUnit="/1/@compilationUnits.2" name="args">
+                  <modifier/>
+                  <type type="/1/@unresolvedItems.0"/>
+                </parameters>
+                <returnType type="/1/@orphanTypes.5"/>
+              </bodyDeclarations>
+            </ownedElements>
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.3" name="Referenced" usagesInTypeAccess="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.2/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type">
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.3" name="run" usages="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.2/@bodyDeclarations.0/@body/@statements.0/@expression">
+                <modifier visibility="public"/>
+                <body originalCompilationUnit="/1/@compilationUnits.3">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.3">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.3" method="/1/@unresolvedItems.3">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.3" escapedValue="&quot;Hello world.&quot;"/>
+                      <expression xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.2">
+                        <qualifier xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.1"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+                <returnType type="/1/@orphanTypes.5"/>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="Referenced" proxy="true" usages="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.2/@bodyDeclarations.0/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@expression/@expression"/>
+            </ownedElements>
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.4" name="Referenced" usagesInImports="/1/@compilationUnits.6/@imports.0" usagesInTypeAccess="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@superClass">
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.4" name="run" usages="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" redefinitions="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0">
+                <modifier visibility="public"/>
+                <body originalCompilationUnit="/1/@compilationUnits.4">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.4">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.4" method="/1/@unresolvedItems.3">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.4" escapedValue="&quot;Hello world.&quot;"/>
+                      <expression xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.2">
+                        <qualifier xsi:type="java:UnresolvedItemAccess" element="/1/@unresolvedItems.1"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+                <returnType type="/1/@orphanTypes.5"/>
+              </bodyDeclarations>
+            </ownedElements>
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.5" name="HelloWorld">
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.5" name="main">
+                <modifier visibility="public" static="true"/>
+                <body originalCompilationUnit="/1/@compilationUnits.5">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.5">
+                    <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.5" content="// a Comment" prefixOfParent="true"/>
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.5" method="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0">
+                      <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.5" method="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3/@bodyDeclarations.1">
+                        <type type="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+                <parameters originalCompilationUnit="/1/@compilationUnits.5" name="args">
+                  <modifier/>
+                  <type type="/1/@unresolvedItems.0"/>
+                </parameters>
+                <returnType type="/1/@orphanTypes.5"/>
+              </bodyDeclarations>
+            </ownedElements>
+          </ownedPackages>
+        </ownedPackages>
+        <ownedPackages name="references">
+          <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.6" name="References">
+            <modifier visibility="public"/>
+            <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.6" name="run" redefinedMethodDeclaration="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0">
+              <annotations originalCompilationUnit="/1/@compilationUnits.6">
+                <type type="/1/@unresolvedItems.4"/>
+              </annotations>
+              <modifier visibility="public"/>
+              <body originalCompilationUnit="/1/@compilationUnits.6">
+                <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.6">
+                  <expression xsi:type="java:SuperMethodInvocation" originalCompilationUnit="/1/@compilationUnits.6" method="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0"/>
+                </statements>
+              </body>
+              <returnType type="/1/@orphanTypes.5"/>
+            </bodyDeclarations>
+            <superClass type="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4"/>
+          </ownedElements>
+        </ownedPackages>
+      </ownedPackages>
+    </ownedElements>
+    <orphanTypes xsi:type="java:PrimitiveTypeInt" name="int"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeLong" name="long"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeFloat" name="float"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeDouble" name="double"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeBoolean" name="boolean"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeVoid" name="void" usagesInTypeAccess="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.1/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.2/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0/@returnType"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
+    <unresolvedItems xsi:type="java:UnresolvedTypeDeclaration" name="String" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.1/@bodyDeclarations.0/@parameters.0/@type /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.2/@bodyDeclarations.0/@parameters.0/@type /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@parameters.0/@type"/>
+    <unresolvedItems name="System" proxy="true"/>
+    <unresolvedItems name="out" proxy="true"/>
+    <unresolvedItems xsi:type="java:UnresolvedMethodDeclaration" name="println" proxy="true" usages="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.1/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@body/@statements.0/@expression"/>
+    <unresolvedItems xsi:type="java:UnresolvedTypeDeclaration" name="Override" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0/@annotations.0/@type"/>
+    <compilationUnits name="HelloWorld.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/example.java/src/de/hub/example/java/HelloWorld.java" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+    <compilationUnits name="HelloWorld.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/example.java/src/de/hub/example/java/HelloWorld.java" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.1"/>
+    <compilationUnits name="HelloWorld.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/example.java/src/de/hub/example/java/HelloWorld.java" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.2"/>
+    <compilationUnits name="Referenced.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/example.java/src/de/hub/example/java/Referenced.java" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.3"/>
+    <compilationUnits name="Referenced.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/example.java/src/de/hub/example/java/Referenced.java" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4"/>
+    <compilationUnits name="HelloWorld.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/example.java/src/de/hub/example/java/HelloWorld.java" commentList="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@comments.0" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5"/>
+    <compilationUnits name="References.java" originalFilePath="/Users/markus/Documents/Projects/EMFFrag/01_tmp/srcrepo/clones/srcrepo.example.git/references.java/src/de/hub/references/References.java" package="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1" types="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0">
+      <imports originalCompilationUnit="/1/@compilationUnits.6" importedElement="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4"/>
+    </compilationUnits>
+  </java:Model>
+</xmi:XMI>

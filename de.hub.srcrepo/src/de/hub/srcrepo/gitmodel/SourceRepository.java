@@ -7,9 +7,8 @@
 package de.hub.srcrepo.gitmodel;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.Model;
-
-import de.hub.emffrag.model.emffrag.IndexedMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,10 +26,10 @@ import de.hub.emffrag.model.emffrag.IndexedMap;
  * </p>
  *
  * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository()
- * @model superTypes="de.hub.emffrag.model.emffrag.IndexedMap<org.eclipse.emf.ecore.EString, de.hub.srcrepo.gitmodel.Commit>"
+ * @model
  * @generated
  */
-public interface SourceRepository extends IndexedMap<String, Commit> {
+public interface SourceRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>All Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link de.hub.srcrepo.gitmodel.Ref}.
@@ -42,7 +41,7 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>All Refs</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository_AllRefs()
-	 * @model containment="true" resolveProxies="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Ref> getAllRefs();
@@ -58,7 +57,7 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>All Commits</em>' containment reference list.
 	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getSourceRepository_AllCommits()
-	 * @model containment="true" resolveProxies="true"
+	 * @model containment="true"
 	 *        annotation="de.hub.emffrag indexes='true'"
 	 * @generated
 	 */
@@ -115,5 +114,21 @@ public interface SourceRepository extends IndexedMap<String, Commit> {
 	 * @generated
 	 */
 	void setRootCommit(Commit value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	Commit getCommit(String name);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void putCommit(String name, Commit commit);
 
 } // SourceRepository

@@ -4,7 +4,6 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
 import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
-import de.hub.emffrag.model.emffrag.Root
 import de.hub.srcrepo.gitmodel.SourceRepository
 import de.hub.srcrepo.gitmodel.Commit
 import de.hub.srcrepo.gitmodel.ParentRelation
