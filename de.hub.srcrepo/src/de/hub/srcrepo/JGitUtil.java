@@ -69,7 +69,7 @@ public class JGitUtil {
 		
 		// create git and clone repository
 		Git git = null;		
-		git = JGitUtil.clone(cloneURL, workingDirectory);
+//		git = JGitUtil.clone(cloneURL, workingDirectory);
 		git = Git.open(new File(workingDirectory));
 
 		
