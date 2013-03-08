@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gitmodel="http://gitmodel/1.0" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java">
   <gitmodel:SourceRepository rootCommit="/0/@allCommits.5">
-    <allRefs referencedCommit="/0/@allCommits.0" isSymbolic="true" name="HEAD"/>
+    <allRefs referencedCommit="/0/@allCommits.0" name="HEAD"/>
     <allRefs referencedCommit="/0/@allCommits.0" name="refs/heads/master"/>
     <allRefs referencedCommit="/0/@allCommits.0" name="refs/remotes/origin/master"/>
     <allCommits name="11fde116d121e19ca8d0b2cca0a9d99ffca4bc23" time="2013-02-15T11:16:53.000+0100" message="added a second project that contains references to the existing project.&#xA;">
@@ -132,7 +132,7 @@
             </ownedElements>
             <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.4" name="Referenced" usagesInImports="/1/@compilationUnits.6/@imports.0" usagesInTypeAccess="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@superClass">
               <modifier visibility="public"/>
-              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.4" name="run" usages="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" redefinitions="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0">
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.4" name="run" usages="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.5/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedPackages.0/@ownedPackages.1/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression">
                 <modifier visibility="public"/>
                 <body originalCompilationUnit="/1/@compilationUnits.4">
                   <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.4">
@@ -173,7 +173,7 @@
         <ownedPackages name="references">
           <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.6" name="References">
             <modifier visibility="public"/>
-            <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.6" name="run" redefinedMethodDeclaration="/1/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0">
+            <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.6" name="run">
               <annotations originalCompilationUnit="/1/@compilationUnits.6">
                 <type type="/1/@unresolvedItems.4"/>
               </annotations>

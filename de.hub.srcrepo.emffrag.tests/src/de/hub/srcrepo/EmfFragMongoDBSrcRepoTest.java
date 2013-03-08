@@ -19,8 +19,6 @@ public class EmfFragMongoDBSrcRepoTest extends EmfFragSrcRepoTest {
 		EmfFragMongoDBActivator.class.getName();
 	}
 	
-	
-	
 	@Override
 	public void init() {
 		super.init();

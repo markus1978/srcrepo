@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
  de.hub.emffrag;bundle-version="1.0.0";visibility:=reexport
-Export-Package: de.hub.srcrepo.gitmodel,
+Export-Package: de.hub.srcrepo.emffrag,
+ de.hub.srcrepo.gitmodel,
  de.hub.srcrepo.gitmodel.emffrag.impl,
  de.hub.srcrepo.gitmodel.emffrag.metadata,
  de.hub.srcrepo.gitmodel.emffrag.util,

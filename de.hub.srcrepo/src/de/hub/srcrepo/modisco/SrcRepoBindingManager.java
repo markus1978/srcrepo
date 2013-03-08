@@ -18,7 +18,7 @@
  *    Erwan Breton (Sodifrance) - initial API and implementation
  *    Romain Dervaux (Mia-Software) - initial API and implementation
  *******************************************************************************/
-package de.hub.srcrepo;
+package de.hub.srcrepo.modisco;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,6 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.MethodBindin
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PackageBinding;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.ParameterBinding;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.UnresolvedBinding;
 
 /**
  * Class used to store and resolves pending references between Java
@@ -139,15 +138,16 @@ public class SrcRepoBindingManager extends BindingManager {
 		this.targets.putAll(aBindingManager.targets);
 		this.pendings.addAll(aBindingManager.pendings);
 	}
-	
+
 	public void addPackageBindings(final SrcRepoBindingManager aBindingManager) {
-		for (String binding: aBindingManager.targets.keySet()) {
+		for (String binding : aBindingManager.targets.keySet()) {
 			NamedElement target = aBindingManager.targets.get(binding);
 			if (target instanceof Package) {
 				addTarget(binding, target);
 			}
 		}
 	}
+
 	// HUB end
 
 	/**
@@ -278,9 +278,14 @@ public class SrcRepoBindingManager extends BindingManager {
 	 */
 	public NamedElement getTarget(final Binding binding) {
 		NamedElement target = null;
-		if (!(binding instanceof UnresolvedBinding)) {
-			target = this.getTarget(binding.toString());
-		}
+		// HUB: this causes problems when resolving package comments/packages.
+		// For some reason the package binding is unresolved, but the binding
+		// manager has an entry for the package.
+		// No idea, if this changes causes any other problems. But I guess, if
+		// there is a target, it is good enough.
+		// if (!(binding instanceof UnresolvedBinding)) {
+		target = this.getTarget(binding.toString());
+		// }
 		return target;
 	}
 
@@ -456,7 +461,14 @@ public class SrcRepoBindingManager extends BindingManager {
 					if (result instanceof AbstractTypeDeclaration) {
 						((AbstractTypeDeclaration) result).setPackage(owner);
 					}
-					owner.getOwnedElements().add((AbstractTypeDeclaration) result);
+					// HUB: I else'ed this brachn. OwnedElements is the oppisite
+					// of package, and if the package of result is already set,
+					// the result is already part of owner#ownedElements.
+					// Otherwise, this will cause inverseRemove and inverseAdd,
+					// which the indexed set of ownedElements does not support.
+					else {
+						owner.getOwnedElements().add((AbstractTypeDeclaration) result);
+					}
 				} else {
 					IStatus status = new Status(IStatus.ERROR, JavaActivator.PLUGIN_ID,
 							"Unkown error.", new Exception("owner == null: " //$NON-NLS-1$ //$NON-NLS-2$
@@ -604,7 +616,7 @@ public class SrcRepoBindingManager extends BindingManager {
 
 	private ArrayType getArrayTypeDeclaration(final ParameterBinding binding, final Model model1) {
 		ArrayType result = (ArrayType) this.getTarget(binding);
-		if (result == null) {			
+		if (result == null) {
 			result = this.factory.createArrayType();
 			result.setName(binding.toString());
 			result.setDimensions(binding.getDimensions());
@@ -638,7 +650,8 @@ public class SrcRepoBindingManager extends BindingManager {
 	}
 
 	// create iterately a hierarchy of packages
-	// HUB changes throughout the whole method -> this is to create each package only once
+	// HUB changes throughout the whole method -> this is to create each package
+	// only once
 	private Package createProxiesPackageHierarchy(final PackageBinding binding, final Model model1) {
 		Package result = this.factory.createPackage();
 		result.setProxy(true);

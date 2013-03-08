@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
@@ -30,6 +31,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManager;
@@ -40,6 +42,9 @@ import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.JavaDiff;
 import de.hub.srcrepo.gitmodel.ParentRelation;
+import de.hub.srcrepo.gitmodel.SourceRepository;
+import de.hub.srcrepo.modisco.SrcRepoBindingManager;
+import de.hub.srcrepo.modisco.SrcRepoMethodRedefinitionManager;
 
 
 public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVisitListener {
@@ -48,6 +53,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private final JavaFactory javaFactory;
 	private final JavaPackage javaPackage;
 	private final Model javaModel;
+	private final SourceRepository gitModel;
 	private final Git git;
 
 	// helper
@@ -58,12 +64,21 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private JavaReader javaReader;
 	private SrcRepoBindingManager javaBindings;
 	private CompilationUnit lastCU;
+	private int i = 0;
+	
+	private final String lastCommit; 
 
-	public MoDiscoGitModelImportVisitor(Git git, Model targetModel) {
+	public MoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model targetModel) {
+		this(git, gitModel, targetModel, "");
+	}
+	
+	public MoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model targetModel, String lastCommit) {
 		super();
 		
+		this.lastCommit =  lastCommit;
 		this.javaPackage = (JavaPackage)targetModel.eClass().getEPackage();
 		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
+		this.gitModel = gitModel;
 		this.javaModel = targetModel;
 		this.git = git;
 		this.javaProjectStructure = new JavaProjectStructure(new Path(git.getRepository().getWorkTree().getAbsolutePath()));
@@ -93,17 +108,21 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public boolean onStartCommit(Commit commit) {
-		// if
-		// (commit.getName().equals("98f56da6e548af6d5660f0c42726a5cde17f23e3"))
-		// {
-		// return false;
-		// }
-
-		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName());
+		if (commit.getName().equals(lastCommit)) {
+			return false;
+		}
+		
+		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + " (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
 		// checkout the corresponding revision and update the eclipse project
 		try {
 			git.checkout().setName(commit.getName()).call();
 			javaProjectStructure.refresh();
+		} catch (JGitInternalException e) {
+			if (e.getMessage().contains("conflict")) {
+				SrcRepoActivator.INSTANCE.warning("Checkout with conflicts: " + e.getMessage());
+			} else {
+				SrcRepoActivator.INSTANCE.error("Exception while checking out and updating IJavaProject", e);	
+			}			
 		} catch (Exception e) {
 			SrcRepoActivator.INSTANCE.error("Exception while checking out and updating IJavaProject", e);
 		}
@@ -115,6 +134,15 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			protected BindingManager getBindingManager() {
 				return getGlobalBindings();
 			}
+
+			@Override			
+			protected void resolveMethodRedefinition(final Model model) {
+				// using our own MethodRedifnitionManager that only check the current compilation unit and not the whole model.
+				EList<CompilationUnit> compilationUnits = model.getCompilationUnits();
+				CompilationUnit compilationUnit = compilationUnits.get(compilationUnits.size() - 1);
+				SrcRepoMethodRedefinitionManager.resolveMethodRedefinitions(compilationUnit, javaFactory);
+			}
+			
 		};
 		javaReader.setDeepAnalysis(true);
 		javaReader.setIncremental(false);
@@ -162,16 +190,19 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public void onCompleteCommit(Commit commit) {
-		// merge bindings and then resolve all references (indirectly via
-		// #terminate)
-		SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
-		if (javaBindings == null) {
-			javaBindings = commitBindings;
-		} else {
-			javaBindings.addBindings(commitBindings);
-			javaReader.setGlobalBindings(javaBindings);
+		// this is only necessary, if there was some java in the current revision.
+		if (javaReader.getResultModel() != null) {
+			// merge bindings and then resolve all references (indirectly via
+			// #terminate)
+			SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
+			if (javaBindings == null) {
+				javaBindings = commitBindings;
+			} else {
+				javaBindings.addBindings(commitBindings);
+				javaReader.setGlobalBindings(javaBindings);
+			}
+			javaReader.terminate(new NullProgressMonitor());
 		}
-		javaReader.terminate(new NullProgressMonitor());
 	}
 
 	@Override
@@ -199,7 +230,15 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			if (compilationUnit != null) {
 				lastCU = null;
 				SrcRepoActivator.INSTANCE.info("import compilation unit " + compilationUnit.getPath());
-				javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
+				try {
+					javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
+				} catch (Exception e) {
+					if (e.getClass().getName().endsWith("AbortCompilation")) {
+						SrcRepoActivator.INSTANCE.warning("Could not compile a compilation unit (is ignored): " + e.getMessage());
+					} else {
+						throw new RuntimeException(e);
+					}
+				}
 				if (lastCU != null) {
 					javaDiff.setCompilationUnit(lastCU);
 				} else {

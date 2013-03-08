@@ -1,13 +1,15 @@
 package de.hub.srcrepo;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.gmt.modisco.java.emf.JavaFactory;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.junit.Before;
 
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.EmfFragActivator.IdBehaviour;
 import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
+import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelFactory;
 
@@ -23,19 +25,29 @@ public class EmfFragSrcRepoTest extends SrcRepoTest {
 		EmfFragActivator.class.getName();
 	}
 	
-	@Override
-	protected GitModelFactory gitFactory() {
-		return GitModelFactory.eINSTANCE;
-	}
-
-	@Override
-	protected JavaFactory javaFactory() {
-		return org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory.eINSTANCE;
-	}
-
-	@Override
-	protected SourceRepository createSourceRepository() {
-		return gitFactory().createEmfFragSourceRepository();
+	protected JGitUtil.ImportConfiguration createImportConfiguration() {
+		JGitUtil.ImportConfiguration config = new JGitUtil.ImportConfiguration() {			
+			@Override
+			public JavaPackage getJavaPackage() {
+				return JavaPackage.eINSTANCE;
+			}
+			
+			@Override
+			public GitModelPackage getGitPackage() {
+				return GitModelPackage.eINSTANCE;
+			}
+			
+			@Override
+			public SourceRepository createSourceRepository() {
+				return GitModelFactory.eINSTANCE.createEmfFragSourceRepository();
+			}
+			
+			@Override
+			public void configure(Resource model) {
+				EmfFragActivator.instance.defaultModelForIdBehavior = (FragmentedModel)model;
+			}
+		};
+		return config;
 	}
 	
 	protected boolean useBinaryFragments() {
@@ -49,12 +61,6 @@ public class EmfFragSrcRepoTest extends SrcRepoTest {
 		EmfFragActivator.instance.useBinaryFragments = useBinaryFragments();
 		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
 		EmfFragActivator.instance.idBehaviour = IdBehaviour.defaultModel;
-	}
-
-	@Override
-	protected void configure() {
-		super.configure();
-		EmfFragActivator.instance.defaultModelForIdBehavior = (FragmentedModel)model;
 	}
 
 	@Override
