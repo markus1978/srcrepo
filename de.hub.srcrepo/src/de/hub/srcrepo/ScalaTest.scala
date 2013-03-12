@@ -30,39 +30,48 @@ class ScalaTest {
 				aType.getName() == name))
 	}
 
-	def selectType(self: Model, name: String): AbstractTypeDeclaration = {
-		self.getCompilationUnits() collect (cu =>
-			cu.getTypes() select (aType =>
-				aType.getName() == name))
+	def findType(self: Model, name: String): AbstractTypeDeclaration = {
+	  self.getOwnedElements().closure((p)=>p.getOwnedPackages())
+	  	.collectAll((p)=>p.getOwnedElements())
+	  	.select((at)=>at.getName().equals(name))
 	}
 	
-	def countJavaTypeDefs(self: SourceRepository): Int = {
-		self.getAllCommits().aggregate(0, (c,t:Int) => 
-		  t + c.getParentRelations().aggregate(0, (pr,t:Int) =>
-		    t + pr.getDiffs().aggregate(0, (diff,t:Int) =>
-		      if (diff.isInstanceOf[JavaDiff])
-		    	  t + diff.asInstanceOf[JavaDiff].getCompilationUnit().getTypes().aggregate(0, (aType,t:Int) =>
-		    	    aType.getBodyDeclarations().aggregate(0, (bd,t:Int) => 
-		    	      if (bd.isInstanceOf[MethodDeclaration]) 1 else 0))
-		      else 0)));
+	def collectAllTypes(self: Model) = 
+	  self.getOwnedElements().closure((p)=>p.getOwnedPackages())
+	  	.collectAll((p)=>p.getOwnedElements())
+	
+	def countMethodDeclarations(self: Model): Int = 
+	  self.getOwnedElements().closure((p)=>p.getOwnedPackages())
+	  	.collectAll((p)=>p.getOwnedElements())
+	  	.collectAll((at)=>at.getBodyDeclarations())
+	  	.size()
+	
+	def countTypeUsages(self: Model): Int =
+	  collectAllTypes(self).union(self.getOrphanTypes())
+	    .collect((t)=>t.getUsagesInTypeAccess()).size()
+	      
+	  	
+	def countTopLevelClasses(self: Model): Int = {
+	  self.getOwnedElements().closure((p)=>p.getOwnedPackages())
+	    .collectAll((p)=>p.getOwnedElements()).size()	  
 	}
 	
-	def traverseJavaModel(self: Model): Boolean = {
-	  def traversePackage(p:Package): Boolean = {
-	    p.getOwnedPackages().forAll(traversePackage) &&
-	    p.getOwnedElements().forAll(at => {
-	      at.getUsagesInTypeAccess().forAll(usage => usage != null)
-	    })
-	  }
-	  
-	  self.getOwnedElements().forAll(traversePackage);
-	}
-	
-	def traversePrimitives(self: Model): Boolean = {
-	  self.getOrphanTypes().forAll(item => item.getUsagesInTypeAccess().forAll(usage => usage != null))
+	def countPrimitives(self: Model): Int = {
+	  self.getOrphanTypes()
+	  	.collectAll((at)=>at.getUsagesInTypeAccess())
+	  	.select((u)=> u != null).size()
 	}
 	
 	def traverseJavaModelViaCU(self: Model): Boolean = {
 	  self.getCompilationUnits().forAll(cu => !cu.getTypes().isEmpty())
 	}
+	
+	def coutJavaDiffs(sr:SourceRepository): Int = {
+	  sr.getAllCommits().collectAll((c)=>c.getParentRelations())
+	    .collectAll((pr)=>pr.getDiffs())
+	    .select((d)=>d.isInstanceOf[JavaDiff])
+	    .size()
+	}
 }
+
+	

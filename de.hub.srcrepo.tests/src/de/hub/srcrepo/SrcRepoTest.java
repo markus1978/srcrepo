@@ -63,7 +63,7 @@ public class SrcRepoTest {
 		return config;
 	}
 	
-	@Test
+//	@Test
 	public void testImportJavaGitModel() throws Exception {					
 		init();
 		try {
@@ -88,9 +88,13 @@ public class SrcRepoTest {
 		Assert.assertEquals(2, model.getContents().size());
 		
 		SourceRepository sourceRepository = (SourceRepository)model.getContents().get(0);
-		System.out.println("##: " + new ScalaTest().countJavaTypeDefs(sourceRepository));
-		System.out.println("##: " + new ScalaTest().traverseJavaModel((Model)model.getContents().get(1)));
-		System.out.println("##: " + new ScalaTest().traverseJavaModelViaCU((Model)model.getContents().get(1)));
-		System.out.println("##: " + new ScalaTest().traversePrimitives((Model)model.getContents().get(1)));
+		Model javaModel = (Model)model.getContents().get(1);
+		ScalaTest scalaTest = new ScalaTest();
+		System.out.println("Java diffs: " + scalaTest.coutJavaDiffs(sourceRepository));
+		System.out.println("Primitives: " + scalaTest.countPrimitives(javaModel));
+		System.out.println("Classes: " + scalaTest.countTopLevelClasses(javaModel));
+		System.out.println("Methods: " + scalaTest.countMethodDeclarations(javaModel));
+		System.out.println("Type usages: " + scalaTest.countTypeUsages(javaModel));
+		System.out.println("##: " + scalaTest.traverseJavaModelViaCU(javaModel));		
 	}
 }
