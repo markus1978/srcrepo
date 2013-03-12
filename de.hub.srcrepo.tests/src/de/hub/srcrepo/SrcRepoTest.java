@@ -8,6 +8,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,5 +89,8 @@ public class SrcRepoTest {
 		
 		SourceRepository sourceRepository = (SourceRepository)model.getContents().get(0);
 		System.out.println("##: " + new ScalaTest().countJavaTypeDefs(sourceRepository));
+		System.out.println("##: " + new ScalaTest().traverseJavaModel((Model)model.getContents().get(1)));
+		System.out.println("##: " + new ScalaTest().traverseJavaModelViaCU((Model)model.getContents().get(1)));
+		System.out.println("##: " + new ScalaTest().traversePrimitives((Model)model.getContents().get(1)));
 	}
 }

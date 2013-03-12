@@ -32,7 +32,7 @@ public class ImportEmfFragTest {
 			JGitUtil.importGit(
 					"https://github.com/markus1978/emf-fragments.git", 
 					"../../../01_tmp/srcrepo/clones/emffrag.git", modelURI, 
-//					"31d01c2b1749c6cb87d27ecedd9fe85e1c85b99d",
+					"31d01c2b1749c6cb87d27ecedd9fe85e1c85b99d",
 					new EmfFragImportConfiguration() {
 						@Override
 						public void configure(Resource model) {

@@ -78,6 +78,7 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingEleme
  * @see #resolveBindings(Model)
  * @see PendingElement#affectTarget(ASTNode)
  */
+@SuppressWarnings("restriction")
 public class SrcRepoBindingManager extends BindingManager {
 
 	/**

@@ -34,6 +34,7 @@ import org.eclipse.gmt.modisco.java.internal.util.JavaUtil;
  * The aim of this class is to bind method with the method overriden of a super
  * class if any
  */
+@SuppressWarnings("restriction")
 public final class SrcRepoMethodRedefinitionManager {
 
 	private SrcRepoMethodRedefinitionManager() {

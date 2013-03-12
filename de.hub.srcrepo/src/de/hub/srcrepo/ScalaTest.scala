@@ -9,6 +9,9 @@ import de.hub.srcrepo.gitmodel.Commit
 import de.hub.srcrepo.gitmodel.ParentRelation
 import de.hub.srcrepo.gitmodel.JavaDiff
 import org.eclipse.gmt.modisco.java.MethodDeclaration
+import org.eclipse.gmt.modisco.java.Package
+import org.eclipse.gmt.modisco.java.PrimitiveTypeBoolean
+import org.eclipse.gmt.modisco.java.PrimitiveType
 
 class ScalaTest {
 
@@ -42,5 +45,24 @@ class ScalaTest {
 		    	    aType.getBodyDeclarations().aggregate(0, (bd,t:Int) => 
 		    	      if (bd.isInstanceOf[MethodDeclaration]) 1 else 0))
 		      else 0)));
+	}
+	
+	def traverseJavaModel(self: Model): Boolean = {
+	  def traversePackage(p:Package): Boolean = {
+	    p.getOwnedPackages().forAll(traversePackage) &&
+	    p.getOwnedElements().forAll(at => {
+	      at.getUsagesInTypeAccess().forAll(usage => usage != null)
+	    })
+	  }
+	  
+	  self.getOwnedElements().forAll(traversePackage);
+	}
+	
+	def traversePrimitives(self: Model): Boolean = {
+	  self.getOrphanTypes().forAll(item => item.getUsagesInTypeAccess().forAll(usage => usage != null))
+	}
+	
+	def traverseJavaModelViaCU(self: Model): Boolean = {
+	  self.getCompilationUnits().forAll(cu => !cu.getTypes().isEmpty())
 	}
 }

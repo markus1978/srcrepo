@@ -8,8 +8,8 @@ import org.junit.Before;
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
-import de.hub.emffrag.fragmentation.IndexBasedIdSemantics;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
+import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelFactory;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage;
@@ -61,7 +61,9 @@ public class EmfFragSrcRepoTest extends SrcRepoTest {
 		super.init();
 		EmfFragActivator.instance.useBinaryFragments = useBinaryFragments();
 		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
-		EmfFragActivator.instance.idSemantics = new IndexBasedIdSemantics(IdBehaviour.defaultModel);
+		EmfFragActivator.instance.idSemantics = 
+				//new IndexBasedIdSemantics(IdBehaviour.defaultModel);
+				new NoReferencesIdSemantics(IdBehaviour.defaultModel);
 	}
 
 	@Override
