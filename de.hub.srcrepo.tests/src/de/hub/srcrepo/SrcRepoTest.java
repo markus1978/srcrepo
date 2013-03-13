@@ -95,6 +95,8 @@ public class SrcRepoTest {
 		System.out.println("Classes: " + scalaTest.countTopLevelClasses(javaModel));
 		System.out.println("Methods: " + scalaTest.countMethodDeclarations(javaModel));
 		System.out.println("Type usages: " + scalaTest.countTypeUsages(javaModel));
-		System.out.println("##: " + scalaTest.traverseJavaModelViaCU(javaModel));		
+		System.out.println("##: " + scalaTest.traverseJavaModelViaCU(javaModel));
+		System.out.println("McCabe: " + scalaTest.mcCabeMetric(javaModel));
+		System.out.println("null?: " + scalaTest.nullMethod(javaModel).getName());
 	}
 }
