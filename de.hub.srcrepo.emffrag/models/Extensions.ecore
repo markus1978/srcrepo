@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="extensions"
+    nsURI="http://srcrepo/extensions/1.0" nsPrefix="sre">
+  <eClassifiers xsi:type="ecore:EClass" name="ImportLog" eSuperTypes="../../de.hub.emffrag/metamodels/emffrag.ecore#//Extension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
+        eType="#//ImportLogEntry" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ImportLogEntry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exception" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exceptionMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ImportLogEntryType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ImportLogEntryType">
+    <eLiterals name="info"/>
+    <eLiterals name="failed" value="1"/>
+    <eLiterals name="undefined" value="2"/>
+  </eClassifiers>
+</ecore:EPackage>

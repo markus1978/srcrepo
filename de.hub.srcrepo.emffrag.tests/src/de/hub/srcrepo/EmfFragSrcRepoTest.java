@@ -10,6 +10,7 @@ import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
+import de.hub.srcrepo.emffrag.EmfFragImportConfiguration;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelFactory;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage;
@@ -27,7 +28,7 @@ public class EmfFragSrcRepoTest extends SrcRepoTest {
 	}
 	
 	protected JGitUtil.ImportConfiguration createImportConfiguration() {
-		JGitUtil.ImportConfiguration config = new JGitUtil.ImportConfiguration() {			
+		JGitUtil.ImportConfiguration config = new EmfFragImportConfiguration() {			
 			@Override
 			public JavaPackage getJavaPackage() {
 				return JavaPackage.eINSTANCE;

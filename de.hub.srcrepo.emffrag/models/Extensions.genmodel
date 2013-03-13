@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.hub.srcrepo.emffrag/src"
+    modelPluginID="de.hub.srcrepo.emffrag" modelName="Extensions" rootExtendsClass="de.hub.emffrag.fragmentation.FObjectImpl"
+    importerID="org.eclipse.emf.importer.ecore" featureDelegation="Dynamic" containmentProxies="true"
+    complianceLevel="6.0" copyrightFields="false" usedGenPackages="../../de.hub.emffrag/metamodels/emffrag.genmodel#//emffrag">
+  <foreignModel>Extensions.ecore</foreignModel>
+  <genPackages prefix="Extensions" basePackage="de.hub.srcrepo.emffrag" disposableProviderFactory="true"
+      ecorePackage="Extensions.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Extensions.ecore#//ImportLogEntryType">
+      <genEnumLiterals ecoreEnumLiteral="Extensions.ecore#//ImportLogEntryType/info"/>
+      <genEnumLiterals ecoreEnumLiteral="Extensions.ecore#//ImportLogEntryType/failed"/>
+      <genEnumLiterals ecoreEnumLiteral="Extensions.ecore#//ImportLogEntryType/undefined"/>
+    </genEnums>
+    <genClasses ecoreClass="Extensions.ecore#//ImportLog">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Extensions.ecore#//ImportLog/entries"/>
+    </genClasses>
+    <genClasses ecoreClass="Extensions.ecore#//ImportLogEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Extensions.ecore#//ImportLogEntry/message"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Extensions.ecore#//ImportLogEntry/exception"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Extensions.ecore#//ImportLogEntry/exceptionMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Extensions.ecore#//ImportLogEntry/type"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

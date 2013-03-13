@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.jgit.api.Git;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,6 +60,12 @@ public class SrcRepoTest {
 			public void configure(Resource model) {
 				
 			}
+
+			@Override
+			public MoDiscoGitModelImportVisitor createMoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel,
+					Model javaModel, String lastCommit) {
+				return new MoDiscoGitModelImportVisitor(git, gitModel, javaModel, lastCommit);
+			}						
 		};
 		return config;
 	}

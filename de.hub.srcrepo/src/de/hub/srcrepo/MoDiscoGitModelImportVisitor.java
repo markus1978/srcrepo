@@ -64,6 +64,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private JavaReader javaReader;
 	private SrcRepoBindingManager javaBindings;
 	private CompilationUnit lastCU;
+	private Commit currentCommit;
 	private int i = 0;
 	
 	private final String lastCommit; 
@@ -111,6 +112,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		if (commit.getName().equals(lastCommit)) {
 			return false;
 		}
+		currentCommit = commit;
 		
 		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + " (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
 		// checkout the corresponding revision and update the eclipse project
@@ -119,12 +121,12 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			javaProjectStructure.refresh();
 		} catch (JGitInternalException e) {
 			if (e.getMessage().contains("conflict")) {
-				SrcRepoActivator.INSTANCE.warning("Checkout with conflicts: " + e.getMessage());
+				reportImportError(currentCommit, "Checkout with conflicts", e, true);
 			} else {
-				SrcRepoActivator.INSTANCE.error("Exception while checking out and updating IJavaProject", e);	
+				reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
 			}			
 		} catch (Exception e) {
-			SrcRepoActivator.INSTANCE.error("Exception while checking out and updating IJavaProject", e);
+			reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
 		}
 
 		// TODO one JavaReader instance should be enough
@@ -169,14 +171,22 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
 		}
 		
-		loop: for (ParentRelation parentRelation: commit.getParentRelations()) {
+		boolean hasProjectFileDiff = false;
+		loop: for (ParentRelation parentRelation: commit.getParentRelations()) {			
 			for (Diff diff: parentRelation.getDiffs()) {
 				if (isProjectFileDiff(diff)) {
-					javaProjectStructure.update();
+					hasProjectFileDiff = true;
 					break loop;
 				}
+			}			
+		}	
+		if (hasProjectFileDiff) {
+			try {
+				javaProjectStructure.update();
+			} catch (Exception e) {
+				reportImportError(currentCommit, "Exception during updating a project structure.", e, false);
 			}
-		}		
+		}
 
 		return true;
 	}
@@ -192,16 +202,20 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	public void onCompleteCommit(Commit commit) {
 		// this is only necessary, if there was some java in the current revision.
 		if (javaReader.getResultModel() != null) {
-			// merge bindings and then resolve all references (indirectly via
-			// #terminate)
-			SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
-			if (javaBindings == null) {
-				javaBindings = commitBindings;
-			} else {
-				javaBindings.addBindings(commitBindings);
-				javaReader.setGlobalBindings(javaBindings);
+			try {
+				// merge bindings and then resolve all references (indirectly via
+				// #terminate)
+				SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
+				if (javaBindings == null) {
+					javaBindings = commitBindings;
+				} else {
+					javaBindings.addBindings(commitBindings);
+					javaReader.setGlobalBindings(javaBindings);
+				}
+				javaReader.terminate(new NullProgressMonitor());
+			} catch (Exception e) {
+				reportImportError(currentCommit, "Exception on resolving references at the end of processing a commit.", e, false);
 			}
-			javaReader.terminate(new NullProgressMonitor());
 		}
 	}
 
@@ -234,7 +248,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 					javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
 				} catch (Exception e) {
 					if (e.getClass().getName().endsWith("AbortCompilation")) {
-						SrcRepoActivator.INSTANCE.warning("Could not compile a compilation unit (is ignored): " + e.getMessage());
+						reportImportError(currentCommit, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
 					} else {
 						throw new RuntimeException(e);
 					}
@@ -242,10 +256,10 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				if (lastCU != null) {
 					javaDiff.setCompilationUnit(lastCU);
 				} else {
-					SrcRepoActivator.INSTANCE.error("Reading comilation unit did not result in a CompilationUnit model for " + path);
+					reportImportError(currentCommit, "Reading comilation unit did not result in a CompilationUnit model for " + path, null, true);
 				}
 			} else {
-				SrcRepoActivator.INSTANCE.error("Could not find a compilation unit at JavaDiff path " + path);
+				reportImportError(currentCommit, "Could not find a compilation unit at JavaDiff path " + path, null, true);
 			}
 		} 
 	}
@@ -259,7 +273,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		return diff.getNewPath().endsWith(".project") && new Path(diff.getNewPath()).lastSegment().equals(".project");
 	}
 	
-	private static class JavaProjectStructure {
+	private class JavaProjectStructure {
 		private static final String METADATA_FOLDER = ".metadata";
 		
 		private final Map<IPath, IJavaProject> javaProjects = new HashMap<IPath, IJavaProject>();
@@ -295,7 +309,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				    
 				    javaProjects.put(projectPath, javaProject);
 				} catch (CoreException e) {
-					SrcRepoActivator.INSTANCE.error("Exception during importing a project into workspace, the project is ignored.", e);
+					reportImportError(currentCommit, "Exception during importing a project into workspace, the project is ignored.", e, true);
 				}				
 			}
 		}
@@ -347,7 +361,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				try {
 					directoriesVisited.add(directory.getCanonicalPath());
 				} catch (IOException exception) {
-					SrcRepoActivator.INSTANCE.error("Could not get path for directory in working copy. Not all directories are checked for projects.", exception);
+					reportImportError(currentCommit, "Could not get path for directory in working copy. Not all directories are checked for projects.", exception, false);
 				}
 			}
 
@@ -373,7 +387,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 								continue;
 							}
 						} catch (IOException exception) {
-							SrcRepoActivator.INSTANCE.error("Could not get path for directory in working copy. Not all directories are checked for projects.", exception);
+							reportImportError(currentCommit, "Could not get path for directory in working copy. Not all directories are checked for projects.", exception, false);
 						}
 						collectProjectFilesFromDirectory(files, contents[i], directoriesVisited);
 					}
@@ -382,5 +396,15 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			return true;
 		}
 	}
-
+	
+	protected void reportImportError(EObject owner, String message, Exception e, boolean controlledFail) {
+		if (e != null) {
+			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "]";
+		}
+		if (controlledFail) {			
+			SrcRepoActivator.INSTANCE.warning(message, e);
+		} else {
+			SrcRepoActivator.INSTANCE.error(message, e);
+		}
+	}
 }

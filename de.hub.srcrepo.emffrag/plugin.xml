@@ -10,5 +10,10 @@
 		        class="de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage"
 		        genModel="models/JavaModel.genmodel"
 		        uri="http://gitmodel/1.0/emffrag"/>
+  <package
+        class="de.hub.srcrepo.emffrag.extensions.ExtensionsPackage"
+        genModel="models/Extensions.genmodel"
+        uri="http://srcrepo/extensions/1.0">
+  </package>
 	</extension>
 </plugin>

@@ -60,7 +60,7 @@ public class MoDiscoTest {
 			Assert.assertTrue("The example project does not cointain the Hello World class",
 					new ScalaTest().checkClassExists((Model) obj, "HelloWorld"));
 			Assert.assertFalse("A class exists that should not", new ScalaTest().checkClassExists((Model) obj, "NoClass"));
-			Assert.assertTrue(new ScalaTest().selectType((Model) obj, "HelloWorld").getName().equals("HelloWorld"));
+			Assert.assertTrue(new ScalaTest().findType((Model) obj, "HelloWorld").getName().equals("HelloWorld"));
 		}
 	}
 

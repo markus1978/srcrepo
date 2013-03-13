@@ -50,6 +50,7 @@ public class JGitUtil {
 		public JavaPackage getJavaPackage();
 		public GitModelPackage getGitPackage();
 		public SourceRepository createSourceRepository();
+		public MoDiscoGitModelImportVisitor createMoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model javaModel, String lastCommit);
 	}
 	
 	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, ImportConfiguration config) throws Exception {
@@ -78,7 +79,7 @@ public class JGitUtil {
 		modelImport.runImport();
 		
 		// visit the git commits and import java on the fly		
-		MoDiscoGitModelImportVisitor visitor = new MoDiscoGitModelImportVisitor(git, gitModel, javaModel, lastCommit);
+		MoDiscoGitModelImportVisitor visitor = config.createMoDiscoGitModelImportVisitor(git, gitModel, javaModel, lastCommit);
 		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), Direction.FROM_PARENT, visitor);
 		
 		// save the resulting model in its resource
