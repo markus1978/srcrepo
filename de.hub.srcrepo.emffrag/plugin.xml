@@ -10,10 +10,33 @@
 		        class="de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage"
 		        genModel="models/JavaModel.genmodel"
 		        uri="http://gitmodel/1.0/emffrag"/>
-  <package
-        class="de.hub.srcrepo.emffrag.extensions.ExtensionsPackage"
-        genModel="models/Extensions.genmodel"
-        uri="http://srcrepo/extensions/1.0">
-  </package>
-	</extension>
+		<package
+		        class="de.hub.srcrepo.emffrag.extensions.ExtensionsPackage"
+		        genModel="models/Extensions.genmodel"
+		        uri="http://srcrepo/extensions/1.0">
+		</package>
+    </extension>
+	
+    <extension
+	         id="application"
+	         point="org.eclipse.core.runtime.applications">
+		<application>
+	         <run
+	               class="de.hub.srcrepo.emffrag.EmfFragSrcRepoImport">
+	         </run>
+	    </application>
+    </extension>
+    <extension
+          id="headless"
+          point="org.eclipse.core.runtime.products">
+       <product
+             application="de.hub.srcrepo.emffrag.application"
+             name="Import">
+          <property
+                name="appName"
+                value="Import">
+          </property>
+       </product>
+    </extension>
+	
 </plugin>

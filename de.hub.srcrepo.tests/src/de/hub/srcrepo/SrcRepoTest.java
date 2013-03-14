@@ -70,7 +70,7 @@ public class SrcRepoTest {
 		return config;
 	}
 	
-//	@Test
+	@Test
 	public void testImportJavaGitModel() throws Exception {					
 		init();
 		try {
