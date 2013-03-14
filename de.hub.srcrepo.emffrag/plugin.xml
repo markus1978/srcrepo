@@ -38,5 +38,17 @@
           </property>
        </product>
     </extension>
+    <extension
+          id="srcrepo"
+          point="org.eclipse.core.runtime.products">
+       <product
+             application="de.hub.srcrepo.emffrag.application"
+             name="srcrepo">
+          <property
+                name="appName"
+                value="srcrepo">
+          </property>
+       </product>
+    </extension>
 	
 </plugin>

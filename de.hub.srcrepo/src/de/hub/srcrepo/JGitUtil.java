@@ -57,7 +57,7 @@ public class JGitUtil {
 		return importGit(cloneURL, workingDirectory, modelURI, "", config);
 	}
 	
-	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, String lastCommit, ImportConfiguration config) throws Exception {
+	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, String lastCommit, ImportConfiguration config) throws Exception {		
 		lastCommit = lastCommit == null ? "" : lastCommit;
 		ResourceSet rs = new ResourceSetImpl();
 		Resource model = rs.createResource(modelURI);
@@ -70,7 +70,9 @@ public class JGitUtil {
 		
 		// create git and clone repository
 		Git git = null;		
-		git = JGitUtil.clone(cloneURL, workingDirectory);
+		if (cloneURL != null && !cloneURL.trim().equals("")) {
+			git = JGitUtil.clone(cloneURL, workingDirectory);
+		}
 		git = Git.open(new File(workingDirectory));
 
 		

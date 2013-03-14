@@ -6,15 +6,26 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 
+import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
+import de.hub.emffrag.mongodb.MongoDBUtil;
 import de.hub.srcrepo.JGitUtil;
+import de.hub.srcrepo.SrcRepoActivator;
 
 public class EmfFragSrcRepoImport implements IApplication {
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		EmfFragActivator.class.getName();
+		EmfFragMongoDBActivator.class.getName();
+		SrcRepoActivator.class.getName();
+
 		final Map<?,?> args = context.getArguments();  
-		final String[] appArgs = (String[]) args.get("application.args");		
-		JGitUtil.importGit(appArgs[0], appArgs[1], URI.createURI(appArgs[2]), new EmfFragImportConfiguration());		
+		final String[] appArgs = (String[]) args.get("application.args");
+		URI dbURI = URI.createURI(appArgs[2]);
+		
+		MongoDBUtil.dropCollection(dbURI);	
+		JGitUtil.importGit(appArgs[0], appArgs[1], dbURI, new EmfFragImportConfiguration());		
 		return IApplication.EXIT_OK;
 	}
 
