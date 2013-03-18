@@ -30,6 +30,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jgit.api.CheckoutCommand.Stage;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
@@ -117,7 +118,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + " (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
 		// checkout the corresponding revision and update the eclipse project
 		try {
-			git.checkout().setName(commit.getName()).call();
+			git.checkout().setForce(true).setStage(Stage.THEIRS).setName(commit.getName()).call();
 			javaProjectStructure.refresh();
 		} catch (JGitInternalException e) {
 			if (e.getMessage().contains("conflict")) {
