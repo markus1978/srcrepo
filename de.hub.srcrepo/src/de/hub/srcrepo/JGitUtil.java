@@ -46,6 +46,7 @@ public class JGitUtil {
 	}
 	
 	public interface ImportConfiguration {
+		public void configureBefore();
 		public void configure(Resource model);
 		public JavaPackage getJavaPackage();
 		public GitModelPackage getGitPackage();
@@ -57,7 +58,9 @@ public class JGitUtil {
 		return importGit(cloneURL, workingDirectory, modelURI, "", config);
 	}
 	
-	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, String lastCommit, ImportConfiguration config) throws Exception {		
+	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, String lastCommit, ImportConfiguration config) throws Exception {	
+		config.configureBefore();
+		
 		lastCommit = lastCommit == null ? "" : lastCommit;
 		ResourceSet rs = new ResourceSetImpl();
 		Resource model = rs.createResource(modelURI);

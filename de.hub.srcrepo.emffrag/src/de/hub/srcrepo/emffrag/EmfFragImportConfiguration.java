@@ -9,8 +9,8 @@ import org.eclipse.jgit.api.Git;
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
-import de.hub.emffrag.fragmentation.IndexBasedIdSemantics;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
+import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
 import de.hub.emffrag.util.Extensions;
 import de.hub.srcrepo.JGitUtil;
 import de.hub.srcrepo.MoDiscoGitModelImportVisitor;
@@ -22,7 +22,13 @@ import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelFactory;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage;
 
-public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration {		
+public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration {	
+	
+	@Override
+	public void configureBefore() {
+		EmfFragActivator.instance.useBinaryFragments = true;
+	}
+
 	@Override
 	public JavaPackage getJavaPackage() {
 		return JavaPackage.eINSTANCE;
@@ -42,7 +48,7 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 	public void configure(Resource model) {
 		EmfFragActivator.instance.collectStatistics = true;
 		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
-		EmfFragActivator.instance.idSemantics = new IndexBasedIdSemantics(IdBehaviour.defaultModel);
+		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
 		EmfFragActivator.instance.defaultModel = (FragmentedModel)model;
 	}
 

@@ -40,7 +40,13 @@ public class SrcRepoTest {
 	}
 	
 	protected JGitUtil.ImportConfiguration createImportConfiguration() {
-		JGitUtil.ImportConfiguration config = new JGitUtil.ImportConfiguration() {			
+		JGitUtil.ImportConfiguration config = new JGitUtil.ImportConfiguration() {		
+			
+			@Override
+			public void configureBefore() {
+				
+			}
+
 			@Override
 			public JavaPackage getJavaPackage() {
 				return JavaPackage.eINSTANCE;
