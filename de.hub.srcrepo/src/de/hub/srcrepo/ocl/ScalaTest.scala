@@ -22,14 +22,7 @@ import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 
 class ScalaTest {
 
-	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]) = new OclList[E](l)
-	implicit def elistToFirst[E >: Null <: AnyRef](l: EList[E]) = {
-		if (l.isEmpty()) {
-			null
-		} else {
-			l.get(0)
-		}
-	}
+	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l)
 
 	def checkClassExists(self: Model, name: String): Boolean = {
 		self.getCompilationUnits() exists (cu =>
@@ -40,7 +33,7 @@ class ScalaTest {
 	def findType(self: Model, name: String): AbstractTypeDeclaration = {
 	  self.getOwnedElements().closure((p)=>p.getOwnedPackages())
 	  	.collectAll((p)=>p.getOwnedElements())
-	  	.select((at)=>at.getName().equals(name))
+	  	.select((at)=>at.getName().equals(name)).first()
 	}
 	
 	def collectAllTypes(self: Model) = 
@@ -102,7 +95,7 @@ class ScalaTest {
 	  model.eContents().closure((e)=>e.eContents())
 	  	.select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
 	  	.collect((e)=>e.asInstanceOf[AbstractMethodDeclaration])
-	  	.select((e)=>e.getBody() == null).get(0)
+	  	.select((e)=>e.getBody() == null).first()
 	}
 	
 //	def mcCabeMetric(model: Model) = {

@@ -14,6 +14,8 @@ class OclList[E >: Null <: AnyRef](val l: EList[E]) {
     r
   }
   
+  def first():E = l.get(0)
+  
   def exists(predicate: (E)=>Boolean): Boolean = 
     iterate(()=>false, (e,r:Boolean)=>predicate(e) || r)
  

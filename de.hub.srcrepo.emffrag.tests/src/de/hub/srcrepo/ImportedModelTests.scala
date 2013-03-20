@@ -2,20 +2,22 @@ package de.hub.srcrepo
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.eclipse.gmt.modisco.java.Model
 import org.junit.Before
 import org.junit.Test
+import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour
+import de.hub.emffrag.fragmentation.NoReferencesIdSemantics
+import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
+import de.hub.emffrag.EmfFragActivator
+import de.hub.srcrepo.emffrag.extensions.ExtensionsPackage
+import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage
 import de.hub.srcrepo.gitmodel.JavaDiff
 import de.hub.srcrepo.gitmodel.SourceRepository
-import de.hub.emffrag.EmfFragActivator
-import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
-import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage
-import de.hub.srcrepo.emffrag.extensions.ExtensionsPackage
-import de.hub.emffrag.fragmentation.NoReferencesIdSemantics
-import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour
+import de.hub.srcrepo.ocl.HandleCollectionConversions
+import de.hub.srcrepo.gitmodel.Diff
 
-class ImportedModelTests extends ScalaTest {
+class ImportedModelTests extends HandleCollectionConversions {
   
   val uriString = "mongodb://141.20.23.228/emffrag.bin"
     
@@ -25,6 +27,7 @@ class ImportedModelTests extends ScalaTest {
     
   @Before def init() {
     EmfFragActivator.standalone(JavaPackage.eINSTANCE, GitModelPackage.eINSTANCE, ExtensionsPackage.eINSTANCE);
+    EmfFragActivator.instance.logInStandAlone = true;
     EmfFragMongoDBActivator.standalone();
     SrcRepoActivator.standalone();
     
@@ -39,7 +42,13 @@ class ImportedModelTests extends ScalaTest {
   }
   
   @Test def testJavaDiffs() {
-    val javaDiffs = gitModel.getAllCommits().collectAll((e)=>e.getParentRelations()).collectAll((e)=>e.getDiffs()).select((e)=>e.isInstanceOf[JavaDiff]).collect((e)=>e.asInstanceOf[JavaDiff])
+    val javaDiffs = 
+      gitModel.getAllCommits()
+      .collectAll((e)=>e.getParentRelations())
+      .collectAll((e)=>e.getDiffs())
+      .select((e:Diff)=>{e.isInstanceOf[JavaDiff]})
+      .collect((e)=>e.asInstanceOf[JavaDiff])
+      
     val allJavaDiffs = javaDiffs.size()
     val javaDiffsWithCU = javaDiffs.select((e)=>e.getCompilationUnit() != null).size()
     
