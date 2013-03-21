@@ -16,6 +16,8 @@ import de.hub.srcrepo.gitmodel.JavaDiff
 import de.hub.srcrepo.gitmodel.SourceRepository
 import de.hub.srcrepo.ocl.HandleCollectionConversions
 import de.hub.srcrepo.gitmodel.Diff
+import de.hub.emffrag.fragmentation.FInternalObjectImpl
+import de.hub.emffrag.fragmentation.FragmentedModel
 
 class ImportedModelTests extends HandleCollectionConversions {
   
@@ -27,7 +29,7 @@ class ImportedModelTests extends HandleCollectionConversions {
     
   @Before def init() {
     EmfFragActivator.standalone(JavaPackage.eINSTANCE, GitModelPackage.eINSTANCE, ExtensionsPackage.eINSTANCE);
-    EmfFragActivator.instance.logInStandAlone = true;
+    EmfFragActivator.instance.logInStandAlone = false;
     EmfFragMongoDBActivator.standalone();
     SrcRepoActivator.standalone();
     
@@ -36,6 +38,8 @@ class ImportedModelTests extends HandleCollectionConversions {
     
     val rs = new ResourceSetImpl()
     resource = rs.createResource(URI.createURI(uriString))
+    
+    EmfFragActivator.instance.defaultModel = resource.asInstanceOf[FragmentedModel]
     
     javaModel = resource.getContents().get(1).asInstanceOf[Model]
     gitModel = resource.getContents().get(0).asInstanceOf[SourceRepository]
