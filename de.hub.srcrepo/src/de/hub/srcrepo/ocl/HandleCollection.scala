@@ -207,6 +207,3 @@ class HandleCollectionConversions {
   }
 }
 
-
-//class HandleCollection[E](val theHandle:Handle[E]) extends Collection[E] { def handle():Handle[E] = theHandle }
-
