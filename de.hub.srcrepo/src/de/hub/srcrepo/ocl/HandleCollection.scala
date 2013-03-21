@@ -2,19 +2,19 @@ package de.hub.srcrepo.ocl
 import de.hub.srcrepo.OclCollection
 import java.util.Iterator
 
-trait Handle[E] { 
+protected trait Handle[E] { 
   def isNull(): Boolean
   def value(): E
   def next(): Handle[E]
 }
 
-class ListHandle[E](val l:List[E], val index:Int) extends Handle[E] {
+protected class ListHandle[E](val l:List[E], val index:Int) extends Handle[E] {
   override def isNull() = index >= l.length
   override def value():E = l(index)
   override def next = new ListHandle(l, index + 1)
 }
 
-class TreeHandle[P,E](
+protected class TreeHandle[P,E](
     val parent:()=>Handle[P], 
     val children:(Handle[P])=>Handle[E], 
     val childHandle:Handle[E]) extends Handle[E] {
@@ -56,25 +56,25 @@ class TreeHandle[P,E](
   }
 }
 
-class HeadHandle[E](val head:Handle[E], val tail:Handle[E]) extends Handle[E] {  
+protected class HeadHandle[E](val head:Handle[E], val tail:Handle[E]) extends Handle[E] {  
   override def isNull() = head.isNull();
   override def value() = head.value();
   override def next() = tail;
 }
 
-class ValueHandle[E](val theValue:E) extends Handle[E] {
+protected class ValueHandle[E](val theValue:E) extends Handle[E] {
   override def isNull() = false
   override def value() = theValue
   override def next() = new NullHandle[E]()
 }
 
-class NullHandle[E]() extends Handle[E] {
+protected class NullHandle[E]() extends Handle[E] {
   override def value() = throw new UnsupportedOperationException
   override def isNull() = true
   override def next() = this
 }
 
-class IteratorHandle[E](val i:java.util.Iterator[E]) extends Handle[E] {
+protected class IteratorHandle[E](val i:java.util.Iterator[E]) extends Handle[E] {
   class Value(val value:E)
   var current = if (i.hasNext()) new Value(i.next()) else null
   override def value() =  current.value
@@ -89,7 +89,7 @@ class IteratorHandle[E](val i:java.util.Iterator[E]) extends Handle[E] {
   override def isNull() = current == null
 }
 
-class HandleIterator[E](var h:Handle[E]) extends java.util.Iterator[E] {
+protected class HandleIterator[E](var h:Handle[E]) extends java.util.Iterator[E] {
   override def hasNext():Boolean = {
     h.isNull()
   }
@@ -99,7 +99,7 @@ class HandleIterator[E](var h:Handle[E]) extends java.util.Iterator[E] {
 
 abstract class HandleCollection[E]() extends OclCollection[E] { 
   
-  def handle():Handle[E]
+  protected def handle():Handle[E]
   
   private def createHandle[R](b:OclCollection[R]):Handle[R] = { 
     if (b.isInstanceOf[HandleCollection[R]]) {      
@@ -181,7 +181,7 @@ abstract class HandleCollection[E]() extends OclCollection[E] {
     compute[OclCollection[E],E](closure.map, (h:Handle[E])=>new HandleBasedHandleCollection(h))
   }
   
-  class RecursiveMap[E](val pred:(E)=>Handle[E]) {
+  private class RecursiveMap[E](val pred:(E)=>Handle[E]) {
     def map:(E)=>Handle[E] = 
       (e)=>new TreeHandle[E,E](
           ()=>new HeadHandle(new ValueHandle(e), pred(e)), 
@@ -194,7 +194,7 @@ abstract class HandleCollection[E]() extends OclCollection[E] {
   }
 }
 
-class HandleBasedHandleCollection[E](val theHandle:Handle[E]) extends HandleCollection[E] {
+private class HandleBasedHandleCollection[E](val theHandle:Handle[E]) extends HandleCollection[E] {
   override def handle():Handle[E] = theHandle
 }
 
