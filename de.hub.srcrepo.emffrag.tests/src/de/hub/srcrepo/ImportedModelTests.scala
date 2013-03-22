@@ -26,7 +26,8 @@ import de.hub.srcrepo.emffrag.extensions.ImportLogEntry
 class ImportedModelTests extends HandleCollectionConversions {
   
 //  val uriString = "mongodb://141.20.23.228/emffrag.bin"
-  val uriString = "mongodb://localhost/de.hub.emffrag.bin"
+//  val uriString = "mongodb://localhost/de.hub.emffrag.bin"
+  val uriString = "mongodb://141.20.23.228/org.eclipse.emf.bin"
     
   var resource:Resource = null
   var javaModel:Model = null

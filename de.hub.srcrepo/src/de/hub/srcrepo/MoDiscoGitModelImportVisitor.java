@@ -127,7 +127,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		}
 		currentCommit = commit;
 		
-		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + " (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
+		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + "[" + commit.getTime() +"] (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
 		// checkout the corresponding revision and update the eclipse project
 		try {
 			git.reset().setMode(ResetType.HARD).call();
@@ -197,6 +197,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		if (hasProjectFileDiff) {
 			try {
 				javaProjectStructure.update();
+				javaProjectStructure.refresh();
 			} catch (Exception e) {
 				reportImportError(currentCommit, "Exception during updating a project structure.", e, false);
 			}
