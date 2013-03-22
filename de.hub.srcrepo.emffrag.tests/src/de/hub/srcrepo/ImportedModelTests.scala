@@ -52,9 +52,11 @@ class ImportedModelTests extends HandleCollectionConversions {
   
   @Test def countErrors() {
     var errors = 0;
+    var commitsWithErrors = 0;
     gitModel.getAllCommits().run((c)=>{
       val log:ImportLog = Extensions.get(c, classOf[ImportLog])
       if (log != null) {
+        commitsWithErrors += 1
         System.out.println(c.getName() + " -------------------------------------------------------")
         log.getEntries().run((e)=>{
           if (e.getException() == null )
@@ -66,7 +68,7 @@ class ImportedModelTests extends HandleCollectionConversions {
       }
     })
     
-    System.out.println("Import contains " + errors + " errors.");
+    System.out.println("Import contains " + errors + " errors in " + commitsWithErrors + " errornous commits.");
   }
   
   @Test def testJavaDiffs() {
