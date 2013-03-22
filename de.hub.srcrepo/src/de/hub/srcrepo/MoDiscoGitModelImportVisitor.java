@@ -69,7 +69,8 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private Commit currentCommit;
 	private int i = 0;
 	
-	private final String lastCommit; 
+	private final String lastCommit;
+	private boolean importCurrentBranch = true;
 
 	public MoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model targetModel) {
 		this(git, gitModel, targetModel, "");
@@ -111,12 +112,17 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public void onMerge(Commit mergeCommit, Commit branchCommit) {
-		// TODO
+		if (branchCommit != null) {
+			importCurrentBranch = false;
+			reportImportError(branchCommit, "Ignoring a branch because only importing the first encounterd branch.", null, true);
+		} else {
+			importCurrentBranch = true;
+		}
 	}
 
 	@Override
 	public boolean onStartCommit(Commit commit) {
-		if (commit.getName().equals(lastCommit)) {
+		if (commit.getName().equals(lastCommit) || !importCurrentBranch) {
 			return false;
 		}
 		currentCommit = commit;
@@ -307,15 +313,20 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				    }
 	
 				    IJavaProject javaProject = JavaCore.create(project);
-				    if (!javaProject.isOpen()) {
-						javaProject.open(new NullProgressMonitor());
-				    				
-					}
-				    
-				    IPath projectPath = new Path(javaProject.getProject().getDescription().getLocationURI().getPath());
-				    projectPath = projectPath.makeRelativeTo(rootPath);
-				    
-				    javaProjects.put(projectPath, javaProject);
+				    if (javaProject.exists()) {
+					    if (!javaProject.isOpen()) {
+							javaProject.open(new NullProgressMonitor());
+					    				
+						}
+					    
+					    IPath projectPath = new Path(javaProject.getProject().getDescription().getLocationURI().getPath());
+					    projectPath = projectPath.makeRelativeTo(rootPath);
+					    
+					    javaProjects.put(projectPath, javaProject);
+				    } else {
+				    	// this is actually not an error, if these projects are indeed no java projects
+				    	reportImportError(currentCommit, "The project " + projectFile.getAbsolutePath() + " is not a java project", null, true);	
+				    }
 				} catch (CoreException e) {
 					reportImportError(currentCommit, "Exception during importing a project into workspace, the project is ignored.", e, true);
 				}				
