@@ -18,10 +18,15 @@ import de.hub.srcrepo.ocl.HandleCollectionConversions
 import de.hub.srcrepo.gitmodel.Diff
 import de.hub.emffrag.fragmentation.FInternalObjectImpl
 import de.hub.emffrag.fragmentation.FragmentedModel
+import de.hub.emffrag.util.EMFFragUtil
+import de.hub.emffrag.util.Extensions
+import de.hub.srcrepo.emffrag.extensions.ImportLog
+import de.hub.srcrepo.emffrag.extensions.ImportLogEntry
 
 class ImportedModelTests extends HandleCollectionConversions {
   
-  val uriString = "mongodb://141.20.23.228/emffrag.bin"
+//  val uriString = "mongodb://141.20.23.228/emffrag.bin"
+  val uriString = "mongodb://localhost/de.hub.emffrag.bin"
     
   var resource:Resource = null
   var javaModel:Model = null
@@ -43,6 +48,25 @@ class ImportedModelTests extends HandleCollectionConversions {
     
     javaModel = resource.getContents().get(1).asInstanceOf[Model]
     gitModel = resource.getContents().get(0).asInstanceOf[SourceRepository]
+  }
+  
+  @Test def countErrors() {
+    var errors = 0;
+    gitModel.getAllCommits().run((c)=>{
+      val log:ImportLog = Extensions.get(c, classOf[ImportLog])
+      if (log != null) {
+        System.out.println(c.getName() + " -------------------------------------------------------")
+        log.getEntries().run((e)=>{
+          if (e.getException() == null )
+            println(e.getMessage())
+          else 
+        	println(e.getMessage() + ": [" + e.getException() + "] " + e.getExceptionMessage()); 
+          errors = errors + 1
+        })      
+      }
+    })
+    
+    System.out.println("Import contains " + errors + " errors.");
   }
   
   @Test def testJavaDiffs() {

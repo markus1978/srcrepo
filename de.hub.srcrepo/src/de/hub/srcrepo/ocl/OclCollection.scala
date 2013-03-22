@@ -29,6 +29,8 @@ trait OclCollection[E] extends java.lang.Iterable[E] {
   def min(expr: (E) => Double): Double
 
   def closure(expr: (E) => OclCollection[E]): OclCollection[E]
+  
+  def run(runnable: (E) => Unit): Unit
 
 //  def union[F >: E](other: OclCollection[F]): OclCollection[E]
 //

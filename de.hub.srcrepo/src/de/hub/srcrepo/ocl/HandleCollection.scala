@@ -27,7 +27,7 @@ protected class TreeHandle[P,E](
     if (parent == null || parent().isNull()) {
       this
     } else if (childHandle.isNull()) {
-      next().asInstanceOf[TreeHandle[P,E]]  
+      next()
     } else {
       this
     }
@@ -191,6 +191,10 @@ abstract class HandleCollection[E]() extends OclCollection[E] {
             else 
               map(h.value)
           })
+  }
+  
+  override def run(runnable:(E)=> Unit) {
+    compute[Unit, Unit]((e)=>{runnable(e); new NullHandle[Unit]}, (h:Handle[Unit])=>{})
   }
 }
 

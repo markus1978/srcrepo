@@ -106,6 +106,11 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		if (targetNode.eClass() == javaPackage.getCompilationUnit()) {
 			lastCU = (CompilationUnit) targetNode;
 		}
+	}	
+
+	@Override
+	public void onMerge(Commit mergeCommit, Commit branchCommit) {
+		// TODO
 	}
 
 	@Override

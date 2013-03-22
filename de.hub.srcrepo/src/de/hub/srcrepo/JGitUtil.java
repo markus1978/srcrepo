@@ -17,7 +17,6 @@ import org.eclipse.jgit.util.FileUtils;
 import de.hub.srcrepo.gitmodel.GitModelPackage;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.util.GitModelUtil;
-import de.hub.srcrepo.gitmodel.util.GitModelUtil.Direction;
 
 public class JGitUtil {
 
@@ -85,7 +84,7 @@ public class JGitUtil {
 		
 		// visit the git commits and import java on the fly		
 		MoDiscoGitModelImportVisitor visitor = config.createMoDiscoGitModelImportVisitor(git, gitModel, javaModel, lastCommit);
-		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), Direction.FROM_PARENT, visitor);
+		GitModelUtil.visitCommitHierarchy(gitModel.getRootCommit(), visitor);
 		
 		// save the resulting model in its resource
 		model.save(null);
