@@ -23,15 +23,17 @@ public class ImportEmfFragTest {
 		EmfFragMongoDBActivator.class.getName();
 		
 		EmfFragActivator.instance.useBinaryFragments = true;
+		EmfFragActivator.instance.cacheSize = 500;
 	
-		URI modelURI = URI.createURI("mongodb://localhost/srcrepo.example.bin");
+		URI modelURI = URI.createURI("mongodb://localhost/emffrag.bin");
 		MongoDBUtil.dropCollection(modelURI);
 		
 		try {
 
 			JGitUtil.importGit(
-					"https://github.com/markus1978/srcrepo.example.git", 
-					"../../../01_tmp/srcrepo/clones/srcrepo.example.git", modelURI, 
+//					"https://github.com/markus1978/srcrepo.example.git", 
+					"",
+					"../../../01_tmp/srcrepo/clones/emffrag.git", modelURI, 
 //					"31d01c2b1749c6cb87d27ecedd9fe85e1c85b99d",
 					new EmfFragImportConfiguration() {
 						@Override

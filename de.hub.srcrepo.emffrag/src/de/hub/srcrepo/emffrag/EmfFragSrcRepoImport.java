@@ -24,7 +24,13 @@ public class EmfFragSrcRepoImport implements IApplication {
 		final String[] appArgs = (String[]) args.get("application.args");
 		URI dbURI = URI.createURI(appArgs[2]);
 		
-		MongoDBUtil.dropCollection(dbURI);	
+		MongoDBUtil.dropCollection(dbURI);		
+		if (appArgs.length == 4) {
+			EmfFragActivator.instance.cacheSize = Integer.parseInt(appArgs[3]);
+		} else {
+			EmfFragActivator.instance.cacheSize = 1000;
+		}
+		
 		JGitUtil.importGit(appArgs[0], appArgs[1], dbURI, new EmfFragImportConfiguration());		
 		return IApplication.EXIT_OK;
 	}
