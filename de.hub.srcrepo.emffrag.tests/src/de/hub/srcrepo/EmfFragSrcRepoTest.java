@@ -6,7 +6,6 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.junit.Before;
 
 import de.hub.emffrag.EmfFragActivator;
-import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
@@ -61,7 +60,6 @@ public class EmfFragSrcRepoTest extends SrcRepoTest {
 	public void init() {
 		super.init();
 		EmfFragActivator.instance.useBinaryFragments = useBinaryFragments();
-		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
 		EmfFragActivator.instance.idSemantics = 
 				//new IndexBasedIdSemantics(IdBehaviour.defaultModel);
 				new NoReferencesIdSemantics(IdBehaviour.defaultModel);

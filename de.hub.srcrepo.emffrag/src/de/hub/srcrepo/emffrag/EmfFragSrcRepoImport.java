@@ -31,6 +31,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 			EmfFragActivator.instance.cacheSize = 1000;
 		}
 		
+		SrcRepoActivator.INSTANCE.info("Staring import with " + appArgs[0] + ", " + appArgs[1] + ", " + dbURI.toString());
+		
 		JGitUtil.importGit(appArgs[0], appArgs[1], dbURI, new EmfFragImportConfiguration());		
 		return IApplication.EXIT_OK;
 	}

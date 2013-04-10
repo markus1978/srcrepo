@@ -5349,6 +5349,12 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
 			 "indexes", "true"
 		   });		
 		addAnnotation
+		  (getNamedElement_UsagesInImports(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
 		  (getPackage_OwnedElements(), 
 		   source, 
 		   new String[] {
@@ -5361,7 +5367,19 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
 			 "fragments", "true"
 		   });		
 		addAnnotation
+		  (getPackage_UsagesInPackageAccess(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
 		  (getType_UsagesInTypeAccess(), 
+		   source, 
+		   new String[] {
+			 "indexes", "true"
+		   });		
+		addAnnotation
+		  (getVariableDeclaration_UsageInVariableAccess(), 
 		   source, 
 		   new String[] {
 			 "indexes", "true"

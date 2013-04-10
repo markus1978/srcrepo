@@ -7,7 +7,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 import de.hub.emffrag.EmfFragActivator;
-import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
@@ -23,7 +22,7 @@ public class ImportEmfFragTest {
 		EmfFragMongoDBActivator.class.getName();
 		
 		EmfFragActivator.instance.useBinaryFragments = true;
-		EmfFragActivator.instance.cacheSize = 500;
+		EmfFragActivator.instance.cacheSize = 10;
 	
 		URI modelURI = URI.createURI("mongodb://localhost/emffrag.bin");
 		MongoDBUtil.dropCollection(modelURI);
@@ -39,7 +38,6 @@ public class ImportEmfFragTest {
 						@Override
 						public void configure(Resource model) {
 							EmfFragActivator.instance.collectStatistics = true;
-							EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
 							EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
 							EmfFragActivator.instance.defaultModel = (FragmentedModel)model;
 						}						

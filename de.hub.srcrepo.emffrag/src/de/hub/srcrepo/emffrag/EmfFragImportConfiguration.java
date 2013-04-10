@@ -7,7 +7,6 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.eclipse.jgit.api.Git;
 
 import de.hub.emffrag.EmfFragActivator;
-import de.hub.emffrag.EmfFragActivator.IndexedValueSetBahaviour;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
@@ -47,7 +46,6 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 	@Override
 	public void configure(Resource model) {
 		EmfFragActivator.instance.collectStatistics = true;
-		EmfFragActivator.instance.indexedValueSetBahaviour = IndexedValueSetBahaviour.neverContains;
 		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
 		EmfFragActivator.instance.defaultModel = (FragmentedModel)model;
 	}
