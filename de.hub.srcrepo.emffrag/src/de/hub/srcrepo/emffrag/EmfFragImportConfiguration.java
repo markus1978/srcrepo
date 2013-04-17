@@ -7,6 +7,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.eclipse.jgit.api.Git;
 
 import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.fragmentation.FInternalObjectImpl;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
@@ -17,6 +18,7 @@ import de.hub.srcrepo.emffrag.extensions.ExtensionsFactory;
 import de.hub.srcrepo.emffrag.extensions.ImportLog;
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntry;
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntryType;
+import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelFactory;
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage;
@@ -72,7 +74,16 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 					importLogEntry.setExceptionMessage(e.getMessage());
 				}
 				importLog.getEntries().add(importLogEntry);
-			}			
+			}
+
+			@Override
+			public void onCompleteCommit(Commit commit) {
+				super.onCompleteCommit(commit);
+				EmfFragActivator.instance.defaultModel.printTelemetry();
+				FInternalObjectImpl.printTelemetry();
+			}	
+			
+			
 		};
 	}
 	

@@ -22,9 +22,10 @@ public class ImportEmfFragTest {
 		EmfFragMongoDBActivator.class.getName();
 		
 		EmfFragActivator.instance.useBinaryFragments = true;
-		EmfFragActivator.instance.cacheSize = 10;
+		EmfFragActivator.instance.cacheSize = 500;
 	
 		URI modelURI = URI.createURI("mongodb://localhost/emffrag.bin");
+//		URI modelURI = URI.createURI("mongodb://localhost/org.eclipse.emf.bin");
 		MongoDBUtil.dropCollection(modelURI);
 		
 		try {
@@ -33,6 +34,7 @@ public class ImportEmfFragTest {
 //					"https://github.com/markus1978/srcrepo.example.git", 
 					"",
 					"../../../01_tmp/srcrepo/clones/emffrag.git", modelURI, 
+//					"../../../01_tmp/srcrepo/clones/org.eclipse.emf.git/", modelURI,
 //					"31d01c2b1749c6cb87d27ecedd9fe85e1c85b99d",
 					new EmfFragImportConfiguration() {
 						@Override

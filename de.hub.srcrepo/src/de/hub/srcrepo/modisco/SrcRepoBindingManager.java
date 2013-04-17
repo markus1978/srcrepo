@@ -118,6 +118,17 @@ public class SrcRepoBindingManager extends BindingManager {
 		super(factory);
 		this.factory = factory;
 	}
+	
+	public void printTelemetry() {
+		StringBuffer info = new StringBuffer();
+		info.append("-- SrcRepoBindingManager telemetry ----------------------------\n");
+		info.append("Pendings: " + pendings.size() + "\n");
+		info.append("Targets: " + targets.size() + "\n");
+		info.append("Unresolved " + unresolvedItems.size() + "\n");
+		info.append("-- END --------------------------------------------------------" + "\n");
+		
+		System.out.println(info.toString());
+	}
 
 	/**
 	 * Constructs a {@code BindingManager} containing the factory, the targets

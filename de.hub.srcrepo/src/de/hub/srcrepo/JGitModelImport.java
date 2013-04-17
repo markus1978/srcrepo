@@ -145,5 +145,7 @@ public class JGitModelImport {
 			nextCommit = rw.parseCommit(nextCommit.getId());
 			importParentsForCommit(nextCommit);
 		}
+		
+		rw.dispose();
 	}
 }

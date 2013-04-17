@@ -16,7 +16,6 @@ import org.eclipse.gmt.modisco.java.Statement
 import org.eclipse.gmt.modisco.java.Block
 import org.eclipse.gmt.modisco.java.IfStatement
 import org.eclipse.gmt.modisco.java.WhileStatement
-import sun.tools.tree.CaseStatement
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 
@@ -78,7 +77,7 @@ class ScalaTest {
 	    .select((e)=>e.isInstanceOf[Statement])
 	    .collect((e)=>e.asInstanceOf[Statement])
 	    .sum((s)=> 
-	      if (s.isInstanceOf[IfStatement] || s.isInstanceOf[WhileStatement] || s.isInstanceOf[CaseStatement]) 1
+	      if (s.isInstanceOf[IfStatement] || s.isInstanceOf[WhileStatement]) 1 // TODO cases
 	      else if (s.isInstanceOf[MethodDeclaration]) 1
 	      else 0
 	  ) + 1.0

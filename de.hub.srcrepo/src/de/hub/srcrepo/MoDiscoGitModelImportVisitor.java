@@ -30,9 +30,8 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jgit.api.CheckoutCommand.Stage;
-import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
@@ -139,7 +138,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		try {
 			git.reset().setMode(ResetType.HARD).call();
 			git.clean().call();
-			git.checkout().setForce(true).setStage(Stage.THEIRS).setName(commit.getName()).call();
+			git.checkout().setForce(true).setName(commit.getName()).call();
 			javaProjectStructure.refresh();
 		} catch (JGitInternalException e) {
 			if (e.getMessage().contains("conflict")) {
@@ -239,6 +238,8 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			} catch (Exception e) {
 				reportImportError(currentCommit, "Exception on resolving references at the end of processing a commit.", e, false);
 			}
+			
+			((SrcRepoBindingManager)javaReader.getGlobalBindings()).printTelemetry();
 		}
 	}
 
