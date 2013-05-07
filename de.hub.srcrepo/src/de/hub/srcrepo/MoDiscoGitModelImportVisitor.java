@@ -239,7 +239,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				reportImportError(currentCommit, "Exception on resolving references at the end of processing a commit.", e, false);
 			}
 			
-			((SrcRepoBindingManager)javaReader.getGlobalBindings()).printTelemetry();
+//			((SrcRepoBindingManager)javaReader.getGlobalBindings()).printTelemetry();
 		}
 	}
 

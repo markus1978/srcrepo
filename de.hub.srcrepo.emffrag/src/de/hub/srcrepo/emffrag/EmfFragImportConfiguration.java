@@ -11,6 +11,7 @@ import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
 import de.hub.emffrag.util.Extensions;
+import de.hub.emffrag.util.MemoryGlobalEvenListener;
 import de.hub.emffrag.util.TelemetryGlobalEvenListener;
 import de.hub.srcrepo.JGitUtil;
 import de.hub.srcrepo.MoDiscoGitModelImportVisitor;
@@ -50,7 +51,8 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 		EmfFragActivator.instance.collectStatistics = true;
 		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
 		EmfFragActivator.instance.defaultModel = (FragmentedModel)model;
-		EmfFragActivator.instance.globalEventListener = new TelemetryGlobalEvenListener();
+//		EmfFragActivator.instance.globalEventListener = new TelemetryGlobalEvenListener();
+		EmfFragActivator.instance.globalEventListener = new MemoryGlobalEvenListener();
 	}
 
 	@Override
@@ -80,10 +82,9 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 			@Override
 			public void onCompleteCommit(Commit commit) {
 				super.onCompleteCommit(commit);
-				((TelemetryGlobalEvenListener)EmfFragActivator.instance.globalEventListener).printTelemetry();
+//				((TelemetryGlobalEvenListener)EmfFragActivator.instance.globalEventListener).printTelemetry();
+				((MemoryGlobalEvenListener)EmfFragActivator.instance.globalEventListener).removeUnessesaryObjects();
 			}	
-			
-			
 		};
 	}
 	
