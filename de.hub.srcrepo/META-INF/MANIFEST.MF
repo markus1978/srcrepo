@@ -21,3 +21,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reex
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: de.hub.srcrepo.SrcRepoActivator
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/jsch-0.1.49.jar,
+ .

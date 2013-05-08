@@ -1,5 +1,7 @@
 package de.hub.srcrepo;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
@@ -7,6 +9,8 @@ import org.osgi.framework.BundleContext;
 public class SrcRepoActivator extends Plugin {
 
 	public static SrcRepoActivator INSTANCE;
+	private boolean isStandAlone = false;
+	private boolean logInStandAlone = true;
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -14,27 +18,47 @@ public class SrcRepoActivator extends Plugin {
 		INSTANCE = this;
 	}
 
+	public void debug(String msg) {
+		log(Status.OK, msg, null);
+	}
+
 	public void info(String msg) {
-		getLog().log(new Status(Status.INFO, getBundle().getSymbolicName(), Status.OK, msg, null));
+		log(Status.INFO, msg, null);
 	}
 
 	public void warning(String msg) {
-		getLog().log(new Status(Status.WARNING, getBundle().getSymbolicName(), Status.OK, msg, null));
+		log(Status.WARNING, msg, null);		
 	}
 	
 	public void warning(String msg, Exception e) {
-		getLog().log(new Status(Status.WARNING, getBundle().getSymbolicName(), Status.OK, msg, e));
+		log(Status.WARNING, msg, e);
 	}
 	
 	public void error(String msg) {
-		getLog().log(new Status(Status.ERROR, getBundle().getSymbolicName(), Status.OK, msg, null));
+		log(Status.ERROR, msg, null);
 	}
 	
 	public void error(String msg, Exception e) {
-		getLog().log(new Status(Status.ERROR, getBundle().getSymbolicName(), Status.OK, msg, e));
+		log(Status.ERROR, msg, e);
 	}	
 	
 	public static void standalone() {
 		INSTANCE = new SrcRepoActivator();
+		INSTANCE.isStandAlone = true;
+	}
+	
+	private void log(int level, String msg, Exception e) {
+		if (!isStandAlone) {
+			try {
+				getLog().log(new Status(level, getBundle().getSymbolicName(), Status.OK, msg, e));
+			} catch (Exception ex) {
+				isStandAlone = true;
+			}	
+		}
+		if (isStandAlone) {
+			if (logInStandAlone) {
+				System.out.println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "(null)") + (e != null ? ": " + e.getMessage() : ""));
+			}
+		}		
 	}
 }

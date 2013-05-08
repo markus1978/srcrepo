@@ -2,6 +2,8 @@ package de.hub.srcrepo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -19,18 +21,26 @@ import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.gitmodel.util.GitModelUtil;
 
 public class JGitUtil {
+	
+	public static Git clone(String uri, String localPath) throws IOException {
+		return clone(uri, localPath, false);
+	}
 
 	/**
 	 * Clones the repository from the given URI and deletes any existing clone first.
 	 */
-	public static Git clone(String uri, String localPath) throws IOException {
+	public static Git clone(String uri, String localPath, boolean reuse) throws IOException {
 		CloneCommand cloneCommand = new CloneCommand();
 		cloneCommand.setCloneAllBranches(true);
 		cloneCommand.setRemote("origin");
 		cloneCommand.setURI(uri);	
 		File directory = new File(localPath);
 		if (directory.exists()) {
-			FileUtils.delete(directory, FileUtils.RECURSIVE);
+			if (reuse) {
+				return Git.open(new File(localPath));
+			} else {
+				FileUtils.delete(directory, FileUtils.RECURSIVE);
+			}
 		}
 		cloneCommand.setDirectory(directory);
 		try {
@@ -73,7 +83,7 @@ public class JGitUtil {
 		// create git and clone repository
 		Git git = null;		
 		if (cloneURL != null && !cloneURL.trim().equals("")) {
-			git = JGitUtil.clone(cloneURL, workingDirectory);
+			git = JGitUtil.clone(cloneURL, workingDirectory, false);
 		}
 		git = Git.open(new File(workingDirectory));
 
@@ -90,5 +100,35 @@ public class JGitUtil {
 		model.save(null);
 		
 		return model;
+	}
+	
+	public interface GitRunnable {
+		public void run(Git git) throws Exception;
+	}
+	
+	private static class CloneAndRunOnRepositoryListContext {
+		int i = 0;
+	}
+	
+	public static void cloneAndRunOnRepositoryList(final String[] repositoryList, final File tmpDirectory, final boolean reuse, final GitRunnable runnable) {	
+		ExecutorService es = Executors.newFixedThreadPool(16);
+		final CloneAndRunOnRepositoryListContext context = new CloneAndRunOnRepositoryListContext();
+		for (final String repository: repositoryList) {
+			es.execute(new Runnable() {
+				@Override
+				public void run() {
+					context.i++;
+					try {
+						SrcRepoActivator.INSTANCE.info("Cloning " + repository + " " + context.i + "(" + repositoryList.length + ")");
+						Git git = JGitUtil.clone(repository, tmpDirectory.toString() + repository.substring(repository.lastIndexOf("/")) + "/" + context.i + "/", reuse);
+						runnable.run(git); 
+					} catch (Exception e) {
+						SrcRepoActivator.INSTANCE.error("Could not clone or run command on " + repository, e);
+						e.printStackTrace();
+					}	
+				}
+			});
+		}
+		es.shutdown();
 	}
 }
