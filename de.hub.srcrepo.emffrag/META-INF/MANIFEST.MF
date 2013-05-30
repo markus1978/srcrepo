@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
  de.hub.emffrag;bundle-version="1.0.0";visibility:=reexport,
- de.hub.emffrag.mongodb;bundle-version="1.0.0"
+ de.hub.emffrag.mongodb;bundle-version="1.0.0",
+ de.hub.emffrag.hbase;bundle-version="1.0.0"
 Export-Package: de.hub.srcrepo.emffrag,
  de.hub.srcrepo.gitmodel,
  de.hub.srcrepo.gitmodel.emffrag.impl,
@@ -15,3 +16,5 @@ Export-Package: de.hub.srcrepo.emffrag,
  org.eclipse.gmt.modisco.java.emffrag.impl,
  org.eclipse.gmt.modisco.java.emffrag.metadata,
  org.eclipse.gmt.modisco.java.emffrag.util
+Bundle-ClassPath: .,
+ libs/commons-cli-1.2.jar

@@ -9,3 +9,4 @@ Require-Bundle: de.hub.srcrepo.tests;bundle-version="1.0.0",
  de.hub.emffrag.mongodb;bundle-version="1.0.0",
  org.scala-ide.scala.library,
  de.hub.emffrag.hbase;bundle-version="1.0.0"
+Bundle-ClassPath: .

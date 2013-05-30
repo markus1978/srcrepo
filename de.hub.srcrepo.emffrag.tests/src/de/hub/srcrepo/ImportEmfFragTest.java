@@ -11,6 +11,7 @@ import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
 import de.hub.emffrag.hbase.EmfFragHBaseActivator;
+import de.hub.emffrag.hbase.HBaseUtil;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBUtil;
 import de.hub.srcrepo.emffrag.EmfFragImportConfiguration;
@@ -25,12 +26,29 @@ public class ImportEmfFragTest {
 		
 		EmfFragActivator.instance.useBinaryFragments = true;
 		EmfFragActivator.instance.cacheSize = 100;
+		
+		boolean checkout = false;
+		
+//		String name = "srcrepo.example";
+//		String name = "emffrag";
+		String name = "org.eclipse.emf";
 	
-		URI modelURI = URI.createURI("hbase://localhost/srcrepo.example.bin");
-//		URI modelURI = URI.createURI("mongodb://localhost/srcrepo.example.bin");
-//		URI modelURI = URI.createURI("mongodb://localhost/emffrag.bin");
-//		URI modelURI = URI.createURI("mongodb://localhost/org.eclipse.emf.bin");
-		MongoDBUtil.dropCollection(modelURI);
+		String protocol = "hbase";
+//		String protocol = "mongodb";
+		
+		String cloneURL = "http://git.eclipse.org/gitroot/emf/org.eclipse.emf.git"; 
+//		String cloneURL = "https://github.com/markus1978/srcrepo.example.git";
+				
+	
+		String gitName = name + ".git";
+		String dataStoreName = name  + ".bin";
+		
+		URI modelURI = URI.createURI(protocol + "://localhost/" + dataStoreName);
+		if (protocol.equals("mongodb")) {
+			MongoDBUtil.dropCollection(modelURI);
+		} else {
+			HBaseUtil.dropTable(name);
+		}
 		
 		try {
 
@@ -44,14 +62,10 @@ public class ImportEmfFragTest {
 //							EmfFragActivator.instance.globalEventListener = new MemoryGlobalEvenListener(); done in super?
 				}						
 			};
-			JGitUtil.importGit(
-//					"http://git.eclipse.org/gitroot/emf/org.eclipse.emf.git", 
-//					"https://github.com/markus1978/srcrepo.example.git", 
-					"",
-					"../../../01_tmp/srcrepo/clones/srcrepo.example.git", modelURI, 
-//					"../../../01_tmp/srcrepo/clones/emffrag.git", modelURI, 
-//					"../../../01_tmp/srcrepo/clones/org.eclipse.emf.git/", modelURI,
-//					"31d01c2b1749c6cb87d27ecedd9fe85e1c85b99d",
+			JGitUtil.importGit( 
+					checkout ? cloneURL : "", 
+					"../../../01_tmp/srcrepo/clones/" + gitName,
+					modelURI,					
 					config);
 		} catch (Exception e) {
 			e.printStackTrace();
