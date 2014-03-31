@@ -8,7 +8,7 @@ class OclList[E >: Null <: AnyRef](val l: EList[E]) {
   
   def iterate[R](start: ()=>R, iter: (E,R)=>R): R = {
     var r = start()
-    for (val e <- l) {
+    for (e <- l) {
       r = iter(e,r);
     }
     r
@@ -67,8 +67,8 @@ class OclList[E >: Null <: AnyRef](val l: EList[E]) {
   	  
 	def join[F >: Null <: AnyRef, R](l: OclList[F], pred: (E, F) => R): EList[R] = {
 		val result = new BasicEList[R](this.l.size() * l.l.size())
-		for (val e <- this.l) {
-			for (val f <- l.l) {
+		for (e <- this.l) {
+			for (f <- l.l) {
 				val r = pred(e, f)
 				if (r != null) {
 					result.add(r)
