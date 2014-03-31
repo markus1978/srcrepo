@@ -80,7 +80,7 @@ public class SrcRepoTest {
 	public void testImportJavaGitModel() throws Exception {					
 		init();
 		try {
-			model = JGitUtil.importGit("https://github.com/markus1978/srcrepo.example.git", "../../../01_tmp/srcrepo/clones/srcrepo.example.git", 
+			model = JGitUtil.importGit("https://github.com/markus1978/srcrepo.example.git", "C:/tmp/srcrepo/clones/srcrepo.example.git", 
 					getTestSourceModelURI(), createImportConfiguration());
 		} catch (IOException e) {
 			e.printStackTrace();

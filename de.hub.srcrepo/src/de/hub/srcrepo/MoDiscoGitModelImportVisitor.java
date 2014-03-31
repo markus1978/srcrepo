@@ -136,8 +136,9 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + "[" + commit.getTime() +"] (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
 		// checkout the corresponding revision and update the eclipse project
 		try {
-			git.reset().setMode(ResetType.HARD).call();
-			git.clean().call();
+			git.clean().setCleanDirectories(true).setIgnore(true).setDryRun(false).call();
+			git.reset().setMode(ResetType.HARD).call();			
+			git.clean().setCleanDirectories(true).setIgnore(true).setDryRun(false).call();
 			git.checkout().setForce(true).setName(commit.getName()).call();
 			javaProjectStructure.refresh();
 		} catch (JGitInternalException e) {
