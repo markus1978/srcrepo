@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+//import java.nio.file.Files;
+//import java.nio.file.Path;
+//import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,9 +38,11 @@ public class RetrieveFilesFromGitRepositories {
 				for (File file: files) {
                     String fileSubPath = file.toString().substring(tmpDirectory.getAbsolutePath().length());
 					SrcRepoActivator.INSTANCE.info("Moving detected file " + fileSubPath);
-					Path path = new File(resultsDirectory.getAbsolutePath() + fileSubPath).toPath();
-					Files.createDirectories(new File(path.toString()).getParentFile().toPath());
-					Files.move(file.toPath(), path, StandardCopyOption.REPLACE_EXISTING);
+					// Java 7 required
+					throw new IllegalAccessException("uncomment following three lines and compile with Java 7.");
+//					Path path = new File(resultsDirectory.getAbsolutePath() + fileSubPath).toPath();
+//					Files.createDirectories(new File(path.toString()).getParentFile().toPath());
+//					Files.move(file.toPath(), path, StandardCopyOption.REPLACE_EXISTING);
 				}
 				git.getRepository().close();
 //				SrcRepoActivator.INSTANCE.info("Removing working directory " + workingDirectory);

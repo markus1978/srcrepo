@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
@@ -68,6 +70,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private CompilationUnit lastCU;
 	private Commit currentCommit;
 	private int i = 0;
+	private IJobManager jobManager;
 	
 	private final String lastCommit;
 
@@ -77,7 +80,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	
 	public MoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model targetModel, String lastCommit) {
 		super();
-		
+		this.jobManager = Job.getJobManager();	
 		this.lastCommit =  lastCommit;
 		this.javaPackage = (JavaPackage)targetModel.eClass().getEPackage();
 		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
@@ -125,26 +128,58 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			currentJavaBindings = null;
 		}
 	}
+	
+	private void joinWithBackgroundJob(Object family) throws InterruptedException {		
+		Job[] jobs = jobManager.find(family);
+		if (jobs.length == 1) {						
+			jobs[0].join();	
+		} else if (jobs.length > 1) {
+			throw new IllegalStateException("More then one job of a family.");
+		}
+	}
+	
+	private void joinWithBackgroundJobs() {
+		try {
+			joinWithBackgroundJob(ResourcesPlugin.FAMILY_MANUAL_REFRESH);
+			joinWithBackgroundJob(ResourcesPlugin.FAMILY_AUTO_REFRESH);
+			joinWithBackgroundJob(ResourcesPlugin.FAMILY_MANUAL_BUILD);
+			joinWithBackgroundJob(ResourcesPlugin.FAMILY_AUTO_BUILD);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
-	public boolean onStartCommit(Commit commit) {
+	public boolean onStartCommit(Commit commit) {		
 		if (commit.getName().equals(lastCommit)) {
 			return false;
 		}
 		currentCommit = commit;
 		
 		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + "[" + commit.getTime() +"] (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
-		// checkout the corresponding revision and update the eclipse project
+		// update the working tree and workspace for the next revision
 		try {
-			git.clean().setCleanDirectories(true).setIgnore(true).setDryRun(false).call();
-			git.reset().setMode(ResetType.HARD).call();			
-			git.clean().setCleanDirectories(true).setIgnore(true).setDryRun(false).call();
+			// append the further execution of this thread to the end of all possibly running conflicting jobs (e.g. refresh or build)
+			joinWithBackgroundJobs();
+			// remove a possible lock file from prior errors or crashes
+			File lockFile = new File(git.getRepository().getWorkTree().getPath() + ".git/index.lock");
+			if (lockFile.exists()) {
+				lockFile.delete();
+			}
+			// clean the working tree from ignored or other untracked files
+			git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
+			// reset possible changes
+			git.reset().setMode(ResetType.HARD).call();
+			// checkout the new revision
 			git.checkout().setForce(true).setName(commit.getName()).call();
-			javaProjectStructure.refresh();
+			// update the eclipse workspace
+			javaProjectStructure.refresh();			
+			// join with the triggered refresh and consequent build jobs
+			joinWithBackgroundJobs();
 		} catch (JGitInternalException e) {
 			if (e.getMessage().contains("conflict")) {
 				reportImportError(currentCommit, "Checkout with conflicts", e, false);
-			} else {
+			} else {				
 				reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
 			}			
 		} catch (Exception e) {
@@ -364,7 +399,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		
 		public void refresh() throws CoreException {
 			for (IJavaProject javaProject: javaProjects.values()) {
-				javaProject.getProject().refreshLocal(IProject.DEPTH_INFINITE, new NullProgressMonitor());
+				javaProject.getProject().refreshLocal(IProject.DEPTH_INFINITE, null);
 			}
 		}
 		
@@ -428,8 +463,16 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	}
 	
 	protected void reportImportError(EObject owner, String message, Exception e, boolean controlledFail) {
+		StringBuffer jobDescription = new StringBuffer("");
+		for(Job job: jobManager.find(null)) {
+			if (jobDescription.length() > 0) {
+				jobDescription.append(", ");
+			}
+			jobDescription.append(job.getName() + "(" + job.getState() + ")");
+		}
+		
 		if (e != null) {
-			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "]";
+			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "]; jobs are " + jobDescription.toString();
 		}
 		if (controlledFail) {			
 			SrcRepoActivator.INSTANCE.warning(message, e);
