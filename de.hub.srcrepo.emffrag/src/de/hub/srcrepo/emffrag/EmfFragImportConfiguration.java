@@ -17,6 +17,7 @@ import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
 import de.hub.emffrag.util.Extensions;
 import de.hub.srcrepo.JGitUtil;
 import de.hub.srcrepo.MoDiscoGitModelImportVisitor;
+import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.emffrag.extensions.ExtensionsFactory;
 import de.hub.srcrepo.emffrag.extensions.ImportLog;
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntry;
@@ -71,7 +72,8 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 						if (reference.getName().startsWith("usage")) {
 							EReference eOpposite = reference.getEOpposite();
 							if (eOpposite != null) {
-								System.out.println(reference.getEContainingClass().getName() + "." + reference.getName() + "->" + reference.getEOpposite().getEContainingClass().getName() + "." + reference.getEOpposite().getName());
+								SrcRepoActivator.INSTANCE.info(reference.getEContainingClass().getName() + "." + reference.getName() 
+										+ "->" + reference.getEOpposite().getEContainingClass().getName() + "." + reference.getEOpposite().getName());
 								eOpposite.setEOpposite(null);
 								reference.setEOpposite(null);								
 							}						

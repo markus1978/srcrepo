@@ -36,6 +36,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.errors.LockFailedException;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManager;
@@ -145,8 +146,9 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 					// update the working tree and workspace for the next revision
 					try {
 						// remove a possible lock file from prior errors or crashes
-						File lockFile = new File(git.getRepository().getWorkTree().getPath() + ".git/index.lock");
+						File lockFile = new File(git.getRepository().getWorkTree().getPath() + "/.git/index.lock");
 						if (lockFile.exists()) {
+							SrcRepoActivator.INSTANCE.info("Have to remove git lock file.");
 							lockFile.delete();
 						}
 						// clean the working tree from ignored or other untracked files
@@ -175,7 +177,10 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 						}
 						javaProjectStructure.refresh();						
 					} catch (JGitInternalException e) {
-						if (e.getMessage().contains("conflict")) {
+						if (e.getCause() instanceof LockFailedException) {
+							// TODO proper reaction
+							reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
+						} if (e.getMessage().contains("conflict")) {
 							reportImportError(currentCommit, "Checkout with conflicts", e, false);
 						} else {				
 							reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
