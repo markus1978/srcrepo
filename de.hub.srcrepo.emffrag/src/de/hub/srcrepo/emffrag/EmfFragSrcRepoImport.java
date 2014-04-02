@@ -37,6 +37,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 				withLongOpt("bulk-insert").
 				withDescription("Number of bulk inserted key-value pairs. Default is 1000.").
 				hasArg().withArgName("size").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("disable-indexes").
+				withDescription("Disables the use of indexes, turns all indexed value sets in the model as normal emf value sets.").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("disable-usages").
+				withDescription("Disables the tracking of usagesXXX opposites.").create());
 		
 		return options;
 	}
@@ -102,7 +108,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		
 		JGitUtil.importGit(commandLine.hasOption("clone") ? commandLine.getOptionValue("clone") : "", 
 				workingDirectory, 
-				dbURI, new EmfFragImportConfiguration());
+				dbURI, new EmfFragImportConfiguration(commandLine.hasOption("disable-indexes"), commandLine.hasOption("disable-usages")));
 		
 		return IApplication.EXIT_OK;
 	}

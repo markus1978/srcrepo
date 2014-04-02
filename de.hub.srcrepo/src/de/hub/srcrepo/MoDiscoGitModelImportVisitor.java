@@ -13,6 +13,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -128,122 +129,115 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			currentJavaBindings = null;
 		}
 	}
-	
-	private void joinWithBackgroundJob(Object family) throws InterruptedException {		
-		Job[] jobs = jobManager.find(family);
-		if (jobs.length == 1) {						
-			jobs[0].join();	
-		} else if (jobs.length > 1) {
-			throw new IllegalStateException("More then one job of a family.");
-		}
-	}
-	
-	private void joinWithBackgroundJobs() {
-		try {
-			joinWithBackgroundJob(ResourcesPlugin.FAMILY_MANUAL_REFRESH);
-			joinWithBackgroundJob(ResourcesPlugin.FAMILY_AUTO_REFRESH);
-			joinWithBackgroundJob(ResourcesPlugin.FAMILY_MANUAL_BUILD);
-			joinWithBackgroundJob(ResourcesPlugin.FAMILY_AUTO_BUILD);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	@Override
-	public boolean onStartCommit(Commit commit) {		
+	public boolean onStartCommit(final Commit commit) {		
 		if (commit.getName().equals(lastCommit)) {
 			return false;
 		}
 		currentCommit = commit;
 		
 		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + "[" + commit.getTime() +"] (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
-		// update the working tree and workspace for the next revision
 		try {
-			// append the further execution of this thread to the end of all possibly running conflicting jobs (e.g. refresh or build)
-			joinWithBackgroundJobs();
-			// remove a possible lock file from prior errors or crashes
-			File lockFile = new File(git.getRepository().getWorkTree().getPath() + ".git/index.lock");
-			if (lockFile.exists()) {
-				lockFile.delete();
-			}
-			// clean the working tree from ignored or other untracked files
-			git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
-			// reset possible changes
-			git.reset().setMode(ResetType.HARD).call();
-			// checkout the new revision
-			git.checkout().setForce(true).setName(commit.getName()).call();
-			// update the eclipse workspace
-			javaProjectStructure.refresh();			
-			// join with the triggered refresh and consequent build jobs
-			joinWithBackgroundJobs();
-		} catch (JGitInternalException e) {
-			if (e.getMessage().contains("conflict")) {
-				reportImportError(currentCommit, "Checkout with conflicts", e, false);
-			} else {				
-				reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
-			}			
-		} catch (Exception e) {
+			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {			
+				@Override
+				public void run(IProgressMonitor monitor) throws CoreException {
+					// update the working tree and workspace for the next revision
+					try {
+						// remove a possible lock file from prior errors or crashes
+						File lockFile = new File(git.getRepository().getWorkTree().getPath() + ".git/index.lock");
+						if (lockFile.exists()) {
+							lockFile.delete();
+						}
+						// clean the working tree from ignored or other untracked files
+						git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
+						// reset possible changes
+						git.reset().setMode(ResetType.HARD).call();
+						// checkout the new revision
+						git.checkout().setForce(true).setName(commit.getName()).call();
+						// update the eclipse workspace
+						boolean hasProjectFileDiff = false;
+						loop: for (ParentRelation parentRelation: commit.getParentRelations()) {			
+							for (Diff diff: parentRelation.getDiffs()) {
+								if (isProjectFileDiff(diff)) {
+									hasProjectFileDiff = true;
+									break loop;
+								}
+							}			
+						}	
+						if (hasProjectFileDiff) {
+							try {
+								SrcRepoActivator.INSTANCE.info("Update a project due to project file change.");
+								javaProjectStructure.update();						
+							} catch (Exception e) {
+								reportImportError(currentCommit, "Exception during updating a project structure.", e, false);
+							}
+						}
+						javaProjectStructure.refresh();						
+					} catch (JGitInternalException e) {
+						if (e.getMessage().contains("conflict")) {
+							reportImportError(currentCommit, "Checkout with conflicts", e, false);
+						} else {				
+							reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
+						}			
+					} catch (Exception e) {
+						reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
+					}					
+				}
+			}, null);
+		} catch (CoreException e) {
 			reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, false);
 		}
 
-		// TODO one JavaReader instance should be enough
-		// setup the JavaReader used to import the java model
-		javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer) {
-			@Override
-			protected BindingManager getBindingManager() {
-				return getGlobalBindings();
-			}
-
-			@Override			
-			protected void resolveMethodRedefinition(final Model model) {
-				// using our own MethodRedifnitionManager that only check the current compilation unit and not the whole model.
-				EList<CompilationUnit> compilationUnits = model.getCompilationUnits();
-				CompilationUnit compilationUnit = compilationUnits.get(compilationUnits.size() - 1);
-				SrcRepoMethodRedefinitionManager.resolveMethodRedefinitions(compilationUnit, javaFactory);
-			}
+		try {
+			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {				
+				@Override
+				public void run(IProgressMonitor monitor) throws CoreException {											
+					// TODO one JavaReader instance should be enough
+					// setup the JavaReader used to import the java model
+					javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer) {
+						@Override
+						protected BindingManager getBindingManager() {
+							return getGlobalBindings();
+						}
 			
-		};
-		javaReader.setDeepAnalysis(true);
-		javaReader.setIncremental(false);
-
-		// start with fresh bindings for each commit. These are later merged
-		// with the existing bindings from former commits.
-		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
-		// resuse existing primitive types and packages
-		if (currentJavaBindings != null) {
-			bindings.addPackageBindings(currentJavaBindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.INT.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.LONG.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.FLOAT.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.DOUBLE.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BOOLEAN.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.VOID.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.CHAR.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.SHORT.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BYTE.toString(), currentJavaBindings, bindings);
-		}
-
-		javaReader.setGlobalBindings(bindings);
-		if (javaReader.isIncremental()) {
-			javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
-		}
-		
-		boolean hasProjectFileDiff = false;
-		loop: for (ParentRelation parentRelation: commit.getParentRelations()) {			
-			for (Diff diff: parentRelation.getDiffs()) {
-				if (isProjectFileDiff(diff)) {
-					hasProjectFileDiff = true;
-					break loop;
+						@Override			
+						protected void resolveMethodRedefinition(final Model model) {
+							// using our own MethodRedifnitionManager that only check the current compilation unit and not the whole model.
+							EList<CompilationUnit> compilationUnits = model.getCompilationUnits();
+							CompilationUnit compilationUnit = compilationUnits.get(compilationUnits.size() - 1);
+							SrcRepoMethodRedefinitionManager.resolveMethodRedefinitions(compilationUnit, javaFactory);
+						}
+						
+					};
+					javaReader.setDeepAnalysis(true);
+					javaReader.setIncremental(false);
+			
+					// start with fresh bindings for each commit. These are later merged
+					// with the existing bindings from former commits.
+					SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
+					// resuse existing primitive types and packages
+					if (currentJavaBindings != null) {
+						bindings.addPackageBindings(currentJavaBindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.INT.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.LONG.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.FLOAT.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.DOUBLE.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BOOLEAN.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.VOID.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.CHAR.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.SHORT.toString(), currentJavaBindings, bindings);
+						moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BYTE.toString(), currentJavaBindings, bindings);
+					}
+			
+					javaReader.setGlobalBindings(bindings);
+					if (javaReader.isIncremental()) {
+						javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
+					}									
 				}
-			}			
-		}	
-		if (hasProjectFileDiff) {
-			try {
-				javaProjectStructure.update();
-				javaProjectStructure.refresh();
-			} catch (Exception e) {
-				reportImportError(currentCommit, "Exception during updating a project structure.", e, false);
-			}
+			}, null);
+		} catch (CoreException e) {
+			reportImportError(currentCommit, "Exception while createing MoDisco model", e, false);
 		}
 
 		return true;
@@ -258,24 +252,31 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public void onCompleteCommit(Commit commit) {
-		// this is only necessary, if there was some java in the current revision.
-		if (javaReader.getResultModel() != null) {
-			try {
-				// merge bindings and then resolve all references (indirectly via
-				// #terminate)
-				SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
-				if (currentJavaBindings == null) {
-					currentJavaBindings = commitBindings;
-				} else {
-					currentJavaBindings.addBindings(commitBindings);
-					javaReader.setGlobalBindings(currentJavaBindings);
-				}
-				javaReader.terminate(new NullProgressMonitor());
-			} catch (Exception e) {
-				reportImportError(currentCommit, "Exception on resolving references at the end of processing a commit.", e, false);
-			}
-			
-//			((SrcRepoBindingManager)javaReader.getGlobalBindings()).printTelemetry();
+		try {
+			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {			
+				@Override
+				public void run(IProgressMonitor monitor) throws CoreException {
+					// this is only necessary, if there was some java in the current revision.
+					if (javaReader.getResultModel() != null) {
+						try {
+							// merge bindings and then resolve all references (indirectly via
+							// #terminate)
+							SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
+							if (currentJavaBindings == null) {
+								currentJavaBindings = commitBindings;
+							} else {
+								currentJavaBindings.addBindings(commitBindings);
+								javaReader.setGlobalBindings(currentJavaBindings);
+							}
+							javaReader.terminate(new NullProgressMonitor());
+						} catch (Exception e) {
+							reportImportError(currentCommit, "Exception on resolving references at the end of processing a commit.", e, false);
+						}
+					}
+				}			
+			}, null);
+		} catch (CoreException e) {
+			reportImportError(currentCommit, "Error on resolving references (completing the commit)", e, false);
 		}
 	}
 
@@ -295,33 +296,42 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	}
 
 	@Override
-	public void onModifiedFile(Diff diff) {
-		if (diff instanceof JavaDiff) {
-			JavaDiff javaDiff = (JavaDiff) diff;
-			IPath path = new Path(javaDiff.getNewPath());
-			ICompilationUnit compilationUnit = javaProjectStructure.getCompilationUnitForPath(path);
-			
-			if (compilationUnit != null) {
-				lastCU = null;
-				SrcRepoActivator.INSTANCE.info("import compilation unit " + compilationUnit.getPath());
-				try {
-					javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
-				} catch (Exception e) {
-					if (e.getClass().getName().endsWith("AbortCompilation")) {
-						reportImportError(currentCommit, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
-					} else {
-						throw new RuntimeException(e);
+	public void onModifiedFile(final Diff diff) {
+		try {
+			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {			
+				@Override
+				public void run(IProgressMonitor monitor) throws CoreException {
+					if (diff instanceof JavaDiff) {
+						JavaDiff javaDiff = (JavaDiff) diff;
+						IPath path = new Path(javaDiff.getNewPath());
+						ICompilationUnit compilationUnit = javaProjectStructure.getCompilationUnitForPath(path);
+						
+						if (compilationUnit != null) {
+							lastCU = null;
+							SrcRepoActivator.INSTANCE.info("import compilation unit " + compilationUnit.getPath());
+							try {
+								javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
+							} catch (Exception e) {
+								if (e.getClass().getName().endsWith("AbortCompilation")) {
+									reportImportError(currentCommit, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
+								} else {
+									throw new RuntimeException(e);
+								}
+							}
+							if (lastCU != null) {
+								javaDiff.setCompilationUnit(lastCU);
+							} else {
+								reportImportError(currentCommit, "Reading comilation unit did not result in a CompilationUnit model for " + path, null, true);
+							}
+						} else {
+							reportImportError(currentCommit, "Could not find a compilation unit at JavaDiff path " + path, null, true);
+						}
 					}
 				}
-				if (lastCU != null) {
-					javaDiff.setCompilationUnit(lastCU);
-				} else {
-					reportImportError(currentCommit, "Reading comilation unit did not result in a CompilationUnit model for " + path, null, true);
-				}
-			} else {
-				reportImportError(currentCommit, "Could not find a compilation unit at JavaDiff path " + path, null, true);
-			}
-		} 
+			}, null);
+		} catch (CoreException e) {
+			reportImportError(currentCommit, "Error on processing modified file", e, false);
+		}
 	}
 
 	@Override
