@@ -110,7 +110,7 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 			String lastCommit) {
 		return new MoDiscoGitModelImportVisitor(git, gitModel, javaModel, lastCommit) {
 			@Override
-			protected void reportImportError(EObject owner, String message, Exception e, boolean controlled) {
+			protected void reportImportError(EObject owner, String message, Throwable e, boolean controlled) {
 				super.reportImportError(owner, message, e, controlled);
 				
 				ImportLog importLog = Extensions.get(owner, ImportLog.class);

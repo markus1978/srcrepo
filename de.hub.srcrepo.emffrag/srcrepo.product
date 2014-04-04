@@ -108,6 +108,7 @@
       <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator.manipulator"/>
+      <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.gmt.modisco.infra.common.core"/>
       <plugin id="org.eclipse.gmt.modisco.infra.discoverymanager"/>
@@ -140,6 +141,7 @@
       <plugin id="org.eclipse.modisco.kdm.source.extension"/>
       <plugin id="org.eclipse.modisco.util.atl.core"/>
       <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.pde.build"/>
       <plugin id="org.eclipse.pde.core"/>
       <plugin id="org.eclipse.swt"/>
