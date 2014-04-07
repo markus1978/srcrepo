@@ -1,13 +1,9 @@
 package de.hub.srcrepo;
 
-import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import org.eclipse.jgit.api.Git;
@@ -38,13 +34,15 @@ public class JGitModelImport {
 	private final GitModelFactory gitFactory;
 	private final Git git;
 	private final SourceRepository targetModel;
+	private final String rootCommitName;
 	
 
-	public JGitModelImport(Git git, SourceRepository targetModel) {
+	public JGitModelImport(Git git, SourceRepository targetModel, String rootCommitName) {
 		super();
 		this.gitFactory = (GitModelFactory)targetModel.eClass().getEPackage().getEFactoryInstance();
 		this.git = git;
 		this.targetModel = targetModel;
+		this.rootCommitName = rootCommitName;
 	}
 
 	private Commit createCommitModel(RevCommit commit) throws Exception {
@@ -56,6 +54,11 @@ public class JGitModelImport {
 			targetModel.getAllCommits().add(commitModel);
 			targetModel.putCommit(commit.getName(), commitModel);			
 		}
+		
+		if (rootCommitName != null && rootCommitName.equals(commitModel.getName())) {
+			targetModel.setRootCommit(commitModel);
+		}
+		
 		return commitModel;
 	}
 	

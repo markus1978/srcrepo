@@ -64,10 +64,10 @@ public class JGitUtil {
 	}
 	
 	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, ImportConfiguration config) throws Exception {
-		return importGit(cloneURL, workingDirectory, modelURI, "", config);
+		return importGit(cloneURL, workingDirectory, modelURI, null, "", config);
 	}
 	
-	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, String lastCommit, ImportConfiguration config) throws Exception {	
+	public static Resource importGit(String cloneURL, String workingDirectory, URI modelURI, String rootCommit, String lastCommit, ImportConfiguration config) throws Exception {	
 		config.configureBefore();
 		
 		lastCommit = lastCommit == null ? "" : lastCommit;
@@ -89,7 +89,7 @@ public class JGitUtil {
 
 		
 		// import the git commit structure
-		JGitModelImport modelImport = new JGitModelImport(git, gitModel);
+		JGitModelImport modelImport = new JGitModelImport(git, gitModel, rootCommit);
 		modelImport.runImport();
 		
 		// visit the git commits and import java on the fly		

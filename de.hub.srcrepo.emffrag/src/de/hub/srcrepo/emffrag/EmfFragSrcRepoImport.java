@@ -43,6 +43,10 @@ public class EmfFragSrcRepoImport implements IApplication {
 		options.addOption(OptionBuilder.
 				withLongOpt("disable-usages").
 				withDescription("Disables the tracking of usagesXXX opposites.").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("root-commit").
+				withDescription("Start the import at a specific commit.").
+				hasArg().withArgName("commit").create());
 		
 		return options;
 	}
@@ -107,8 +111,9 @@ public class EmfFragSrcRepoImport implements IApplication {
 		
 		
 		JGitUtil.importGit(commandLine.hasOption("clone") ? commandLine.getOptionValue("clone") : "", 
-				workingDirectory, 
-				dbURI, new EmfFragImportConfiguration(commandLine.hasOption("disable-indexes"), commandLine.hasOption("disable-usages")));
+				workingDirectory, dbURI, 
+				commandLine.hasOption("root-commit") ? commandLine.getOptionValue("root-commit") : null, "",
+				new EmfFragImportConfiguration(commandLine.hasOption("disable-indexes"), commandLine.hasOption("disable-usages")));
 		
 		return IApplication.EXIT_OK;
 	}

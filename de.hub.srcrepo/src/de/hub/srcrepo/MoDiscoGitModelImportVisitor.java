@@ -1,15 +1,15 @@
 package de.hub.srcrepo;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -69,9 +69,11 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	// helper
 	private final AbstractRegionDiscoverer2<Object> abstractRegionDiscoverer;
-	private final JavaProjectStructure javaProjectStructure;
+//	private final JavaProjectStructure javaProjectStructure;
 
 	// state
+	private IProject[] allProjects;
+	private IPath absoluteWorkingDirectoryPath;
 	private SrcRepoBindingManager currentJavaBindings;
 	private HashMap<Commit, SrcRepoBindingManager> bindingsPerBranch = new HashMap<Commit, SrcRepoBindingManager>();
 	private CompilationUnit lastCU;
@@ -79,8 +81,11 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private List<JavaDiff> javaDiffsInCurrentCommit = new ArrayList<JavaDiff>();
 	private int i = 0;
 	private IJobManager jobManager;
-	
+	private boolean updateJavaProjectStructureForMerge = false;
 	private final String lastCommit;
+	private int importedCompilationUnits = 0;
+	private int createdProjects = 0;
+	private int knownProjects = 0;
 
 	public MoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model targetModel) {
 		this(git, gitModel, targetModel, "");
@@ -143,7 +148,8 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		this.gitModel = gitModel;
 		this.javaModel = targetModel;
 		this.git = git;
-		this.javaProjectStructure = new JavaProjectStructure(new Path(git.getRepository().getWorkTree().getAbsolutePath()));
+		this.allProjects = new IProject[0];
+		this.absoluteWorkingDirectoryPath = new Path(git.getRepository().getWorkTree().getAbsolutePath());
 		
 		abstractRegionDiscoverer = new AbstractRegionDiscoverer2<Object>() {
 			@Override
@@ -169,6 +175,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public void onMerge(Commit mergeCommit, Commit branchCommit) {
+		updateJavaProjectStructureForMerge = true;
 		if (branchCommit != null) {
 			SrcRepoBindingManager branchBindings = bindingsPerBranch.get(branchCommit);
 			if (branchBindings == null && currentJavaBindings != null) {
@@ -178,7 +185,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			} else {
 				SrcRepoActivator.INSTANCE.info("Visit next branch on branch commit " + branchCommit.getName() + "[" + branchCommit.getTime() +"]. Resetting bindings.");
 			}
-			currentJavaBindings = branchBindings;
+			currentJavaBindings = branchBindings;			
 		} else {
 			currentJavaBindings = null;
 		}
@@ -212,16 +219,22 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			return false;
 		}
 		
-		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + "[" + commit.getTime() +"] (" + ++i + "/" + gitModel.getAllCommits().size() + ")");
+		SrcRepoActivator.INSTANCE.info("Visit commit " + commit.getName() + " "   				
+				+ "(" + ++i + "/" + gitModel.getAllCommits().size() + "), " 
+				+ importedCompilationUnits + "/" + createdProjects + "/" + knownProjects);
+		
+		String author = commit.getAuthor(); author = author == null ? "[NO AUTHOR]" : author.trim();		
+		String message = commit.getMessage(); message = message == null ? "[NO MESSAGE]" : message.trim();
+		SrcRepoActivator.INSTANCE.info("Info for visited commit; " + commit.getTime() +", " + author + ":\n" + message);
 		
 		// move current commit to the new commit
 		currentCommit = commit;
 		
 		// checkout the new commit
-		runJob(new CheckoutJob());		
-		
+		runJob(new CheckoutAndRefreshJob());		
+
 		// check for new projects and refresh all java projects
-		runJob(new JavaRefreshJob());
+		//runJob(new JavaRefreshJob());
 		
 		// clear the java diffs collected for the last commit
 		javaDiffsInCurrentCommit.clear();
@@ -238,6 +251,10 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public void onCompleteCommit(Commit commit) {
+		if (javaDiffsInCurrentCommit.size() == 0) {
+			return;
+		}
+		
 		// setup the JavaReader used to import the java model
 		// TODO one JavaReader instance should be enough
 		JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer) {
@@ -284,6 +301,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentCommit, javaReader));		
 		
 		// resolve references
+		SrcRepoActivator.INSTANCE.info("Resolving references...");
 		// this is only necessary, if there was some java in the current revision.
 		if (javaReader.getResultModel() != null) {
 			// merge bindings and then resolve all references (indirectly via #terminate)
@@ -326,19 +344,28 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		
 	}
 	
-	private boolean isProjectFileDiff(Diff diff) {
-		return (diff.getNewPath().endsWith(".project") && new Path(diff.getNewPath()).lastSegment().equals(".project")) ||
-				(diff.getOldPath().endsWith(".project") && new Path(diff.getOldPath()).lastSegment().equals(".project"));
+	private boolean isNewOrModifiedProjectFileDiff(Diff diff) {
+		return (diff.getNewPath().endsWith(".project") && new Path(diff.getNewPath()).lastSegment().equals(".project"));
 	}
 	
-	private class CheckoutJob extends WorkspaceJob {
+	private class CheckoutAndRefreshJob extends WorkspaceJob {
 		
-		public CheckoutJob() {
+		public CheckoutAndRefreshJob() {
 			super(MoDiscoGitModelImportVisitor.class.getName() + " git checkout.");
+		}
+		
+		private void clean() throws GitAPIException {
+			git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
+			org.eclipse.jgit.api.Status status = git.status().call();
+			if (status.hasUncommittedChanges() || status.getUntracked().size() > 0 || status.getUntrackedFolders().size() > 0) {
+				reportImportError(currentCommit, "Git clean did not fully clean: " + status.hasUncommittedChanges() + "/" 
+						+ status.getUntracked().size() + "/" + status.getUntrackedFolders().size() + ".", null, false);
+			}
 		}
 
 		@Override
-		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {		
+			// checkout
 			try {
 				// remove a possible lock file from prior errors or crashes
 				File lockFile = new File(git.getRepository().getWorkTree().getPath() + "/.git/index.lock");
@@ -347,11 +374,13 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 					lockFile.delete();
 				}
 				// clean the working tree from ignored or other untracked files
-				git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
+				clean();
 				// reset possible changes
 				git.reset().setMode(ResetType.HARD).call();
 				// checkout the new revision
-				git.checkout().setForce(true).setName(currentCommit.getName()).call();					
+				git.checkout().setName(currentCommit.getName()).call();	
+				// just in case
+				clean();											
 			} catch (JGitInternalException e) {
 				if (e.getCause() instanceof LockFailedException) {
 					// TODO proper reaction
@@ -363,37 +392,97 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				}			
 			} catch (GitAPIException e) {
 				reportImportError(currentCommit, "Exception while checking out and updating IJavaProject", e, true);
+			} finally {								
+				// refresh and remove deleted projects from workspace implicetely
+				ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
+				
+				boolean hasNewOrModifiedProjectFileDiff = false;
+				loop: for (ParentRelation parentRelation: currentCommit.getParentRelations()) {			
+					for (Diff diff: parentRelation.getDiffs()) {
+						if (isNewOrModifiedProjectFileDiff(diff)) {
+							hasNewOrModifiedProjectFileDiff = true;
+							break loop;
+						}
+					}			
+				}	
+				if (hasNewOrModifiedProjectFileDiff || updateJavaProjectStructureForMerge) {		
+					Collection<File> actualProjectFiles = new HashSet<File>();
+					ProjectUtil.findProjectFiles(actualProjectFiles, git.getRepository().getWorkTree(), null, new NullProgressMonitor());
+					
+					Collection<File> workspaceProjectFiles = new HashSet<File>();				
+					for(IProject p: allProjects) {
+						IPath projectLocation = p.getLocation();
+						if (!p.isOpen() || projectLocation == null) {
+							continue;
+						}							
+						String projectFilePath = projectLocation.append(IProjectDescription.DESCRIPTION_FILE_NAME).toOSString();
+						File projectFile = new File(projectFilePath);
+						workspaceProjectFiles.add(projectFile);
+					}
+					
+					// create workspace projects for protentially new project files
+					for(File actualProjectFile: actualProjectFiles) {
+						if (!workspaceProjectFiles.contains(actualProjectFile)) {					
+							IPath projectDescriptionFile = new Path(actualProjectFile.getAbsolutePath());
+							IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(projectDescriptionFile); 
+						    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());	
+						    if (!project.exists()) {						  
+							    try {
+									project.create(description, null);
+									if (!project.isOpen()) {
+								    	project.open(null);
+								    }		
+									createdProjects++;
+									SrcRepoActivator.INSTANCE.info("Created project " + actualProjectFile);
+							    } catch (ResourceException e) {
+							    	reportImportError(currentCommit, "Could not create project for project file " + projectDescriptionFile, e, true);
+							    } catch (CoreException e) {
+							    	reportImportError(currentCommit, "Could not create project for project file " + projectDescriptionFile, e, true);
+							    }
+						    }
+						}
+					}
+					
+					allProjects = ProjectUtil.getValidOpenProjects(git.getRepository());
+					knownProjects = allProjects.length;
+				}		
+				
+				// refresh all projects, implicitly removes old projects
+				// ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
 			}
 			
 			return Status.OK_STATUS;
 		}		
 	}
 	
-	private class JavaRefreshJob extends WorkspaceJob {
-			
-		public JavaRefreshJob() {
-			super(MoDiscoGitModelImportVisitor.class.getName() + " refresh java projects.");
-		}
-
-		@Override
-		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-				boolean hasProjectFileDiff = false;
-				loop: for (ParentRelation parentRelation: currentCommit.getParentRelations()) {			
-					for (Diff diff: parentRelation.getDiffs()) {
-						if (isProjectFileDiff(diff)) {
-							hasProjectFileDiff = true;
-							break loop;
-						}
-					}			
-				}	
-				if (hasProjectFileDiff) {
-					SrcRepoActivator.INSTANCE.info("Update a project due to project file change.");
-					javaProjectStructure.update();										
+	public ICompilationUnit getCompilationUnitForPath(IPath relativeToWorkingDirectoryPath) throws CoreException {		
+		boolean hasSomeClosedProjects = false;
+		for (IProject project: allProjects) {		
+			if (!project.isOpen()) {
+				hasSomeClosedProjects = true;
+			} else if (project.isNatureEnabled(JavaCore.NATURE_ID)) {
+				IPath projectPath = project.getLocation();
+				projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
+				
+				if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
+					relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
+					IJavaProject javaProject = JavaCore.create(project);
+					IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
+					IJavaElement element = JavaCore.create(resource, javaProject);
+					
+					if (element != null && element instanceof ICompilationUnit) {
+						return (ICompilationUnit) element;
+					} else {
+						SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " is not a compilation unit. Expect subsequent errors.");
+					}
 				}
-				javaProjectStructure.refresh();									
-			
-			return Status.OK_STATUS;
-		}		
+			}
+		}
+		if (hasSomeClosedProjects) {
+			SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " could not be found, and some projects are closed.");
+		}
+		
+		return null;
 	}
 	
 	private class ImportJavaCompilationUnits extends WorkspaceJob {
@@ -408,17 +497,17 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		}
 
 		@Override
-		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {						
-			
-			
+		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {									
 			// import diffs
+			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
+			int count = 0;
 			for(JavaDiff javaDiff: javaDiffs) {
 				IPath path = new Path(javaDiff.getNewPath());
-				ICompilationUnit compilationUnit = javaProjectStructure.getCompilationUnitForPath(path);
+				ICompilationUnit compilationUnit = getCompilationUnitForPath(path);
 				
 				if (compilationUnit != null) {
 					lastCU = null;
-					SrcRepoActivator.INSTANCE.info("import compilation unit " + compilationUnit.getPath());
+					SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
 					try {
 						javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
 					} catch (Exception e) {
@@ -430,6 +519,8 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 					}
 					if (lastCU != null) {
 						javaDiff.setCompilationUnit(lastCU);
+						count++;
+						importedCompilationUnits++;
 					} else {
 						reportImportError(currentCommit, "Reading comilation unit did not result in a CompilationUnit model for " + path, null, true);
 					}
@@ -437,151 +528,14 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 					reportImportError(currentCommit, "Could not find a compilation unit at JavaDiff path " + path, null, true);
 				}						
 			}
-			
+			SrcRepoActivator.INSTANCE.info("imported " + count + " compilation units");
 			return Status.OK_STATUS;
 		}		
 	}
 	
-	private class JavaProjectStructure {
-		private static final String METADATA_FOLDER = ".metadata";
-		
-		private final Map<IPath, IJavaProject> javaProjects = new HashMap<IPath, IJavaProject>();
-		private final IPath rootPath;
-		
-		public JavaProjectStructure(IPath rootPath) {
-			this.rootPath = rootPath;
-		}
-		
-		public void update() {
-			javaProjects.clear();
-			List<File> projectFiles = new ArrayList<File>();
-			collectProjectFilesFromDirectory(projectFiles, rootPath.toFile(), null);
-			for (File projectFile: projectFiles) {
-				try {
-					IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(new Path(projectFile.getAbsolutePath())); 
-				    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
-				    if (!project.exists()) {
-				    	project.create(description, null);
-				    }
-				    if (!project.isOpen()) {
-				    	project.open(null);
-				    }
-	
-				    IJavaProject javaProject = JavaCore.create(project);
-				    if (javaProject.exists()) {
-					    if (!javaProject.isOpen()) {
-							javaProject.open(new NullProgressMonitor());
-					    				
-						}
-					    
-					    IPath projectPath = new Path(javaProject.getProject().getDescription().getLocationURI().getPath());
-					    projectPath = projectPath.makeRelativeTo(rootPath);
-					    
-					    javaProjects.put(projectPath, javaProject);
-				    } else {
-				    	// this is actually not an error, if these projects are indeed no java projects
-				    	reportImportError(currentCommit, "The project " + projectFile.getAbsolutePath() + " is not a java project", null, true);	
-				    }
-				} catch (CoreException e) {
-					reportImportError(currentCommit, "Exception during importing a project into workspace, the project is ignored.", e, true);
-				}				
-			}
-		}
-		
-		public ICompilationUnit getCompilationUnitForPath(IPath relativePath) {			
-
-			for (IPath projectPath: javaProjects.keySet()) {
-				if (projectPath.isPrefixOf(relativePath)) {
-					relativePath = relativePath.makeRelativeTo(projectPath);
-					IJavaProject javaProject = javaProjects.get(projectPath);
-					IResource resource = javaProject.getProject().findMember(relativePath);
-					IJavaElement element = JavaCore.create(resource, javaProject);
-					
-					if (element != null && element instanceof ICompilationUnit) {
-						return (ICompilationUnit) element;
-					}
-				}
-			}
-			
-			return null;
-		}
-		
-		public void refresh() throws CoreException {
-			for (IJavaProject javaProject: javaProjects.values()) {
-				javaProject.getProject().refreshLocal(IProject.DEPTH_INFINITE, null);
-			}
-		}
-		
-		/**
-		 * Collect the list of .project files that are under directory into files.
-		 * 
-		 * @param files
-		 * @param directory
-		 * @param directoriesVisited
-		 * 		Set of canonical paths of directories, used as recursion guard
-		 * @param monitor
-		 * 		The monitor to report to
-		 * @return boolean <code>true</code> if the operation was completed.
-		 */
-		private boolean collectProjectFilesFromDirectory(Collection<File> files,
-				File directory, Set<String> directoriesVisited) {
-			File[] contents = directory.listFiles();
-			if (contents == null)
-				return false;
-
-			// Initialize recursion guard for recursive symbolic links
-			if (directoriesVisited == null) {
-				directoriesVisited = new HashSet<String>();
-				try {
-					directoriesVisited.add(directory.getCanonicalPath());
-				} catch (IOException exception) {
-					reportImportError(currentCommit, "Could not get path for directory in working copy. Not all directories are checked for projects.", exception, false);
-				}
-			}
-
-			// first look for project description files
-			final String dotProject = IProjectDescription.DESCRIPTION_FILE_NAME;
-			for (int i = 0; i < contents.length; i++) {
-				File file = contents[i];
-				if (file.isFile() && file.getName().equals(dotProject)) {
-					files.add(file);
-					// don't search sub-directories since we can't have nested
-					// projects
-					return true;
-				}
-			}
-			// no project description found, so recurse into sub-directories
-			for (int i = 0; i < contents.length; i++) {
-				if (contents[i].isDirectory()) {
-					if (!contents[i].getName().equals(METADATA_FOLDER)) {
-						try {
-							String canonicalPath = contents[i].getCanonicalPath();
-							if (!directoriesVisited.add(canonicalPath)) {
-								// already been here --> do not recurse
-								continue;
-							}
-						} catch (IOException exception) {
-							reportImportError(currentCommit, "Could not get path for directory in working copy. Not all directories are checked for projects.", exception, false);
-						}
-						collectProjectFilesFromDirectory(files, contents[i], directoriesVisited);
-					}
-				}
-			}
-			return true;
-		}
-	}
-	
 	protected void reportImportError(EObject owner, String message, Throwable e, boolean controlledFail) {
-		StringBuffer jobDescription = new StringBuffer("");
-		for(Job job: jobManager.find(null)) {
-			if (jobDescription.length() > 0) {
-				jobDescription.append(", ");
-			}
-			jobDescription.append(job.getName() + "(" + job.getState() + ")");
-		}
-		
 		if (e != null) {
-			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "]; jobs are " + jobDescription.toString();
+			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "].";
 		}
 		if (controlledFail) {			
 			SrcRepoActivator.INSTANCE.warning(message, (Exception)e);

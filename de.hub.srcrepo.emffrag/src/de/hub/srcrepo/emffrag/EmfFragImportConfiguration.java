@@ -37,6 +37,10 @@ public class EmfFragImportConfiguration implements JGitUtil.ImportConfiguration 
 		this.disableUsages = disableUsages;
 	}
 
+	public EmfFragImportConfiguration() {
+		this(false, false);
+	}
+	
 	@Override
 	public void configureBefore() {
 		EmfFragActivator.instance.useBinaryFragments = true;

@@ -61,7 +61,7 @@ public class JGitTest {
 		final Resource resource = rs.createResource(URI.createURI("models/example.java.gitmodel"));
 		SourceRepository gitModel = GitModelFactory.eINSTANCE.createSourceRepository();
 		resource.getContents().add(gitModel);		
-		JGitModelImport modelImport = new JGitModelImport(git, gitModel);
+		JGitModelImport modelImport = new JGitModelImport(git, gitModel, null);
 		
 		try {
 			modelImport.runImport();
