@@ -3,13 +3,10 @@ package de.hub.srcrepo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -378,9 +375,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				// reset possible changes
 				git.reset().setMode(ResetType.HARD).call();
 				// checkout the new revision
-				git.checkout().setName(currentCommit.getName()).call();	
-				// just in case
-				clean();											
+				git.checkout().setName(currentCommit.getName()).call();												
 			} catch (JGitInternalException e) {
 				if (e.getCause() instanceof LockFailedException) {
 					// TODO proper reaction
@@ -434,8 +429,6 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 								    }		
 									createdProjects++;
 									SrcRepoActivator.INSTANCE.info("Created project " + actualProjectFile);
-							    } catch (ResourceException e) {
-							    	reportImportError(currentCommit, "Could not create project for project file " + projectDescriptionFile, e, true);
 							    } catch (CoreException e) {
 							    	reportImportError(currentCommit, "Could not create project for project file " + projectDescriptionFile, e, true);
 							    }
@@ -446,9 +439,6 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 					allProjects = ProjectUtil.getValidOpenProjects(git.getRepository());
 					knownProjects = allProjects.length;
 				}		
-				
-				// refresh all projects, implicitly removes old projects
-				// ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
 			}
 			
 			return Status.OK_STATUS;

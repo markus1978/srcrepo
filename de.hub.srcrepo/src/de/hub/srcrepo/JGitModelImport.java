@@ -130,6 +130,7 @@ public class JGitModelImport {
 	
 			commitModel.setTime(new Date(((long) commit.getCommitTime()) * 1000));
 			commitModel.setMessage(commit.getFullMessage());
+			commitModel.setAuthor(commit.getAuthorIdent().getName());
 	
 			
 			

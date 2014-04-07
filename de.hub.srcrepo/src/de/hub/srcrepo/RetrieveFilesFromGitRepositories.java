@@ -23,7 +23,7 @@ public class RetrieveFilesFromGitRepositories {
 		
 		File repositoryListFile = new File(args[0]);
 		final File tmpDirectory = new File(args[1]);
-		final File resultsDirectory = new File(args[2]);
+//		final File resultsDirectory = new File(args[2]);
 		final String pattern = args[3];
 		
 		String[] repositoryList = readLines(repositoryListFile.toString());
