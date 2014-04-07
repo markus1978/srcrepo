@@ -18,10 +18,11 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.emffrag.model.emffrag.EmfFragPackage;
+import de.hub.srcrepo.gitmodel.AbstractFileRef;
 import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.EmfFragSourceRepository;
-import de.hub.srcrepo.gitmodel.JavaDiff;
+import de.hub.srcrepo.gitmodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.gitmodel.ParentRelation;
 import de.hub.srcrepo.gitmodel.Ref;
 import de.hub.srcrepo.gitmodel.RevCompilationUnit;
@@ -69,13 +70,6 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass javaDiffEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass revCompilationUnitEClass = null;
 
 	/**
@@ -91,6 +85,20 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * @generated
 	 */
 	private EClass emfFragSourceRepositoryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass abstractFileRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass javaCompilationUnitRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -367,17 +375,8 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getJavaDiff() {
-		return javaDiffEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaDiff_CompilationUnit() {
-		return (EReference)javaDiffEClass.getEStructuralFeatures().get(0);
+	public EReference getDiff_File() {
+		return (EReference)diffEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -457,6 +456,33 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getAbstractFileRef() {
+		return abstractFileRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJavaCompilationUnitRef() {
+		return javaCompilationUnitRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaCompilationUnitRef_CompilationUnit() {
+		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getChangeType() {
 		return changeTypeEDataType;
 	}
@@ -514,9 +540,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		createEAttribute(diffEClass, DIFF__NEW_PATH);
 		createEAttribute(diffEClass, DIFF__TYPE);
 		createEAttribute(diffEClass, DIFF__OLD_PATH);
-
-		javaDiffEClass = createEClass(JAVA_DIFF);
-		createEReference(javaDiffEClass, JAVA_DIFF__COMPILATION_UNIT);
+		createEReference(diffEClass, DIFF__FILE);
 
 		revCompilationUnitEClass = createEClass(REV_COMPILATION_UNIT);
 		createEReference(revCompilationUnitEClass, REV_COMPILATION_UNIT__PARENT);
@@ -528,6 +552,11 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		createEReference(parentRelationEClass, PARENT_RELATION__CHILD);
 
 		emfFragSourceRepositoryEClass = createEClass(EMF_FRAG_SOURCE_REPOSITORY);
+
+		abstractFileRefEClass = createEClass(ABSTRACT_FILE_REF);
+
+		javaCompilationUnitRefEClass = createEClass(JAVA_COMPILATION_UNIT_REF);
+		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -565,7 +594,6 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		javaDiffEClass.getESuperTypes().add(this.getDiff());
 		revCompilationUnitEClass.getESuperTypes().add(theJavaPackage.getCompilationUnit());
 		EGenericType g1 = createEGenericType(theEmfFragPackage.getIndexedMap());
 		EGenericType g2 = createEGenericType(ecorePackage.getEString());
@@ -575,6 +603,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		emfFragSourceRepositoryEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getSourceRepository());
 		emfFragSourceRepositoryEClass.getEGenericSuperTypes().add(g1);
+		javaCompilationUnitRefEClass.getESuperTypes().add(this.getAbstractFileRef());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(sourceRepositoryEClass, SourceRepository.class, "SourceRepository", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -609,9 +638,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		initEAttribute(getDiff_NewPath(), ecorePackage.getEString(), "newPath", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiff_Type(), this.getChangeType(), "type", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiff_OldPath(), ecorePackage.getEString(), "oldPath", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(javaDiffEClass, JavaDiff.class, "JavaDiff", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getJavaDiff_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, JavaDiff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiff_File(), this.getAbstractFileRef(), null, "file", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(revCompilationUnitEClass, RevCompilationUnit.class, "RevCompilationUnit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRevCompilationUnit_Parent(), this.getRevCompilationUnit(), this.getRevCompilationUnit_Children(), "parent", null, 0, -1, RevCompilationUnit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -623,6 +650,11 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 		initEReference(getParentRelation_Child(), this.getCommit(), this.getCommit_ParentRelations(), "child", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(emfFragSourceRepositoryEClass, EmfFragSourceRepository.class, "EmfFragSourceRepository", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(abstractFileRefEClass, AbstractFileRef.class, "AbstractFileRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(javaCompilationUnitRefEClass, JavaCompilationUnitRef.class, "JavaCompilationUnitRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJavaCompilationUnitRef_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -650,7 +682,7 @@ public class GitModelPackageImpl extends EPackageImpl implements GitModelPackage
 			 "indexes", "true"
 		   });		
 		addAnnotation
-		  (getJavaDiff_CompilationUnit(), 
+		  (getJavaCompilationUnitRef_CompilationUnit(), 
 		   source, 
 		   new String[] {
 			 "Fragmentation", "true"

@@ -96,10 +96,6 @@ public class GitModelAdapterFactory extends AdapterFactoryImpl {
 				return createDiffAdapter();
 			}
 			@Override
-			public Adapter caseJavaDiff(JavaDiff object) {
-				return createJavaDiffAdapter();
-			}
-			@Override
 			public Adapter caseRevCompilationUnit(RevCompilationUnit object) {
 				return createRevCompilationUnitAdapter();
 			}
@@ -110,6 +106,14 @@ public class GitModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseEmfFragSourceRepository(EmfFragSourceRepository object) {
 				return createEmfFragSourceRepositoryAdapter();
+			}
+			@Override
+			public Adapter caseAbstractFileRef(AbstractFileRef object) {
+				return createAbstractFileRefAdapter();
+			}
+			@Override
+			public Adapter caseJavaCompilationUnitRef(JavaCompilationUnitRef object) {
+				return createJavaCompilationUnitRefAdapter();
 			}
 			@Override
 			public Adapter caseASTNode(ASTNode object) {
@@ -204,20 +208,6 @@ public class GitModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.gitmodel.JavaDiff <em>Java Diff</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.hub.srcrepo.gitmodel.JavaDiff
-	 * @generated
-	 */
-	public Adapter createJavaDiffAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.gitmodel.RevCompilationUnit <em>Rev Compilation Unit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -256,6 +246,34 @@ public class GitModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEmfFragSourceRepositoryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.gitmodel.AbstractFileRef <em>Abstract File Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.gitmodel.AbstractFileRef
+	 * @generated
+	 */
+	public Adapter createAbstractFileRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.gitmodel.JavaCompilationUnitRef <em>Java Compilation Unit Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.gitmodel.JavaCompilationUnitRef
+	 * @generated
+	 */
+	public Adapter createJavaCompilationUnitRefAdapter() {
 		return null;
 	}
 

@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.gitmodel.util;
 
+import de.hub.srcrepo.gitmodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -103,13 +104,6 @@ public class GitModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case GitModelPackage.JAVA_DIFF: {
-				JavaDiff javaDiff = (JavaDiff)theEObject;
-				T result = caseJavaDiff(javaDiff);
-				if (result == null) result = caseDiff(javaDiff);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case GitModelPackage.REV_COMPILATION_UNIT: {
 				RevCompilationUnit revCompilationUnit = (RevCompilationUnit)theEObject;
 				T result = caseRevCompilationUnit(revCompilationUnit);
@@ -122,6 +116,19 @@ public class GitModelSwitch<T> extends Switch<T> {
 			case GitModelPackage.PARENT_RELATION: {
 				ParentRelation parentRelation = (ParentRelation)theEObject;
 				T result = caseParentRelation(parentRelation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GitModelPackage.ABSTRACT_FILE_REF: {
+				AbstractFileRef abstractFileRef = (AbstractFileRef)theEObject;
+				T result = caseAbstractFileRef(abstractFileRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GitModelPackage.JAVA_COMPILATION_UNIT_REF: {
+				JavaCompilationUnitRef javaCompilationUnitRef = (JavaCompilationUnitRef)theEObject;
+				T result = caseJavaCompilationUnitRef(javaCompilationUnitRef);
+				if (result == null) result = caseAbstractFileRef(javaCompilationUnitRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -190,21 +197,6 @@ public class GitModelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Java Diff</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Java Diff</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseJavaDiff(JavaDiff object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Rev Compilation Unit</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -231,6 +223,36 @@ public class GitModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseParentRelation(ParentRelation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract File Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract File Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAbstractFileRef(AbstractFileRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Java Compilation Unit Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Java Compilation Unit Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJavaCompilationUnitRef(JavaCompilationUnitRef object) {
 		return null;
 	}
 

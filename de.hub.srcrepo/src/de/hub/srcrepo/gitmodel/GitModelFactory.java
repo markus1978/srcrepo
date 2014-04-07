@@ -62,15 +62,6 @@ public interface GitModelFactory extends EFactory {
 	Diff createDiff();
 
 	/**
-	 * Returns a new object of class '<em>Java Diff</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Java Diff</em>'.
-	 * @generated
-	 */
-	JavaDiff createJavaDiff();
-
-	/**
 	 * Returns a new object of class '<em>Rev Compilation Unit</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -87,6 +78,15 @@ public interface GitModelFactory extends EFactory {
 	 * @generated
 	 */
 	ParentRelation createParentRelation();
+
+	/**
+	 * Returns a new object of class '<em>Java Compilation Unit Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Java Compilation Unit Ref</em>'.
+	 * @generated
+	 */
+	JavaCompilationUnitRef createJavaCompilationUnitRef();
 
 	/**
 	 * Returns the package supported by this factory.

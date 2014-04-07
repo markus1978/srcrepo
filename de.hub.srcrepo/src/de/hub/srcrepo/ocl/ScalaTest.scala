@@ -1,23 +1,22 @@
 package de.hub.srcrepo
 
 import org.eclipse.emf.common.util.EList
-import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
-import org.eclipse.gmt.modisco.java.CompilationUnit
-import org.eclipse.gmt.modisco.java.Model
-import de.hub.srcrepo.gitmodel.SourceRepository
-import de.hub.srcrepo.gitmodel.Commit
-import de.hub.srcrepo.gitmodel.ParentRelation
-import de.hub.srcrepo.gitmodel.JavaDiff
-import org.eclipse.gmt.modisco.java.MethodDeclaration
-import org.eclipse.gmt.modisco.java.Package
-import org.eclipse.gmt.modisco.java.PrimitiveTypeBoolean
-import org.eclipse.gmt.modisco.java.PrimitiveType
-import org.eclipse.gmt.modisco.java.Statement
-import org.eclipse.gmt.modisco.java.Block
-import org.eclipse.gmt.modisco.java.IfStatement
-import org.eclipse.gmt.modisco.java.WhileStatement
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
+import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
+import org.eclipse.gmt.modisco.java.Block
+import org.eclipse.gmt.modisco.java.CompilationUnit
+import org.eclipse.gmt.modisco.java.IfStatement
+import org.eclipse.gmt.modisco.java.MethodDeclaration
+import org.eclipse.gmt.modisco.java.Model
+import org.eclipse.gmt.modisco.java.Package
+import org.eclipse.gmt.modisco.java.Statement
+import org.eclipse.gmt.modisco.java.WhileStatement
+
+import de.hub.srcrepo.gitmodel.Commit
+import de.hub.srcrepo.gitmodel.JavaCompilationUnitRef
+import de.hub.srcrepo.gitmodel.ParentRelation
+import de.hub.srcrepo.gitmodel.SourceRepository
 
 class ScalaTest {
 
@@ -68,7 +67,7 @@ class ScalaTest {
 	def coutJavaDiffs(sr:SourceRepository): Int = {
 	  sr.getAllCommits().collectAll((c)=>c.getParentRelations())
 	    .collectAll((pr)=>pr.getDiffs())
-	    .select((d)=>d.isInstanceOf[JavaDiff])
+	    .select((d)=>d.getFile() != null && d.getFile().isInstanceOf[JavaCompilationUnitRef])
 	    .size()
 	}
 	

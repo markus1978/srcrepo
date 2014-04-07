@@ -43,15 +43,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ChangeType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="file" eType="#//AbstractFileRef"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ChangeType" instanceClassName="org.eclipse.jgit.diff.DiffEntry.ChangeType"/>
-  <eClassifiers xsi:type="ecore:EClass" name="JavaDiff" eSuperTypes="#//Diff">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass ../../org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
-      <eAnnotations source="de.hub.emffrag">
-        <details key="Fragmentation" value="true"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RevCompilationUnit" eSuperTypes="../../org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" upperBound="-1"
         eType="#//RevCompilationUnit" eOpposite="#//RevCompilationUnit/children"/>
@@ -65,5 +60,13 @@
         eOpposite="#//Commit/childRelations"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="child" eType="#//Commit"
         eOpposite="#//Commit/parentRelations"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractFileRef" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaCompilationUnitRef" eSuperTypes="#//AbstractFileRef">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass ../../org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="Fragmentation" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

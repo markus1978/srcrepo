@@ -1,11 +1,11 @@
 package de.hub.srcrepo;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -48,7 +48,8 @@ import org.eclipse.modisco.kdm.source.extension.discovery.SourceVisitListener;
 
 import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
-import de.hub.srcrepo.gitmodel.JavaDiff;
+import de.hub.srcrepo.gitmodel.GitModelFactory;
+import de.hub.srcrepo.gitmodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.gitmodel.ParentRelation;
 import de.hub.srcrepo.gitmodel.SourceRepository;
 import de.hub.srcrepo.modisco.SrcRepoBindingManager;
@@ -60,22 +61,22 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	// parameter
 	private final JavaFactory javaFactory;
 	private final JavaPackage javaPackage;
-	private final Model javaModel;
+	private final Model javaModel;	
 	private final SourceRepository gitModel;
+	private final GitModelFactory gitFactory;
 	private final Git git;
 
 	// helper
 	private final AbstractRegionDiscoverer2<Object> abstractRegionDiscoverer;
-//	private final JavaProjectStructure javaProjectStructure;
 
 	// state
 	private IProject[] allProjects;
 	private IPath absoluteWorkingDirectoryPath;
 	private SrcRepoBindingManager currentJavaBindings;
 	private HashMap<Commit, SrcRepoBindingManager> bindingsPerBranch = new HashMap<Commit, SrcRepoBindingManager>();
-	private CompilationUnit lastCU;
+	private CompilationUnit importedCompilationUnit;
 	private Commit currentCommit;
-	private List<JavaDiff> javaDiffsInCurrentCommit = new ArrayList<JavaDiff>();
+	private Map<ICompilationUnit, Diff> javaDiffsInCurrentCommit = new HashMap<ICompilationUnit, Diff>();
 	private int i = 0;
 	private IJobManager jobManager;
 	private boolean updateJavaProjectStructureForMerge = false;
@@ -83,6 +84,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	private int importedCompilationUnits = 0;
 	private int createdProjects = 0;
 	private int knownProjects = 0;
+	private Collection<String> javaLikeExtensions = new HashSet<String>();
 
 	public MoDiscoGitModelImportVisitor(Git git, SourceRepository gitModel, Model targetModel) {
 		this(git, gitModel, targetModel, "");
@@ -142,11 +144,13 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		this.lastCommit =  lastCommit;
 		this.javaPackage = (JavaPackage)targetModel.eClass().getEPackage();
 		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
+		this.gitFactory = (GitModelFactory)gitModel.eClass().getEPackage().getEFactoryInstance();
 		this.gitModel = gitModel;
 		this.javaModel = targetModel;
 		this.git = git;
 		this.allProjects = new IProject[0];
 		this.absoluteWorkingDirectoryPath = new Path(git.getRepository().getWorkTree().getAbsolutePath());
+		Collections.addAll(javaLikeExtensions, JavaCore.getJavaLikeExtensions());
 		
 		abstractRegionDiscoverer = new AbstractRegionDiscoverer2<Object>() {
 			@Override
@@ -166,7 +170,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	public void sourceRegionVisited(String filePath, int startOffset, int endOffset, int startLine, int endLine,
 			EObject targetNode) {
 		if (targetNode.eClass() == javaPackage.getCompilationUnit()) {
-			lastCU = (CompilationUnit) targetNode;
+			importedCompilationUnit = (CompilationUnit) targetNode;
 		}
 	}	
 
@@ -334,10 +338,10 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 
 	@Override
 	public void onModifiedFile(final Diff diff) {
-		// collect java diffs for later import see #onCompletedCommit
-		if (diff instanceof JavaDiff) {
-			javaDiffsInCurrentCommit.add((JavaDiff)diff);
-		}
+		ICompilationUnit compilationUnit = getCompilationUnitForDiff(diff);
+		if (compilationUnit != null) {
+			javaDiffsInCurrentCommit.put(compilationUnit, diff);			
+		}		
 	}
 
 	@Override
@@ -357,16 +361,16 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		
 		private void clean() throws GitAPIException {
 			git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
-			org.eclipse.jgit.api.Status status = git.status().call();
-			if (status.hasUncommittedChanges()) {
-				// try again
-				git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
-				status = git.status().call();
-			}
-			if (status.hasUncommittedChanges() || status.getUntracked().size() > 0 || status.getUntrackedFolders().size() > 0) {
-				SrcRepoActivator.INSTANCE.warning("Git clean did not fully clean: " + status.hasUncommittedChanges() + "/" 
-						+ status.getUntracked().size() + "/" + status.getUntrackedFolders().size() + ".");
-			}
+//			org.eclipse.jgit.api.Status status = git.status().call();
+//			if (status.hasUncommittedChanges()) {
+//				// try again
+//				git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
+//				status = git.status().call();
+//			}
+//			if (status.hasUncommittedChanges() || status.getUntracked().size() > 0 || status.getUntrackedFolders().size() > 0) {
+//				SrcRepoActivator.INSTANCE.warning("Git clean did not fully clean: " + status.hasUncommittedChanges() + "/" 
+//						+ status.getUntracked().size() + "/" + status.getUntrackedFolders().size() + ".");
+//			}
 		}
 
 		@Override
@@ -454,31 +458,41 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		}		
 	}
 	
-	public ICompilationUnit getCompilationUnitForPath(IPath relativeToWorkingDirectoryPath) throws CoreException {		
-		boolean hasSomeClosedProjects = false;
-		for (IProject project: allProjects) {		
-			if (!project.isOpen()) {
-				hasSomeClosedProjects = true;
-			} else if (project.isNatureEnabled(JavaCore.NATURE_ID)) {
-				IPath projectPath = project.getLocation();
-				projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
-				
-				if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
-					relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
-					IJavaProject javaProject = JavaCore.create(project);
-					IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
-					IJavaElement element = JavaCore.create(resource, javaProject);
-					
-					if (element != null && element instanceof ICompilationUnit) {
-						return (ICompilationUnit) element;
-					} else {
-						SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " is not a compilation unit. Expect subsequent errors.");
+	public ICompilationUnit getCompilationUnitForDiff(Diff diff) {
+		IPath relativeToWorkingDirectoryPath = new Path(diff.getNewPath());		
+		String fileExtension = relativeToWorkingDirectoryPath.getFileExtension();		
+		if (fileExtension != null && javaLikeExtensions.contains(fileExtension)) {
+			// we only potentially have a compilation unit
+			boolean hasSomeClosedProjects = false;
+			for (IProject project: allProjects) {		
+				if (!project.isOpen()) {
+					hasSomeClosedProjects = true;
+				} else {
+					boolean hasJavaNature = false;
+					try {
+						hasJavaNature = project.isNatureEnabled(JavaCore.NATURE_ID);
+					} catch (CoreException e) {
+						reportImportError(currentCommit, "Could not determine project nature. Assume non java project.", e, true);
+					}
+					if (hasJavaNature) {
+						IPath projectPath = project.getLocation();
+						projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
+						
+						if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
+							relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
+							IJavaProject javaProject = JavaCore.create(project);
+							IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
+							IJavaElement element = JavaCore.create(resource, javaProject);
+							if (element != null && element instanceof ICompilationUnit) {
+								return (ICompilationUnit)element;							
+							}
+						}
 					}
 				}
 			}
-		}
-		if (hasSomeClosedProjects) {
-			SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " could not be found, and some projects are closed.");
+			if (hasSomeClosedProjects) {
+				SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " could not be found, and some projects are closed.");
+			}			
 		}
 		
 		return null;
@@ -486,10 +500,10 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 	
 	private class ImportJavaCompilationUnits extends WorkspaceJob {
 		
-		private final Collection<JavaDiff> javaDiffs;
+		private final Map<ICompilationUnit, Diff> javaDiffs;
 		private final JavaReader javaReader;		
 
-		public ImportJavaCompilationUnits(Collection<JavaDiff> javaDiffs, JavaReader javaReader) {
+		public ImportJavaCompilationUnits(Map<ICompilationUnit, Diff> javaDiffs, JavaReader javaReader) {
 			super(MoDiscoGitModelImportVisitor.class.getName() + " import compilation units for current commit.");
 			this.javaDiffs = javaDiffs;
 			this.javaReader = javaReader;
@@ -500,33 +514,31 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 			// import diffs
 			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
 			int count = 0;
-			for(JavaDiff javaDiff: javaDiffs) {
-				IPath path = new Path(javaDiff.getNewPath());
-				ICompilationUnit compilationUnit = getCompilationUnitForPath(path);
-				
-				if (compilationUnit != null) {
-					lastCU = null;
-					SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
-					try {
-						javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());
-					} catch (Exception e) {
-						if (e.getClass().getName().endsWith("AbortCompilation")) {
-							reportImportError(currentCommit, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
-						} else {
-							throw new RuntimeException(e);
-						}
-					}
-					if (lastCU != null) {
-						javaDiff.setCompilationUnit(lastCU);
-						count++;
-						importedCompilationUnits++;
+			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {		
+				SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
+				importedCompilationUnit = null;
+				try {
+					javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());					
+				} catch (Exception e) {
+					if (e.getClass().getName().endsWith("AbortCompilation")) {
+						reportImportError(currentCommit, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
+						continue;
 					} else {
-						reportImportError(currentCommit, "Reading comilation unit did not result in a CompilationUnit model for " + path, null, true);
+						throw new RuntimeException(e);
 					}
+				}							
+				
+				if (importedCompilationUnit != null) {
+					JavaCompilationUnitRef ref = gitFactory.createJavaCompilationUnitRef();
+					ref.setCompilationUnit(importedCompilationUnit);
+					javaDiffs.get(compilationUnit).setFile(ref);
+					count++;
+					importedCompilationUnits++;
 				} else {
-					reportImportError(currentCommit, "Could not find a compilation unit at JavaDiff path " + path, null, true);
-				}						
-			}
+					reportImportError(currentCommit, "Sucessfully imported a compilation unit, but no model was created: " + compilationUnit, null, true);
+				}
+			}										
+				
 			SrcRepoActivator.INSTANCE.info("imported " + count + " compilation units");
 			return Status.OK_STATUS;
 		}		

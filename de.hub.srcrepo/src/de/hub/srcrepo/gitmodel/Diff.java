@@ -20,6 +20,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
  *   <li>{@link de.hub.srcrepo.gitmodel.Diff#getNewPath <em>New Path</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.Diff#getType <em>Type</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.Diff#getOldPath <em>Old Path</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.Diff#getFile <em>File</em>}</li>
  * </ul>
  * </p>
  *
@@ -105,5 +106,31 @@ public interface Diff extends EObject {
 	 * @generated
 	 */
 	void setOldPath(String value);
+
+	/**
+	 * Returns the value of the '<em><b>File</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>File</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>File</em>' containment reference.
+	 * @see #setFile(AbstractFileRef)
+	 * @see de.hub.srcrepo.gitmodel.GitModelPackage#getDiff_File()
+	 * @model containment="true"
+	 * @generated
+	 */
+	AbstractFileRef getFile();
+
+	/**
+	 * Sets the value of the '{@link de.hub.srcrepo.gitmodel.Diff#getFile <em>File</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>File</em>' containment reference.
+	 * @see #getFile()
+	 * @generated
+	 */
+	void setFile(AbstractFileRef value);
 
 } // Diff

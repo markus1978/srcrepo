@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.gitmodel.impl;
 
+import de.hub.srcrepo.gitmodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -72,9 +73,9 @@ public class GitModelFactoryImpl extends EFactoryImpl implements GitModelFactory
 			case GitModelPackage.COMMIT: return createCommit();
 			case GitModelPackage.REF: return createRef();
 			case GitModelPackage.DIFF: return createDiff();
-			case GitModelPackage.JAVA_DIFF: return createJavaDiff();
 			case GitModelPackage.REV_COMPILATION_UNIT: return createRevCompilationUnit();
 			case GitModelPackage.PARENT_RELATION: return createParentRelation();
+			case GitModelPackage.JAVA_COMPILATION_UNIT_REF: return createJavaCompilationUnitRef();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -155,16 +156,6 @@ public class GitModelFactoryImpl extends EFactoryImpl implements GitModelFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public JavaDiff createJavaDiff() {
-		JavaDiffImpl javaDiff = new JavaDiffImpl();
-		return javaDiff;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public RevCompilationUnit createRevCompilationUnit() {
 		RevCompilationUnitImpl revCompilationUnit = new RevCompilationUnitImpl();
 		return revCompilationUnit;
@@ -178,6 +169,16 @@ public class GitModelFactoryImpl extends EFactoryImpl implements GitModelFactory
 	public ParentRelation createParentRelation() {
 		ParentRelationImpl parentRelation = new ParentRelationImpl();
 		return parentRelation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JavaCompilationUnitRef createJavaCompilationUnitRef() {
+		JavaCompilationUnitRefImpl javaCompilationUnitRef = new JavaCompilationUnitRefImpl();
+		return javaCompilationUnitRef;
 	}
 
 	/**

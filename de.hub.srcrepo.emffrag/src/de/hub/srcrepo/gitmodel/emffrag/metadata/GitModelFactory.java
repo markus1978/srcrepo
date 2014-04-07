@@ -9,7 +9,7 @@ package de.hub.srcrepo.gitmodel.emffrag.metadata;
 import de.hub.srcrepo.gitmodel.Commit;
 import de.hub.srcrepo.gitmodel.Diff;
 import de.hub.srcrepo.gitmodel.EmfFragSourceRepository;
-import de.hub.srcrepo.gitmodel.JavaDiff;
+import de.hub.srcrepo.gitmodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.gitmodel.ParentRelation;
 import de.hub.srcrepo.gitmodel.Ref;
 import de.hub.srcrepo.gitmodel.RevCompilationUnit;
@@ -69,15 +69,6 @@ public interface GitModelFactory extends de.hub.srcrepo.gitmodel.GitModelFactory
 	Diff createDiff();
 
 	/**
-	 * Returns a new object of class '<em>Java Diff</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Java Diff</em>'.
-	 * @generated
-	 */
-	JavaDiff createJavaDiff();
-
-	/**
 	 * Returns a new object of class '<em>Rev Compilation Unit</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -103,6 +94,15 @@ public interface GitModelFactory extends de.hub.srcrepo.gitmodel.GitModelFactory
 	 * @generated
 	 */
 	EmfFragSourceRepository createEmfFragSourceRepository();
+
+	/**
+	 * Returns a new object of class '<em>Java Compilation Unit Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Java Compilation Unit Ref</em>'.
+	 * @generated
+	 */
+	JavaCompilationUnitRef createJavaCompilationUnitRef();
 
 	/**
 	 * Returns the package supported by this factory.

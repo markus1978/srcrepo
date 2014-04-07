@@ -181,11 +181,6 @@ public class ParentRelationItemProvider
 			(createChildParameter
 				(GitModelPackage.Literals.PARENT_RELATION__DIFFS,
 				 GitModelFactory.eINSTANCE.createDiff()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(GitModelPackage.Literals.PARENT_RELATION__DIFFS,
-				 GitModelFactory.eINSTANCE.createJavaDiff()));
 	}
 
 	/**

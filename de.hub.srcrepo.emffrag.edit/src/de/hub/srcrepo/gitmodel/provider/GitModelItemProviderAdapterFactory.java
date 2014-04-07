@@ -168,29 +168,6 @@ public class GitModelItemProviderAdapterFactory extends GitModelAdapterFactory i
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.gitmodel.JavaDiff} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected JavaDiffItemProvider javaDiffItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.gitmodel.JavaDiff}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createJavaDiffAdapter() {
-		if (javaDiffItemProvider == null) {
-			javaDiffItemProvider = new JavaDiffItemProvider(this);
-		}
-
-		return javaDiffItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.gitmodel.RevCompilationUnit} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -257,6 +234,29 @@ public class GitModelItemProviderAdapterFactory extends GitModelAdapterFactory i
 		}
 
 		return emfFragSourceRepositoryItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.gitmodel.JavaCompilationUnitRef} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected JavaCompilationUnitRefItemProvider javaCompilationUnitRefItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.gitmodel.JavaCompilationUnitRef}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createJavaCompilationUnitRefAdapter() {
+		if (javaCompilationUnitRefItemProvider == null) {
+			javaCompilationUnitRefItemProvider = new JavaCompilationUnitRefItemProvider(this);
+		}
+
+		return javaCompilationUnitRefItemProvider;
 	}
 
 	/**
@@ -362,10 +362,10 @@ public class GitModelItemProviderAdapterFactory extends GitModelAdapterFactory i
 		if (commitItemProvider != null) commitItemProvider.dispose();
 		if (refItemProvider != null) refItemProvider.dispose();
 		if (diffItemProvider != null) diffItemProvider.dispose();
-		if (javaDiffItemProvider != null) javaDiffItemProvider.dispose();
 		if (revCompilationUnitItemProvider != null) revCompilationUnitItemProvider.dispose();
 		if (parentRelationItemProvider != null) parentRelationItemProvider.dispose();
 		if (emfFragSourceRepositoryItemProvider != null) emfFragSourceRepositoryItemProvider.dispose();
+		if (javaCompilationUnitRefItemProvider != null) javaCompilationUnitRefItemProvider.dispose();
 	}
 
 }

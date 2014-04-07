@@ -291,68 +291,22 @@ public interface GitModelPackage extends EPackage {
 	int DIFF__OLD_PATH = 2;
 
 	/**
+	 * The feature id for the '<em><b>File</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__FILE = 3;
+
+	/**
 	 * The number of structural features of the '<em>Diff</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_FEATURE_COUNT = 3;
-
-	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.JavaDiffImpl <em>Java Diff</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.gitmodel.impl.JavaDiffImpl
-	 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getJavaDiff()
-	 * @generated
-	 */
-	int JAVA_DIFF = 4;
-
-	/**
-	 * The feature id for the '<em><b>New Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_DIFF__NEW_PATH = DIFF__NEW_PATH;
-
-	/**
-	 * The feature id for the '<em><b>Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_DIFF__TYPE = DIFF__TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Old Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_DIFF__OLD_PATH = DIFF__OLD_PATH;
-
-	/**
-	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_DIFF__COMPILATION_UNIT = DIFF_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Java Diff</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_DIFF_FEATURE_COUNT = DIFF_FEATURE_COUNT + 1;
+	int DIFF_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.RevCompilationUnitImpl <em>Rev Compilation Unit</em>}' class.
@@ -362,7 +316,7 @@ public interface GitModelPackage extends EPackage {
 	 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getRevCompilationUnit()
 	 * @generated
 	 */
-	int REV_COMPILATION_UNIT = 5;
+	int REV_COMPILATION_UNIT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Comments</b></em>' containment reference list.
@@ -498,7 +452,7 @@ public interface GitModelPackage extends EPackage {
 	 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getParentRelation()
 	 * @generated
 	 */
-	int PARENT_RELATION = 6;
+	int PARENT_RELATION = 5;
 
 	/**
 	 * The feature id for the '<em><b>Diffs</b></em>' containment reference list.
@@ -537,6 +491,53 @@ public interface GitModelPackage extends EPackage {
 	int PARENT_RELATION_FEATURE_COUNT = 3;
 
 	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.AbstractFileRefImpl <em>Abstract File Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.gitmodel.impl.AbstractFileRefImpl
+	 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getAbstractFileRef()
+	 * @generated
+	 */
+	int ABSTRACT_FILE_REF = 6;
+
+	/**
+	 * The number of structural features of the '<em>Abstract File Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_FILE_REF_FEATURE_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.gitmodel.impl.JavaCompilationUnitRefImpl <em>Java Compilation Unit Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.gitmodel.impl.JavaCompilationUnitRefImpl
+	 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getJavaCompilationUnitRef()
+	 * @generated
+	 */
+	int JAVA_COMPILATION_UNIT_REF = 7;
+
+	/**
+	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT = ABSTRACT_FILE_REF_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Java Compilation Unit Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -544,7 +545,7 @@ public interface GitModelPackage extends EPackage {
 	 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 7;
+	int CHANGE_TYPE = 8;
 
 
 	/**
@@ -786,25 +787,15 @@ public interface GitModelPackage extends EPackage {
 	EAttribute getDiff_OldPath();
 
 	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.JavaDiff <em>Java Diff</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.gitmodel.Diff#getFile <em>File</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Java Diff</em>'.
-	 * @see de.hub.srcrepo.gitmodel.JavaDiff
+	 * @return the meta object for the containment reference '<em>File</em>'.
+	 * @see de.hub.srcrepo.gitmodel.Diff#getFile()
+	 * @see #getDiff()
 	 * @generated
 	 */
-	EClass getJavaDiff();
-
-	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.gitmodel.JavaDiff#getCompilationUnit <em>Compilation Unit</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Compilation Unit</em>'.
-	 * @see de.hub.srcrepo.gitmodel.JavaDiff#getCompilationUnit()
-	 * @see #getJavaDiff()
-	 * @generated
-	 */
-	EReference getJavaDiff_CompilationUnit();
+	EReference getDiff_File();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.RevCompilationUnit <em>Rev Compilation Unit</em>}'.
@@ -880,6 +871,37 @@ public interface GitModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getParentRelation_Child();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.AbstractFileRef <em>Abstract File Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Abstract File Ref</em>'.
+	 * @see de.hub.srcrepo.gitmodel.AbstractFileRef
+	 * @generated
+	 */
+	EClass getAbstractFileRef();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.gitmodel.JavaCompilationUnitRef <em>Java Compilation Unit Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Java Compilation Unit Ref</em>'.
+	 * @see de.hub.srcrepo.gitmodel.JavaCompilationUnitRef
+	 * @generated
+	 */
+	EClass getJavaCompilationUnitRef();
+
+	/**
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.gitmodel.JavaCompilationUnitRef#getCompilationUnit <em>Compilation Unit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Compilation Unit</em>'.
+	 * @see de.hub.srcrepo.gitmodel.JavaCompilationUnitRef#getCompilationUnit()
+	 * @see #getJavaCompilationUnitRef()
+	 * @generated
+	 */
+	EReference getJavaCompilationUnitRef_CompilationUnit();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
@@ -1099,22 +1121,12 @@ public interface GitModelPackage extends EPackage {
 		EAttribute DIFF__OLD_PATH = eINSTANCE.getDiff_OldPath();
 
 		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.gitmodel.impl.JavaDiffImpl <em>Java Diff</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.gitmodel.impl.JavaDiffImpl
-		 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getJavaDiff()
-		 * @generated
-		 */
-		EClass JAVA_DIFF = eINSTANCE.getJavaDiff();
-
-		/**
-		 * The meta object literal for the '<em><b>Compilation Unit</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>File</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference JAVA_DIFF__COMPILATION_UNIT = eINSTANCE.getJavaDiff_CompilationUnit();
+		EReference DIFF__FILE = eINSTANCE.getDiff_File();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.gitmodel.impl.RevCompilationUnitImpl <em>Rev Compilation Unit</em>}' class.
@@ -1175,6 +1187,34 @@ public interface GitModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PARENT_RELATION__CHILD = eINSTANCE.getParentRelation_Child();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.gitmodel.impl.AbstractFileRefImpl <em>Abstract File Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.gitmodel.impl.AbstractFileRefImpl
+		 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getAbstractFileRef()
+		 * @generated
+		 */
+		EClass ABSTRACT_FILE_REF = eINSTANCE.getAbstractFileRef();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.gitmodel.impl.JavaCompilationUnitRefImpl <em>Java Compilation Unit Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.gitmodel.impl.JavaCompilationUnitRefImpl
+		 * @see de.hub.srcrepo.gitmodel.impl.GitModelPackageImpl#getJavaCompilationUnitRef()
+		 * @generated
+		 */
+		EClass JAVA_COMPILATION_UNIT_REF = eINSTANCE.getJavaCompilationUnitRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Compilation Unit</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT = eINSTANCE.getJavaCompilationUnitRef_CompilationUnit();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.

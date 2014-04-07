@@ -1,27 +1,27 @@
 package de.hub.srcrepo
+
 import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.gmt.modisco.java.Model
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.junit.Before
 import org.junit.Test
+
+import de.hub.emffrag.EmfFragActivator
+import de.hub.emffrag.fragmentation.FragmentedModel
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
-import de.hub.emffrag.EmfFragActivator
-import de.hub.srcrepo.emffrag.extensions.ExtensionsPackage
-import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage
-import de.hub.srcrepo.gitmodel.JavaDiff
-import de.hub.srcrepo.gitmodel.SourceRepository
-import de.hub.srcrepo.ocl.HandleCollectionConversions
-import de.hub.srcrepo.gitmodel.Diff
-import de.hub.emffrag.fragmentation.FInternalObjectImpl
-import de.hub.emffrag.fragmentation.FragmentedModel
-import de.hub.emffrag.util.EMFFragUtil
 import de.hub.emffrag.util.Extensions
+import de.hub.srcrepo.emffrag.extensions.ExtensionsPackage
 import de.hub.srcrepo.emffrag.extensions.ImportLog
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntry
+import de.hub.srcrepo.gitmodel.Diff
+import de.hub.srcrepo.gitmodel.JavaCompilationUnitRef
+import de.hub.srcrepo.gitmodel.SourceRepository
+import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage
+import de.hub.srcrepo.ocl.HandleCollectionConversions
 
 class ImportedModelTests extends HandleCollectionConversions {
   
@@ -73,15 +73,15 @@ class ImportedModelTests extends HandleCollectionConversions {
   }
   
   @Test def testJavaDiffs() {
-    val javaDiffs = 
+    val javaCompilationUnitRefs = 
       gitModel.getAllCommits()
       .collectAll((e)=>e.getParentRelations())
       .collectAll((e)=>e.getDiffs())
-      .select((e:Diff)=>{e.isInstanceOf[JavaDiff]})
-      .collect((e)=>e.asInstanceOf[JavaDiff])
+      .select((e:Diff)=>{e.getFile() != null && e.getFile().isInstanceOf[JavaCompilationUnitRef]})
+      .collect((e)=>e.getFile().asInstanceOf[JavaCompilationUnitRef])
       
-    val allJavaDiffs = javaDiffs.size()
-    val javaDiffsWithCU = javaDiffs.select((e)=>e.getCompilationUnit() != null).size()
+    val allJavaDiffs = javaCompilationUnitRefs.size()
+    val javaDiffsWithCU = javaCompilationUnitRefs.select((e)=>e.getCompilationUnit() != null).size()
     
     System.out.println(javaDiffsWithCU + "/" + allJavaDiffs + " have a compilation unit")
   }

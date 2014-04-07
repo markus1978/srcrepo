@@ -68,12 +68,8 @@ public class JGitModelImport {
 		parentRelationModel.setParent(parentModel);		
 		for (DiffEntry diffEntry : diffs) {
 			Diff diffModel = null;
-			String path = diffEntry.getNewPath();
-			if (path.endsWith(".java")) {
-				diffModel = gitFactory.createJavaDiff();
-			} else {
-				diffModel = gitFactory.createDiff();
-			}
+			String path = diffEntry.getNewPath();			
+			diffModel = gitFactory.createDiff();
 			diffModel.setNewPath(path);
 			diffModel.setOldPath(diffEntry.getOldPath());
 			diffModel.setType(diffEntry.getChangeType());

@@ -8,6 +8,7 @@ package de.hub.srcrepo.gitmodel.emffrag.impl;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
 
+import de.hub.srcrepo.gitmodel.AbstractFileRef;
 import de.hub.srcrepo.gitmodel.Diff;
 
 import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage;
@@ -26,6 +27,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
  *   <li>{@link de.hub.srcrepo.gitmodel.emffrag.impl.DiffImpl#getNewPath <em>New Path</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.emffrag.impl.DiffImpl#getType <em>Type</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.emffrag.impl.DiffImpl#getOldPath <em>Old Path</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.emffrag.impl.DiffImpl#getFile <em>File</em>}</li>
  * </ul>
  * </p>
  *
@@ -113,6 +115,24 @@ public class DiffImpl extends FObjectImpl implements Diff {
 	 */
 	public void setOldPath(String newOldPath) {
 		eSet(GitModelPackage.Literals.DIFF__OLD_PATH, newOldPath);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AbstractFileRef getFile() {
+		return (AbstractFileRef)eGet(GitModelPackage.Literals.DIFF__FILE, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFile(AbstractFileRef newFile) {
+		eSet(GitModelPackage.Literals.DIFF__FILE, newFile);
 	}
 
 } //DiffImpl

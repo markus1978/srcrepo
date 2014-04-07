@@ -6,8 +6,11 @@
  */
 package de.hub.srcrepo.gitmodel.impl;
 
+import de.hub.srcrepo.gitmodel.AbstractFileRef;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
@@ -25,6 +28,7 @@ import de.hub.srcrepo.gitmodel.GitModelPackage;
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.DiffImpl#getNewPath <em>New Path</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.DiffImpl#getType <em>Type</em>}</li>
  *   <li>{@link de.hub.srcrepo.gitmodel.impl.DiffImpl#getOldPath <em>Old Path</em>}</li>
+ *   <li>{@link de.hub.srcrepo.gitmodel.impl.DiffImpl#getFile <em>File</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,6 +89,16 @@ public class DiffImpl extends EObjectImpl implements Diff {
 	 * @ordered
 	 */
 	protected String oldPath = OLD_PATH_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getFile() <em>File</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFile()
+	 * @generated
+	 * @ordered
+	 */
+	protected AbstractFileRef file;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -173,6 +187,63 @@ public class DiffImpl extends EObjectImpl implements Diff {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public AbstractFileRef getFile() {
+		return file;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetFile(AbstractFileRef newFile, NotificationChain msgs) {
+		AbstractFileRef oldFile = file;
+		file = newFile;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, GitModelPackage.DIFF__FILE, oldFile, newFile);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFile(AbstractFileRef newFile) {
+		if (newFile != file) {
+			NotificationChain msgs = null;
+			if (file != null)
+				msgs = ((InternalEObject)file).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - GitModelPackage.DIFF__FILE, null, msgs);
+			if (newFile != null)
+				msgs = ((InternalEObject)newFile).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - GitModelPackage.DIFF__FILE, null, msgs);
+			msgs = basicSetFile(newFile, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, GitModelPackage.DIFF__FILE, newFile, newFile));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case GitModelPackage.DIFF__FILE:
+				return basicSetFile(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -182,6 +253,8 @@ public class DiffImpl extends EObjectImpl implements Diff {
 				return getType();
 			case GitModelPackage.DIFF__OLD_PATH:
 				return getOldPath();
+			case GitModelPackage.DIFF__FILE:
+				return getFile();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -202,6 +275,9 @@ public class DiffImpl extends EObjectImpl implements Diff {
 				return;
 			case GitModelPackage.DIFF__OLD_PATH:
 				setOldPath((String)newValue);
+				return;
+			case GitModelPackage.DIFF__FILE:
+				setFile((AbstractFileRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -224,6 +300,9 @@ public class DiffImpl extends EObjectImpl implements Diff {
 			case GitModelPackage.DIFF__OLD_PATH:
 				setOldPath(OLD_PATH_EDEFAULT);
 				return;
+			case GitModelPackage.DIFF__FILE:
+				setFile((AbstractFileRef)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -242,6 +321,8 @@ public class DiffImpl extends EObjectImpl implements Diff {
 				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 			case GitModelPackage.DIFF__OLD_PATH:
 				return OLD_PATH_EDEFAULT == null ? oldPath != null : !OLD_PATH_EDEFAULT.equals(oldPath);
+			case GitModelPackage.DIFF__FILE:
+				return file != null;
 		}
 		return super.eIsSet(featureID);
 	}
