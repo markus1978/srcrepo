@@ -505,11 +505,24 @@ public class SrcRepoBindingManager extends BindingManager {
 			}
 			// declaring the super class
 			if (!binding.isInterface() && binding.getSuperClass() != null) {
-				ClassDeclaration superClass = (ClassDeclaration) getTypeDeclaration(binding.getSuperClass(), model1);
-				if (superClass != null) {
-					TypeAccess typAcc = this.factory.createTypeAccess();
-					typAcc.setType(superClass);
-					((ClassDeclaration) result).setSuperClass(typAcc);
+				// BUGFIX this is sometimes an InterfaceDeclaration dispite !binding.isInterface (hub/sam/markus)
+				NamedElement superClassTypeDeclaration = getTypeDeclaration(binding.getSuperClass(), model1);
+				if (superClassTypeDeclaration instanceof ClassDeclaration) {
+					ClassDeclaration superClass = (ClassDeclaration) superClassTypeDeclaration;
+					if (superClass != null) {
+						TypeAccess typAcc = this.factory.createTypeAccess();
+						typAcc.setType(superClass);
+						((ClassDeclaration) result).setSuperClass(typAcc);
+					}
+				} else if (superClassTypeDeclaration instanceof InterfaceDeclaration) {
+					InterfaceDeclaration superInterface = (InterfaceDeclaration) superClassTypeDeclaration;
+					if (superInterface != null) {
+						TypeAccess typAcc = this.factory.createTypeAccess();
+						typAcc.setType(superInterface);
+						((AbstractTypeDeclaration) result).getSuperInterfaces().add(typAcc);
+					}
+				} else {
+					throw new IllegalStateException("Unexpected super class type declaration type: " + superClassTypeDeclaration);
 				}
 			}
 			// declaring the super interfaces

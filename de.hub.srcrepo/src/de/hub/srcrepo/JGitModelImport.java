@@ -1,7 +1,7 @@
 package de.hub.srcrepo;
 
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,7 +83,7 @@ public class JGitModelImport {
 	
 	public void runImport() throws Exception {
 		// create helper
-		Set<RevCommit> commitsToImport = new HashSet<RevCommit>();		
+		Map<String, RevCommit> commitsToImport = new HashMap<String, RevCommit>();		
 		Repository jGitRepository = git.getRepository();
 		RevWalk walk = new RevWalk(jGitRepository);
 		
@@ -106,7 +106,7 @@ public class JGitModelImport {
 				
 				walk.markStart(startCommit);
 				for(RevCommit commit: walk) {
-					commitsToImport.add(commit);					
+					commitsToImport.put(commit.getName(), commit);					
 				}
 			}
 		}
@@ -121,7 +121,7 @@ public class JGitModelImport {
 		df.setDiffComparator(RawTextComparator.DEFAULT);
 		df.setDetectRenames(true);
 		
-		for (RevCommit commit: commitsToImport) {
+		for (RevCommit commit: commitsToImport.values()) {
 			SrcRepoActivator.INSTANCE.debug("import commit " + commit.getName());
 			Commit commitModel = targetModel.getCommit(commit.getName());
 			if (commitModel == null) {
@@ -130,9 +130,7 @@ public class JGitModelImport {
 	
 			commitModel.setTime(new Date(((long) commit.getCommitTime()) * 1000));
 			commitModel.setMessage(commit.getFullMessage());
-			commitModel.setAuthor(commit.getAuthorIdent().getName());
-	
-			
+			commitModel.setAuthor(commit.getAuthorIdent().getName());		
 			
 			List<DiffEntry> diffs = null;
 			if (commit.getParentCount() > 0) {
@@ -146,8 +144,15 @@ public class JGitModelImport {
 				createParentRelation(commitModel, null, diffs);
 				if (targetModel.getRootCommit() == null) {
 					targetModel.setRootCommit(commitModel);
+					SrcRepoActivator.INSTANCE.info("Root commit: " + commitModel.getName() + ", " + commitModel.getTime());
 				} else {
-					SrcRepoActivator.INSTANCE.error("There are multiple root commits, this can not happen.");
+					if (rootCommitName == null) {
+						SrcRepoActivator.INSTANCE.error("There are multiple root commits, this can not happen: " 
+								+ commitModel.getName() + ", " + commitModel.getTime() + ". Using the earlier one.");
+						if (targetModel.getRootCommit().getTime().after(commitModel.getTime())) {
+							targetModel.setRootCommit(commitModel);
+						}
+					}
 				}
 			}
 		}

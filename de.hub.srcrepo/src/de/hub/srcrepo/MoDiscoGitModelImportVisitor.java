@@ -297,19 +297,23 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		// import all collected diffs and resolve references
 		runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentCommit, javaReader));		
 		
-		// resolve references
-		SrcRepoActivator.INSTANCE.info("Resolving references...");
-		// this is only necessary, if there was some java in the current revision.
-		if (javaReader.getResultModel() != null) {
-			// merge bindings and then resolve all references (indirectly via #terminate)
-			SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
-			if (currentJavaBindings == null) {
-				currentJavaBindings = commitBindings;
-			} else {
-				currentJavaBindings.addBindings(commitBindings);
-				javaReader.setGlobalBindings(currentJavaBindings);
+		try {
+			// resolve references
+			SrcRepoActivator.INSTANCE.info("Resolving references...");
+			// this is only necessary, if there was some java in the current revision.
+			if (javaReader.getResultModel() != null) {
+				// merge bindings and then resolve all references (indirectly via #terminate)
+				SrcRepoBindingManager commitBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
+				if (currentJavaBindings == null) {
+					currentJavaBindings = commitBindings;
+				} else {
+					currentJavaBindings.addBindings(commitBindings);
+					javaReader.setGlobalBindings(currentJavaBindings);
+				}
+				javaReader.terminate(new NullProgressMonitor());
 			}
-			javaReader.terminate(new NullProgressMonitor());
+		} catch (Exception e) {
+			reportImportError(currentCommit, "Could not finalize import of compilation units, some references are probably not resolved.", e, true);
 		}
 	}
 
@@ -354,9 +358,14 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 		private void clean() throws GitAPIException {
 			git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
 			org.eclipse.jgit.api.Status status = git.status().call();
+			if (status.hasUncommittedChanges()) {
+				// try again
+				git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
+				status = git.status().call();
+			}
 			if (status.hasUncommittedChanges() || status.getUntracked().size() > 0 || status.getUntrackedFolders().size() > 0) {
-				reportImportError(currentCommit, "Git clean did not fully clean: " + status.hasUncommittedChanges() + "/" 
-						+ status.getUntracked().size() + "/" + status.getUntrackedFolders().size() + ".", null, false);
+				SrcRepoActivator.INSTANCE.warning("Git clean did not fully clean: " + status.hasUncommittedChanges() + "/" 
+						+ status.getUntracked().size() + "/" + status.getUntrackedFolders().size() + ".");
 			}
 		}
 
@@ -375,7 +384,7 @@ public class MoDiscoGitModelImportVisitor implements IGitModelVisitor, SourceVis
 				// reset possible changes
 				git.reset().setMode(ResetType.HARD).call();
 				// checkout the new revision
-				git.checkout().setName(currentCommit.getName()).call();												
+				git.checkout().setForce(true).setName(currentCommit.getName()).call();	
 			} catch (JGitInternalException e) {
 				if (e.getCause() instanceof LockFailedException) {
 					// TODO proper reaction
