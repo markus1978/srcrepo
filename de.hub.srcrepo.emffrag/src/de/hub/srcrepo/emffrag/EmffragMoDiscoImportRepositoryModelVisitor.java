@@ -43,5 +43,12 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 	public void onCompleteRev(Rev rev) {
 		super.onCompleteRev(rev);
 		((FObjectImpl)repositoryModel).fFragmentation().save(null);
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		((FObjectImpl)repositoryModel).fFragmentation().save(null);
 	}	
+		
 }

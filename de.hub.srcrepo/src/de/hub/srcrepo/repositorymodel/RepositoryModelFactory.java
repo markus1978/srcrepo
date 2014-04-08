@@ -80,6 +80,51 @@ public interface RepositoryModelFactory extends EFactory {
 	JavaCompilationUnitRef createJavaCompilationUnitRef();
 
 	/**
+	 * Returns a new object of class '<em>Traversal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Traversal</em>'.
+	 * @generated
+	 */
+	Traversal createTraversal();
+
+	/**
+	 * Returns a new object of class '<em>Mo Disco Import</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mo Disco Import</em>'.
+	 * @generated
+	 */
+	MoDiscoImport createMoDiscoImport();
+
+	/**
+	 * Returns a new object of class '<em>Java Bindings</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Java Bindings</em>'.
+	 * @generated
+	 */
+	JavaBindings createJavaBindings();
+
+	/**
+	 * Returns a new object of class '<em>Branch Point</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Branch Point</em>'.
+	 * @generated
+	 */
+	BranchPoint createBranchPoint();
+
+	/**
+	 * Returns a new object of class '<em>Java Bindings Per Branch</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Java Bindings Per Branch</em>'.
+	 * @generated
+	 */
+	JavaBindingsPerBranch createJavaBindingsPerBranch();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

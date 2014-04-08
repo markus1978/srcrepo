@@ -22,6 +22,7 @@ import org.eclipse.gmt.modisco.java.Model;
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getAllRevs <em>All Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev <em>Root Rev</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}</li>
  * </ul>
  * </p>
  *
@@ -58,7 +59,6 @@ public interface RepositoryModel extends EObject {
 	 * @return the value of the '<em>All Revs</em>' containment reference list.
 	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_AllRevs()
 	 * @model containment="true"
-	 *        annotation="de.hub.emffrag indexes='true'"
 	 * @generated
 	 */
 	EList<Rev> getAllRevs();
@@ -114,6 +114,33 @@ public interface RepositoryModel extends EObject {
 	 * @generated
 	 */
 	void setRootRev(Rev value);
+
+	/**
+	 * Returns the value of the '<em><b>Traversals</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Traversals</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Traversals</em>' containment reference.
+	 * @see #setTraversals(Traversal)
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_Traversals()
+	 * @model containment="true"
+	 *        annotation="de.hub.emffrag Fragmentation='true'"
+	 * @generated
+	 */
+	Traversal getTraversals();
+
+	/**
+	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Traversals</em>' containment reference.
+	 * @see #getTraversals()
+	 * @generated
+	 */
+	void setTraversals(Traversal value);
 
 	/**
 	 * <!-- begin-user-doc -->

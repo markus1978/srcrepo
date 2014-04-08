@@ -25,6 +25,7 @@ import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Traversal;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,6 +38,7 @@ import de.hub.srcrepo.repositorymodel.Rev;
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getRootRev <em>Root Rev</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
  * </ul>
  * </p>
  *
@@ -82,6 +84,16 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * @ordered
 	 */
 	protected Rev rootRev;
+
+	/**
+	 * The cached value of the '{@link #getTraversals() <em>Traversals</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTraversals()
+	 * @generated
+	 * @ordered
+	 */
+	protected Traversal traversals;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -204,6 +216,50 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Traversal getTraversals() {
+		return traversals;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetTraversals(Traversal newTraversals, NotificationChain msgs) {
+		Traversal oldTraversals = traversals;
+		traversals = newTraversals;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS, oldTraversals, newTraversals);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTraversals(Traversal newTraversals) {
+		if (newTraversals != traversals) {
+			NotificationChain msgs = null;
+			if (traversals != null)
+				msgs = ((InternalEObject)traversals).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS, null, msgs);
+			if (newTraversals != null)
+				msgs = ((InternalEObject)newTraversals).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS, null, msgs);
+			msgs = basicSetTraversals(newTraversals, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS, newTraversals, newTraversals));
+	}
+
+
+	/**
 	 * @generated NOT
 	 */
 	private final Map<String, Rev> revisions = new HashMap<String, Rev>();
@@ -248,6 +304,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				return ((InternalEList<?>)getAllRefs()).basicRemove(otherEnd, msgs);
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				return ((InternalEList<?>)getAllRevs()).basicRemove(otherEnd, msgs);
+			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
+				return basicSetTraversals(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -270,6 +328,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				if (resolve) return getRootRev();
 				return basicGetRootRev();
+			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
+				return getTraversals();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -297,6 +357,9 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				setRootRev((Rev)newValue);
 				return;
+			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
+				setTraversals((Traversal)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -321,6 +384,9 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				setRootRev((Rev)null);
 				return;
+			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
+				setTraversals((Traversal)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -341,6 +407,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				return javaModel != null;
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				return rootRev != null;
+			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
+				return traversals != null;
 		}
 		return super.eIsSet(featureID);
 	}

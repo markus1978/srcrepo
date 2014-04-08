@@ -213,6 +213,121 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.Traversal} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TraversalItemProvider traversalItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.Traversal}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTraversalAdapter() {
+		if (traversalItemProvider == null) {
+			traversalItemProvider = new TraversalItemProvider(this);
+		}
+
+		return traversalItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.MoDiscoImport} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected MoDiscoImportItemProvider moDiscoImportItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.MoDiscoImport}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createMoDiscoImportAdapter() {
+		if (moDiscoImportItemProvider == null) {
+			moDiscoImportItemProvider = new MoDiscoImportItemProvider(this);
+		}
+
+		return moDiscoImportItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.JavaBindings} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected JavaBindingsItemProvider javaBindingsItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.JavaBindings}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createJavaBindingsAdapter() {
+		if (javaBindingsItemProvider == null) {
+			javaBindingsItemProvider = new JavaBindingsItemProvider(this);
+		}
+
+		return javaBindingsItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.BranchPoint} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected BranchPointItemProvider branchPointItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.BranchPoint}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createBranchPointAdapter() {
+		if (branchPointItemProvider == null) {
+			branchPointItemProvider = new BranchPointItemProvider(this);
+		}
+
+		return branchPointItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected JavaBindingsPerBranchItemProvider javaBindingsPerBranchItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createJavaBindingsPerBranchAdapter() {
+		if (javaBindingsPerBranchItemProvider == null) {
+			javaBindingsPerBranchItemProvider = new JavaBindingsPerBranchItemProvider(this);
+		}
+
+		return javaBindingsPerBranchItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -317,6 +432,11 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 		if (diffItemProvider != null) diffItemProvider.dispose();
 		if (parentRelationItemProvider != null) parentRelationItemProvider.dispose();
 		if (javaCompilationUnitRefItemProvider != null) javaCompilationUnitRefItemProvider.dispose();
+		if (traversalItemProvider != null) traversalItemProvider.dispose();
+		if (moDiscoImportItemProvider != null) moDiscoImportItemProvider.dispose();
+		if (javaBindingsItemProvider != null) javaBindingsItemProvider.dispose();
+		if (branchPointItemProvider != null) branchPointItemProvider.dispose();
+		if (javaBindingsPerBranchItemProvider != null) javaBindingsPerBranchItemProvider.dispose();
 	}
 
 }

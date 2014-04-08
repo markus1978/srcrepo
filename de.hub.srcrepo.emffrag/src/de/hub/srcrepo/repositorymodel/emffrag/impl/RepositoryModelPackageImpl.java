@@ -17,12 +17,17 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.BranchPoint;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.JavaBindings;
+import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MoDiscoImport;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Traversal;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -81,6 +86,41 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass javaCompilationUnitRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass traversalEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass moDiscoImportEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass javaBindingsEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass branchPointEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass javaBindingsPerBranchEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -196,6 +236,15 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getRepositoryModel_RootRev() {
 		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRepositoryModel_Traversals() {
+		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -428,6 +477,177 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getTraversal() {
+		return traversalEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTraversal_RemaingBranchPoints() {
+		return (EReference)traversalEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTraversal_CurrentBranchpoint() {
+		return (EReference)traversalEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTraversal_Name() {
+		return (EAttribute)traversalEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTraversal_Merges() {
+		return (EReference)traversalEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTraversal_NextRev() {
+		return (EReference)traversalEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMoDiscoImport() {
+		return moDiscoImportEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMoDiscoImport_Bindings() {
+		return (EReference)moDiscoImportEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMoDiscoImport_BindingsPerBranch() {
+		return (EReference)moDiscoImportEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJavaBindings() {
+		return javaBindingsEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaBindings_Targets() {
+		return (EReference)javaBindingsEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaBindings_Unresolved() {
+		return (EReference)javaBindingsEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getBranchPoint() {
+		return branchPointEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBranchPoint_Parent() {
+		return (EReference)branchPointEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBranchPoint_Children() {
+		return (EReference)branchPointEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBranchPoint_Next() {
+		return (EReference)branchPointEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJavaBindingsPerBranch() {
+		return javaBindingsPerBranchEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaBindingsPerBranch_Bindings() {
+		return (EReference)javaBindingsPerBranchEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaBindingsPerBranch_Branch() {
+		return (EReference)javaBindingsPerBranchEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getChangeType() {
 		return changeTypeEDataType;
 	}
@@ -465,6 +685,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REVS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__JAVA_MODEL);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ROOT_REV);
+		createEReference(repositoryModelEClass, REPOSITORY_MODEL__TRAVERSALS);
 
 		revEClass = createEClass(REV);
 		createEAttribute(revEClass, REV__AUTHOR);
@@ -496,6 +717,30 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		javaCompilationUnitRefEClass = createEClass(JAVA_COMPILATION_UNIT_REF);
 		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT);
+
+		traversalEClass = createEClass(TRAVERSAL);
+		createEReference(traversalEClass, TRAVERSAL__REMAING_BRANCH_POINTS);
+		createEReference(traversalEClass, TRAVERSAL__CURRENT_BRANCHPOINT);
+		createEAttribute(traversalEClass, TRAVERSAL__NAME);
+		createEReference(traversalEClass, TRAVERSAL__MERGES);
+		createEReference(traversalEClass, TRAVERSAL__NEXT_REV);
+
+		moDiscoImportEClass = createEClass(MO_DISCO_IMPORT);
+		createEReference(moDiscoImportEClass, MO_DISCO_IMPORT__BINDINGS);
+		createEReference(moDiscoImportEClass, MO_DISCO_IMPORT__BINDINGS_PER_BRANCH);
+
+		javaBindingsEClass = createEClass(JAVA_BINDINGS);
+		createEReference(javaBindingsEClass, JAVA_BINDINGS__TARGETS);
+		createEReference(javaBindingsEClass, JAVA_BINDINGS__UNRESOLVED);
+
+		branchPointEClass = createEClass(BRANCH_POINT);
+		createEReference(branchPointEClass, BRANCH_POINT__PARENT);
+		createEReference(branchPointEClass, BRANCH_POINT__CHILDREN);
+		createEReference(branchPointEClass, BRANCH_POINT__NEXT);
+
+		javaBindingsPerBranchEClass = createEClass(JAVA_BINDINGS_PER_BRANCH);
+		createEReference(javaBindingsPerBranchEClass, JAVA_BINDINGS_PER_BRANCH__BINDINGS);
+		createEReference(javaBindingsPerBranchEClass, JAVA_BINDINGS_PER_BRANCH__BRANCH);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -533,6 +778,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		// Add supertypes to classes
 		javaCompilationUnitRefEClass.getESuperTypes().add(this.getAbstractFileRef());
+		moDiscoImportEClass.getESuperTypes().add(this.getTraversal());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(repositoryModelEClass, RepositoryModel.class, "RepositoryModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -540,6 +786,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getRepositoryModel_AllRevs(), this.getRev(), null, "allRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_RootRev(), this.getRev(), null, "rootRev", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepositoryModel_Traversals(), this.getTraversal(), null, "traversals", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = addEOperation(repositoryModelEClass, this.getRev(), "getRev", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -579,6 +826,30 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEClass(javaCompilationUnitRefEClass, JavaCompilationUnitRef.class, "JavaCompilationUnitRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJavaCompilationUnitRef_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(traversalEClass, Traversal.class, "Traversal", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTraversal_RemaingBranchPoints(), this.getBranchPoint(), null, "remaingBranchPoints", null, 0, -1, Traversal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTraversal_CurrentBranchpoint(), this.getBranchPoint(), null, "currentBranchpoint", null, 0, 1, Traversal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTraversal_Name(), ecorePackage.getEString(), "name", null, 0, 1, Traversal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTraversal_Merges(), this.getRev(), null, "merges", null, 0, -1, Traversal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTraversal_NextRev(), this.getRev(), null, "nextRev", null, 0, 1, Traversal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(moDiscoImportEClass, MoDiscoImport.class, "MoDiscoImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMoDiscoImport_Bindings(), this.getJavaBindings(), null, "bindings", null, 0, 1, MoDiscoImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMoDiscoImport_BindingsPerBranch(), this.getJavaBindingsPerBranch(), null, "bindingsPerBranch", null, 0, -1, MoDiscoImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(javaBindingsEClass, JavaBindings.class, "JavaBindings", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJavaBindings_Targets(), theJavaPackage.getNamedElement(), null, "targets", null, 0, -1, JavaBindings.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJavaBindings_Unresolved(), theJavaPackage.getUnresolvedItem(), null, "unresolved", null, 0, -1, JavaBindings.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(branchPointEClass, BranchPoint.class, "BranchPoint", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBranchPoint_Parent(), this.getRev(), null, "parent", null, 0, 1, BranchPoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBranchPoint_Children(), this.getRev(), null, "children", null, 0, -1, BranchPoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBranchPoint_Next(), this.getRev(), null, "next", null, 0, 1, BranchPoint.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(javaBindingsPerBranchEClass, JavaBindingsPerBranch.class, "JavaBindingsPerBranch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJavaBindingsPerBranch_Bindings(), this.getJavaBindings(), null, "bindings", null, 0, 1, JavaBindingsPerBranch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJavaBindingsPerBranch_Branch(), this.getRev(), null, "branch", null, 0, 1, JavaBindingsPerBranch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
@@ -586,8 +857,44 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createResource(eNS_URI);
 
 		// Create annotations
+		// http:///org/eclipse/emf/ecore/util/ExtendedMetaData
+		createExtendedMetaDataAnnotations();
 		// de.hub.emffrag
 		createDeAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http:///org/eclipse/emf/ecore/util/ExtendedMetaData</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createExtendedMetaDataAnnotations() {
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";		
+		addAnnotation
+		  (repositoryModelEClass, 
+		   source, 
+		   new String[] {
+			 "name", "Rev"
+		   });			
+		addAnnotation
+		  (refEClass, 
+		   source, 
+		   new String[] {
+			 "name", "Rev"
+		   });		
+		addAnnotation
+		  (diffEClass, 
+		   source, 
+		   new String[] {
+			 "name", "Rev"
+		   });		
+		addAnnotation
+		  (parentRelationEClass, 
+		   source, 
+		   new String[] {
+			 "name", "Rev"
+		   });	
 	}
 
 	/**
@@ -597,7 +904,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	protected void createDeAnnotations() {
-		String source = "de.hub.emffrag";		
+		String source = "de.hub.emffrag";			
+		addAnnotation
+		  (getRepositoryModel_Traversals(), 
+		   source, 
+		   new String[] {
+			 "Fragmentation", "true"
+		   });					
 		addAnnotation
 		  (getJavaCompilationUnitRef_CompilationUnit(), 
 		   source, 

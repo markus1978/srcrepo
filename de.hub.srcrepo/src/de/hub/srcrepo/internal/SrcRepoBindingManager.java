@@ -62,6 +62,8 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PackageBindi
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.ParameterBinding;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
+import de.hub.srcrepo.repositorymodel.JavaBindings;
+
 /**
  * Class used to store and resolves pending references between Java
  * {@link ASTNode}s.
@@ -145,6 +147,20 @@ public class SrcRepoBindingManager extends BindingManager {
 		this.targets = new HashMap<String, NamedElement>(aBindingManager.targets);
 		this.pendings = new ArrayList<PendingElement>(aBindingManager.pendings);
 		this.model = aBindingManager.model;
+	}
+	
+	public SrcRepoBindingManager(final JavaFactory factory, Model javaModel, JavaBindings bindingsModel) {
+		super(factory);
+		this.factory = factory;
+		this.model = javaModel;
+		this.targets = new HashMap<String, NamedElement>(bindingsModel.getTargets().size());
+		for(NamedElement target: bindingsModel.getTargets()) {
+			this.targets.put(target.getName(), target);
+		}
+		this.pendings = new ArrayList<PendingElement>(bindingsModel.getUnresolved().size());
+		for(UnresolvedItem unresolvedItem: bindingsModel.getUnresolved()) {
+			this.unresolvedItems.put(unresolvedItem.getName(), unresolvedItem);
+		}
 	}
 
 	// HUB start
@@ -716,5 +732,10 @@ public class SrcRepoBindingManager extends BindingManager {
 			}
 		}
 		return result;
+	}
+
+	public void saveToBindingsModel(JavaBindings bindings) {
+		bindings.getTargets().addAll(targets.values());
+		bindings.getUnresolved().addAll(unresolvedItems.values());
 	}
 }

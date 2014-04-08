@@ -2,8 +2,11 @@
 <ecore:EPackage xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="repositorymodel"
-    nsURI="http://hub.sam.repositorymodel/1.0/emffrag" nsPrefix="repositorymodel">
+    nsURI="http://hub.sam.repositorymodel/1.0" nsPrefix="repositorymodel">
   <eClassifiers xsi:type="ecore:EClass" name="RepositoryModel">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="Rev"/>
+    </eAnnotations>
     <eOperations name="getRev" eType="#//Rev">
       <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
@@ -17,6 +20,12 @@
         eType="#//Rev" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass java.ecore#//Model"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootRev" eType="#//Rev"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="traversals" eType="#//Traversal"
+        containment="true">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="Fragmentation" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Rev">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -30,12 +39,18 @@
         eType="#//ParentRelation" eOpposite="#//ParentRelation/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ref">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="Rev"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedCommit" eType="#//Rev"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPeeled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSymbolic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Diff">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="Rev"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ChangeType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -44,6 +59,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ChangeType" instanceClassName="org.eclipse.jgit.diff.DiffEntry.ChangeType"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParentRelation">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="Rev"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diffs" upperBound="-1"
         eType="#//Diff" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Rev"
@@ -57,5 +75,38 @@
         <details key="Fragmentation" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Traversal">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="remaingBranchPoints" upperBound="-1"
+        eType="#//BranchPoint" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="currentBranchpoint" eType="#//BranchPoint"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="merges" upperBound="-1"
+        eType="#//Rev"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nextRev" eType="#//Rev"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MoDiscoImport" eSuperTypes="#//Traversal">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bindings" eType="#//JavaBindings"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bindingsPerBranch" upperBound="-1"
+        eType="#//JavaBindingsPerBranch" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaBindings">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
+        eType="ecore:EClass java.ecore#//NamedElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unresolved" upperBound="-1"
+        eType="ecore:EClass java.ecore#//UnresolvedItem"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BranchPoint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Rev"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//Rev"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//Rev"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JavaBindingsPerBranch">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bindings" eType="#//JavaBindings"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="branch" eType="#//Rev"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -17,6 +17,7 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Traversal;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -30,6 +31,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getRootRev <em>Root Rev</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
  * </ul>
  * </p>
  *
@@ -119,6 +121,24 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	 */
 	public void setRootRev(Rev newRootRev) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REV, newRootRev);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Traversal getTraversals() {
+		return (Traversal)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTraversals(Traversal newTraversals) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, newTraversals);
 	}
 
 	/**

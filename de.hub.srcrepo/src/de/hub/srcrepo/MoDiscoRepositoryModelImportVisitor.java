@@ -45,11 +45,15 @@ import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.internal.SrcRepoMethodRedefinitionManager;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.JavaBindings;
+import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MoDiscoImport;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Traversal;
 
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor, SourceVisitListener {
 
@@ -161,6 +165,19 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		});
 
 	}
+
+	@Override
+	public void loadState(Traversal traversal) {
+		MoDiscoImport moDiscoImport = (MoDiscoImport)traversal;
+		JavaBindings bindings = moDiscoImport.getBindings();
+		currentJavaBindings = new SrcRepoBindingManager(javaFactory, javaModel, bindings);
+		bindingsPerBranch.clear();
+		for (JavaBindingsPerBranch javaBindingsPerBranch: moDiscoImport.getBindingsPerBranch()) {
+			bindingsPerBranch.put(javaBindingsPerBranch.getBranch(), new SrcRepoBindingManager(javaFactory, javaModel, javaBindingsPerBranch.getBindings()));
+		}
+	}
+
+
 
 	@Override
 	public void sourceRegionVisited(String filePath, int startOffset, int endOffset, int startLine, int endLine,
@@ -515,4 +532,24 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			SrcRepoActivator.INSTANCE.error(message, (Exception)e);
 		}
 	}
+
+	@Override
+	public void saveState(Traversal traversal) {
+		MoDiscoImport moDiscoImport = (MoDiscoImport)traversal;
+		JavaBindings bindings = moDiscoImport.getBindings();
+		if (bindings == null) {
+			bindings = repositoryFactory.createJavaBindings();
+			moDiscoImport.setBindings(bindings);
+		}
+		bindings.getTargets().clear();
+		bindings.getUnresolved().clear();
+		currentJavaBindings.saveToBindingsModel(bindings);
+	}
+
+	@Override
+	public void close() {
+		
+	}
+	
+	
 }

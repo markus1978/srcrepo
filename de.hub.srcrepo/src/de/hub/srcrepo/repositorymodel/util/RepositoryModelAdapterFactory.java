@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.repositorymodel.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -103,6 +104,26 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseJavaCompilationUnitRef(JavaCompilationUnitRef object) {
 				return createJavaCompilationUnitRefAdapter();
+			}
+			@Override
+			public Adapter caseTraversal(Traversal object) {
+				return createTraversalAdapter();
+			}
+			@Override
+			public Adapter caseMoDiscoImport(MoDiscoImport object) {
+				return createMoDiscoImportAdapter();
+			}
+			@Override
+			public Adapter caseJavaBindings(JavaBindings object) {
+				return createJavaBindingsAdapter();
+			}
+			@Override
+			public Adapter caseBranchPoint(BranchPoint object) {
+				return createBranchPointAdapter();
+			}
+			@Override
+			public Adapter caseJavaBindingsPerBranch(JavaBindingsPerBranch object) {
+				return createJavaBindingsPerBranchAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -219,6 +240,76 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createJavaCompilationUnitRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.Traversal <em>Traversal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.Traversal
+	 * @generated
+	 */
+	public Adapter createTraversalAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.MoDiscoImport <em>Mo Disco Import</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImport
+	 * @generated
+	 */
+	public Adapter createMoDiscoImportAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.JavaBindings <em>Java Bindings</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.JavaBindings
+	 * @generated
+	 */
+	public Adapter createJavaBindingsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.BranchPoint <em>Branch Point</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.BranchPoint
+	 * @generated
+	 */
+	public Adapter createBranchPointAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch <em>Java Bindings Per Branch</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch
+	 * @generated
+	 */
+	public Adapter createJavaBindingsPerBranchAdapter() {
 		return null;
 	}
 

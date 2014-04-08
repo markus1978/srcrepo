@@ -35,6 +35,7 @@ import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.SrcRepoUtil;
+import de.hub.srcrepo.repositorymodel.MoDiscoImport;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -70,6 +71,13 @@ public class EmfFragSrcRepoImport implements IApplication {
 				withLongOpt("root-commit").
 				withDescription("Start the import at a specific commit.").
 				hasArg().withArgName("commit").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("resume").
+				withDescription("Resume import if a prior aborted import is saved within an existing repository model.").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("abort-after").
+				withDescription("Abort after a given number of revisions. The traversal is saved to resume later.").
+				hasArg().withArgName("number-of-revs").create());
 		
 		return options;
 	}
@@ -81,7 +89,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 						(Integer.parseInt(cl.getOptionValue("log")) >= 0 && 
 						 Integer.parseInt(cl.getOptionValue("log")) <=4)) &&
 				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0) &&
-				(!cl.hasOption("bulk-insert") || Integer.parseInt(cl.getOptionValue("bulk-insert")) > 0);
+				(!cl.hasOption("bulk-insert") || Integer.parseInt(cl.getOptionValue("bulk-insert")) > 0 ) &&
+				(!cl.hasOption("abort-after") || Integer.parseInt(cl.getOptionValue("abort-after")) > 0);
 	}
 	
 	private void printUsage() {
@@ -183,9 +192,14 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (commandLine.hasOption("last-commit")) {
 			lastCommitName = commandLine.getOptionValue("last-commit");
 		}
+		int abortAfterNumberOfRevs = -1;
+		if (commandLine.hasOption("abort-after")) {
+			abortAfterNumberOfRevs = Integer.parseInt(commandLine.getOptionValue("abort-after"));
+		}
 		boolean withDisabledIndexes = commandLine.hasOption("disable-indexes");
 		boolean withDisabledUsages = commandLine.hasOption("disable-usages");
 		boolean withBinaryFragments = !commandLine.hasOption("xmi-fragments");
+		boolean resume = commandLine.hasOption("resume");
 		
 		if (lastCommitName != null) {
 			importRepository(
@@ -198,6 +212,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 					withDisabledUsages, 
 					bulkInsertSize, 
 					fragmentsCacheSize, 
+					resume, 
+					abortAfterNumberOfRevs,
 					rootCommitName, 
 					lastCommitName);
 		} else {
@@ -209,8 +225,10 @@ public class EmfFragSrcRepoImport implements IApplication {
 					withBinaryFragments, 
 					withDisabledIndexes, 
 					withDisabledUsages, 
-					bulkInsertSize, 
+					bulkInsertSize,
 					fragmentsCacheSize, 
+					resume, 
+					abortAfterNumberOfRevs,
 					rootCommitName);
 		}
 		
@@ -224,7 +242,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 			URI modelURI, 
 			String startRevName,
 			String... stopRevNames) {
-		return importRepository(scs, workingDirectory, repositoryURL, modelURI, true, true, true, 1000, 1000, startRevName, stopRevNames);
+		return importRepository(scs, workingDirectory, repositoryURL, modelURI, true, true, true, 1000, 1000, false, -1, startRevName, stopRevNames);
 	}
 	
 	public static RepositoryModel importRepository(
@@ -237,8 +255,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 			boolean withDisabledUsages, 
 			int bulkInsertSize, 
 			int fragmentCacheSize,
+			boolean resume,
+			int stopAfterNumberOfRevs,
 			String startRevName,
 			String... stopRevNames) {
+		
+		boolean stop = stopAfterNumberOfRevs > 0;
 		
 		// configuring		
 		EmfFragActivator.instance.collectStatistics = true;
@@ -247,32 +269,51 @@ public class EmfFragSrcRepoImport implements IApplication {
 		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
 		EmfFragActivator.instance.cacheSize = fragmentCacheSize;
 		EmfFragActivator.instance.bulkInsertSize = bulkInsertSize;
+				
+		// init database
+		if ("mongodb".equals(modelURI.scheme())) {
+			EmfFragMongoDBActivator.class.getName();
+			if (!resume) {
+				MongoDBUtil.dropCollection(modelURI);
+			}
+		} else if ("hbase".equals(modelURI.scheme())) {
+			EmfFragHBaseActivator.class.getName();
+			if (!resume) {
+				HBaseUtil.dropTable(modelURI.segment(0));
+			}
+		}
+
 		
 		// create fragmentation
 		Resource resource = new ResourceSetImpl().createResource(modelURI);
 		EmfFragActivator.instance.defaultModel = (FragmentedModel)resource;		
-		
-		// init database
-		if ("mongodb".equals(modelURI.scheme())) {
-			EmfFragMongoDBActivator.class.getName();
-			MongoDBUtil.dropCollection(modelURI);		
-		} else if ("hbase".equals(modelURI.scheme())) {
-			EmfFragHBaseActivator.class.getName();						
-			HBaseUtil.dropTable(modelURI.segment(0));
-		}
-		
+				
 		// create necessary models
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
 		JavaPackage javaModelPackage = createJavaPackage(withDisabledIndexes, withDisabledIndexes);
-		RepositoryModel repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();
-		Model javaModel = javaModelPackage.getJavaFactory().createModel();		
-
-		resource.getContents().add(repositoryModel);
-		resource.getContents().add(javaModel);
+		RepositoryModel repositoryModel = null;
+		Model javaModel = null;
 		
-		repositoryModel.setJavaModel(javaModel);
-		javaModel.setName("Java source code repository model.");
-
+		if (!resume) {
+			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();
+			javaModel = javaModelPackage.getJavaFactory().createModel();		
+			resource.getContents().add(repositoryModel);
+			resource.getContents().add(javaModel);
+			repositoryModel.setJavaModel(javaModel);
+			javaModel.setName("Java source code repository model.");
+		} else {
+			if (resource.getContents().isEmpty()) {
+				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
+				return null;
+			}
+			repositoryModel = (RepositoryModel) resource.getContents().get(0);
+			javaModel = repositoryModel.getJavaModel();
+			if (repositoryModel.getTraversals() == null) {
+				SrcRepoActivator.INSTANCE.info("No traversal present to resume,");
+				return repositoryModel;
+			}
+		}
+		
 		
 		// creating working copy
 		try {
@@ -287,12 +328,14 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing rev model
-		SrcRepoActivator.INSTANCE.info("Importing into " + modelURI + " from " +  workingDirectory + ".");
-		try {
-			scs.importRevisions(repositoryModel);
-		} catch (SourceControlException e) {
-			SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
-			return null;
+		if (!resume) {
+			SrcRepoActivator.INSTANCE.info("Importing into " + modelURI + " from " +  workingDirectory + ".");
+			try {
+				scs.importRevisions(repositoryModel);
+			} catch (SourceControlException e) {
+				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
+				return null;
+			}
 		}
 		
 		// importing source code
@@ -303,9 +346,22 @@ public class EmfFragSrcRepoImport implements IApplication {
 			stopRevs[i] = repositoryModel.getRev(stopRevName);
 		}
 		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(scs, repositoryModel);
-		SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor);
+		if (resume) {
+			SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, repositoryModel.getTraversals(), true, stop ? stopAfterNumberOfRevs : -1);
+		} else {
+			if (stop) {
+				MoDiscoImport traversal = repositoryModelPackage.getRepositoryModelFactory().createMoDiscoImport();
+				repositoryModel.setTraversals(traversal);
+				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, traversal, false, stopAfterNumberOfRevs);	
+			} else {
+				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor);
+			}
+		}
 		
-		SrcRepoActivator.INSTANCE.info("Import complete.");
+		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
+		scs.close();
+		visitor.close();
+		SrcRepoActivator.INSTANCE.info("Import done.");
 		
 		return repositoryModel;
 	}

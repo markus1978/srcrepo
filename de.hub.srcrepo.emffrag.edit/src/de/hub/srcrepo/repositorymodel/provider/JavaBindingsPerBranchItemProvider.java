@@ -7,13 +7,21 @@
 package de.hub.srcrepo.repositorymodel.provider;
 
 
+import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
+
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
+
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -24,17 +32,13 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
-import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
 /**
- * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.RepositoryModel} object.
+ * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class RepositoryModelItemProvider
+public class JavaBindingsPerBranchItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -48,7 +52,7 @@ public class RepositoryModelItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RepositoryModelItemProvider(AdapterFactory adapterFactory) {
+	public JavaBindingsPerBranchItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -63,71 +67,25 @@ public class RepositoryModelItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addJavaModelPropertyDescriptor(object);
-			addRootRevPropertyDescriptor(object);
-			addTraversalsPropertyDescriptor(object);
+			addBranchPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Java Model feature.
+	 * This adds a property descriptor for the Branch feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addJavaModelPropertyDescriptor(Object object) {
+	protected void addBranchPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_javaModel_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_javaModel_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__JAVA_MODEL,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Root Rev feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRootRevPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_rootRev_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_rootRev_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REV,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Traversals feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTraversalsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_traversals_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_traversals_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
+				 getString("_UI_JavaBindingsPerBranch_branch_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_JavaBindingsPerBranch_branch_feature", "_UI_JavaBindingsPerBranch_type"),
+				 RepositoryModelPackage.Literals.JAVA_BINDINGS_PER_BRANCH__BRANCH,
 				 true,
 				 false,
 				 true,
@@ -148,8 +106,7 @@ public class RepositoryModelItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REFS);
-			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS);
+			childrenFeatures.add(RepositoryModelPackage.Literals.JAVA_BINDINGS_PER_BRANCH__BINDINGS);
 		}
 		return childrenFeatures;
 	}
@@ -168,14 +125,14 @@ public class RepositoryModelItemProvider
 	}
 
 	/**
-	 * This returns RepositoryModel.gif.
+	 * This returns JavaBindingsPerBranch.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RepositoryModel"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/JavaBindingsPerBranch"));
 	}
 
 	/**
@@ -186,7 +143,7 @@ public class RepositoryModelItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_RepositoryModel_type");
+		return getString("_UI_JavaBindingsPerBranch_type");
 	}
 
 	/**
@@ -200,9 +157,8 @@ public class RepositoryModelItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(RepositoryModel.class)) {
-			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REFS:
-			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
+		switch (notification.getFeatureID(JavaBindingsPerBranch.class)) {
+			case RepositoryModelPackage.JAVA_BINDINGS_PER_BRANCH__BINDINGS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -222,13 +178,8 @@ public class RepositoryModelItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REFS,
-				 RepositoryModelFactory.eINSTANCE.createRef()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS,
-				 RepositoryModelFactory.eINSTANCE.createRev()));
+				(RepositoryModelPackage.Literals.JAVA_BINDINGS_PER_BRANCH__BINDINGS,
+				 RepositoryModelFactory.eINSTANCE.createJavaBindings()));
 	}
 
 	/**

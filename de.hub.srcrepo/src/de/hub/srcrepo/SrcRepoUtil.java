@@ -14,11 +14,20 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Traversal;
 
 public class SrcRepoUtil {
 	
-	public static void traverseRepository(RepositoryModel repositoryModel, Rev startRev, Rev[] stopRevs, IRepositoryModelVisitor visitor) {	
+	public static void traverseRepository(RepositoryModel repositoryModel, Rev startRev, Rev[] stopRevs, IRepositoryModelVisitor visitor) {
+		traverseRepository(repositoryModel, startRev, stopRevs, visitor, null, false, -1);
+	}
+	
+	public static void traverseRepository(
+			RepositoryModel repositoryModel, Rev startRev, Rev[] stopRevs, IRepositoryModelVisitor visitor, 
+			Traversal traversal, boolean resume, int numberOfRevsToImport) {
+		
 		Collection<Rev> stopRevCollection = new HashSet<Rev>();
 		Collections.addAll(stopRevCollection, stopRevs);
 		if (startRev == null) {
@@ -26,24 +35,36 @@ public class SrcRepoUtil {
 		}
 		
 		Queue<BranchPoint> branchPoints = new LinkedList<BranchPoint>();
-		Collection<Rev> mergePoints = new HashSet<Rev>();
-		
-		List<Rev> startBranches = new ArrayList<Rev>(1);
-		startBranches.add(startRev);
-		branchPoints.add(new BranchPoint(null, startBranches));
+		Collection<Rev> mergePoints = new HashSet<Rev>();		
 		
 		Rev currentRev = null;
+		if (traversal != null && resume) {
+			mergePoints.addAll(traversal.getMerges());
+			for (de.hub.srcrepo.repositorymodel.BranchPoint branchPointModel: traversal.getRemaingBranchPoints()) {
+				branchPoints.add(new BranchPoint(traversal.getCurrentBranchpoint()));
+				branchPoints.add(new BranchPoint(branchPointModel));
+			}
+			currentRev = traversal.getNextRev();
+		} else {		
+			List<Rev> startBranches = new ArrayList<Rev>(1);
+			startBranches.add(startRev);
+			branchPoints.add(new BranchPoint(null, startBranches));
+			currentRev = null;
+		}
+				
+		int importedRevs = 0;
 		while (!branchPoints.isEmpty()) {
 			BranchPoint currentBranchPoint = branchPoints.poll();
-			while (currentBranchPoint.hasNext()) {				
-				Rev nextRev = currentBranchPoint.next();
-				
-				visitor.onMerge(currentRev, currentBranchPoint.branchingRev);
-				currentRev = nextRev;
+			while (currentBranchPoint.hasNext()) {		
+				if (currentRev == null) {
+					Rev nextRev = currentBranchPoint.next();				
+					visitor.onMerge(currentRev, currentBranchPoint.branchingRev);
+					currentRev = nextRev;
+				}
 				
 				boolean continueOnBranch = true;
 				while (continueOnBranch) {
-					if (stopRevCollection.contains(nextRev)) {
+					if (stopRevCollection.contains(currentRev)) {
 						continueOnBranch = false;
 					} else {
 						EList<ParentRelation> parentRelations = currentRev.getParentRelations();
@@ -79,6 +100,9 @@ public class SrcRepoUtil {
 							List<Rev> children = getChildren(currentRev);
 							if (children.size() == 0) {
 								continueOnBranch = false;
+								currentRev = null;
+							} else if (children.size() == 1) {
+								currentRev = children.get(0);
 							} else {
 								BranchPoint branchPoint = new BranchPoint(currentRev, children);
 								currentRev = branchPoint.next();							
@@ -86,9 +110,43 @@ public class SrcRepoUtil {
 							}
 						}					
 					}
+					
+					if (numberOfRevsToImport > 0 && ++importedRevs >= numberOfRevsToImport) {
+						// save traversal	
+						traversal.getRemaingBranchPoints().clear();
+						traversal.getMerges().clear();
+						traversal.setCurrentBranchpoint(null);
+						traversal.setNextRev(null);
+						
+						RepositoryModelFactory factory = (RepositoryModelFactory)traversal.eClass().getEPackage().getEFactoryInstance();
+						for(BranchPoint branchPoint: branchPoints) {
+							de.hub.srcrepo.repositorymodel.BranchPoint branchPointModel = factory.createBranchPoint();
+							branchPoint.saveToBranchPoinModel(branchPointModel);
+							traversal.getRemaingBranchPoints().add(branchPointModel);
+						}
+						traversal.getMerges().addAll(mergePoints);
+						BranchPoint currentBranchPointToSave = null;
+						if (continueOnBranch || currentBranchPoint.hasNext()) {
+							currentBranchPointToSave = currentBranchPoint;
+							if (continueOnBranch) {
+								traversal.setNextRev(currentRev);
+							}
+						} else {
+							currentBranchPointToSave = branchPoints.poll();
+						}
+						de.hub.srcrepo.repositorymodel.BranchPoint branchPointModel = factory.createBranchPoint();
+						currentBranchPointToSave.saveToBranchPoinModel(branchPointModel);
+						traversal.setCurrentBranchpoint(branchPointModel);
+						visitor.saveState(traversal);
+						SrcRepoActivator.INSTANCE.info("Saved the traversal state, aborting traversal now.");
+						return;
+					}
 				}
 			}
 		}
+		
+		repositoryModel.setTraversals(null);
+		SrcRepoActivator.INSTANCE.info("Traversal complete, removed possible old traversal state from the model.");		
 	}
 	
 	private static class BranchPoint {
@@ -102,12 +160,31 @@ public class SrcRepoUtil {
 			this.currentIndex = 0;
 		}
 		
+		public BranchPoint(de.hub.srcrepo.repositorymodel.BranchPoint branchPointModel) {
+			branches = new ArrayList<Rev>();
+			branches.addAll(branchPointModel.getChildren());
+			branchingRev = branchPointModel.getParent();
+			currentIndex = 0;
+			for(Rev branchRev: branches) {
+				if (branchPointModel.getNext() != branchRev) {
+					currentIndex++;
+				}
+			}
+		}
+
 		boolean hasNext() {
 			return branches.size() > currentIndex;
 		}
 		
 		Rev next() {
 			return branches.get(currentIndex++);
+		}
+		
+		public void saveToBranchPoinModel(de.hub.srcrepo.repositorymodel.BranchPoint branchPointModel) {
+			branchPointModel.getChildren().clear();
+			branchPointModel.getChildren().addAll(branches);
+			branchPointModel.setParent(branchingRev);
+			branchPointModel.setNext(branches.get(currentIndex-1));
 		}
 	}
 	

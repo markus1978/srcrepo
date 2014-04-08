@@ -7,35 +7,35 @@
 package de.hub.srcrepo.repositorymodel.provider;
 
 
+import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
+
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
-import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
 /**
- * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.RepositoryModel} object.
+ * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.MoDiscoImport} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class RepositoryModelItemProvider
-	extends ItemProviderAdapter
+public class MoDiscoImportItemProvider
+	extends TraversalItemProvider
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -48,7 +48,7 @@ public class RepositoryModelItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RepositoryModelItemProvider(AdapterFactory adapterFactory) {
+	public MoDiscoImportItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -63,77 +63,8 @@ public class RepositoryModelItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addJavaModelPropertyDescriptor(object);
-			addRootRevPropertyDescriptor(object);
-			addTraversalsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Java Model feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addJavaModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_javaModel_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_javaModel_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__JAVA_MODEL,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Root Rev feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRootRevPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_rootRev_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_rootRev_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REV,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Traversals feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTraversalsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_traversals_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_traversals_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -148,8 +79,8 @@ public class RepositoryModelItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REFS);
-			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS);
+			childrenFeatures.add(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS);
+			childrenFeatures.add(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS_PER_BRANCH);
 		}
 		return childrenFeatures;
 	}
@@ -168,14 +99,14 @@ public class RepositoryModelItemProvider
 	}
 
 	/**
-	 * This returns RepositoryModel.gif.
+	 * This returns MoDiscoImport.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RepositoryModel"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/MoDiscoImport"));
 	}
 
 	/**
@@ -186,7 +117,10 @@ public class RepositoryModelItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_RepositoryModel_type");
+		String label = ((MoDiscoImport)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_MoDiscoImport_type") :
+			getString("_UI_MoDiscoImport_type") + " " + label;
 	}
 
 	/**
@@ -200,9 +134,9 @@ public class RepositoryModelItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(RepositoryModel.class)) {
-			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REFS:
-			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
+		switch (notification.getFeatureID(MoDiscoImport.class)) {
+			case RepositoryModelPackage.MO_DISCO_IMPORT__BINDINGS:
+			case RepositoryModelPackage.MO_DISCO_IMPORT__BINDINGS_PER_BRANCH:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -222,24 +156,36 @@ public class RepositoryModelItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REFS,
-				 RepositoryModelFactory.eINSTANCE.createRef()));
+				(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS,
+				 RepositoryModelFactory.eINSTANCE.createJavaBindings()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS,
-				 RepositoryModelFactory.eINSTANCE.createRev()));
+				(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS_PER_BRANCH,
+				 RepositoryModelFactory.eINSTANCE.createJavaBindingsPerBranch()));
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public ResourceLocator getResourceLocator() {
-		return RepositoryModelEditPlugin.INSTANCE;
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify =
+			childFeature == RepositoryModelPackage.Literals.TRAVERSAL__REMAING_BRANCH_POINTS ||
+			childFeature == RepositoryModelPackage.Literals.TRAVERSAL__CURRENT_BRANCHPOINT;
+
+		if (qualify) {
+			return getString
+				("_UI_CreateChild_text2",
+				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 }
