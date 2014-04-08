@@ -7,7 +7,6 @@ import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.junit.Before
 import org.junit.Test
-
 import de.hub.emffrag.EmfFragActivator
 import de.hub.emffrag.fragmentation.FragmentedModel
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour
@@ -17,24 +16,22 @@ import de.hub.emffrag.util.Extensions
 import de.hub.srcrepo.emffrag.extensions.ExtensionsPackage
 import de.hub.srcrepo.emffrag.extensions.ImportLog
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntry
-import de.hub.srcrepo.gitmodel.Diff
-import de.hub.srcrepo.gitmodel.JavaCompilationUnitRef
-import de.hub.srcrepo.gitmodel.SourceRepository
-import de.hub.srcrepo.gitmodel.emffrag.metadata.GitModelPackage
 import de.hub.srcrepo.ocl.HandleCollectionConversions
+import de.hub.srcrepo.repositorymodel.RepositoryModel
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
+import de.hub.srcrepo.repositorymodel.Diff
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 
 class ImportedModelTests extends HandleCollectionConversions {
   
-//  val uriString = "mongodb://141.20.23.228/emffrag.bin"
-//  val uriString = "mongodb://localhost/de.hub.emffrag.bin"
   val uriString = "mongodb://141.20.23.228/org.eclipse.emf.bin"
     
   var resource:Resource = null
   var javaModel:Model = null
-  var gitModel:SourceRepository = null
+  var gitModel:RepositoryModel = null
     
   @Before def init() {
-    EmfFragActivator.standalone(JavaPackage.eINSTANCE, GitModelPackage.eINSTANCE, ExtensionsPackage.eINSTANCE);
+    EmfFragActivator.standalone(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE, ExtensionsPackage.eINSTANCE);
     EmfFragActivator.instance.logInStandAlone = false;
     EmfFragMongoDBActivator.standalone();
     SrcRepoActivator.standalone();
@@ -48,13 +45,13 @@ class ImportedModelTests extends HandleCollectionConversions {
     EmfFragActivator.instance.defaultModel = resource.asInstanceOf[FragmentedModel]
     
     javaModel = resource.getContents().get(1).asInstanceOf[Model]
-    gitModel = resource.getContents().get(0).asInstanceOf[SourceRepository]
+    gitModel = resource.getContents().get(0).asInstanceOf[RepositoryModel]
   }
   
   @Test def countErrors() {
     var errors = 0;
     var commitsWithErrors = 0;
-    gitModel.getAllCommits().run((c)=>{
+    gitModel.getAllRevs().run((c)=>{
       val log:ImportLog = Extensions.get(c, classOf[ImportLog])
       if (log != null) {
         commitsWithErrors += 1
@@ -74,7 +71,7 @@ class ImportedModelTests extends HandleCollectionConversions {
   
   @Test def testJavaDiffs() {
     val javaCompilationUnitRefs = 
-      gitModel.getAllCommits()
+      gitModel.getAllRevs()
       .collectAll((e)=>e.getParentRelations())
       .collectAll((e)=>e.getDiffs())
       .select((e:Diff)=>{e.getFile() != null && e.getFile().isInstanceOf[JavaCompilationUnitRef]})

@@ -4,11 +4,11 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: de.hub.srcrepo.emffrag.edit;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Activator: de.hub.srcrepo.gitmodel.provider.GitModelEditPlugin$Implementation
+Bundle-Activator: de.hub.srcrepo.repositorymodel.provider.RepositoryModelEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: de.hub.srcrepo.gitmodel.provider
+Export-Package: de.hub.srcrepo.repositorymodel.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.edit;visibility:=reexport,
  de.hub.emffrag.edit;visibility:=reexport,

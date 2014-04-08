@@ -1,5 +1,6 @@
 package de.hub.srcrepo.emffrag;
 
+import java.io.File;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -8,16 +9,35 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
+
 import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.fragmentation.FGlobalEventListener;
+import de.hub.emffrag.fragmentation.FragmentedModel;
+import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
+import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
 import de.hub.emffrag.hbase.EmfFragHBaseActivator;
 import de.hub.emffrag.hbase.HBaseUtil;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBUtil;
-import de.hub.srcrepo.JGitUtil;
+import de.hub.srcrepo.GitSourceControlSystem;
+import de.hub.srcrepo.ISourceControlSystem;
+import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.SrcRepoActivator;
+import de.hub.srcrepo.SrcRepoUtil;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class EmfFragSrcRepoImport implements IApplication {
 	
@@ -40,6 +60,9 @@ public class EmfFragSrcRepoImport implements IApplication {
 		options.addOption(OptionBuilder.
 				withLongOpt("disable-indexes").
 				withDescription("Disables the use of indexes, turns all indexed value sets in the model as normal emf value sets.").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("xmi-fragments").
+				withDescription("Use XMI fragments instead of binary fragments.").create());
 		options.addOption(OptionBuilder.
 				withLongOpt("disable-usages").
 				withDescription("Disables the tracking of usagesXXX opposites.").create());
@@ -64,9 +87,59 @@ public class EmfFragSrcRepoImport implements IApplication {
 	private void printUsage() {
 		new HelpFormatter().printHelp("eclipse ... [options] working-copy-path data-base-uri", createOptions());
 	}
+	
+
+	public static JavaPackage createJavaPackage(boolean disabledIndexes, boolean disabledUsages) {	
+		JavaPackage javaPackage = JavaPackage.eINSTANCE;
+		
+		if (disabledIndexes) {
+			TreeIterator<EObject> eAllContents = javaPackage.eAllContents();
+			while (eAllContents.hasNext()) {
+				EObject next = eAllContents.next();
+				if (next instanceof EAnnotation) {
+					EAnnotation eAnnotation = (EAnnotation)next;
+					String value = eAnnotation.getDetails().get("indexes");
+					if (value != null && value.equals("true")) {
+						eAnnotation.getDetails().put("indexes", "false");
+					}
+				}
+			}
+		}
+		
+		if (disabledUsages) {
+			TreeIterator<EObject> eAllContents = javaPackage.eAllContents();
+			while (eAllContents.hasNext()) {
+				EObject next = eAllContents.next();
+				if (next instanceof EReference) {
+					EReference reference = (EReference)next;
+					if (reference.getName().startsWith("usage")) {
+						EReference eOpposite = reference.getEOpposite();
+						if (eOpposite != null) {
+							SrcRepoActivator.INSTANCE.info(reference.getEContainingClass().getName() + "." + reference.getName() 
+									+ "->" + reference.getEOpposite().getEContainingClass().getName() + "." + reference.getEOpposite().getName());
+							eOpposite.setEOpposite(null);
+							reference.setEOpposite(null);								
+						}						
+					}
+				}
+			}
+		}
+		return javaPackage;
+	}
+	
+	public static RepositoryModelPackage createRepositoryModelPackage() {
+		return RepositoryModelPackage.eINSTANCE;
+	}
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		// ensure loading of plug-ins
+		EmfFragActivator.class.getName();
+		SrcRepoActivator.class.getName();
+		EmfFragMongoDBActivator.class.getName();
+		EmfFragHBaseActivator.class.getName();
+		
+		// checking command line options
 		final Map<?,?> args = context.getArguments();
 		final String[] appArgs = (String[]) args.get("application.args");
 		
@@ -84,38 +157,157 @@ public class EmfFragSrcRepoImport implements IApplication {
 			return IApplication.EXIT_OK; 
 		}
 		
-		EmfFragActivator.class.getName();
-		SrcRepoActivator.class.getName();
-
-		URI dbURI = URI.createURI((String)commandLine.getArgList().get(1));
-		String workingDirectory = (String)commandLine.getArgList().get(0);
+		URI modelURI = URI.createURI((String)commandLine.getArgList().get(1));
+		File workingDirectory = new File((String)commandLine.getArgList().get(0));
 		
-		if ("mongodb".equals(dbURI.scheme())) {
-			EmfFragMongoDBActivator.class.getName();
-			MongoDBUtil.dropCollection(dbURI);		
-		} else if ("hbase".equals(dbURI.scheme())) {
-			EmfFragHBaseActivator.class.getName();
-			if (commandLine.hasOption("bulk-insert")) {
-				EmfFragActivator.instance.bulkInsertSize = Integer.parseInt(commandLine.getOptionValue("bulk-insert"));
-			}
-			HBaseUtil.dropTable(dbURI.segment(0));
+		String repositoryURL = null;
+		if (commandLine.hasOption("clone")) {
+			repositoryURL = commandLine.getOptionValue("clone");
 		}
 		
-		if (!commandLine.hasOption("fragments-cache")) {
-			EmfFragActivator.instance.cacheSize = 1000;
+		int bulkInsertSize = 1000;
+		if (commandLine.hasOption("bulk-insert")) {
+			bulkInsertSize = Integer.parseInt(commandLine.getOptionValue("bulk-insert"));
+		}
+		
+		int fragmentsCacheSize = 1000;		
+		if (commandLine.hasOption("fragments-cache")) {			
+			fragmentsCacheSize = Integer.parseInt(commandLine.getOptionValue("fragments-cache"));
+		}
+		
+		String rootCommitName = null;
+		if (commandLine.hasOption("root-commit")) {
+			rootCommitName = commandLine.getOptionValue("root-commit");
+		}
+		String lastCommitName = null; 
+		if (commandLine.hasOption("last-commit")) {
+			lastCommitName = commandLine.getOptionValue("last-commit");
+		}
+		boolean withDisabledIndexes = commandLine.hasOption("disable-indexes");
+		boolean withDisabledUsages = commandLine.hasOption("disable-usages");
+		boolean withBinaryFragments = !commandLine.hasOption("xmi-fragments");
+		
+		if (lastCommitName != null) {
+			importRepository(
+					new GitSourceControlSystem(), 
+					workingDirectory, 
+					repositoryURL, 
+					modelURI, 
+					withBinaryFragments, 
+					withDisabledIndexes, 
+					withDisabledUsages, 
+					bulkInsertSize, 
+					fragmentsCacheSize, 
+					rootCommitName, 
+					lastCommitName);
 		} else {
-			EmfFragActivator.instance.cacheSize = Integer.parseInt(commandLine.getOptionValue("fragments-cache"));
+			importRepository(
+					new GitSourceControlSystem(), 
+					workingDirectory, 
+					repositoryURL, 
+					modelURI, 
+					withBinaryFragments, 
+					withDisabledIndexes, 
+					withDisabledUsages, 
+					bulkInsertSize, 
+					fragmentsCacheSize, 
+					rootCommitName);
 		}
-		
-		SrcRepoActivator.INSTANCE.info("Staring import into " + dbURI + " from " +  workingDirectory + ".");
-		
-		
-		JGitUtil.importGit(commandLine.hasOption("clone") ? commandLine.getOptionValue("clone") : "", 
-				workingDirectory, dbURI, 
-				commandLine.hasOption("root-commit") ? commandLine.getOptionValue("root-commit") : null, "",
-				new EmfFragImportConfiguration(commandLine.hasOption("disable-indexes"), commandLine.hasOption("disable-usages")));
 		
 		return IApplication.EXIT_OK;
+	}
+	
+	public static RepositoryModel importRepository(
+			ISourceControlSystem scs, 
+			File workingDirectory, 
+			String repositoryURL, 
+			URI modelURI, 
+			String startRevName,
+			String... stopRevNames) {
+		return importRepository(scs, workingDirectory, repositoryURL, modelURI, true, true, true, 1000, 1000, startRevName, stopRevNames);
+	}
+	
+	public static RepositoryModel importRepository(
+			ISourceControlSystem scs, 
+			File workingDirectory, 
+			String repositoryURL, 
+			URI modelURI, 
+			boolean withBinaryResources, 
+			boolean withDisabledIndexes, 
+			boolean withDisabledUsages, 
+			int bulkInsertSize, 
+			int fragmentCacheSize,
+			String startRevName,
+			String... stopRevNames) {
+		
+		// configuring		
+		EmfFragActivator.instance.collectStatistics = true;
+		EmfFragActivator.instance.globalEventListener = FGlobalEventListener.emptyInstance;
+		EmfFragActivator.instance.useBinaryFragments = withBinaryResources;
+		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
+		EmfFragActivator.instance.cacheSize = fragmentCacheSize;
+		EmfFragActivator.instance.bulkInsertSize = bulkInsertSize;
+		
+		// create fragmentation
+		Resource resource = new ResourceSetImpl().createResource(modelURI);
+		EmfFragActivator.instance.defaultModel = (FragmentedModel)resource;		
+		
+		// init database
+		if ("mongodb".equals(modelURI.scheme())) {
+			EmfFragMongoDBActivator.class.getName();
+			MongoDBUtil.dropCollection(modelURI);		
+		} else if ("hbase".equals(modelURI.scheme())) {
+			EmfFragHBaseActivator.class.getName();						
+			HBaseUtil.dropTable(modelURI.segment(0));
+		}
+		
+		// create necessary models
+		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
+		JavaPackage javaModelPackage = createJavaPackage(withDisabledIndexes, withDisabledIndexes);
+		RepositoryModel repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();
+		Model javaModel = javaModelPackage.getJavaFactory().createModel();		
+
+		resource.getContents().add(repositoryModel);
+		resource.getContents().add(javaModel);
+		
+		repositoryModel.setJavaModel(javaModel);
+		javaModel.setName("Java source code repository model.");
+
+		
+		// creating working copy
+		try {
+			if (repositoryURL != null) {
+				SrcRepoActivator.INSTANCE.info("Cloning " + repositoryURL + " into " +  workingDirectory + ".");
+				scs.createWorkingCopy(workingDirectory, repositoryURL);
+			} else {
+				scs.setWorkingCopy(workingDirectory);
+			}
+		} catch (SourceControlException e) {
+			SrcRepoActivator.INSTANCE.error("Could not create working copy.", e);
+		}
+		
+		// importing rev model
+		SrcRepoActivator.INSTANCE.info("Importing into " + modelURI + " from " +  workingDirectory + ".");
+		try {
+			scs.importRevisions(repositoryModel);
+		} catch (SourceControlException e) {
+			SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
+			return null;
+		}
+		
+		// importing source code
+		Rev startRev = startRevName != null ? repositoryModel.getRev(startRevName) : null;
+		Rev[] stopRevs = new Rev[stopRevNames.length];
+		int i = 0;
+		for (String stopRevName: stopRevNames) {
+			stopRevs[i] = repositoryModel.getRev(stopRevName);
+		}
+		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(scs, repositoryModel);
+		SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor);
+		
+		SrcRepoActivator.INSTANCE.info("Import complete.");
+		
+		return repositoryModel;
 	}
 
 	@Override

@@ -3,8 +3,8 @@
 <plugin>
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://gitmodel/1.0"
-            class="de.hub.srcrepo.gitmodel.GitModelPackage"
-            genModel="models/GitModel.genmodel"/>
+            uri="http://hub.sam.repositorymodel/1.0"
+            class="de.hub.srcrepo.repositorymodel.RepositoryModelPackage"
+            genModel="models/RepositoryModel.genmodel"/>
    </extension>
 </plugin>

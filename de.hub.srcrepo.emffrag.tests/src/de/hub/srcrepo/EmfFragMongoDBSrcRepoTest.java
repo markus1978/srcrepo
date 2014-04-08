@@ -2,37 +2,24 @@ package de.hub.srcrepo;
 
 import org.eclipse.emf.common.util.URI;
 
-import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
-import de.hub.emffrag.mongodb.MongoDBUtil;
 
-public class EmfFragMongoDBSrcRepoTest extends EmfFragSrcRepoTest {
+public class EmfFragMongoDBSrcRepoTest extends EmfFragMemorySrcRepoGitTest {
 	
 	@Override
-	protected URI getTestSourceModelURI() {
+	protected URI getTestRepositoryModelURI() {
 		return URI.createURI("mongodb://localhost/example.java.gitmodel.bin");
 	}		
 	
 	@Override
-	protected void loadDependencies() {
+	public void loadDependencies() {
 		super.loadDependencies();
 		EmfFragMongoDBActivator.class.getName();
 	}
-	
-	@Override
-	public void init() {
-		super.init();
-		EmfFragActivator.instance.collectStatistics = true;
-	}
 
+	@Override
 	protected boolean useBinaryFragments() {
 		return true;
-	}
-
-	@Override
-	public void testImportJavaGitModel() throws Exception {
-		MongoDBUtil.dropCollection(getTestSourceModelURI());
-		super.testImportJavaGitModel();
 	}	
 
 	

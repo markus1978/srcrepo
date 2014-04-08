@@ -35,6 +35,8 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.kdm.source.extension.discovery.AbstractRegionDiscoverer2;
 import org.junit.Test;
 
+import de.hub.srcrepo.ocl.OclUtil;
+
 /**
  * These tests are not really tests. We use them to experiment with the MoDisco
  * API.
@@ -58,9 +60,9 @@ public class MoDiscoTest {
 		Assert.assertTrue("No elements in project model", !contents.isEmpty());
 		for (EObject obj : contents) {
 			Assert.assertTrue("The example project does not cointain the Hello World class",
-					new ScalaTest().checkClassExists((Model) obj, "HelloWorld"));
-			Assert.assertFalse("A class exists that should not", new ScalaTest().checkClassExists((Model) obj, "NoClass"));
-			Assert.assertTrue(new ScalaTest().findType((Model) obj, "HelloWorld").getName().equals("HelloWorld"));
+					new OclUtil().checkClassExists((Model) obj, "HelloWorld"));
+			Assert.assertFalse("A class exists that should not", new OclUtil().checkClassExists((Model) obj, "NoClass"));
+			Assert.assertTrue(new OclUtil().findType((Model) obj, "HelloWorld").getName().equals("HelloWorld"));
 		}
 	}
 

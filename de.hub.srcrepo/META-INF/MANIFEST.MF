@@ -4,10 +4,10 @@ Bundle-Name: Srcrepo
 Bundle-SymbolicName: de.hub.srcrepo;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: de.hub.srcrepo,
- de.hub.srcrepo.gitmodel,
- de.hub.srcrepo.gitmodel.impl,
- de.hub.srcrepo.gitmodel.util,
  de.hub.srcrepo.ocl,
+ de.hub.srcrepo.repositorymodel,
+ de.hub.srcrepo.repositorymodel.impl,
+ de.hub.srcrepo.repositorymodel.util,
  org.eclipse.jgit.api,
  org.eclipse.jgit.api.errors,
  org.eclipse.jgit.blame,

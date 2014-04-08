@@ -12,8 +12,8 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://gitmodel/1.0"
-            class="de.hub.srcrepo.gitmodel.provider.GitModelItemProviderAdapterFactory"
+            uri="http://hub.sam.repositorymodel/1.0"
+            class="de.hub.srcrepo.repositorymodel.provider.RepositoryModelItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -21,8 +21,8 @@
                org.eclipse.emf.edit.provider.IItemLabelProvider
                org.eclipse.emf.edit.provider.IItemPropertySource"/>
       <factory
-            uri="http://gitmodel/1.0/emffrag"
-            class="de.hub.srcrepo.gitmodel.provider.GitModelItemProviderAdapterFactory"
+            uri="http://hub.sam.repositorymodel/1.0/emffrag"
+            class="de.hub.srcrepo.repositorymodel.provider.RepositoryModelItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider

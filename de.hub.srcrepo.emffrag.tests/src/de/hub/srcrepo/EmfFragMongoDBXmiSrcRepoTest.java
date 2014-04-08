@@ -5,7 +5,7 @@ import org.eclipse.emf.common.util.URI;
 public class EmfFragMongoDBXmiSrcRepoTest extends EmfFragMongoDBSrcRepoTest {
 	
 	@Override
-	protected URI getTestSourceModelURI() {
+	protected URI getTestRepositoryModelURI() {
 		return URI.createURI("mongodb://localhost/example.java.gitmodel.xmi");
 	}		
 	

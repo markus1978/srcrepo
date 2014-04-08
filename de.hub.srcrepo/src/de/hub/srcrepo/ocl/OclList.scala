@@ -1,10 +1,10 @@
-package de.hub.srcrepo
+package de.hub.srcrepo.ocl
 
 import org.eclipse.emf.common.util.EList
 import scala.collection.JavaConversions._
 import org.eclipse.emf.common.util.BasicEList
 
-class OclList[E >: Null <: AnyRef](val l: EList[E]) {
+class OclList[E >: Null <: AnyRef](val l: EList[E]) { 
   
   def iterate[R](start: ()=>R, iter: (E,R)=>R): R = {
     var r = start()
