@@ -42,6 +42,87 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class EmfFragSrcRepoImport implements IApplication {
 	
+	public static class Configuration {
+		private final ISourceControlSystem scs; 
+		private final File workingDirectory;
+		private final URI modelURI;
+		
+		private String repositoryURL = null; 
+		private boolean withBinaryResources = true; 
+		private boolean withDisabledIndexes = false; 
+		private boolean withDisabledUsages = false;
+		private int bulkInsertSize = 1000;
+		private int fragmentCacheSize = 1000;
+		private boolean resume = false;
+		private int stopAfterNumberOfRevs = -1;
+		private String startRevName = null;
+		private String[] stopRevNames = new String[0];
+		
+		public Configuration(ISourceControlSystem scs,
+				File workingDirectory, URI modelURI) {
+			super();
+			this.scs = scs;
+			this.workingDirectory = workingDirectory;
+			this.modelURI = modelURI;
+		}
+
+		public Configuration repositoryURL(String repositoryURL) {
+			this.repositoryURL = repositoryURL;
+			return this;
+		}
+
+		public Configuration withBinaryResources(boolean withBinaryResources) {
+			this.withBinaryResources = withBinaryResources;
+			return this;
+		}
+
+		public Configuration withDisabledIndexes(boolean withDisabledIndexes) {
+			this.withDisabledIndexes = withDisabledIndexes;
+			return this;
+		}
+
+		public Configuration withDisabledUsages(boolean withDisabledUsages) {
+			this.withDisabledUsages = withDisabledUsages;
+			return this;
+		}
+
+		public Configuration bulkInsertSize(int bulkInsertSize) {
+			this.bulkInsertSize = bulkInsertSize;
+			return this;
+		}
+
+		public Configuration fragmentCacheSize(int fragmentCacheSize) {
+			this.fragmentCacheSize = fragmentCacheSize;
+			return this;
+		}
+
+		public Configuration resume(boolean resume) {
+			this.resume = resume;
+			return this;
+		}
+
+		public Configuration stopAfterNumberOfRevs(int stopAfterNumberOfRevs) {
+			this.stopAfterNumberOfRevs = stopAfterNumberOfRevs;
+			return this;
+		}
+
+		public Configuration startRevName(String startRevName) {
+			this.startRevName = startRevName;
+			return this;
+		}
+
+		public Configuration stopRevNames(String[] stopRevNames) {
+			this.stopRevNames = stopRevNames;
+			return this;
+		}						
+	}
+	
+	public static class GitConfiguration extends Configuration {
+		public GitConfiguration(File workingDirectory, URI modelURI) {
+			super(new GitSourceControlSystem(), workingDirectory, modelURI);
+		}		
+	}
+	
 	@SuppressWarnings("static-access")
 	private Options createOptions() {
 		Options options = new Options();
@@ -141,7 +222,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 	}
 
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(IApplicationContext context) throws Exception {		
 		// ensure loading of plug-ins
 		EmfFragActivator.class.getName();
 		SrcRepoActivator.class.getName();
@@ -168,133 +249,72 @@ public class EmfFragSrcRepoImport implements IApplication {
 		
 		URI modelURI = URI.createURI((String)commandLine.getArgList().get(1));
 		File workingDirectory = new File((String)commandLine.getArgList().get(0));
+		Configuration config = new Configuration(new GitSourceControlSystem(), workingDirectory, modelURI);
 		
-		String repositoryURL = null;
 		if (commandLine.hasOption("clone")) {
-			repositoryURL = commandLine.getOptionValue("clone");
-		}
-		
-		int bulkInsertSize = 1000;
+			config.repositoryURL(commandLine.getOptionValue("clone"));
+		}		
 		if (commandLine.hasOption("bulk-insert")) {
-			bulkInsertSize = Integer.parseInt(commandLine.getOptionValue("bulk-insert"));
+			config.bulkInsertSize(Integer.parseInt(commandLine.getOptionValue("bulk-insert")));
 		}
-		
-		int fragmentsCacheSize = 1000;		
 		if (commandLine.hasOption("fragments-cache")) {			
-			fragmentsCacheSize = Integer.parseInt(commandLine.getOptionValue("fragments-cache"));
+			config.fragmentCacheSize(Integer.parseInt(commandLine.getOptionValue("fragments-cache")));
 		}
-		
-		String rootCommitName = null;
 		if (commandLine.hasOption("root-commit")) {
-			rootCommitName = commandLine.getOptionValue("root-commit");
+			config.startRevName(commandLine.getOptionValue("root-commit"));
 		}
-		String lastCommitName = null; 
 		if (commandLine.hasOption("last-commit")) {
-			lastCommitName = commandLine.getOptionValue("last-commit");
+			config.stopRevNames(new String[] { commandLine.getOptionValue("last-commit") });
 		}
-		int abortAfterNumberOfRevs = -1;
 		if (commandLine.hasOption("abort-after")) {
-			abortAfterNumberOfRevs = Integer.parseInt(commandLine.getOptionValue("abort-after"));
+			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
 		}
-		boolean withDisabledIndexes = commandLine.hasOption("disable-indexes");
-		boolean withDisabledUsages = commandLine.hasOption("disable-usages");
-		boolean withBinaryFragments = !commandLine.hasOption("xmi-fragments");
-		boolean resume = commandLine.hasOption("resume");
+		config.withDisabledIndexes(commandLine.hasOption("disable-indexes"));
+		config.withDisabledUsages(commandLine.hasOption("disable-usages"));
+		config.withBinaryResources(!commandLine.hasOption("xmi-fragments"));
+		config.resume(commandLine.hasOption("resume"));
 		
-		if (lastCommitName != null) {
-			importRepository(
-					new GitSourceControlSystem(), 
-					workingDirectory, 
-					repositoryURL, 
-					modelURI, 
-					withBinaryFragments, 
-					withDisabledIndexes, 
-					withDisabledUsages, 
-					bulkInsertSize, 
-					fragmentsCacheSize, 
-					resume, 
-					abortAfterNumberOfRevs,
-					rootCommitName, 
-					lastCommitName);
-		} else {
-			importRepository(
-					new GitSourceControlSystem(), 
-					workingDirectory, 
-					repositoryURL, 
-					modelURI, 
-					withBinaryFragments, 
-					withDisabledIndexes, 
-					withDisabledUsages, 
-					bulkInsertSize,
-					fragmentsCacheSize, 
-					resume, 
-					abortAfterNumberOfRevs,
-					rootCommitName);
-		}
-		
+		importRepository(config);
 		return IApplication.EXIT_OK;
 	}
 	
-	public static RepositoryModel importRepository(
-			ISourceControlSystem scs, 
-			File workingDirectory, 
-			String repositoryURL, 
-			URI modelURI, 
-			String startRevName,
-			String... stopRevNames) {
-		return importRepository(scs, workingDirectory, repositoryURL, modelURI, true, true, true, 1000, 1000, false, -1, startRevName, stopRevNames);
-	}
-	
-	public static RepositoryModel importRepository(
-			ISourceControlSystem scs, 
-			File workingDirectory, 
-			String repositoryURL, 
-			URI modelURI, 
-			boolean withBinaryResources, 
-			boolean withDisabledIndexes, 
-			boolean withDisabledUsages, 
-			int bulkInsertSize, 
-			int fragmentCacheSize,
-			boolean resume,
-			int stopAfterNumberOfRevs,
-			String startRevName,
-			String... stopRevNames) {
+	public static RepositoryModel importRepository(Configuration config) {
 		
-		boolean stop = stopAfterNumberOfRevs > 0;
+		boolean stop = config.stopAfterNumberOfRevs > 0;
 		
 		// configuring		
 		EmfFragActivator.instance.collectStatistics = true;
 		EmfFragActivator.instance.globalEventListener = FGlobalEventListener.emptyInstance;
-		EmfFragActivator.instance.useBinaryFragments = withBinaryResources;
+		EmfFragActivator.instance.useBinaryFragments = config.withBinaryResources;
 		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
-		EmfFragActivator.instance.cacheSize = fragmentCacheSize;
-		EmfFragActivator.instance.bulkInsertSize = bulkInsertSize;
+		EmfFragActivator.instance.cacheSize = config.fragmentCacheSize;
+		EmfFragActivator.instance.bulkInsertSize = config.bulkInsertSize;
 				
 		// init database
-		if ("mongodb".equals(modelURI.scheme())) {
+		if ("mongodb".equals(config.modelURI.scheme())) {
 			EmfFragMongoDBActivator.class.getName();
-			if (!resume) {
-				MongoDBUtil.dropCollection(modelURI);
+			if (!config.resume) {
+				MongoDBUtil.dropCollection(config.modelURI);
 			}
-		} else if ("hbase".equals(modelURI.scheme())) {
+		} else if ("hbase".equals(config.modelURI.scheme())) {
 			EmfFragHBaseActivator.class.getName();
-			if (!resume) {
-				HBaseUtil.dropTable(modelURI.segment(0));
+			if (!config.resume) {
+				HBaseUtil.dropTable(config.modelURI.segment(0));
 			}
 		}
 
 		
 		// create fragmentation
-		Resource resource = new ResourceSetImpl().createResource(modelURI);
+		Resource resource = new ResourceSetImpl().createResource(config.modelURI);
 		EmfFragActivator.instance.defaultModel = (FragmentedModel)resource;		
 				
 		// create necessary models
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
-		JavaPackage javaModelPackage = createJavaPackage(withDisabledIndexes, withDisabledIndexes);
+		JavaPackage javaModelPackage = createJavaPackage(config.withDisabledIndexes, config.withDisabledUsages);
 		RepositoryModel repositoryModel = null;
 		Model javaModel = null;
 		
-		if (!resume) {
+		if (!config.resume) {
 			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();
 			javaModel = javaModelPackage.getJavaFactory().createModel();		
 			resource.getContents().add(repositoryModel);
@@ -317,21 +337,21 @@ public class EmfFragSrcRepoImport implements IApplication {
 		
 		// creating working copy
 		try {
-			if (repositoryURL != null) {
-				SrcRepoActivator.INSTANCE.info("Cloning " + repositoryURL + " into " +  workingDirectory + ".");
-				scs.createWorkingCopy(workingDirectory, repositoryURL);
+			if (config.repositoryURL != null) {
+				SrcRepoActivator.INSTANCE.info("Cloning " + config.repositoryURL + " into " +  config.workingDirectory + ".");
+				config.scs.createWorkingCopy(config.workingDirectory, config.repositoryURL);
 			} else {
-				scs.setWorkingCopy(workingDirectory);
+				config.scs.setWorkingCopy(config.workingDirectory);
 			}
 		} catch (SourceControlException e) {
 			SrcRepoActivator.INSTANCE.error("Could not create working copy.", e);
 		}
 		
 		// importing rev model
-		if (!resume) {
-			SrcRepoActivator.INSTANCE.info("Importing into " + modelURI + " from " +  workingDirectory + ".");
+		if (!config.resume) {
+			SrcRepoActivator.INSTANCE.info("Importing into " + config.modelURI + " from " +  config.workingDirectory + ".");
 			try {
-				scs.importRevisions(repositoryModel);
+				config.scs.importRevisions(repositoryModel);
 			} catch (SourceControlException e) {
 				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
 				return null;
@@ -339,27 +359,27 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing source code
-		Rev startRev = startRevName != null ? repositoryModel.getRev(startRevName) : null;
-		Rev[] stopRevs = new Rev[stopRevNames.length];
+		Rev startRev = config.startRevName != null ? repositoryModel.getRev(config.startRevName) : null;
+		Rev[] stopRevs = new Rev[config.stopRevNames.length];
 		int i = 0;
-		for (String stopRevName: stopRevNames) {
+		for (String stopRevName: config.stopRevNames) {
 			stopRevs[i] = repositoryModel.getRev(stopRevName);
 		}
-		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(scs, repositoryModel);
-		if (resume) {
-			SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, repositoryModel.getTraversals(), true, stop ? stopAfterNumberOfRevs : -1);
+		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel);
+		if (config.resume) {
+			SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
 		} else {
 			if (stop) {
 				MoDiscoImport traversal = repositoryModelPackage.getRepositoryModelFactory().createMoDiscoImport();
 				repositoryModel.setTraversals(traversal);
-				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, traversal, false, stopAfterNumberOfRevs);	
+				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, traversal, false, config.stopAfterNumberOfRevs);	
 			} else {
 				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor);
 			}
 		}
 		
 		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
-		scs.close();
+		config.scs.close();
 		visitor.close();
 		SrcRepoActivator.INSTANCE.info("Import done.");
 		

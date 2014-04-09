@@ -6,7 +6,7 @@ public class EmfFragMongoDBXmiSrcRepoTest extends EmfFragMongoDBSrcRepoTest {
 	
 	@Override
 	protected URI getTestRepositoryModelURI() {
-		return URI.createURI("mongodb://localhost/example.java.gitmodel.xmi");
+		return URI.createURI("mongodb://localhost/srcrepo.example.java.gitmodel.xmi");
 	}		
 	
 	@Override

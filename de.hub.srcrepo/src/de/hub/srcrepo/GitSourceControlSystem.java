@@ -251,7 +251,5 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		if (git != null) {
 			git.close();
 		}
-	}
-
-	
+	}	
 }

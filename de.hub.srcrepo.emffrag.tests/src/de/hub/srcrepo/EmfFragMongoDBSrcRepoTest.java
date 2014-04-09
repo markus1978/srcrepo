@@ -6,9 +6,11 @@ import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 
 public class EmfFragMongoDBSrcRepoTest extends EmfFragMemorySrcRepoGitTest {
 	
+	public static URI testModelURI = URI.createURI("mongodb://localhost/srcrepo.example.gitmodel.bin");
+	
 	@Override
 	protected URI getTestRepositoryModelURI() {
-		return URI.createURI("mongodb://localhost/example.java.gitmodel.bin");
+		return testModelURI;
 	}		
 	
 	@Override

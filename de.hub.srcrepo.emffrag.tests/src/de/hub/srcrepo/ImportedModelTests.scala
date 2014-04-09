@@ -24,7 +24,7 @@ import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 
 class ImportedModelTests extends HandleCollectionConversions {
   
-  val uriString = "mongodb://141.20.23.228/org.eclipse.emf.bin"
+  val uri = EmfFragMongoDBSrcRepoTest.testModelURI; 
     
   var resource:Resource = null
   var javaModel:Model = null
@@ -37,10 +37,10 @@ class ImportedModelTests extends HandleCollectionConversions {
     SrcRepoActivator.standalone();
     
     EmfFragActivator.instance.useBinaryFragments = true
-    EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.strict)
+    EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel)
     
     val rs = new ResourceSetImpl()
-    resource = rs.createResource(URI.createURI(uriString))
+    resource = rs.createResource(uri)
     
     EmfFragActivator.instance.defaultModel = resource.asInstanceOf[FragmentedModel]
     
