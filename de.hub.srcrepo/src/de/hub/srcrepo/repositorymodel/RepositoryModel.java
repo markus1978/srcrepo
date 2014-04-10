@@ -20,7 +20,6 @@ import org.eclipse.gmt.modisco.java.Model;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getAllRevs <em>All Revs</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev <em>Root Rev</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}</li>
  * </ul>
@@ -62,32 +61,6 @@ public interface RepositoryModel extends EObject {
 	 * @generated
 	 */
 	EList<Rev> getAllRevs();
-
-	/**
-	 * Returns the value of the '<em><b>Java Model</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Java Model</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Java Model</em>' reference.
-	 * @see #setJavaModel(Model)
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_JavaModel()
-	 * @model
-	 * @generated
-	 */
-	Model getJavaModel();
-
-	/**
-	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getJavaModel <em>Java Model</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Java Model</em>' reference.
-	 * @see #getJavaModel()
-	 * @generated
-	 */
-	void setJavaModel(Model value);
 
 	/**
 	 * Returns the value of the '<em><b>Root Rev</b></em>' reference.

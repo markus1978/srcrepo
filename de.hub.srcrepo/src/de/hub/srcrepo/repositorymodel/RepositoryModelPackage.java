@@ -89,22 +89,13 @@ public interface RepositoryModelPackage extends EPackage {
 	int REPOSITORY_MODEL__ALL_REVS = 1;
 
 	/**
-	 * The feature id for the '<em><b>Java Model</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_MODEL__JAVA_MODEL = 2;
-
-	/**
 	 * The feature id for the '<em><b>Root Rev</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__ROOT_REV = 3;
+	int REPOSITORY_MODEL__ROOT_REV = 2;
 
 	/**
 	 * The feature id for the '<em><b>Traversals</b></em>' containment reference.
@@ -113,7 +104,7 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__TRAVERSALS = 4;
+	int REPOSITORY_MODEL__TRAVERSALS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Repository Model</em>' class.
@@ -122,7 +113,7 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_FEATURE_COUNT = 5;
+	int REPOSITORY_MODEL_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.RevImpl <em>Rev</em>}' class.
@@ -373,13 +364,22 @@ public interface RepositoryModelPackage extends EPackage {
 	int ABSTRACT_FILE_REF = 5;
 
 	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_FILE_REF__PATH = 0;
+
+	/**
 	 * The number of structural features of the '<em>Abstract File Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_FILE_REF_FEATURE_COUNT = 0;
+	int ABSTRACT_FILE_REF_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.JavaCompilationUnitRefImpl <em>Java Compilation Unit Ref</em>}' class.
@@ -392,6 +392,15 @@ public interface RepositoryModelPackage extends EPackage {
 	int JAVA_COMPILATION_UNIT_REF = 6;
 
 	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF__PATH = ABSTRACT_FILE_REF__PATH;
+
+	/**
 	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -401,13 +410,31 @@ public interface RepositoryModelPackage extends EPackage {
 	int JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT = ABSTRACT_FILE_REF_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Java Model</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF__JAVA_MODEL = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Pendings</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF__PENDINGS = ABSTRACT_FILE_REF_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Java Compilation Unit Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
+	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl <em>Traversal State</em>}' class.
@@ -465,151 +492,50 @@ public interface RepositoryModelPackage extends EPackage {
 	int TRAVERSAL_STATE_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.MoDiscoImportStateImpl <em>Mo Disco Import State</em>}' class.
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.PendingElementImpl <em>Pending Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.repositorymodel.impl.MoDiscoImportStateImpl
-	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getMoDiscoImportState()
+	 * @see de.hub.srcrepo.repositorymodel.impl.PendingElementImpl
+	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getPendingElement()
 	 * @generated
 	 */
-	int MO_DISCO_IMPORT_STATE = 8;
+	int PENDING_ELEMENT = 8;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Client Node</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MO_DISCO_IMPORT_STATE__NAME = TRAVERSAL_STATE__NAME;
+	int PENDING_ELEMENT__CLIENT_NODE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Merges</b></em>' reference list.
+	 * The feature id for the '<em><b>Binding</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MO_DISCO_IMPORT_STATE__MERGES = TRAVERSAL_STATE__MERGES;
+	int PENDING_ELEMENT__BINDING = 1;
 
 	/**
-	 * The feature id for the '<em><b>Open Branches</b></em>' reference list.
+	 * The feature id for the '<em><b>Link Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MO_DISCO_IMPORT_STATE__OPEN_BRANCHES = TRAVERSAL_STATE__OPEN_BRANCHES;
+	int PENDING_ELEMENT__LINK_NAME = 2;
 
 	/**
-	 * The feature id for the '<em><b>Completed Branches</b></em>' reference list.
+	 * The number of structural features of the '<em>Pending Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MO_DISCO_IMPORT_STATE__COMPLETED_BRANCHES = TRAVERSAL_STATE__COMPLETED_BRANCHES;
-
-	/**
-	 * The feature id for the '<em><b>Bindings</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MO_DISCO_IMPORT_STATE__BINDINGS = TRAVERSAL_STATE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Bindings Per Branch</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MO_DISCO_IMPORT_STATE__BINDINGS_PER_BRANCH = TRAVERSAL_STATE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Mo Disco Import State</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MO_DISCO_IMPORT_STATE_FEATURE_COUNT = TRAVERSAL_STATE_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.JavaBindingsImpl <em>Java Bindings</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.repositorymodel.impl.JavaBindingsImpl
-	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getJavaBindings()
-	 * @generated
-	 */
-	int JAVA_BINDINGS = 9;
-
-	/**
-	 * The feature id for the '<em><b>Targets</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_BINDINGS__TARGETS = 0;
-
-	/**
-	 * The feature id for the '<em><b>Unresolved</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_BINDINGS__UNRESOLVED = 1;
-
-	/**
-	 * The number of structural features of the '<em>Java Bindings</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_BINDINGS_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.JavaBindingsPerBranchImpl <em>Java Bindings Per Branch</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.repositorymodel.impl.JavaBindingsPerBranchImpl
-	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getJavaBindingsPerBranch()
-	 * @generated
-	 */
-	int JAVA_BINDINGS_PER_BRANCH = 10;
-
-	/**
-	 * The feature id for the '<em><b>Bindings</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_BINDINGS_PER_BRANCH__BINDINGS = 0;
-
-	/**
-	 * The feature id for the '<em><b>Branch</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_BINDINGS_PER_BRANCH__BRANCH = 1;
-
-	/**
-	 * The number of structural features of the '<em>Java Bindings Per Branch</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_BINDINGS_PER_BRANCH_FEATURE_COUNT = 2;
+	int PENDING_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
@@ -619,7 +545,7 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 11;
+	int CHANGE_TYPE = 9;
 
 
 	/**
@@ -653,17 +579,6 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getRepositoryModel_AllRevs();
-
-	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getJavaModel <em>Java Model</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Java Model</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModel#getJavaModel()
-	 * @see #getRepositoryModel()
-	 * @generated
-	 */
-	EReference getRepositoryModel_JavaModel();
 
 	/**
 	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev <em>Root Rev</em>}'.
@@ -936,6 +851,17 @@ public interface RepositoryModelPackage extends EPackage {
 	EClass getAbstractFileRef();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.AbstractFileRef#getPath <em>Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Path</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.AbstractFileRef#getPath()
+	 * @see #getAbstractFileRef()
+	 * @generated
+	 */
+	EAttribute getAbstractFileRef_Path();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef <em>Java Compilation Unit Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -955,6 +881,28 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getJavaCompilationUnitRef_CompilationUnit();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel <em>Java Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Java Model</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel()
+	 * @see #getJavaCompilationUnitRef()
+	 * @generated
+	 */
+	EReference getJavaCompilationUnitRef_JavaModel();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getPendings <em>Pendings</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Pendings</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getPendings()
+	 * @see #getJavaCompilationUnitRef()
+	 * @generated
+	 */
+	EReference getJavaCompilationUnitRef_Pendings();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.TraversalState <em>Traversal State</em>}'.
@@ -1011,100 +959,47 @@ public interface RepositoryModelPackage extends EPackage {
 	EReference getTraversalState_CompletedBranches();
 
 	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.MoDiscoImportState <em>Mo Disco Import State</em>}'.
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.PendingElement <em>Pending Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Mo Disco Import State</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImportState
+	 * @return the meta object for class '<em>Pending Element</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.PendingElement
 	 * @generated
 	 */
-	EClass getMoDiscoImportState();
+	EClass getPendingElement();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.MoDiscoImportState#getBindings <em>Bindings</em>}'.
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.PendingElement#getClientNode <em>Client Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Bindings</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImportState#getBindings()
-	 * @see #getMoDiscoImportState()
+	 * @return the meta object for the reference '<em>Client Node</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.PendingElement#getClientNode()
+	 * @see #getPendingElement()
 	 * @generated
 	 */
-	EReference getMoDiscoImportState_Bindings();
+	EReference getPendingElement_ClientNode();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.MoDiscoImportState#getBindingsPerBranch <em>Bindings Per Branch</em>}'.
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.PendingElement#getBinding <em>Binding</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Bindings Per Branch</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImportState#getBindingsPerBranch()
-	 * @see #getMoDiscoImportState()
+	 * @return the meta object for the attribute '<em>Binding</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.PendingElement#getBinding()
+	 * @see #getPendingElement()
 	 * @generated
 	 */
-	EReference getMoDiscoImportState_BindingsPerBranch();
+	EAttribute getPendingElement_Binding();
 
 	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.JavaBindings <em>Java Bindings</em>}'.
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.PendingElement#getLinkName <em>Link Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Java Bindings</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindings
+	 * @return the meta object for the attribute '<em>Link Name</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.PendingElement#getLinkName()
+	 * @see #getPendingElement()
 	 * @generated
 	 */
-	EClass getJavaBindings();
-
-	/**
-	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.JavaBindings#getTargets <em>Targets</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Targets</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindings#getTargets()
-	 * @see #getJavaBindings()
-	 * @generated
-	 */
-	EReference getJavaBindings_Targets();
-
-	/**
-	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.JavaBindings#getUnresolved <em>Unresolved</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Unresolved</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindings#getUnresolved()
-	 * @see #getJavaBindings()
-	 * @generated
-	 */
-	EReference getJavaBindings_Unresolved();
-
-	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch <em>Java Bindings Per Branch</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Java Bindings Per Branch</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch
-	 * @generated
-	 */
-	EClass getJavaBindingsPerBranch();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch#getBindings <em>Bindings</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Bindings</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch#getBindings()
-	 * @see #getJavaBindingsPerBranch()
-	 * @generated
-	 */
-	EReference getJavaBindingsPerBranch_Bindings();
-
-	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch#getBranch <em>Branch</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Branch</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch#getBranch()
-	 * @see #getJavaBindingsPerBranch()
-	 * @generated
-	 */
-	EReference getJavaBindingsPerBranch_Branch();
+	EAttribute getPendingElement_LinkName();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
@@ -1164,14 +1059,6 @@ public interface RepositoryModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference REPOSITORY_MODEL__ALL_REVS = eINSTANCE.getRepositoryModel_AllRevs();
-
-		/**
-		 * The meta object literal for the '<em><b>Java Model</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REPOSITORY_MODEL__JAVA_MODEL = eINSTANCE.getRepositoryModel_JavaModel();
 
 		/**
 		 * The meta object literal for the '<em><b>Root Rev</b></em>' reference feature.
@@ -1384,6 +1271,14 @@ public interface RepositoryModelPackage extends EPackage {
 		EClass ABSTRACT_FILE_REF = eINSTANCE.getAbstractFileRef();
 
 		/**
+		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ABSTRACT_FILE_REF__PATH = eINSTANCE.getAbstractFileRef_Path();
+
+		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.JavaCompilationUnitRefImpl <em>Java Compilation Unit Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1400,6 +1295,22 @@ public interface RepositoryModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT = eINSTANCE.getJavaCompilationUnitRef_CompilationUnit();
+
+		/**
+		 * The meta object literal for the '<em><b>Java Model</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JAVA_COMPILATION_UNIT_REF__JAVA_MODEL = eINSTANCE.getJavaCompilationUnitRef_JavaModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Pendings</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JAVA_COMPILATION_UNIT_REF__PENDINGS = eINSTANCE.getJavaCompilationUnitRef_Pendings();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl <em>Traversal State</em>}' class.
@@ -1444,82 +1355,38 @@ public interface RepositoryModelPackage extends EPackage {
 		EReference TRAVERSAL_STATE__COMPLETED_BRANCHES = eINSTANCE.getTraversalState_CompletedBranches();
 
 		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.MoDiscoImportStateImpl <em>Mo Disco Import State</em>}' class.
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.PendingElementImpl <em>Pending Element</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.repositorymodel.impl.MoDiscoImportStateImpl
-		 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getMoDiscoImportState()
+		 * @see de.hub.srcrepo.repositorymodel.impl.PendingElementImpl
+		 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getPendingElement()
 		 * @generated
 		 */
-		EClass MO_DISCO_IMPORT_STATE = eINSTANCE.getMoDiscoImportState();
+		EClass PENDING_ELEMENT = eINSTANCE.getPendingElement();
 
 		/**
-		 * The meta object literal for the '<em><b>Bindings</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Client Node</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MO_DISCO_IMPORT_STATE__BINDINGS = eINSTANCE.getMoDiscoImportState_Bindings();
+		EReference PENDING_ELEMENT__CLIENT_NODE = eINSTANCE.getPendingElement_ClientNode();
 
 		/**
-		 * The meta object literal for the '<em><b>Bindings Per Branch</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Binding</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MO_DISCO_IMPORT_STATE__BINDINGS_PER_BRANCH = eINSTANCE.getMoDiscoImportState_BindingsPerBranch();
+		EAttribute PENDING_ELEMENT__BINDING = eINSTANCE.getPendingElement_Binding();
 
 		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.JavaBindingsImpl <em>Java Bindings</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.repositorymodel.impl.JavaBindingsImpl
-		 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getJavaBindings()
-		 * @generated
-		 */
-		EClass JAVA_BINDINGS = eINSTANCE.getJavaBindings();
-
-		/**
-		 * The meta object literal for the '<em><b>Targets</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Link Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference JAVA_BINDINGS__TARGETS = eINSTANCE.getJavaBindings_Targets();
-
-		/**
-		 * The meta object literal for the '<em><b>Unresolved</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JAVA_BINDINGS__UNRESOLVED = eINSTANCE.getJavaBindings_Unresolved();
-
-		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.JavaBindingsPerBranchImpl <em>Java Bindings Per Branch</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.repositorymodel.impl.JavaBindingsPerBranchImpl
-		 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getJavaBindingsPerBranch()
-		 * @generated
-		 */
-		EClass JAVA_BINDINGS_PER_BRANCH = eINSTANCE.getJavaBindingsPerBranch();
-
-		/**
-		 * The meta object literal for the '<em><b>Bindings</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JAVA_BINDINGS_PER_BRANCH__BINDINGS = eINSTANCE.getJavaBindingsPerBranch_Bindings();
-
-		/**
-		 * The meta object literal for the '<em><b>Branch</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JAVA_BINDINGS_PER_BRANCH__BRANCH = eINSTANCE.getJavaBindingsPerBranch_Branch();
+		EAttribute PENDING_ELEMENT__LINK_NAME = eINSTANCE.getPendingElement_LinkName();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.

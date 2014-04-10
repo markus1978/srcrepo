@@ -18,11 +18,9 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.JavaBindings;
-import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
+import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -98,21 +96,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass moDiscoImportStateEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass javaBindingsEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass javaBindingsPerBranchEClass = null;
+	private EClass pendingElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -217,7 +201,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRepositoryModel_JavaModel() {
+	public EReference getRepositoryModel_RootRev() {
 		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -226,17 +210,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRepositoryModel_RootRev() {
-		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getRepositoryModel_Traversals() {
-		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(4);
+		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -451,6 +426,15 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getAbstractFileRef_Path() {
+		return (EAttribute)abstractFileRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getJavaCompilationUnitRef() {
 		return javaCompilationUnitRefEClass;
 	}
@@ -462,6 +446,24 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getJavaCompilationUnitRef_CompilationUnit() {
 		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaCompilationUnitRef_JavaModel() {
+		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJavaCompilationUnitRef_Pendings() {
+		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -514,8 +516,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getMoDiscoImportState() {
-		return moDiscoImportStateEClass;
+	public EClass getPendingElement() {
+		return pendingElementEClass;
 	}
 
 	/**
@@ -523,8 +525,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMoDiscoImportState_Bindings() {
-		return (EReference)moDiscoImportStateEClass.getEStructuralFeatures().get(0);
+	public EReference getPendingElement_ClientNode() {
+		return (EReference)pendingElementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -532,8 +534,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMoDiscoImportState_BindingsPerBranch() {
-		return (EReference)moDiscoImportStateEClass.getEStructuralFeatures().get(1);
+	public EAttribute getPendingElement_Binding() {
+		return (EAttribute)pendingElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -541,53 +543,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getJavaBindings() {
-		return javaBindingsEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaBindings_Targets() {
-		return (EReference)javaBindingsEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaBindings_Unresolved() {
-		return (EReference)javaBindingsEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getJavaBindingsPerBranch() {
-		return javaBindingsPerBranchEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaBindingsPerBranch_Bindings() {
-		return (EReference)javaBindingsPerBranchEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaBindingsPerBranch_Branch() {
-		return (EReference)javaBindingsPerBranchEClass.getEStructuralFeatures().get(1);
+	public EAttribute getPendingElement_LinkName() {
+		return (EAttribute)pendingElementEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -630,7 +587,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		repositoryModelEClass = createEClass(REPOSITORY_MODEL);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REFS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REVS);
-		createEReference(repositoryModelEClass, REPOSITORY_MODEL__JAVA_MODEL);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ROOT_REV);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__TRAVERSALS);
 
@@ -661,9 +617,12 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(parentRelationEClass, PARENT_RELATION__CHILD);
 
 		abstractFileRefEClass = createEClass(ABSTRACT_FILE_REF);
+		createEAttribute(abstractFileRefEClass, ABSTRACT_FILE_REF__PATH);
 
 		javaCompilationUnitRefEClass = createEClass(JAVA_COMPILATION_UNIT_REF);
 		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT);
+		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__JAVA_MODEL);
+		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__PENDINGS);
 
 		traversalStateEClass = createEClass(TRAVERSAL_STATE);
 		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NAME);
@@ -671,17 +630,10 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__OPEN_BRANCHES);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__COMPLETED_BRANCHES);
 
-		moDiscoImportStateEClass = createEClass(MO_DISCO_IMPORT_STATE);
-		createEReference(moDiscoImportStateEClass, MO_DISCO_IMPORT_STATE__BINDINGS);
-		createEReference(moDiscoImportStateEClass, MO_DISCO_IMPORT_STATE__BINDINGS_PER_BRANCH);
-
-		javaBindingsEClass = createEClass(JAVA_BINDINGS);
-		createEReference(javaBindingsEClass, JAVA_BINDINGS__TARGETS);
-		createEReference(javaBindingsEClass, JAVA_BINDINGS__UNRESOLVED);
-
-		javaBindingsPerBranchEClass = createEClass(JAVA_BINDINGS_PER_BRANCH);
-		createEReference(javaBindingsPerBranchEClass, JAVA_BINDINGS_PER_BRANCH__BINDINGS);
-		createEReference(javaBindingsPerBranchEClass, JAVA_BINDINGS_PER_BRANCH__BRANCH);
+		pendingElementEClass = createEClass(PENDING_ELEMENT);
+		createEReference(pendingElementEClass, PENDING_ELEMENT__CLIENT_NODE);
+		createEAttribute(pendingElementEClass, PENDING_ELEMENT__BINDING);
+		createEAttribute(pendingElementEClass, PENDING_ELEMENT__LINK_NAME);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -719,13 +671,11 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		// Add supertypes to classes
 		javaCompilationUnitRefEClass.getESuperTypes().add(this.getAbstractFileRef());
-		moDiscoImportStateEClass.getESuperTypes().add(this.getTraversalState());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(repositoryModelEClass, RepositoryModel.class, "RepositoryModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRepositoryModel_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_AllRevs(), this.getRev(), null, "allRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRepositoryModel_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_RootRev(), this.getRev(), null, "rootRev", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_Traversals(), this.getTraversalState(), null, "traversals", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -763,9 +713,12 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getParentRelation_Child(), this.getRev(), this.getRev_ParentRelations(), "child", null, 0, 1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(abstractFileRefEClass, AbstractFileRef.class, "AbstractFileRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAbstractFileRef_Path(), ecorePackage.getEString(), "path", null, 0, 1, AbstractFileRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(javaCompilationUnitRefEClass, JavaCompilationUnitRef.class, "JavaCompilationUnitRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJavaCompilationUnitRef_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJavaCompilationUnitRef_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJavaCompilationUnitRef_Pendings(), this.getPendingElement(), null, "pendings", null, 0, -1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(traversalStateEClass, TraversalState.class, "TraversalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTraversalState_Name(), ecorePackage.getEString(), "name", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -773,17 +726,10 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getTraversalState_OpenBranches(), this.getRev(), null, "openBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_CompletedBranches(), this.getRev(), null, "completedBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(moDiscoImportStateEClass, MoDiscoImportState.class, "MoDiscoImportState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMoDiscoImportState_Bindings(), this.getJavaBindings(), null, "bindings", null, 0, 1, MoDiscoImportState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMoDiscoImportState_BindingsPerBranch(), this.getJavaBindingsPerBranch(), null, "bindingsPerBranch", null, 0, -1, MoDiscoImportState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(javaBindingsEClass, JavaBindings.class, "JavaBindings", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getJavaBindings_Targets(), theJavaPackage.getNamedElement(), null, "targets", null, 0, -1, JavaBindings.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJavaBindings_Unresolved(), theJavaPackage.getUnresolvedItem(), null, "unresolved", null, 0, -1, JavaBindings.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(javaBindingsPerBranchEClass, JavaBindingsPerBranch.class, "JavaBindingsPerBranch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getJavaBindingsPerBranch_Bindings(), this.getJavaBindings(), null, "bindings", null, 0, 1, JavaBindingsPerBranch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJavaBindingsPerBranch_Branch(), this.getRev(), null, "branch", null, 0, 1, JavaBindingsPerBranch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(pendingElementEClass, PendingElement.class, "PendingElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPendingElement_ClientNode(), theJavaPackage.getASTNode(), null, "clientNode", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPendingElement_Binding(), ecorePackage.getEString(), "binding", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPendingElement_LinkName(), ecorePackage.getEString(), "linkName", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

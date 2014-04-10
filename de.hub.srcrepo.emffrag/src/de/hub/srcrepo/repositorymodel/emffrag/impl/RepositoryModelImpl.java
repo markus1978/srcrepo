@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.gmt.modisco.java.Model;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.Ref;
@@ -29,7 +28,6 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getRootRev <em>Root Rev</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
  * </ul>
@@ -85,24 +83,6 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	@SuppressWarnings("unchecked")
 	public EList<Rev> getAllRevs() {
 		return (EList<Rev>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Model getJavaModel() {
-		return (Model)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__JAVA_MODEL, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setJavaModel(Model newJavaModel) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__JAVA_MODEL, newJavaModel);
 	}
 
 	/**

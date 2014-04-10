@@ -236,72 +236,26 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.MoDiscoImportState} instances.
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.PendingElement} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MoDiscoImportStateItemProvider moDiscoImportStateItemProvider;
+	protected PendingElementItemProvider pendingElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.MoDiscoImportState}.
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.PendingElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createMoDiscoImportStateAdapter() {
-		if (moDiscoImportStateItemProvider == null) {
-			moDiscoImportStateItemProvider = new MoDiscoImportStateItemProvider(this);
+	public Adapter createPendingElementAdapter() {
+		if (pendingElementItemProvider == null) {
+			pendingElementItemProvider = new PendingElementItemProvider(this);
 		}
 
-		return moDiscoImportStateItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.JavaBindings} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected JavaBindingsItemProvider javaBindingsItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.JavaBindings}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createJavaBindingsAdapter() {
-		if (javaBindingsItemProvider == null) {
-			javaBindingsItemProvider = new JavaBindingsItemProvider(this);
-		}
-
-		return javaBindingsItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected JavaBindingsPerBranchItemProvider javaBindingsPerBranchItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createJavaBindingsPerBranchAdapter() {
-		if (javaBindingsPerBranchItemProvider == null) {
-			javaBindingsPerBranchItemProvider = new JavaBindingsPerBranchItemProvider(this);
-		}
-
-		return javaBindingsPerBranchItemProvider;
+		return pendingElementItemProvider;
 	}
 
 	/**
@@ -410,9 +364,7 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 		if (parentRelationItemProvider != null) parentRelationItemProvider.dispose();
 		if (javaCompilationUnitRefItemProvider != null) javaCompilationUnitRefItemProvider.dispose();
 		if (traversalStateItemProvider != null) traversalStateItemProvider.dispose();
-		if (moDiscoImportStateItemProvider != null) moDiscoImportStateItemProvider.dispose();
-		if (javaBindingsItemProvider != null) javaBindingsItemProvider.dispose();
-		if (javaBindingsPerBranchItemProvider != null) javaBindingsPerBranchItemProvider.dispose();
+		if (pendingElementItemProvider != null) pendingElementItemProvider.dispose();
 	}
 
 }

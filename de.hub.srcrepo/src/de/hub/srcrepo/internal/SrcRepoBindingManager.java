@@ -1,9 +1,4 @@
 /*******************************************************************************
- * This is a copy from MoDisco ((c) 2009 Mia-Software, with a view changes 
- * (c) 2013 Markus Scheidgen marked with HUB. 
- *******************************************************************************/
-
-/*******************************************************************************
  * Copyright (c) 2009 Mia-Software.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,6 +13,7 @@
  *    Erwan Breton (Sodifrance) - initial API and implementation
  *    Romain Dervaux (Mia-Software) - initial API and implementation
  *******************************************************************************/
+
 package de.hub.srcrepo.internal;
 
 import java.util.ArrayList;
@@ -59,8 +55,7 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.MethodBindin
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PackageBinding;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.ParameterBinding;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
-
-import de.hub.srcrepo.repositorymodel.JavaBindings;
+import org.eclipse.modisco.java.discoverer.internal.io.java.binding.UnresolvedBinding;
 
 /**
  * Class used to store and resolves pending references between Java
@@ -79,8 +74,9 @@ import de.hub.srcrepo.repositorymodel.JavaBindings;
  * 
  * @see #resolveBindings(Model)
  * @see PendingElement#affectTarget(ASTNode)
+ * 
+ * This is a copy from the MoDisco Indigo distribution with an additional getter for the pendings.
  */
-@SuppressWarnings("restriction")
 public class SrcRepoBindingManager extends BindingManager {
 
 	/**
@@ -97,6 +93,10 @@ public class SrcRepoBindingManager extends BindingManager {
 	 * the pending references.
 	 */
 	private List<PendingElement> pendings = new ArrayList<PendingElement>();
+	
+	public List<PendingElement> getPendings() {
+		return pendings;
+	}
 
 	/**
 	 * The EMF factory.
@@ -120,17 +120,6 @@ public class SrcRepoBindingManager extends BindingManager {
 		super(factory);
 		this.factory = factory;
 	}
-	
-	public void printTelemetry() {
-		StringBuffer info = new StringBuffer();
-		info.append("-- SrcRepoBindingManager telemetry ----------------------------\n");
-		info.append("Pendings: " + pendings.size() + "\n");
-		info.append("Targets: " + targets.size() + "\n");
-		info.append("Unresolved " + unresolvedItems.size() + "\n");
-		info.append("-- END --------------------------------------------------------" + "\n");
-		
-		System.out.println(info.toString());
-	}
 
 	/**
 	 * Constructs a {@code BindingManager} containing the factory, the targets
@@ -146,37 +135,6 @@ public class SrcRepoBindingManager extends BindingManager {
 		this.pendings = new ArrayList<PendingElement>(aBindingManager.pendings);
 		this.model = aBindingManager.model;
 	}
-	
-	public SrcRepoBindingManager(final JavaFactory factory, Model javaModel, JavaBindings bindingsModel) {
-		super(factory);
-		this.factory = factory;
-		this.model = javaModel;
-		this.targets = new HashMap<String, NamedElement>(bindingsModel.getTargets().size());
-		for(NamedElement target: bindingsModel.getTargets()) {
-			this.targets.put(target.getName(), target);
-		}
-		this.pendings = new ArrayList<PendingElement>(bindingsModel.getUnresolved().size());
-		for(UnresolvedItem unresolvedItem: bindingsModel.getUnresolved()) {
-			this.unresolvedItems.put(unresolvedItem.getName(), unresolvedItem);
-		}
-	}
-
-	// HUB start
-	public void addBindings(final SrcRepoBindingManager aBindingManager) {
-		this.targets.putAll(aBindingManager.targets);
-		this.pendings.addAll(aBindingManager.pendings);
-	}
-
-	public void addPackageBindings(final SrcRepoBindingManager aBindingManager) {
-		for (String binding : aBindingManager.targets.keySet()) {
-			NamedElement target = aBindingManager.targets.get(binding);
-			if (target instanceof Package) {
-				addTarget(binding, target);
-			}
-		}
-	}
-
-	// HUB end
 
 	/**
 	 * Enable incremental behavior.
@@ -306,14 +264,9 @@ public class SrcRepoBindingManager extends BindingManager {
 	 */
 	public NamedElement getTarget(final Binding binding) {
 		NamedElement target = null;
-		// HUB: this causes problems when resolving package comments/packages.
-		// For some reason the package binding is unresolved, but the binding
-		// manager has an entry for the package.
-		// No idea, if this changes causes any other problems. But I guess, if
-		// there is a target, it is good enough.
-		// if (!(binding instanceof UnresolvedBinding)) {
-		target = this.getTarget(binding.toString());
-		// }
+		if (!(binding instanceof UnresolvedBinding)) {
+			target = this.getTarget(binding.toString());
+		}
 		return target;
 	}
 
@@ -347,8 +300,8 @@ public class SrcRepoBindingManager extends BindingManager {
 	public PendingElement getPending(final ASTNode clientNode, final String linkName) {
 		PendingElement result = null;
 		for (PendingElement pe : this.pendings) {
-			if (pe.getClientNode() != null && pe.getClientNode().equals(clientNode) && pe.getLinkName() != null
-					&& pe.getLinkName().equals(linkName)) {
+			if (pe.getClientNode() != null && pe.getClientNode().equals(clientNode)
+					&& pe.getLinkName() != null && pe.getLinkName().equals(linkName)) {
 				result = pe;
 			}
 		}
@@ -376,12 +329,10 @@ public class SrcRepoBindingManager extends BindingManager {
 			}
 		}
 		manageUnresolvedBindings(model1, unresolvedBindings);
-		// HUB
-		this.pendings.clear();
-		// HUB
 	}
 
-	private void manageUnresolvedBindings(final Model model1, final List<PendingElement> unresolvedBindings) {
+	private void manageUnresolvedBindings(final Model model1,
+			final List<PendingElement> unresolvedBindings) {
 		if (model1 != null) {
 			for (PendingElement pe : unresolvedBindings) {
 				NamedElement target = null;
@@ -396,7 +347,8 @@ public class SrcRepoBindingManager extends BindingManager {
 	private NamedElement searchQNInModel(final String qualifiedName) {
 		NamedElement resultNamedElement = null;
 		if (isIncrementalDiscovering()) {
-			resultNamedElement = JavaUtil.getNamedElementByQualifiedName(this.model, qualifiedName, this.targets);
+			resultNamedElement = JavaUtil.getNamedElementByQualifiedName(this.model, qualifiedName,
+					this.targets);
 			if (resultNamedElement != null) {
 				this.addTarget(qualifiedName, resultNamedElement);
 			}
@@ -438,7 +390,8 @@ public class SrcRepoBindingManager extends BindingManager {
 			if (result != null) {
 				// some misc unresolved bindings might have the same
 				// bd.getName()
-				EStructuralFeature feature = pe.getClientNode().eClass().getEStructuralFeature(pe.getLinkName());
+				EStructuralFeature feature = pe.getClientNode().eClass()
+						.getEStructuralFeature(pe.getLinkName());
 				if (!feature.getEType().isInstance(result)) {
 					result = null;
 				}
@@ -489,14 +442,7 @@ public class SrcRepoBindingManager extends BindingManager {
 					if (result instanceof AbstractTypeDeclaration) {
 						((AbstractTypeDeclaration) result).setPackage(owner);
 					}
-					// HUB: I else'ed this brachn. OwnedElements is the oppisite
-					// of package, and if the package of result is already set,
-					// the result is already part of owner#ownedElements.
-					// Otherwise, this will cause inverseRemove and inverseAdd,
-					// which the indexed set of ownedElements does not support.
-					else {
-						owner.getOwnedElements().add((AbstractTypeDeclaration) result);
-					}
+					owner.getOwnedElements().add((AbstractTypeDeclaration) result);
 				} else {
 					IStatus status = new Status(IStatus.ERROR, JavaActivator.PLUGIN_ID,
 							"Unkown error.", new Exception("owner == null: " //$NON-NLS-1$ //$NON-NLS-2$
@@ -504,8 +450,8 @@ public class SrcRepoBindingManager extends BindingManager {
 					JavaActivator.getDefault().getLog().log(status);
 				}
 			} else if (binding.getDeclaringClass() != null) {
-				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(binding.getDeclaringClass(),
-						model1);
+				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(
+						binding.getDeclaringClass(), model1);
 				if (declaring != null) {
 					declaring.getBodyDeclarations().add((AbstractTypeDeclaration) result);
 				}
@@ -514,37 +460,27 @@ public class SrcRepoBindingManager extends BindingManager {
 					// To be sure that result object is owned by a resource.
 					model1.getOrphanTypes().add((Type) result);
 				} else {
-					String message = binding.toString() + " will not be contained by the model element."; //$NON-NLS-1$
+					String message = binding.toString()
+							+ " will not be contained by the model element."; //$NON-NLS-1$
 					IStatus status = new Status(IStatus.ERROR, JavaActivator.PLUGIN_ID, message);
 					JavaActivator.getDefault().getLog().log(status);
 				}
 			}
 			// declaring the super class
 			if (!binding.isInterface() && binding.getSuperClass() != null) {
-				// BUGFIX this is sometimes an InterfaceDeclaration dispite !binding.isInterface (hub/sam/markus)
-				NamedElement superClassTypeDeclaration = getTypeDeclaration(binding.getSuperClass(), model1);
-				if (superClassTypeDeclaration instanceof ClassDeclaration) {
-					ClassDeclaration superClass = (ClassDeclaration) superClassTypeDeclaration;
-					if (superClass != null) {
-						TypeAccess typAcc = this.factory.createTypeAccess();
-						typAcc.setType(superClass);
-						((ClassDeclaration) result).setSuperClass(typAcc);
-					}
-				} else if (superClassTypeDeclaration instanceof InterfaceDeclaration) {
-					InterfaceDeclaration superInterface = (InterfaceDeclaration) superClassTypeDeclaration;
-					if (superInterface != null) {
-						TypeAccess typAcc = this.factory.createTypeAccess();
-						typAcc.setType(superInterface);
-						((AbstractTypeDeclaration) result).getSuperInterfaces().add(typAcc);
-					}
-				} else {
-					throw new IllegalStateException("Unexpected super class type declaration type: " + superClassTypeDeclaration);
+				ClassDeclaration superClass = (ClassDeclaration) getTypeDeclaration(
+						binding.getSuperClass(), model1);
+				if (superClass != null) {
+					TypeAccess typAcc = this.factory.createTypeAccess();
+					typAcc.setType(superClass);
+					((ClassDeclaration) result).setSuperClass(typAcc);
 				}
 			}
 			// declaring the super interfaces
 			if (binding.getSuperInterfaces() != null) {
 				for (ClassBinding anInterface : binding.getSuperInterfaces()) {
-					InterfaceDeclaration superInterface = (InterfaceDeclaration) getTypeDeclaration(anInterface, model1);
+					InterfaceDeclaration superInterface = (InterfaceDeclaration) getTypeDeclaration(
+							anInterface, model1);
 					if (superInterface != null) {
 						TypeAccess typAcc = this.factory.createTypeAccess();
 						typAcc.setType(superInterface);
@@ -566,7 +502,8 @@ public class SrcRepoBindingManager extends BindingManager {
 		return result;
 	}
 
-	private EnumConstantDeclaration getEnumConstantDeclaration(final FieldBinding binding, final Model model1) {
+	private EnumConstantDeclaration getEnumConstantDeclaration(final FieldBinding binding,
+			final Model model1) {
 		EnumConstantDeclaration result = (EnumConstantDeclaration) this.getTarget(binding);
 		if (result == null) {
 			result = this.factory.createEnumConstantDeclaration();
@@ -574,7 +511,8 @@ public class SrcRepoBindingManager extends BindingManager {
 			result.setName(binding.getName());
 
 			if (binding.getDeclaringClass() != null) {
-				EnumDeclaration declaring = (EnumDeclaration) getTypeDeclaration(binding.getDeclaringClass(), model1);
+				EnumDeclaration declaring = (EnumDeclaration) getTypeDeclaration(
+						binding.getDeclaringClass(), model1);
 				if (declaring != null) {
 					declaring.getEnumConstants().add(result);
 				}
@@ -587,7 +525,8 @@ public class SrcRepoBindingManager extends BindingManager {
 		return result;
 	}
 
-	private VariableDeclarationFragment getFieldDeclaration(final FieldBinding binding, final Model model1) {
+	private VariableDeclarationFragment getFieldDeclaration(final FieldBinding binding,
+			final Model model1) {
 		VariableDeclarationFragment result = (VariableDeclarationFragment) this.getTarget(binding);
 		if (result == null) {
 			FieldDeclaration field = this.factory.createFieldDeclaration();
@@ -600,8 +539,8 @@ public class SrcRepoBindingManager extends BindingManager {
 			field.getFragments().add(result);
 
 			if (binding.getDeclaringClass() != null) {
-				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(binding.getDeclaringClass(),
-						model1);
+				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(
+						binding.getDeclaringClass(), model1);
 				if (declaring != null) {
 					declaring.getBodyDeclarations().add(field);
 				}
@@ -614,7 +553,8 @@ public class SrcRepoBindingManager extends BindingManager {
 		return result;
 	}
 
-	private AbstractMethodDeclaration getMethodDeclaration(final MethodBinding binding, final Model model1) {
+	private AbstractMethodDeclaration getMethodDeclaration(final MethodBinding binding,
+			final Model model1) {
 		AbstractMethodDeclaration result = (AbstractMethodDeclaration) this.getTarget(binding);
 		if (result == null) {
 			if (binding.isConstructor()) {
@@ -627,7 +567,8 @@ public class SrcRepoBindingManager extends BindingManager {
 			result.setName(binding.getName());
 			for (int i = 0; i < binding.getParameters().size(); i++) {
 				ParameterBinding param = binding.getParameters().get(i);
-				SingleVariableDeclaration paramDecl = this.factory.createSingleVariableDeclaration();
+				SingleVariableDeclaration paramDecl = this.factory
+						.createSingleVariableDeclaration();
 				paramDecl.setProxy(true);
 				paramDecl.setName("arg" + i); //$NON-NLS-1$
 				result.getParameters().add(paramDecl);
@@ -644,8 +585,8 @@ public class SrcRepoBindingManager extends BindingManager {
 			// a type body declaration which is not finished to construct
 			// This avoid null pointer exception while searching into the model.
 			if (binding.getDeclaringClass() != null) {
-				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(binding.getDeclaringClass(),
-						model1);
+				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(
+						binding.getDeclaringClass(), model1);
 				if (declaring != null) {
 					declaring.getBodyDeclarations().add(result);
 				}
@@ -672,15 +613,17 @@ public class SrcRepoBindingManager extends BindingManager {
 		return result;
 	}
 
-	private AnnotationTypeMemberDeclaration getAnnotationTypeMemberDeclaration(final MethodBinding binding, final Model model1) {
-		AnnotationTypeMemberDeclaration result = (AnnotationTypeMemberDeclaration) this.getTarget(binding);
+	private AnnotationTypeMemberDeclaration getAnnotationTypeMemberDeclaration(
+			final MethodBinding binding, final Model model1) {
+		AnnotationTypeMemberDeclaration result = (AnnotationTypeMemberDeclaration) this
+				.getTarget(binding);
 		if (result == null) {
 			result = this.factory.createAnnotationTypeMemberDeclaration();
 			result.setProxy(true);
 			result.setName(binding.getName());
 			if (binding.getDeclaringClass() != null) {
-				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(binding.getDeclaringClass(),
-						model1);
+				AbstractTypeDeclaration declaring = (AbstractTypeDeclaration) getTypeDeclaration(
+						binding.getDeclaringClass(), model1);
 				if (declaring != null) {
 					declaring.getBodyDeclarations().add(result);
 				}
@@ -691,8 +634,6 @@ public class SrcRepoBindingManager extends BindingManager {
 	}
 
 	// create iterately a hierarchy of packages
-	// HUB changes throughout the whole method -> this is to create each package
-	// only once
 	private Package createProxiesPackageHierarchy(final PackageBinding binding, final Model model1) {
 		Package result = this.factory.createPackage();
 		result.setProxy(true);
@@ -732,8 +673,4 @@ public class SrcRepoBindingManager extends BindingManager {
 		return result;
 	}
 
-	public void saveToBindingsModel(JavaBindings bindings) {
-		bindings.getTargets().addAll(targets.values());
-		bindings.getUnresolved().addAll(unresolvedItems.values());
-	}
 }

@@ -6,16 +6,14 @@
  */
 package de.hub.srcrepo.repositorymodel.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.JavaBindings;
-import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -129,22 +127,9 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case RepositoryModelPackage.MO_DISCO_IMPORT_STATE: {
-				MoDiscoImportState moDiscoImportState = (MoDiscoImportState)theEObject;
-				T result = caseMoDiscoImportState(moDiscoImportState);
-				if (result == null) result = caseTraversalState(moDiscoImportState);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case RepositoryModelPackage.JAVA_BINDINGS: {
-				JavaBindings javaBindings = (JavaBindings)theEObject;
-				T result = caseJavaBindings(javaBindings);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case RepositoryModelPackage.JAVA_BINDINGS_PER_BRANCH: {
-				JavaBindingsPerBranch javaBindingsPerBranch = (JavaBindingsPerBranch)theEObject;
-				T result = caseJavaBindingsPerBranch(javaBindingsPerBranch);
+			case RepositoryModelPackage.PENDING_ELEMENT: {
+				PendingElement pendingElement = (PendingElement)theEObject;
+				T result = casePendingElement(pendingElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -273,47 +258,17 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Mo Disco Import State</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Pending Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Mo Disco Import State</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Pending Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMoDiscoImportState(MoDiscoImportState object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Java Bindings</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Java Bindings</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseJavaBindings(JavaBindings object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Java Bindings Per Branch</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Java Bindings Per Branch</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseJavaBindingsPerBranch(JavaBindingsPerBranch object) {
+	public T casePendingElement(PendingElement object) {
 		return null;
 	}
 

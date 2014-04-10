@@ -63,32 +63,9 @@ public class RepositoryModelItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addJavaModelPropertyDescriptor(object);
 			addRootRevPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Java Model feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addJavaModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_javaModel_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_javaModel_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__JAVA_MODEL,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -213,11 +190,6 @@ public class RepositoryModelItemProvider
 			(createChildParameter
 				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
 				 RepositoryModelFactory.eINSTANCE.createTraversalState()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
-				 RepositoryModelFactory.eINSTANCE.createMoDiscoImportState()));
 	}
 
 	/**

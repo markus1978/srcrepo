@@ -89,31 +89,13 @@ public interface RepositoryModelFactory extends EFactory {
 	TraversalState createTraversalState();
 
 	/**
-	 * Returns a new object of class '<em>Mo Disco Import State</em>'.
+	 * Returns a new object of class '<em>Pending Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Mo Disco Import State</em>'.
+	 * @return a new object of class '<em>Pending Element</em>'.
 	 * @generated
 	 */
-	MoDiscoImportState createMoDiscoImportState();
-
-	/**
-	 * Returns a new object of class '<em>Java Bindings</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Java Bindings</em>'.
-	 * @generated
-	 */
-	JavaBindings createJavaBindings();
-
-	/**
-	 * Returns a new object of class '<em>Java Bindings Per Branch</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Java Bindings Per Branch</em>'.
-	 * @generated
-	 */
-	JavaBindingsPerBranch createJavaBindingsPerBranch();
+	PendingElement createPendingElement();
 
 	/**
 	 * Returns the package supported by this factory.

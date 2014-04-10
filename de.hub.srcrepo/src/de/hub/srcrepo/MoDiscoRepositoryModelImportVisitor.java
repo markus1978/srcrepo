@@ -24,11 +24,9 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
-import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -37,18 +35,14 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.modisco.infra.discovery.core.exception.DiscoveryException;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManager;
+import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 import org.eclipse.modisco.kdm.source.extension.discovery.AbstractRegionDiscoverer2;
 import org.eclipse.modisco.kdm.source.extension.discovery.SourceVisitListener;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
-import de.hub.srcrepo.internal.SrcRepoMethodRedefinitionManager;
 import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.JavaBindings;
-import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
@@ -60,7 +54,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	protected final ISourceControlSystem sourceControlSystem;
 	protected final JavaFactory javaFactory;
 	protected final JavaPackage javaPackage;
-	protected final Model javaModel;	
 	protected final RepositoryModel repositoryModel;
 	protected final RepositoryModelFactory repositoryFactory;
 
@@ -68,8 +61,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private final AbstractRegionDiscoverer2<Object> abstractRegionDiscoverer;
 
 	// state
-	private SrcRepoBindingManager currentJavaBindings;
-	private HashMap<Rev, SrcRepoBindingManager> bindingsPerBranch = new HashMap<Rev, SrcRepoBindingManager>();
+//	private SrcRepoBindingManager currentJavaBindings;
+//	private HashMap<Rev, SrcRepoBindingManager> bindingsPerBranch = new HashMap<Rev, SrcRepoBindingManager>();
 	
 	// volatile
 	private IProject[] allProjects;
@@ -89,9 +82,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private IPath absoluteWorkingDirectoryPath;
 	private Collection<String> javaLikeExtensions = new HashSet<String>();
 	
-	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel) {				
-		this.javaModel = repositoryModel.getJavaModel();
-		this.javaPackage = (JavaPackage)javaModel.eClass().getEPackage();
+	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
+		this.javaPackage = javaPackage;
 		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
 		
 		this.sourceControlSystem = sourceControlSystem;
@@ -168,13 +160,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void loadState(TraversalState traversal) {
-		MoDiscoImportState moDiscoImport = (MoDiscoImportState)traversal;
-		JavaBindings bindings = moDiscoImport.getBindings();
-		currentJavaBindings = new SrcRepoBindingManager(javaFactory, javaModel, bindings);
-		bindingsPerBranch.clear();
-		for (JavaBindingsPerBranch javaBindingsPerBranch: moDiscoImport.getBindingsPerBranch()) {
-			bindingsPerBranch.put(javaBindingsPerBranch.getBranch(), new SrcRepoBindingManager(javaFactory, javaModel, javaBindingsPerBranch.getBindings()));
-		}
+
 	}
 
 
@@ -190,19 +176,19 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	@Override
 	public void onMerge(Rev mergeRev, Rev branchRev) {
 		updateJavaProjectStructureForMerge = true;
-		if (branchRev != null) {
-			SrcRepoBindingManager branchBindings = bindingsPerBranch.get(branchRev);
-			if (branchBindings == null && currentJavaBindings != null) {
-				branchBindings = new SrcRepoBindingManager(currentJavaBindings);
-				bindingsPerBranch.put(branchRev, branchBindings);
-				SrcRepoActivator.INSTANCE.info("Visit first branch on branch ref " + branchRev.getName() + "[" + branchRev.getTime() +"]. Saving current bindings.");
-			} else {
-				SrcRepoActivator.INSTANCE.info("Visit next branch on branch ref " + branchRev.getName() + "[" + branchRev.getTime() +"]. Resetting bindings.");
-			}
-			currentJavaBindings = branchBindings;			
-		} else {
-			currentJavaBindings = null;
-		}
+//		if (branchRev != null) {
+//			SrcRepoBindingManager branchBindings = bindingsPerBranch.get(branchRev);
+//			if (branchBindings == null && currentJavaBindings != null) {
+//				branchBindings = new SrcRepoBindingManager(currentJavaBindings);
+//				bindingsPerBranch.put(branchRev, branchBindings);
+//				SrcRepoActivator.INSTANCE.info("Visit first branch on branch ref " + branchRev.getName() + "[" + branchRev.getTime() +"]. Saving current bindings.");
+//			} else {
+//				SrcRepoActivator.INSTANCE.info("Visit next branch on branch ref " + branchRev.getName() + "[" + branchRev.getTime() +"]. Resetting bindings.");
+//			}
+//			currentJavaBindings = branchBindings;			
+//		} else {
+//			currentJavaBindings = null;
+//		}
 	}
 	
 	private void runJob(WorkspaceJob job) {
@@ -253,12 +239,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		return true;
 	}
 
-	private static void moveBinding(String name, BindingManager source, BindingManager target) {
-		NamedElement binding = source.getTarget(name);
-		if (binding != null) {
-			target.addTarget(name, binding);
-		}
-	}
+//	private static void moveBinding(String name, BindingManager source, BindingManager target) {
+//		NamedElement binding = source.getTarget(name);
+//		if (binding != null) {
+//			target.addTarget(name, binding);
+//		}
+//	}
 
 	@Override
 	public void onCompleteRev(Rev ref) {
@@ -266,69 +252,71 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			return;
 		}
 		
-		// setup the JavaReader used to import the java model
-		// TODO one JavaReader instance should be enough
-		JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer) {
-			@Override
-			protected BindingManager getBindingManager() {
-				return getGlobalBindings();
-			}
+//		// setup the JavaReader used to import the java model
+//		// TODO one JavaReader instance should be enough
+//		JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer) {
+//			@Override
+//			protected BindingManager getBindingManager() {
+//				return getGlobalBindings();
+//			}
+//
+//			@Override			
+//			protected void resolveMethodRedefinition(final Model model) {
+//				// using our own MethodRedifnitionManager that only check the current compilation unit and not the whole model.
+//				EList<CompilationUnit> compilationUnits = model.getCompilationUnits();
+//				CompilationUnit compilationUnit = compilationUnits.get(compilationUnits.size() - 1);
+//				SrcRepoMethodRedefinitionManager.resolveMethodRedefinitions(compilationUnit, javaFactory);
+//			}
+//			
+//		};
+//		
+//		JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer);
+//		javaReader.setDeepAnalysis(true);
+//		javaReader.setIncremental(false);
 
-			@Override			
-			protected void resolveMethodRedefinition(final Model model) {
-				// using our own MethodRedifnitionManager that only check the current compilation unit and not the whole model.
-				EList<CompilationUnit> compilationUnits = model.getCompilationUnits();
-				CompilationUnit compilationUnit = compilationUnits.get(compilationUnits.size() - 1);
-				SrcRepoMethodRedefinitionManager.resolveMethodRedefinitions(compilationUnit, javaFactory);
-			}
-			
-		};
-		javaReader.setDeepAnalysis(true);
-		javaReader.setIncremental(false);
-
-		// start with fresh bindings for each ref. These are later merged
-		// with the existing bindings from former Revs.
-		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
-		// resuse existing primitive types and packages
-		if (currentJavaBindings != null) {
-			bindings.addPackageBindings(currentJavaBindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.INT.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.LONG.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.FLOAT.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.DOUBLE.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BOOLEAN.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.VOID.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.CHAR.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.SHORT.toString(), currentJavaBindings, bindings);
-			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BYTE.toString(), currentJavaBindings, bindings);
-		}
-
-		javaReader.setGlobalBindings(bindings);
-		if (javaReader.isIncremental()) {
-			javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
-		}						
+//		// start with fresh bindings for each ref. These are later merged
+//		// with the existing bindings from former Revs.
+//		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
+//		// resuse existing primitive types and packages
+//		if (currentJavaBindings != null) {
+//			bindings.addPackageBindings(currentJavaBindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.INT.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.LONG.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.FLOAT.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.DOUBLE.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BOOLEAN.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.VOID.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.CHAR.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.SHORT.toString(), currentJavaBindings, bindings);
+//			moveBinding(org.eclipse.jdt.core.dom.PrimitiveType.BYTE.toString(), currentJavaBindings, bindings);
+//		}
+//
+//		javaReader.setGlobalBindings(bindings);
+//		if (javaReader.isIncremental()) {
+//			javaReader.getGlobalBindings().enableIncrementalDiscovering(javaModel);
+//		}						
 		
 		// import all collected diffs and resolve references
-		runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentRev, javaReader));		
+		runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentRev));		
 		
-		try {
-			// resolve references
-			SrcRepoActivator.INSTANCE.info("Resolving references...");
-			// this is only necessary, if there was some java in the current revision.
-			if (javaReader.getResultModel() != null) {
-				// merge bindings and then resolve all references (indirectly via #terminate)
-				SrcRepoBindingManager RevBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
-				if (currentJavaBindings == null) {
-					currentJavaBindings = RevBindings;
-				} else {
-					currentJavaBindings.addBindings(RevBindings);
-					javaReader.setGlobalBindings(currentJavaBindings);
-				}
-				javaReader.terminate(new NullProgressMonitor());
-			}
-		} catch (Exception e) {
-			reportImportError(currentRev, "Could not finalize import of compilation units, some references are probably not resolved.", e, true);
-		}
+//		try {
+//			// resolve references
+//			SrcRepoActivator.INSTANCE.info("Resolving references...");
+//			// this is only necessary, if there was some java in the current revision.
+//			if (javaReader.getResultModel() != null) {
+//				// merge bindings and then resolve all references (indirectly via #terminate)
+//				SrcRepoBindingManager RevBindings = (SrcRepoBindingManager)javaReader.getGlobalBindings();
+//				if (currentJavaBindings == null) {
+//					currentJavaBindings = RevBindings;
+//				} else {
+//					currentJavaBindings.addBindings(RevBindings);
+//					javaReader.setGlobalBindings(currentJavaBindings);
+//				}
+//				javaReader.terminate(new NullProgressMonitor());
+//			}
+//		} catch (Exception e) {
+//			reportImportError(currentRev, "Could not finalize import of compilation units, some references are probably not resolved.", e, true);
+//		}
 	}
 
 	@Override
@@ -478,13 +466,11 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	
 	private class ImportJavaCompilationUnits extends WorkspaceJob {
 		
-		private final Map<ICompilationUnit, Diff> javaDiffs;
-		private final JavaReader javaReader;		
+		private final Map<ICompilationUnit, Diff> javaDiffs;	
 
-		public ImportJavaCompilationUnits(Map<ICompilationUnit, Diff> javaDiffs, JavaReader javaReader) {
+		public ImportJavaCompilationUnits(Map<ICompilationUnit, Diff> javaDiffs) {
 			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " import compilation units for current ref.");
 			this.javaDiffs = javaDiffs;
-			this.javaReader = javaReader;
 		}
 
 		@Override
@@ -492,11 +478,17 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			// import diffs
 			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
 			int count = 0;
-			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {		
+			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {
+				SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
+				JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), abstractRegionDiscoverer);
+				javaReader.setGlobalBindings(bindings);
+				javaReader.setDeepAnalysis(true);
+				javaReader.setIncremental(true);
+				Model javaModel = javaFactory.createModel();
 				SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
 				importedCompilationUnit = null;
 				try {
-					javaReader.readModel(compilationUnit, javaModel, new NullProgressMonitor());					
+					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());					
 				} catch (Exception e) {
 					if (e.getClass().getName().endsWith("AbortCompilation")) {
 						reportImportError(currentRev, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
@@ -509,6 +501,16 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				if (importedCompilationUnit != null) {
 					JavaCompilationUnitRef ref = repositoryFactory.createJavaCompilationUnitRef();
 					ref.setCompilationUnit(importedCompilationUnit);
+					ref.setJavaModel(javaModel);
+					ref.setPath(compilationUnit.getPath().toOSString());
+					// save pending bindings
+					for(PendingElement pendingElement: bindings.getPendings()) {
+						de.hub.srcrepo.repositorymodel.PendingElement pendingElementModel = repositoryFactory.createPendingElement();
+						pendingElementModel.setBinding(pendingElement.getBinding().toString());
+						pendingElementModel.setLinkName(pendingElement.getLinkName());
+						pendingElementModel.setClientNode(pendingElement.getClientNode());
+						ref.getPendings().add(pendingElementModel);
+					}
 					javaDiffs.get(compilationUnit).setFile(ref);
 					count++;
 					importedCompilationUnits++;
@@ -535,15 +537,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void saveState(TraversalState traversal) {
-		MoDiscoImportState moDiscoImport = (MoDiscoImportState)traversal;
-		JavaBindings bindings = moDiscoImport.getBindings();
-		if (bindings == null) {
-			bindings = repositoryFactory.createJavaBindings();
-			moDiscoImport.setBindings(bindings);
-		}
-		bindings.getTargets().clear();
-		bindings.getUnresolved().clear();
-		currentJavaBindings.saveToBindingsModel(bindings);
+;
 	}
 
 	@Override

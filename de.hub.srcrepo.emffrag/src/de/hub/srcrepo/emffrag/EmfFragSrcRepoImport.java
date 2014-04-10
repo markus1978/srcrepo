@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.EmfFragActivator;
@@ -35,8 +34,8 @@ import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.RepositoryModelTraversal;
 import de.hub.srcrepo.SrcRepoActivator;
-import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class EmfFragSrcRepoImport implements IApplication {
@@ -289,22 +288,16 @@ public class EmfFragSrcRepoImport implements IApplication {
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
 		JavaPackage javaModelPackage = createJavaPackage(config.withDisabledIndexes, config.withDisabledUsages);
 		RepositoryModel repositoryModel = null;
-		Model javaModel = null;
 		
 		if (!config.resume) {
-			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();
-			javaModel = javaModelPackage.getJavaFactory().createModel();		
+			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();		
 			resource.getContents().add(repositoryModel);
-			resource.getContents().add(javaModel);
-			repositoryModel.setJavaModel(javaModel);
-			javaModel.setName("Java source code repository model.");
 		} else {
 			if (resource.getContents().isEmpty()) {
 				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
 				return null;
 			}
 			repositoryModel = (RepositoryModel) resource.getContents().get(0);
-			javaModel = repositoryModel.getJavaModel();
 			if (repositoryModel.getTraversals() == null) {
 				SrcRepoActivator.INSTANCE.info("No traversal present to resume,");
 				return repositoryModel;
@@ -336,12 +329,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing source code
-		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel);
+		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
 		if (config.resume) {
 			RepositoryModelTraversal.traverse(repositoryModel, visitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
 		} else {
 			if (stop) {
-				MoDiscoImportState traversalState = repositoryModelPackage.getRepositoryModelFactory().createMoDiscoImportState();
+				TraversalState traversalState = repositoryModelPackage.getRepositoryModelFactory().createTraversalState();
 				repositoryModel.setTraversals(traversalState);
 				RepositoryModelTraversal.traverse(repositoryModel, visitor, traversalState, false, config.stopAfterNumberOfRevs);	
 			} else {

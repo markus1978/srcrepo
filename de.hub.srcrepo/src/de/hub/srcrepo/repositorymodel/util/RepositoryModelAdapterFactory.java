@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.repositorymodel.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -13,10 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.JavaBindings;
-import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -113,16 +111,8 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 				return createTraversalStateAdapter();
 			}
 			@Override
-			public Adapter caseMoDiscoImportState(MoDiscoImportState object) {
-				return createMoDiscoImportStateAdapter();
-			}
-			@Override
-			public Adapter caseJavaBindings(JavaBindings object) {
-				return createJavaBindingsAdapter();
-			}
-			@Override
-			public Adapter caseJavaBindingsPerBranch(JavaBindingsPerBranch object) {
-				return createJavaBindingsPerBranchAdapter();
+			public Adapter casePendingElement(PendingElement object) {
+				return createPendingElementAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -257,44 +247,16 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.MoDiscoImportState <em>Mo Disco Import State</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.PendingElement <em>Pending Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImportState
+	 * @see de.hub.srcrepo.repositorymodel.PendingElement
 	 * @generated
 	 */
-	public Adapter createMoDiscoImportStateAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.JavaBindings <em>Java Bindings</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindings
-	 * @generated
-	 */
-	public Adapter createJavaBindingsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch <em>Java Bindings Per Branch</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch
-	 * @generated
-	 */
-	public Adapter createJavaBindingsPerBranchAdapter() {
+	public Adapter createPendingElementAdapter() {
 		return null;
 	}
 

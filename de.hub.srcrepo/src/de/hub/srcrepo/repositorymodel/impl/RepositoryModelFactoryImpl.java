@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.repositorymodel.impl;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -15,10 +16,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.JavaBindings;
-import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -78,9 +76,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.PARENT_RELATION: return createParentRelation();
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return createJavaCompilationUnitRef();
 			case RepositoryModelPackage.TRAVERSAL_STATE: return createTraversalState();
-			case RepositoryModelPackage.MO_DISCO_IMPORT_STATE: return createMoDiscoImportState();
-			case RepositoryModelPackage.JAVA_BINDINGS: return createJavaBindings();
-			case RepositoryModelPackage.JAVA_BINDINGS_PER_BRANCH: return createJavaBindingsPerBranch();
+			case RepositoryModelPackage.PENDING_ELEMENT: return createPendingElement();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -191,29 +187,9 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MoDiscoImportState createMoDiscoImportState() {
-		MoDiscoImportStateImpl moDiscoImportState = new MoDiscoImportStateImpl();
-		return moDiscoImportState;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public JavaBindings createJavaBindings() {
-		JavaBindingsImpl javaBindings = new JavaBindingsImpl();
-		return javaBindings;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public JavaBindingsPerBranch createJavaBindingsPerBranch() {
-		JavaBindingsPerBranchImpl javaBindingsPerBranch = new JavaBindingsPerBranchImpl();
-		return javaBindingsPerBranch;
+	public PendingElement createPendingElement() {
+		PendingElementImpl pendingElement = new PendingElementImpl();
+		return pendingElement;
 	}
 
 	/**

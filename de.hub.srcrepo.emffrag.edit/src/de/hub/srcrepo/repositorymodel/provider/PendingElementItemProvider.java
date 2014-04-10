@@ -20,17 +20,20 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 
+import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
- * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.JavaBindings} object.
+ * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.PendingElement} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class JavaBindingsItemProvider
+public class PendingElementItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -44,7 +47,7 @@ public class JavaBindingsItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public JavaBindingsItemProvider(AdapterFactory adapterFactory) {
+	public PendingElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -59,26 +62,27 @@ public class JavaBindingsItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addTargetsPropertyDescriptor(object);
-			addUnresolvedPropertyDescriptor(object);
+			addClientNodePropertyDescriptor(object);
+			addBindingPropertyDescriptor(object);
+			addLinkNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Targets feature.
+	 * This adds a property descriptor for the Client Node feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addTargetsPropertyDescriptor(Object object) {
+	protected void addClientNodePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_JavaBindings_targets_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_JavaBindings_targets_feature", "_UI_JavaBindings_type"),
-				 RepositoryModelPackage.Literals.JAVA_BINDINGS__TARGETS,
+				 getString("_UI_PendingElement_clientNode_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_PendingElement_clientNode_feature", "_UI_PendingElement_type"),
+				 RepositoryModelPackage.Literals.PENDING_ELEMENT__CLIENT_NODE,
 				 true,
 				 false,
 				 true,
@@ -88,36 +92,58 @@ public class JavaBindingsItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Unresolved feature.
+	 * This adds a property descriptor for the Binding feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addUnresolvedPropertyDescriptor(Object object) {
+	protected void addBindingPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_JavaBindings_unresolved_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_JavaBindings_unresolved_feature", "_UI_JavaBindings_type"),
-				 RepositoryModelPackage.Literals.JAVA_BINDINGS__UNRESOLVED,
+				 getString("_UI_PendingElement_binding_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_PendingElement_binding_feature", "_UI_PendingElement_type"),
+				 RepositoryModelPackage.Literals.PENDING_ELEMENT__BINDING,
 				 true,
 				 false,
-				 true,
-				 null,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
 	}
 
 	/**
-	 * This returns JavaBindings.gif.
+	 * This adds a property descriptor for the Link Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLinkNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_PendingElement_linkName_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_PendingElement_linkName_feature", "_UI_PendingElement_type"),
+				 RepositoryModelPackage.Literals.PENDING_ELEMENT__LINK_NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This returns PendingElement.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/JavaBindings"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/PendingElement"));
 	}
 
 	/**
@@ -128,7 +154,10 @@ public class JavaBindingsItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_JavaBindings_type");
+		String label = ((PendingElement)object).getLinkName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_PendingElement_type") :
+			getString("_UI_PendingElement_type") + " " + label;
 	}
 
 	/**
@@ -141,6 +170,13 @@ public class JavaBindingsItemProvider
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
+
+		switch (notification.getFeatureID(PendingElement.class)) {
+			case RepositoryModelPackage.PENDING_ELEMENT__BINDING:
+			case RepositoryModelPackage.PENDING_ELEMENT__LINK_NAME:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+		}
 		super.notifyChanged(notification);
 	}
 

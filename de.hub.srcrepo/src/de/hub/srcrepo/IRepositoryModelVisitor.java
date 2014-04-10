@@ -9,8 +9,8 @@ public interface IRepositoryModelVisitor {
 	/**
 	 * Is called when the currently visited branch ends or is merged into an
 	 * already visited branch and visiting is continued on the next (not yet
-	 * visited) branch. Note, this is also called in the beginning with null
-	 * arguments.
+	 * visited) branch. Note, this is also called in the beginning of a branch
+	 * with mergeRev==null.
 	 * 
 	 * @param mergeRev
 	 *            The already priorly visited revision that the currently visited

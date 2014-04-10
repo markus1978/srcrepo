@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.gmt.modisco.java.Model;
 
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -36,7 +35,6 @@ import de.hub.srcrepo.repositorymodel.TraversalState;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getRootRev <em>Root Rev</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
  * </ul>
@@ -64,16 +62,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * @ordered
 	 */
 	protected EList<Rev> allRevs;
-
-	/**
-	 * The cached value of the '{@link #getJavaModel() <em>Java Model</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getJavaModel()
-	 * @generated
-	 * @ordered
-	 */
-	protected Model javaModel;
 
 	/**
 	 * The cached value of the '{@link #getRootRev() <em>Root Rev</em>}' reference.
@@ -136,44 +124,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 			allRevs = new EObjectContainmentEList<Rev>(Rev.class, this, RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS);
 		}
 		return allRevs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Model getJavaModel() {
-		if (javaModel != null && javaModel.eIsProxy()) {
-			InternalEObject oldJavaModel = (InternalEObject)javaModel;
-			javaModel = (Model)eResolveProxy(oldJavaModel);
-			if (javaModel != oldJavaModel) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RepositoryModelPackage.REPOSITORY_MODEL__JAVA_MODEL, oldJavaModel, javaModel));
-			}
-		}
-		return javaModel;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Model basicGetJavaModel() {
-		return javaModel;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setJavaModel(Model newJavaModel) {
-		Model oldJavaModel = javaModel;
-		javaModel = newJavaModel;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.REPOSITORY_MODEL__JAVA_MODEL, oldJavaModel, javaModel));
 	}
 
 	/**
@@ -321,9 +271,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				return getAllRefs();
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				return getAllRevs();
-			case RepositoryModelPackage.REPOSITORY_MODEL__JAVA_MODEL:
-				if (resolve) return getJavaModel();
-				return basicGetJavaModel();
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				if (resolve) return getRootRev();
 				return basicGetRootRev();
@@ -350,9 +297,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				getAllRevs().clear();
 				getAllRevs().addAll((Collection<? extends Rev>)newValue);
 				return;
-			case RepositoryModelPackage.REPOSITORY_MODEL__JAVA_MODEL:
-				setJavaModel((Model)newValue);
-				return;
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				setRootRev((Rev)newValue);
 				return;
@@ -377,9 +321,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				getAllRevs().clear();
 				return;
-			case RepositoryModelPackage.REPOSITORY_MODEL__JAVA_MODEL:
-				setJavaModel((Model)null);
-				return;
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				setRootRev((Rev)null);
 				return;
@@ -402,8 +343,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				return allRefs != null && !allRefs.isEmpty();
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				return allRevs != null && !allRevs.isEmpty();
-			case RepositoryModelPackage.REPOSITORY_MODEL__JAVA_MODEL:
-				return javaModel != null;
 			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
 				return rootRev != null;
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:

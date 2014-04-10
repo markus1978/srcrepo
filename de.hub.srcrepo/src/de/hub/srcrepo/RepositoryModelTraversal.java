@@ -152,7 +152,7 @@ public class RepositoryModelTraversal {
 		new RepositoryModelTraversal(repositoryModel, visitor).run(resume, stopAfterNumberOfRevs > 0, state, stopAfterNumberOfRevs);
 	}
 
-	public static void traverseRepository(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
+	public static void traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
 		traverse(repositoryModel, visitor, null, false, -1);		
 	}
 	
