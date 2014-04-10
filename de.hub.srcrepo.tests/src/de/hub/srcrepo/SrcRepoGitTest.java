@@ -30,12 +30,10 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.junit.Test;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
+import de.hub.srcrepo.ocl.OclUtil;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
-import de.hub.srcrepo.repositorymodel.Rev;
-
-import de.hub.srcrepo.ocl.OclUtil;
 
 public class SrcRepoGitTest {
 	
@@ -79,7 +77,7 @@ public class SrcRepoGitTest {
 		
 		try {
 			scs.importRevisions(repositoryModel);
-			SrcRepoUtil.traverseRepository(repositoryModel, null, new Rev[0], new MoDiscoRepositoryModelImportVisitor(scs, repositoryModel));
+			RepositoryModelTraversal.traverseRepository(repositoryModel, new MoDiscoRepositoryModelImportVisitor(scs, repositoryModel));
 			scs.close();
 		} catch (Exception e) {
 			e.printStackTrace();

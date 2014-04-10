@@ -11,17 +11,16 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
-import de.hub.srcrepo.repositorymodel.BranchPoint;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaBindings;
 import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -124,28 +123,22 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case RepositoryModelPackage.TRAVERSAL: {
-				Traversal traversal = (Traversal)theEObject;
-				T result = caseTraversal(traversal);
+			case RepositoryModelPackage.TRAVERSAL_STATE: {
+				TraversalState traversalState = (TraversalState)theEObject;
+				T result = caseTraversalState(traversalState);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case RepositoryModelPackage.MO_DISCO_IMPORT: {
-				MoDiscoImport moDiscoImport = (MoDiscoImport)theEObject;
-				T result = caseMoDiscoImport(moDiscoImport);
-				if (result == null) result = caseTraversal(moDiscoImport);
+			case RepositoryModelPackage.MO_DISCO_IMPORT_STATE: {
+				MoDiscoImportState moDiscoImportState = (MoDiscoImportState)theEObject;
+				T result = caseMoDiscoImportState(moDiscoImportState);
+				if (result == null) result = caseTraversalState(moDiscoImportState);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case RepositoryModelPackage.JAVA_BINDINGS: {
 				JavaBindings javaBindings = (JavaBindings)theEObject;
 				T result = caseJavaBindings(javaBindings);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case RepositoryModelPackage.BRANCH_POINT: {
-				BranchPoint branchPoint = (BranchPoint)theEObject;
-				T result = caseBranchPoint(branchPoint);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -265,32 +258,32 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Traversal</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Traversal State</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Traversal</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Traversal State</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTraversal(Traversal object) {
+	public T caseTraversalState(TraversalState object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Mo Disco Import</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Mo Disco Import State</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Mo Disco Import</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Mo Disco Import State</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMoDiscoImport(MoDiscoImport object) {
+	public T caseMoDiscoImportState(MoDiscoImportState object) {
 		return null;
 	}
 
@@ -306,21 +299,6 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseJavaBindings(JavaBindings object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Branch Point</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Branch Point</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseBranchPoint(BranchPoint object) {
 		return null;
 	}
 

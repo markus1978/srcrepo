@@ -33,11 +33,10 @@ import de.hub.emffrag.mongodb.MongoDBUtil;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
+import de.hub.srcrepo.RepositoryModelTraversal;
 import de.hub.srcrepo.SrcRepoActivator;
-import de.hub.srcrepo.SrcRepoUtil;
-import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class EmfFragSrcRepoImport implements IApplication {
@@ -55,8 +54,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private int fragmentCacheSize = 1000;
 		private boolean resume = false;
 		private int stopAfterNumberOfRevs = -1;
-		private String startRevName = null;
-		private String[] stopRevNames = new String[0];
 		
 		public Configuration(ISourceControlSystem scs,
 				File workingDirectory, URI modelURI) {
@@ -104,17 +101,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		public Configuration stopAfterNumberOfRevs(int stopAfterNumberOfRevs) {
 			this.stopAfterNumberOfRevs = stopAfterNumberOfRevs;
 			return this;
-		}
-
-		public Configuration startRevName(String startRevName) {
-			this.startRevName = startRevName;
-			return this;
-		}
-
-		public Configuration stopRevNames(String[] stopRevNames) {
-			this.stopRevNames = stopRevNames;
-			return this;
-		}						
+		}					
 	}
 	
 	public static class GitConfiguration extends Configuration {
@@ -148,10 +135,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		options.addOption(OptionBuilder.
 				withLongOpt("disable-usages").
 				withDescription("Disables the tracking of usagesXXX opposites.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("root-commit").
-				withDescription("Start the import at a specific commit.").
-				hasArg().withArgName("commit").create());
 		options.addOption(OptionBuilder.
 				withLongOpt("resume").
 				withDescription("Resume import if a prior aborted import is saved within an existing repository model.").create());
@@ -260,12 +243,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (commandLine.hasOption("fragments-cache")) {			
 			config.fragmentCacheSize(Integer.parseInt(commandLine.getOptionValue("fragments-cache")));
 		}
-		if (commandLine.hasOption("root-commit")) {
-			config.startRevName(commandLine.getOptionValue("root-commit"));
-		}
-		if (commandLine.hasOption("last-commit")) {
-			config.stopRevNames(new String[] { commandLine.getOptionValue("last-commit") });
-		}
 		if (commandLine.hasOption("abort-after")) {
 			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
 		}
@@ -359,22 +336,16 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing source code
-		Rev startRev = config.startRevName != null ? repositoryModel.getRev(config.startRevName) : null;
-		Rev[] stopRevs = new Rev[config.stopRevNames.length];
-		int i = 0;
-		for (String stopRevName: config.stopRevNames) {
-			stopRevs[i] = repositoryModel.getRev(stopRevName);
-		}
 		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel);
 		if (config.resume) {
-			SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
+			RepositoryModelTraversal.traverse(repositoryModel, visitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
 		} else {
 			if (stop) {
-				MoDiscoImport traversal = repositoryModelPackage.getRepositoryModelFactory().createMoDiscoImport();
-				repositoryModel.setTraversals(traversal);
-				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor, traversal, false, config.stopAfterNumberOfRevs);	
+				MoDiscoImportState traversalState = repositoryModelPackage.getRepositoryModelFactory().createMoDiscoImportState();
+				repositoryModel.setTraversals(traversalState);
+				RepositoryModelTraversal.traverse(repositoryModel, visitor, traversalState, false, config.stopAfterNumberOfRevs);	
 			} else {
-				SrcRepoUtil.traverseRepository(repositoryModel, startRev, stopRevs, visitor);
+				RepositoryModelTraversal.traverse(repositoryModel, visitor, null, false, -1);
 			}
 		}
 		

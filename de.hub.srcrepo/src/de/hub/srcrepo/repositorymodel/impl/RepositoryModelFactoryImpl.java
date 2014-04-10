@@ -6,7 +6,6 @@
  */
 package de.hub.srcrepo.repositorymodel.impl;
 
-import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -15,19 +14,18 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
-import de.hub.srcrepo.repositorymodel.BranchPoint;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaBindings;
 import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 
 /**
  * <!-- begin-user-doc -->
@@ -79,10 +77,9 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.DIFF: return createDiff();
 			case RepositoryModelPackage.PARENT_RELATION: return createParentRelation();
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return createJavaCompilationUnitRef();
-			case RepositoryModelPackage.TRAVERSAL: return createTraversal();
-			case RepositoryModelPackage.MO_DISCO_IMPORT: return createMoDiscoImport();
+			case RepositoryModelPackage.TRAVERSAL_STATE: return createTraversalState();
+			case RepositoryModelPackage.MO_DISCO_IMPORT_STATE: return createMoDiscoImportState();
 			case RepositoryModelPackage.JAVA_BINDINGS: return createJavaBindings();
-			case RepositoryModelPackage.BRANCH_POINT: return createBranchPoint();
 			case RepositoryModelPackage.JAVA_BINDINGS_PER_BRANCH: return createJavaBindingsPerBranch();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -184,9 +181,9 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Traversal createTraversal() {
-		TraversalImpl traversal = new TraversalImpl();
-		return traversal;
+	public TraversalState createTraversalState() {
+		TraversalStateImpl traversalState = new TraversalStateImpl();
+		return traversalState;
 	}
 
 	/**
@@ -194,9 +191,9 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MoDiscoImport createMoDiscoImport() {
-		MoDiscoImportImpl moDiscoImport = new MoDiscoImportImpl();
-		return moDiscoImport;
+	public MoDiscoImportState createMoDiscoImportState() {
+		MoDiscoImportStateImpl moDiscoImportState = new MoDiscoImportStateImpl();
+		return moDiscoImportState;
 	}
 
 	/**
@@ -207,16 +204,6 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public JavaBindings createJavaBindings() {
 		JavaBindingsImpl javaBindings = new JavaBindingsImpl();
 		return javaBindings;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BranchPoint createBranchPoint() {
-		BranchPointImpl branchPoint = new BranchPointImpl();
-		return branchPoint;
 	}
 
 	/**

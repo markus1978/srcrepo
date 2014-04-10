@@ -11,30 +11,30 @@ import org.eclipse.emf.ecore.EClass;
 
 import de.hub.srcrepo.repositorymodel.JavaBindings;
 import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
-import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mo Disco Import</b></em>'.
+ * An implementation of the model object '<em><b>Mo Disco Import State</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.MoDiscoImportImpl#getBindings <em>Bindings</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.MoDiscoImportImpl#getBindingsPerBranch <em>Bindings Per Branch</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.MoDiscoImportStateImpl#getBindings <em>Bindings</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.MoDiscoImportStateImpl#getBindingsPerBranch <em>Bindings Per Branch</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class MoDiscoImportImpl extends TraversalImpl implements MoDiscoImport {
+public class MoDiscoImportStateImpl extends TraversalStateImpl implements MoDiscoImportState {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MoDiscoImportImpl() {
+	protected MoDiscoImportStateImpl() {
 		super();
 	}
 
@@ -45,7 +45,7 @@ public class MoDiscoImportImpl extends TraversalImpl implements MoDiscoImport {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return RepositoryModelPackage.Literals.MO_DISCO_IMPORT;
+		return RepositoryModelPackage.Literals.MO_DISCO_IMPORT_STATE;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class MoDiscoImportImpl extends TraversalImpl implements MoDiscoImport {
 	 * @generated
 	 */
 	public JavaBindings getBindings() {
-		return (JavaBindings)eGet(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS, true);
+		return (JavaBindings)eGet(RepositoryModelPackage.Literals.MO_DISCO_IMPORT_STATE__BINDINGS, true);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class MoDiscoImportImpl extends TraversalImpl implements MoDiscoImport {
 	 * @generated
 	 */
 	public void setBindings(JavaBindings newBindings) {
-		eSet(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS, newBindings);
+		eSet(RepositoryModelPackage.Literals.MO_DISCO_IMPORT_STATE__BINDINGS, newBindings);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class MoDiscoImportImpl extends TraversalImpl implements MoDiscoImport {
 	 */
 	@SuppressWarnings("unchecked")
 	public EList<JavaBindingsPerBranch> getBindingsPerBranch() {
-		return (EList<JavaBindingsPerBranch>)eGet(RepositoryModelPackage.Literals.MO_DISCO_IMPORT__BINDINGS_PER_BRANCH, true);
+		return (EList<JavaBindingsPerBranch>)eGet(RepositoryModelPackage.Literals.MO_DISCO_IMPORT_STATE__BINDINGS_PER_BRANCH, true);
 	}
 
-} //MoDiscoImportImpl
+} //MoDiscoImportStateImpl

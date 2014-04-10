@@ -213,49 +213,49 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.Traversal} instances.
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.TraversalState} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TraversalItemProvider traversalItemProvider;
+	protected TraversalStateItemProvider traversalStateItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.Traversal}.
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.TraversalState}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createTraversalAdapter() {
-		if (traversalItemProvider == null) {
-			traversalItemProvider = new TraversalItemProvider(this);
+	public Adapter createTraversalStateAdapter() {
+		if (traversalStateItemProvider == null) {
+			traversalStateItemProvider = new TraversalStateItemProvider(this);
 		}
 
-		return traversalItemProvider;
+		return traversalStateItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.MoDiscoImport} instances.
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.MoDiscoImportState} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MoDiscoImportItemProvider moDiscoImportItemProvider;
+	protected MoDiscoImportStateItemProvider moDiscoImportStateItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.MoDiscoImport}.
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.MoDiscoImportState}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createMoDiscoImportAdapter() {
-		if (moDiscoImportItemProvider == null) {
-			moDiscoImportItemProvider = new MoDiscoImportItemProvider(this);
+	public Adapter createMoDiscoImportStateAdapter() {
+		if (moDiscoImportStateItemProvider == null) {
+			moDiscoImportStateItemProvider = new MoDiscoImportStateItemProvider(this);
 		}
 
-		return moDiscoImportItemProvider;
+		return moDiscoImportStateItemProvider;
 	}
 
 	/**
@@ -279,29 +279,6 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 		}
 
 		return javaBindingsItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.BranchPoint} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected BranchPointItemProvider branchPointItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.BranchPoint}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createBranchPointAdapter() {
-		if (branchPointItemProvider == null) {
-			branchPointItemProvider = new BranchPointItemProvider(this);
-		}
-
-		return branchPointItemProvider;
 	}
 
 	/**
@@ -432,10 +409,9 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 		if (diffItemProvider != null) diffItemProvider.dispose();
 		if (parentRelationItemProvider != null) parentRelationItemProvider.dispose();
 		if (javaCompilationUnitRefItemProvider != null) javaCompilationUnitRefItemProvider.dispose();
-		if (traversalItemProvider != null) traversalItemProvider.dispose();
-		if (moDiscoImportItemProvider != null) moDiscoImportItemProvider.dispose();
+		if (traversalStateItemProvider != null) traversalStateItemProvider.dispose();
+		if (moDiscoImportStateItemProvider != null) moDiscoImportStateItemProvider.dispose();
 		if (javaBindingsItemProvider != null) javaBindingsItemProvider.dispose();
-		if (branchPointItemProvider != null) branchPointItemProvider.dispose();
 		if (javaBindingsPerBranchItemProvider != null) javaBindingsPerBranchItemProvider.dispose();
 	}
 

@@ -23,6 +23,5 @@ public class EmfFragMongoDBSrcRepoTest extends EmfFragMemorySrcRepoGitTest {
 	protected boolean useBinaryFragments() {
 		return true;
 	}	
-
 	
 }

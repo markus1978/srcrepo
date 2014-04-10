@@ -65,7 +65,6 @@ public class RepositoryModelItemProvider
 
 			addJavaModelPropertyDescriptor(object);
 			addRootRevPropertyDescriptor(object);
-			addTraversalsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -115,28 +114,6 @@ public class RepositoryModelItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Traversals feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addTraversalsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_traversals_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_traversals_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -150,6 +127,7 @@ public class RepositoryModelItemProvider
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REFS);
 			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS);
+			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS);
 		}
 		return childrenFeatures;
 	}
@@ -203,6 +181,7 @@ public class RepositoryModelItemProvider
 		switch (notification.getFeatureID(RepositoryModel.class)) {
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REFS:
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
+			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -229,6 +208,16 @@ public class RepositoryModelItemProvider
 			(createChildParameter
 				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ALL_REVS,
 				 RepositoryModelFactory.eINSTANCE.createRev()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
+				 RepositoryModelFactory.eINSTANCE.createTraversalState()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS,
+				 RepositoryModelFactory.eINSTANCE.createMoDiscoImportState()));
 	}
 
 	/**

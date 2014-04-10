@@ -25,7 +25,7 @@ import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 
 /**
  * <!-- begin-user-doc -->
@@ -93,7 +93,7 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * @generated
 	 * @ordered
 	 */
-	protected Traversal traversals;
+	protected TraversalState traversals;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -220,7 +220,7 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Traversal getTraversals() {
+	public TraversalState getTraversals() {
 		return traversals;
 	}
 
@@ -229,8 +229,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetTraversals(Traversal newTraversals, NotificationChain msgs) {
-		Traversal oldTraversals = traversals;
+	public NotificationChain basicSetTraversals(TraversalState newTraversals, NotificationChain msgs) {
+		TraversalState oldTraversals = traversals;
 		traversals = newTraversals;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS, oldTraversals, newTraversals);
@@ -244,7 +244,7 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setTraversals(Traversal newTraversals) {
+	public void setTraversals(TraversalState newTraversals) {
 		if (newTraversals != traversals) {
 			NotificationChain msgs = null;
 			if (traversals != null)
@@ -257,7 +257,6 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS, newTraversals, newTraversals));
 	}
-
 
 	/**
 	 * @generated NOT
@@ -358,7 +357,7 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				setRootRev((Rev)newValue);
 				return;
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
-				setTraversals((Traversal)newValue);
+				setTraversals((TraversalState)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -385,7 +384,7 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				setRootRev((Rev)null);
 				return;
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
-				setTraversals((Traversal)null);
+				setTraversals((TraversalState)null);
 				return;
 		}
 		super.eUnset(featureID);

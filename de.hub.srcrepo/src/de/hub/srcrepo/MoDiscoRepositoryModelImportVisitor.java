@@ -48,12 +48,12 @@ import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaBindings;
 import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor, SourceVisitListener {
 
@@ -167,8 +167,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public void loadState(Traversal traversal) {
-		MoDiscoImport moDiscoImport = (MoDiscoImport)traversal;
+	public void loadState(TraversalState traversal) {
+		MoDiscoImportState moDiscoImport = (MoDiscoImportState)traversal;
 		JavaBindings bindings = moDiscoImport.getBindings();
 		currentJavaBindings = new SrcRepoBindingManager(javaFactory, javaModel, bindings);
 		bindingsPerBranch.clear();
@@ -534,8 +534,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public void saveState(Traversal traversal) {
-		MoDiscoImport moDiscoImport = (MoDiscoImport)traversal;
+	public void saveState(TraversalState traversal) {
+		MoDiscoImportState moDiscoImport = (MoDiscoImportState)traversal;
 		JavaBindings bindings = moDiscoImport.getBindings();
 		if (bindings == null) {
 			bindings = repositoryFactory.createJavaBindings();

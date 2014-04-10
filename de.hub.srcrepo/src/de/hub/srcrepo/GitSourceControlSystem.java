@@ -207,26 +207,32 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
 		if (isTryHard) {
 			org.eclipse.jgit.api.Status status = git.status().call();
-			if (status.hasUncommittedChanges()) {
+			if (!status.isClean()) {
 				// try again
 				git.clean().setCleanDirectories(true).setIgnore(false).setDryRun(false).call();
 				status = git.status().call();
 			}
-			if (status.hasUncommittedChanges() || status.getUntracked().size() > 0 || status.getUntrackedFolders().size() > 0) {
-				SrcRepoActivator.INSTANCE.warning("Git clean did not fully clean even after trying again: " + status.hasUncommittedChanges() + "/" 
-						+ status.getUntracked().size() + "/" + status.getUntrackedFolders().size() + ".");
+			if (!status.isClean() || status.getUntracked().size() > 0) {
+				SrcRepoActivator.INSTANCE.warning("Git clean did not fully clean even after trying again: " + status.isClean() + "/" 
+						+ status.getUntracked().size() + ".");
 			}
+		}
+	}
+	
+	private void removeLock(String file) {
+		File lockFile = new File(git.getRepository().getWorkTree().getPath() + "/" + file);
+		if (lockFile.exists()) {
+			lockFile.delete();
+			SrcRepoActivator.INSTANCE.debug("Had to remove git lock file " + file);
 		}
 	}
 
 	@Override
 	public void checkoutRevision(String name) throws SourceControlException {
 		try {
-			// remove a possible lock file from prior errors or crashes
-			File lockFile = new File(git.getRepository().getWorkTree().getPath() + "/.git/index.lock");
-			if (lockFile.exists()) {
-				lockFile.delete();
-			}
+			// remove a possible lock files from prior errors or crashes
+			removeLock(".git/index.lock");
+			removeLock(".git/HEAD.lock");
 			// clean the working tree from ignored or other untracked files
 			clean();
 			// reset possible changes

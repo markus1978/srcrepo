@@ -6,17 +6,16 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 
-import de.hub.srcrepo.repositorymodel.BranchPoint;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaBindings;
 import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MoDiscoImport;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 
 /**
  * <!-- begin-user-doc -->
@@ -90,22 +89,22 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	JavaCompilationUnitRef createJavaCompilationUnitRef();
 
 	/**
-	 * Returns a new object of class '<em>Traversal</em>'.
+	 * Returns a new object of class '<em>Traversal State</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Traversal</em>'.
+	 * @return a new object of class '<em>Traversal State</em>'.
 	 * @generated
 	 */
-	Traversal createTraversal();
+	TraversalState createTraversalState();
 
 	/**
-	 * Returns a new object of class '<em>Mo Disco Import</em>'.
+	 * Returns a new object of class '<em>Mo Disco Import State</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Mo Disco Import</em>'.
+	 * @return a new object of class '<em>Mo Disco Import State</em>'.
 	 * @generated
 	 */
-	MoDiscoImport createMoDiscoImport();
+	MoDiscoImportState createMoDiscoImportState();
 
 	/**
 	 * Returns a new object of class '<em>Java Bindings</em>'.
@@ -115,15 +114,6 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	JavaBindings createJavaBindings();
-
-	/**
-	 * Returns a new object of class '<em>Branch Point</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Branch Point</em>'.
-	 * @generated
-	 */
-	BranchPoint createBranchPoint();
 
 	/**
 	 * Returns a new object of class '<em>Java Bindings Per Branch</em>'.

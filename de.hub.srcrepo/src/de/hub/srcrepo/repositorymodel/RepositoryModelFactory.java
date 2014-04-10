@@ -80,22 +80,22 @@ public interface RepositoryModelFactory extends EFactory {
 	JavaCompilationUnitRef createJavaCompilationUnitRef();
 
 	/**
-	 * Returns a new object of class '<em>Traversal</em>'.
+	 * Returns a new object of class '<em>Traversal State</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Traversal</em>'.
+	 * @return a new object of class '<em>Traversal State</em>'.
 	 * @generated
 	 */
-	Traversal createTraversal();
+	TraversalState createTraversalState();
 
 	/**
-	 * Returns a new object of class '<em>Mo Disco Import</em>'.
+	 * Returns a new object of class '<em>Mo Disco Import State</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Mo Disco Import</em>'.
+	 * @return a new object of class '<em>Mo Disco Import State</em>'.
 	 * @generated
 	 */
-	MoDiscoImport createMoDiscoImport();
+	MoDiscoImportState createMoDiscoImportState();
 
 	/**
 	 * Returns a new object of class '<em>Java Bindings</em>'.
@@ -105,15 +105,6 @@ public interface RepositoryModelFactory extends EFactory {
 	 * @generated
 	 */
 	JavaBindings createJavaBindings();
-
-	/**
-	 * Returns a new object of class '<em>Branch Point</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Branch Point</em>'.
-	 * @generated
-	 */
-	BranchPoint createBranchPoint();
 
 	/**
 	 * Returns a new object of class '<em>Java Bindings Per Branch</em>'.

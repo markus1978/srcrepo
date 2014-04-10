@@ -6,7 +6,6 @@
  */
 package de.hub.srcrepo.repositorymodel.util;
 
-import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -14,12 +13,16 @@ import org.eclipse.emf.ecore.EObject;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.JavaBindings;
+import de.hub.srcrepo.repositorymodel.JavaBindingsPerBranch;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MoDiscoImportState;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 
 /**
  * <!-- begin-user-doc -->
@@ -106,20 +109,16 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 				return createJavaCompilationUnitRefAdapter();
 			}
 			@Override
-			public Adapter caseTraversal(Traversal object) {
-				return createTraversalAdapter();
+			public Adapter caseTraversalState(TraversalState object) {
+				return createTraversalStateAdapter();
 			}
 			@Override
-			public Adapter caseMoDiscoImport(MoDiscoImport object) {
-				return createMoDiscoImportAdapter();
+			public Adapter caseMoDiscoImportState(MoDiscoImportState object) {
+				return createMoDiscoImportStateAdapter();
 			}
 			@Override
 			public Adapter caseJavaBindings(JavaBindings object) {
 				return createJavaBindingsAdapter();
-			}
-			@Override
-			public Adapter caseBranchPoint(BranchPoint object) {
-				return createBranchPointAdapter();
 			}
 			@Override
 			public Adapter caseJavaBindingsPerBranch(JavaBindingsPerBranch object) {
@@ -244,30 +243,30 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.Traversal <em>Traversal</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.TraversalState <em>Traversal State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.Traversal
+	 * @see de.hub.srcrepo.repositorymodel.TraversalState
 	 * @generated
 	 */
-	public Adapter createTraversalAdapter() {
+	public Adapter createTraversalStateAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.MoDiscoImport <em>Mo Disco Import</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.MoDiscoImportState <em>Mo Disco Import State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImport
+	 * @see de.hub.srcrepo.repositorymodel.MoDiscoImportState
 	 * @generated
 	 */
-	public Adapter createMoDiscoImportAdapter() {
+	public Adapter createMoDiscoImportStateAdapter() {
 		return null;
 	}
 
@@ -282,20 +281,6 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createJavaBindingsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.BranchPoint <em>Branch Point</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.BranchPoint
-	 * @generated
-	 */
-	public Adapter createBranchPointAdapter() {
 		return null;
 	}
 

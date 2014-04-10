@@ -2,7 +2,7 @@ package de.hub.srcrepo;
 
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public interface IRepositoryModelVisitor {
 
@@ -46,9 +46,9 @@ public interface IRepositoryModelVisitor {
 
 	public void onDeletedFile(Diff diff);
 	
-	public void loadState(Traversal traversal);
+	public void loadState(TraversalState traversal);
 	
-	public void saveState(Traversal traversal);
+	public void saveState(TraversalState traversal);
 	
 	public void close();
 	

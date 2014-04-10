@@ -124,13 +124,13 @@ public interface RepositoryModel extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Traversals</em>' containment reference.
-	 * @see #setTraversals(Traversal)
+	 * @see #setTraversals(TraversalState)
 	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_Traversals()
 	 * @model containment="true"
 	 *        annotation="de.hub.emffrag Fragmentation='true'"
 	 * @generated
 	 */
-	Traversal getTraversals();
+	TraversalState getTraversals();
 
 	/**
 	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}' containment reference.
@@ -140,7 +140,7 @@ public interface RepositoryModel extends EObject {
 	 * @see #getTraversals()
 	 * @generated
 	 */
-	void setTraversals(Traversal value);
+	void setTraversals(TraversalState value);
 
 	/**
 	 * <!-- begin-user-doc -->

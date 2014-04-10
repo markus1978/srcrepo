@@ -17,7 +17,7 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Traversal;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -128,8 +128,8 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Traversal getTraversals() {
-		return (Traversal)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, true);
+	public TraversalState getTraversals() {
+		return (TraversalState)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, true);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setTraversals(Traversal newTraversals) {
+	public void setTraversals(TraversalState newTraversals) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, newTraversals);
 	}
 

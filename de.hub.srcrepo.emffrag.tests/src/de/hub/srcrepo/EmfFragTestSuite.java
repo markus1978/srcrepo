@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
 	EmfFragMemorySrcRepoGitTest.class,
 	EmfFragMongoDBSrcRepoTest.class,
 	EmfFragMongoDBXmiSrcRepoTest.class,
-	ImportedModelTests.class
+	ImportedModelTests.class,
+	EmfFragResumeMongoDBSrcRepoTest.class
 })
 public class EmfFragTestSuite {
 

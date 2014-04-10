@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport;
+import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 
 public class EmfFragMemorySrcRepoGitTest {
@@ -46,21 +47,25 @@ public class EmfFragMemorySrcRepoGitTest {
 		return true;
 	}
 	
-	@Test
-	public void importTest() {		
+	protected Configuration prepareConfiguration() {
 		String repositoryURL = null;
 		if (!workingDirectory.exists()) {
 			repositoryURL = "https://github.com/markus1978/srcrepo.example.git";
 		}		
 		URI modelURI = getTestRepositoryModelURI();
 		
-		RepositoryModel importedRepository = EmfFragSrcRepoImport.importRepository(
-				new EmfFragSrcRepoImport.GitConfiguration(workingDirectory, modelURI).
+		return new EmfFragSrcRepoImport.GitConfiguration(workingDirectory, modelURI).
 				repositoryURL(repositoryURL).
-				withBinaryResources(useBinaryFragments()));
-		
-		Assert.assertNotNull(importedRepository);
-		Assert.assertTrue(importedRepository.getAllRevs().size() > 10);
+				withBinaryResources(useBinaryFragments());
 	}
 	
+	protected void assertRepositoryModel(RepositoryModel importedRepository, int minimumNumberOfRevs) {
+		Assert.assertNotNull(importedRepository);
+		Assert.assertTrue(importedRepository.getAllRevs().size() >= minimumNumberOfRevs);
+	}
+	
+	@Test
+	public void importTest() {		
+		assertRepositoryModel(EmfFragSrcRepoImport.importRepository(prepareConfiguration()), 10);
+	}
 }
