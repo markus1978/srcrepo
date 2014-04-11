@@ -42,7 +42,6 @@ public class RepositoryModelTraversal {
 			openBranches.addAll(state.getOpenBranches());
 			completedBranches.addAll(state.getCompletedBranches());
 			merges.addAll(state.getMerges());
-			visitor.loadState(state);
 		} else {
 			openBranches.add(repositoryModel.getRootRev());
 		}
@@ -84,7 +83,6 @@ public class RepositoryModelTraversal {
 							state.getOpenBranches().add(rev);
 						}
 						state.getOpenBranches().addAll(openBranches);
-						visitor.saveState(state);
 					}
 					return;
 				}

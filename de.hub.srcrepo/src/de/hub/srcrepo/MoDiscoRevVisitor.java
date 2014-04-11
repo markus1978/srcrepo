@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration;
+import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.Package;
@@ -23,6 +22,7 @@ import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 
+@SuppressWarnings("restriction")
 public abstract class MoDiscoRevVisitor extends RevVisitor {
 	
 	private final JavaPackage targetMetaModel;
@@ -33,7 +33,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 	}
 
 	@Override
-	protected final void onRev(Rev rev, Map<String, AbstractFileRef> files) {	
+	protected final void onRev(Rev rev, Map<String, AbstractFileRef> files) {		
 		if (!filter(rev)) {
 			return;
 		}
@@ -93,7 +93,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		}
 		
 		// do
-		onRev(targetModel);
+		onRev(rev, targetModel);
 		
 		// remove the old model
 		EcoreUtil.delete(targetModel);
@@ -103,12 +103,13 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		return true;
 	}
 	
-	protected abstract void onRev(Model model);
+	protected abstract void onRev(Rev rev, Model model);
 	
 	private class JavaModelMerge {
 		final SourceToTargetMetaModelCopier sourceToObject = new SourceToTargetMetaModelCopier();
 		final Model targetModel;
 		final Map<String, Type> orphanTypes = new HashMap<String, Type>();
+		final Map<String, Package> packages = new HashMap<String, Package>();
 		
 		public JavaModelMerge(Model targetModel) {
 			super();
@@ -121,6 +122,9 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 			}
 			for (Type sourceOrphanType: sourceModel.getOrphanTypes()) {
 				mergeOrphanType(sourceOrphanType);
+			}
+			for (CompilationUnit cu: sourceModel.getCompilationUnits()) {
+				targetModel.getCompilationUnits().add((CompilationUnit)sourceToObject.copy(cu));
 			}
 		}
 		
@@ -140,12 +144,17 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 			sourceToObject.copyReferences();
 		}
 		
+		String qualifiedName(Package pkg) {
+			return pkg == null ? "" : pkg.getName() + ".";
+		}
+		
 		void mergePackage(Package source) {
-			Package targetPackage = (Package)sourceToObject.get(source);
+			String qualifiedName = qualifiedName(source);
+			Package targetPackage = packages.get(qualifiedName);
 			if (targetPackage == null) {
 				targetPackage = (Package)targetMetaModel.getJavaFactory().create(source.eClass());
 				targetPackage.setName(source.getName());
-				sourceToObject.put(source, targetPackage);
+				packages.put(qualifiedName, targetPackage);
 				if (source.eContainer() instanceof Package) {
 					Package targetContainer = (Package)sourceToObject.get(source.eContainer());
 					targetContainer.getOwnedPackages().add(targetPackage);
@@ -153,6 +162,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 					targetModel.getOwnedElements().add(targetPackage);
 				}
 			}
+			sourceToObject.put(source, targetPackage);
 			
 			for(AbstractTypeDeclaration type: source.getOwnedElements()) {
 				mergeType(targetPackage, type);
@@ -182,12 +192,12 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 			return getTarget(eStructuralFeature.getEContainingClass()).getEStructuralFeature(eStructuralFeature.getFeatureID());			
 		}
 
-		@Override
-		protected void copyReference(EReference eReference, EObject eObject,
-				EObject copyEObject) {
-			if (eReference != ((JavaPackage)eObject.eClass().getEPackage()).getASTNode_OriginalCompilationUnit()) { 
-				super.copyReference(eReference, eObject, copyEObject);
-			}
-		}
+//		@Override
+//		protected void copyReference(EReference eReference, EObject eObject,
+//				EObject copyEObject) {
+//			if (eReference != ((JavaPackage)eObject.eClass().getEPackage()).getASTNode_OriginalCompilationUnit()) { 
+//				super.copyReference(eReference, eObject, copyEObject);
+//			}
+//		}
 	}
 }

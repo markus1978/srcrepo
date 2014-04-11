@@ -41,7 +41,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 */
 	public static RepositoryModelFactory init() {
 		try {
-			RepositoryModelFactory theRepositoryModelFactory = (RepositoryModelFactory)EPackage.Registry.INSTANCE.getEFactory("http://hub.sam.repositorymodel/1.0"); 
+			RepositoryModelFactory theRepositoryModelFactory = (RepositoryModelFactory)EPackage.Registry.INSTANCE.getEFactory("http://hub.sam.repositorymodel/1.0/emffrag"); 
 			if (theRepositoryModelFactory != null) {
 				return theRepositoryModelFactory;
 			}

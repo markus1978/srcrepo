@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <repositorymodel:RepositoryModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java" xmlns:repositorymodel="http://hub.sam.repositorymodel/1.0" rootRev="//@allRevs.10">
-  <allRefs referencedCommit="//@allRevs.0" isPeeled="true" name="refs/heads/master"/>
   <allRefs referencedCommit="//@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
+  <allRefs referencedCommit="//@allRevs.0" isPeeled="true" name="refs/heads/master"/>
   <allRefs referencedCommit="//@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
   <allRevs author="Markus Scheidgen" name="46517d2d514d0b95518456d1f784ccc86a71c782" time="2014-04-09T15:54:51.000+0200" message="Merged a-branch back into master, removed the change made on the branch.&#xA;">
     <parentRelations parent="//@allRevs.12"/>
@@ -39,17 +39,8 @@
                             <fragments xsi:type="java:TextElement" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0" text="This is a java doc commit at a method."/>
                           </tags>
                         </comments>
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -74,7 +65,7 @@
               <type/>
               <typeArguments type="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
             </orphanTypes>
-            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@comments.0" package="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
+            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.3" package="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
               <imports originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
               <imports originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
             </compilationUnits>
@@ -84,9 +75,6 @@
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@orphanTypes.9/@type" binding="java.util.ArrayList" linkName="type"/>
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@superInterfaces.0" binding="java.io.Serializable" linkName="type"/>
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.ReferencedRenamed" linkName="type"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.ReferencedRenamed.ReferencedRenamed()" linkName="method"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression" binding="de.hub.example.java.ReferencedRenamed.run()" linkName="method"/>
           <targets id="E" target="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
           <targets id="char" target="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="java.util.ArrayList&lt;E>" target="//@allRevs.0/@parentRelations.1/@diffs.0/@file/@javaModel/@orphanTypes.9"/>
@@ -119,39 +107,11 @@
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" name="run">
                         <modifier visibility="public"/>
-                        <body originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello world.&quot;"/>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello world printed.&quot;"/>
-                            </expression>
-                          </statements>
-                        </body>
                         <returnType type="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@orphanTypes.5"/>
                       </bodyDeclarations>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" name="log">
                         <modifier visibility="public"/>
-                        <body originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:InfixExpression" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" operator="+">
-                                <rightOperand xsi:type="java:SingleVariableAccess" variable="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0"/>
-                                <leftOperand xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;# &quot;"/>
-                              </arguments>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
-                        <parameters originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" name="msg" usageInVariableAccess="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@arguments.0/@rightOperand">
+                        <parameters originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@compilationUnits.0" name="msg">
                           <modifier/>
                           <type/>
                         </parameters>
@@ -173,14 +133,7 @@
             <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
             <compilationUnits name="ReferencedRenamed.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\ReferencedRenamed.java" package="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.1/@expression" binding="de.hub.example.java.ReferencedRenamed.log(java.lang.String)" linkName="method"/>
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
           <targets id="char" target="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@orphanTypes.0"/>
           <targets id="de.hub.example.java.ReferencedRenamed" target="//@allRevs.0/@parentRelations.1/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
@@ -215,11 +168,6 @@
                         <type/>
                       </annotations>
                       <modifier visibility="public"/>
-                      <body originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@compilationUnits.0">
-                        <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@compilationUnits.0">
-                          <expression xsi:type="java:SuperMethodInvocation" originalCompilationUnit="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@compilationUnits.0"/>
-                        </statements>
-                      </body>
                       <returnType type="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@orphanTypes.5"/>
                     </bodyDeclarations>
                     <superClass/>
@@ -243,7 +191,6 @@
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@compilationUnits.0/@imports.0" binding="de.hub.example.java.ReferencedRenamed" linkName="importedElement"/>
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@superClass" binding="de.hub.example.java.ReferencedRenamed" linkName="type"/>
           <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@annotations.0/@type" binding="java.lang.Override" linkName="type"/>
-          <pendings clientNode="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.ReferencedRenamed.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@orphanTypes.0"/>
           <targets id="de.hub.references.References.run()" target="//@allRevs.0/@parentRelations.1/@diffs.6/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0"/>
@@ -286,17 +233,8 @@
                             <fragments xsi:type="java:TextElement" originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" text="This is a java doc commit at a method."/>
                           </tags>
                         </comments>
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -317,12 +255,9 @@
             <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
             <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
             <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
-            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.1 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.2 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@comments.0" package="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.1 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.2 //@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.3" package="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <pendings clientNode="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.Referenced" linkName="type"/>
-          <pendings clientNode="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.Referenced.Referenced()" linkName="method"/>
-          <pendings clientNode="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.0"/>
           <targets id="void" target="//@allRevs.1/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.5"/>
@@ -360,11 +295,6 @@
                         <type/>
                       </annotations>
                       <modifier visibility="public"/>
-                      <body originalCompilationUnit="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0">
-                        <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0">
-                          <expression xsi:type="java:SuperMethodInvocation" originalCompilationUnit="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0"/>
-                        </statements>
-                      </body>
                       <returnType type="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.5"/>
                     </bodyDeclarations>
                     <superClass/>
@@ -388,7 +318,6 @@
           <pendings clientNode="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0/@imports.0" binding="de.hub.example.java.Referenced" linkName="importedElement"/>
           <pendings clientNode="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@superClass" binding="de.hub.example.java.Referenced" linkName="type"/>
           <pendings clientNode="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@annotations.0/@type" binding="java.lang.Override" linkName="type"/>
-          <pendings clientNode="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.0"/>
           <targets id="de.hub.references.References.run()" target="//@allRevs.2/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0"/>
@@ -424,10 +353,8 @@
                     <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="SoonBeRemoved">
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="TheMethodThatWasntThere">
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// empty" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// empty" enclosedByParent="true"/>
-                        </body>
                         <returnType type="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.5"/>
                       </bodyDeclarations>
                     </ownedElements>
@@ -444,7 +371,7 @@
             <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
             <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
             <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
-            <compilationUnits name="SoonBeRemoved.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\SoonBeRemoved.java" commentList="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@comments.0" package="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+            <compilationUnits name="SoonBeRemoved.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\SoonBeRemoved.java" commentList="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0" package="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <targets id="de.hub.example.java.SoonBeRemoved" target="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           <targets id="char" target="//@allRevs.4/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
@@ -518,15 +445,6 @@
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="main">
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -550,9 +468,6 @@
             <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" package="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.Referenced" linkName="type"/>
-          <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.Referenced.Referenced()" linkName="method"/>
-          <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.0"/>
           <targets id="void" target="//@allRevs.6/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.5"/>
@@ -581,16 +496,6 @@
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@compilationUnits.0" name="run">
                         <modifier visibility="public"/>
-                        <body originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello world.&quot;"/>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <returnType type="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@orphanTypes.5"/>
                       </bodyDeclarations>
                     </ownedElements>
@@ -609,9 +514,6 @@
             <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
             <compilationUnits name="Referenced.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\Referenced.java" package="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
-          <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
           <targets id="de.hub.example.java.Referenced" target="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           <targets id="char" target="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.6/@parentRelations.0/@diffs.1/@file/@javaModel/@orphanTypes.0"/>
@@ -643,17 +545,8 @@
                     <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="HelloWorld">
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="main">
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -674,12 +567,9 @@
             <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
             <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
             <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
-            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@comments.0" package="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0" package="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <pendings clientNode="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.Referenced" linkName="type"/>
-          <pendings clientNode="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.Referenced.Referenced()" linkName="method"/>
-          <pendings clientNode="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.0"/>
           <targets id="void" target="//@allRevs.7/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.5"/>
@@ -712,39 +602,11 @@
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="run">
                         <modifier visibility="public"/>
-                        <body originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello world.&quot;"/>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello world printed.&quot;"/>
-                            </expression>
-                          </statements>
-                        </body>
                         <returnType type="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.5"/>
                       </bodyDeclarations>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="log">
                         <modifier visibility="public"/>
-                        <body originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:InfixExpression" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" operator="+">
-                                <rightOperand xsi:type="java:SingleVariableAccess" variable="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0"/>
-                                <leftOperand xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;# &quot;"/>
-                              </arguments>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
-                        <parameters originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="msg" usageInVariableAccess="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@arguments.0/@rightOperand">
+                        <parameters originalCompilationUnit="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="msg">
                           <modifier/>
                           <type/>
                         </parameters>
@@ -766,14 +628,7 @@
             <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
             <compilationUnits name="Referenced.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\Referenced.java" package="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.1/@expression" binding="de.hub.example.java.Referenced.log(java.lang.String)" linkName="method"/>
           <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
           <targets id="de.hub.example.java.Referenced" target="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           <targets id="char" target="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.8/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.0"/>
@@ -809,16 +664,6 @@
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0" name="main">
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello world.&quot;"/>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -842,9 +687,6 @@
             <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" package="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <pendings clientNode="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
           <targets id="char" target="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@orphanTypes.0"/>
           <targets id="void" target="//@allRevs.9/@parentRelations.0/@diffs.2/@file/@javaModel/@orphanTypes.5"/>
@@ -881,16 +723,6 @@
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@compilationUnits.0" name="main">
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@compilationUnits.0">
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@compilationUnits.0">
-                              <arguments xsi:type="java:StringLiteral" originalCompilationUnit="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@compilationUnits.0" escapedValue="&quot;Hello World!&quot;"/>
-                              <expression xsi:type="java:SingleVariableAccess">
-                                <qualifier xsi:type="java:TypeAccess"/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -914,9 +746,6 @@
             <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" package="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <pendings clientNode="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@qualifier" binding="java.lang.System" linkName="type"/>
-          <pendings clientNode="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="java.lang.System.out" linkName="variable"/>
-          <pendings clientNode="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="java.io.PrintStream.println(java.lang.String)" linkName="method"/>
           <targets id="char" target="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@orphanTypes.0"/>
           <targets id="void" target="//@allRevs.10/@parentRelations.0/@diffs.4/@file/@javaModel/@orphanTypes.5"/>
@@ -971,17 +800,8 @@
                             <fragments xsi:type="java:TextElement" originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" text="This is a java doc commit at a method."/>
                           </tags>
                         </comments>
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -1006,7 +826,7 @@
               <type/>
               <typeArguments type="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
             </orphanTypes>
-            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@comments.0" package="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
+            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.3" package="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
               <imports originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
               <imports originalCompilationUnit="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
             </compilationUnits>
@@ -1016,9 +836,6 @@
           <pendings clientNode="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.9/@type" binding="java.util.ArrayList" linkName="type"/>
           <pendings clientNode="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@superInterfaces.0" binding="java.io.Serializable" linkName="type"/>
           <pendings clientNode="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.Referenced" linkName="type"/>
-          <pendings clientNode="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.Referenced.Referenced()" linkName="method"/>
-          <pendings clientNode="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="E" target="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
           <targets id="char" target="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="java.util.ArrayList&lt;E>" target="//@allRevs.11/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.9"/>
@@ -1076,17 +893,8 @@
                             <fragments xsi:type="java:TextElement" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" text="This is a java doc commit at a method."/>
                           </tags>
                         </comments>
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -1111,7 +919,7 @@
               <type/>
               <typeArguments type="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
             </orphanTypes>
-            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@comments.0" package="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
+            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.3" package="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
               <imports originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
               <imports originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
             </compilationUnits>
@@ -1121,9 +929,6 @@
           <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.9/@type" binding="java.util.ArrayList" linkName="type"/>
           <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@superInterfaces.0" binding="java.io.Serializable" linkName="type"/>
           <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.ReferencedRenamed" linkName="type"/>
-          <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.ReferencedRenamed.ReferencedRenamed()" linkName="method"/>
-          <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression" binding="de.hub.example.java.ReferencedRenamed.run()" linkName="method"/>
           <targets id="E" target="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
           <targets id="char" target="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="java.util.ArrayList&lt;E>" target="//@allRevs.12/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.9"/>
@@ -1158,11 +963,6 @@
                         <type/>
                       </annotations>
                       <modifier visibility="public"/>
-                      <body originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                        <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0">
-                          <expression xsi:type="java:SuperMethodInvocation" originalCompilationUnit="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0"/>
-                        </statements>
-                      </body>
                       <returnType type="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@orphanTypes.5"/>
                     </bodyDeclarations>
                     <superClass/>
@@ -1186,7 +986,6 @@
           <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@compilationUnits.0/@imports.0" binding="de.hub.example.java.ReferencedRenamed" linkName="importedElement"/>
           <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@superClass" binding="de.hub.example.java.ReferencedRenamed" linkName="type"/>
           <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@annotations.0/@type" binding="java.lang.Override" linkName="type"/>
-          <pendings clientNode="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.ReferencedRenamed.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@orphanTypes.6"/>
           <targets id="int" target="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@orphanTypes.0"/>
           <targets id="de.hub.references.References.run()" target="//@allRevs.12/@parentRelations.0/@diffs.2/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0"/>
@@ -1228,17 +1027,8 @@
                     <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0" name="SubDirectory">
                       <modifier visibility="public"/>
                       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0" name="main">
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type type="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.9"/>
@@ -1262,12 +1052,9 @@
             <orphanTypes xsi:type="java:ArrayType" name="java.lang.String[]" usagesInTypeAccess="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@parameters.0/@type" dimensions="1">
               <elementType/>
             </orphanTypes>
-            <compilationUnits name="SubDirectory.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\subdirectory\sub.java\src\de\hub\example\java\SubDirectory.java" commentList="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@comments.0" package="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+            <compilationUnits name="SubDirectory.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\subdirectory\sub.java\src\de\hub\example\java\SubDirectory.java" commentList="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0" package="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
           </javaModel>
           <pendings clientNode="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.9/@elementType" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.Referenced" linkName="type"/>
-          <pendings clientNode="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.Referenced.Referenced()" linkName="method"/>
-          <pendings clientNode="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="char" target="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.6"/>
           <targets id="de.hub.example.java.SubDirectory.main(java.lang.String[])" target="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0"/>
           <targets id="int" target="//@allRevs.14/@parentRelations.0/@diffs.3/@file/@javaModel/@orphanTypes.0"/>
@@ -1323,17 +1110,8 @@
                             <fragments xsi:type="java:TextElement" originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" text="This is a java doc commit at a method."/>
                           </tags>
                         </comments>
+                        <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" enclosedByParent="true"/>
                         <modifier visibility="public" static="true"/>
-                        <body originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                          <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                            <comments xsi:type="java:LineComment" originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" content="// a Comment" prefixOfParent="true"/>
-                            <expression xsi:type="java:MethodInvocation" originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0">
-                                <type/>
-                              </expression>
-                            </expression>
-                          </statements>
-                        </body>
                         <parameters originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0" name="args">
                           <modifier/>
                           <type/>
@@ -1358,7 +1136,7 @@
               <type/>
               <typeArguments type="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
             </orphanTypes>
-            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@comments.0" package="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
+            <compilationUnits name="HelloWorld.java" originalFilePath="C:\tmp\srcrepo\clones\srcrepo.example.git\example.java\src\de\hub\example\java\HelloWorld.java" commentList="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@comments.0 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@comments.0 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.0 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.1 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.2 //@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@comments.3" package="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
               <imports originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
               <imports originalCompilationUnit="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@compilationUnits.0"/>
             </compilationUnits>
@@ -1368,9 +1146,6 @@
           <pendings clientNode="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.9/@type" binding="java.util.ArrayList" linkName="type"/>
           <pendings clientNode="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@superInterfaces.0" binding="java.io.Serializable" linkName="type"/>
           <pendings clientNode="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@parameters.0/@type" binding="java.lang.String" linkName="type"/>
-          <pendings clientNode="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@type" binding="de.hub.example.java.Referenced" linkName="type"/>
-          <pendings clientNode="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression" binding="de.hub.example.java.Referenced.Referenced()" linkName="method"/>
-          <pendings clientNode="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@body/@statements.0/@expression" binding="de.hub.example.java.Referenced.run()" linkName="method"/>
           <targets id="E" target="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@typeParameters.0"/>
           <targets id="char" target="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.6"/>
           <targets id="java.util.ArrayList&lt;E>" target="//@allRevs.15/@parentRelations.0/@diffs.0/@file/@javaModel/@orphanTypes.9"/>

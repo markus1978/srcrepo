@@ -1,8 +1,8 @@
-package de.hub.srcrepo;
+package de.hub.srcrepo.emffrag;
 
 import org.eclipse.emf.common.util.URI;
 
-public class EmfFragMongoDBXmiSrcRepoTest extends EmfFragMongoDBSrcRepoTest {
+public class MongoDBXmiMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTest {
 	
 	@Override
 	protected URI getTestRepositoryModelURI() {

@@ -37,8 +37,12 @@ import de.hub.srcrepo.ocl.OclUtil;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
+import de.hub.srcrepo.repositorymodel.Rev;
 
-public class SrcRepoGitTest {
+public class MoDiscoGitImportTest {
+	
+	public final static URI testModelURI = URI.createURI("test-models/example.java.xmi");
+	public final static File workingCopy = new File("c:/tmp/srcrepo/clones/srcrepo.example.git");
 	
 	protected void loadDependencies() {
 
@@ -48,7 +52,7 @@ public class SrcRepoGitTest {
 	public void testClone() {
 		try {
 			GitSourceControlSystem scs = new GitSourceControlSystem();
-			scs.createWorkingCopy(new File("c:/tmp/srcrepo/clones/srcrepo.example.git"), "git://github.com/markus1978/srcrepo.example.git");
+			scs.createWorkingCopy(workingCopy, "git://github.com/markus1978/srcrepo.example.git");
 			scs.close();
 		} catch (SourceControlException e) {
 			e.printStackTrace();
@@ -64,7 +68,6 @@ public class SrcRepoGitTest {
 		
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
-			File workingCopy = new File("c:/tmp/srcrepo/clones/srcrepo.example.git");
 			if (workingCopy.exists()) {
 				scs.setWorkingCopy(workingCopy);
 			} else {
@@ -76,7 +79,7 @@ public class SrcRepoGitTest {
 		}
 		
 		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(URI.createURI("models/example.java.gitmodel"));
+		final Resource resource = rs.createResource(testModelURI);
 		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
 		resource.getContents().add(repositoryModel);
 		
@@ -103,8 +106,8 @@ public class SrcRepoGitTest {
 		
 		RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {			
 			@Override
-			protected void onRev(Model model) {
-				System.out.println("-----------------------------------------");
+			protected void onRev(Rev rev, Model model) {
+				System.out.println(rev.getName());
 				TreeIterator<EObject> i = model.eAllContents();
 				while(i.hasNext()) {
 					EObject next = i.next();

@@ -6,7 +6,6 @@ import java.util.Map;
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public abstract class RevVisitor implements IRepositoryModelVisitor {
 	
@@ -73,16 +72,6 @@ public abstract class RevVisitor implements IRepositoryModelVisitor {
 	@Override
 	public void onDeletedFile(Diff diff) {
 		files.remove(diff.getOldPath());
-	}
-
-	@Override
-	public void loadState(TraversalState traversal) {
-		
-	}
-
-	@Override
-	public void saveState(TraversalState traversal) {
-		
 	}
 
 	@Override

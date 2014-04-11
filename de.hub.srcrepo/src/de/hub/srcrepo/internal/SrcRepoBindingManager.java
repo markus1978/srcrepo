@@ -78,6 +78,7 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.UnresolvedBi
  * This is a copy from the MoDisco Indigo distribution with an additional getters 
  * for the pendings and targets.
  */
+@SuppressWarnings("restriction")
 public class SrcRepoBindingManager extends BindingManager {
 
 	/**

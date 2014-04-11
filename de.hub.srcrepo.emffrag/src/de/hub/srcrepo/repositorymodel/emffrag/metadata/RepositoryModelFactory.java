@@ -29,7 +29,7 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	RepositoryModelFactory eINSTANCE = de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelFactoryImpl.init();
 

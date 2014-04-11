@@ -1,10 +1,10 @@
-package de.hub.srcrepo;
+package de.hub.srcrepo.emffrag;
 
 import org.eclipse.emf.common.util.URI;
 
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 
-public class EmfFragMongoDBSrcRepoTest extends EmfFragMemorySrcRepoGitTest {
+public class MongoDBMoDiscoGitImportTest extends MemoryMoDiscoGitImportTest {
 	
 	public static URI testModelURI = URI.createURI("mongodb://localhost/srcrepo.example.gitmodel.bin");
 	

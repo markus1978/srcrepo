@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
  * @model kind="package"
- * @generated
+ * @generated NOT
  */
 public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.RepositoryModelPackage {
 	/**
@@ -41,7 +41,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://hub.sam.repositorymodel/1.0";
+	String eNS_URI = "http://hub.sam.repositorymodel/1.0/emffrag";
 
 	/**
 	 * The package namespace name.

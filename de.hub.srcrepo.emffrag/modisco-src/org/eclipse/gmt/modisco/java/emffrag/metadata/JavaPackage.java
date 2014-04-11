@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory
  * @model kind="package"
- * @generated
+ * @generated NOT
  */
 public interface JavaPackage extends org.eclipse.gmt.modisco.java.emf.JavaPackage {
 	/**

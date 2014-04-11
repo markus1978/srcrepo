@@ -1,11 +1,11 @@
-package de.hub.srcrepo;
+package de.hub.srcrepo.emffrag;
 
 import org.junit.Test;
 
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 
-public class EmfFragResumeMongoDBSrcRepoTest extends EmfFragMongoDBSrcRepoTest {
+public class ResumeMongoDBMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTest {
 
 	@Override
 	@Test
