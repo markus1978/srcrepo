@@ -68,4 +68,9 @@ public class EmfFragMemorySrcRepoGitTest {
 	public void importTest() {		
 		assertRepositoryModel(EmfFragSrcRepoImport.importRepository(prepareConfiguration()), 10);
 	}
+	
+	@Test
+	public void testImportedModel() {
+		
+	}
 }

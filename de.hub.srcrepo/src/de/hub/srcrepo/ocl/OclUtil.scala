@@ -83,33 +83,10 @@ class OclUtil {
 	  	.sum((e)=>if (e.getBody()!=null) mcCabeMetric(e.getBody()) else 0)
 	}
 	
-	def nullMethod(model: Model): AbstractMethodDeclaration = {
+	def nullMethod(model: Model): Int = {
 	  model.eContents().closure((e)=>e.eContents())
 	  	.select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
 	  	.collect((e)=>e.asInstanceOf[AbstractMethodDeclaration])
-	  	.select((e)=>e.getBody() == null).first()
+	  	.select((e)=>e.getBody() == null).size()
 	}
-	
-//	def mcCabeMetric(model: Model) = {
-//	  model.getOwnedElements().closure((e)=>e.getOwnedPackages())
-//	    .collectAll((e)=>e.getOwnedElements())
-//	    .collectAll((e)=>e.getBodyDeclarations())
-//	    .closure((e)=>if (e.isInstanceOf[AbstractTypeDeclaration]) e.asInstanceOf[AbstractTypeDeclaration].getBodyDeclarations() else List())
-//	    .sum(if (e.isInstanceOf[AbstractMethodDeclaration]) mcCabeMetric(e.asInstanceOf[AbstractMethodDeclaration].getBlock()) else 0)
-//	}
-	
-//	def mcCabeMetric(block: Block) = {
-//	  block.getStatements().closure((s)=>
-//	    if (s.isInstanceOf[IfStatement]) {
-//	      val ifStatement = s.asInstanceOf[IfStatement];
-//	      List(ifStatement.getThenStatement(), ifStatement.getElseStatement())
-//	    } 
-//	    else if (s.isInstanceOf[Block]) s.asInstanceOf[Block].getStatements()
-//	    else List()
-//	  ).sum((s)=>
-//	    if (s.isInstanceOf[IfStatement]) 1
-//	    else if (s.isInstanceOf[WhileStatement]) 1
-//	    else 0
-//	  ) + 1
-//	}
 }
