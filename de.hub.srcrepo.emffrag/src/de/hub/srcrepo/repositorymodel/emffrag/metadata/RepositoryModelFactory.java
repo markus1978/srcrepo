@@ -13,6 +13,7 @@ import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
 
 /**
@@ -103,6 +104,15 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	PendingElement createPendingElement();
+
+	/**
+	 * Returns a new object of class '<em>Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Target</em>'.
+	 * @generated
+	 */
+	Target createTarget();
 
 	/**
 	 * Returns the package supported by this factory.

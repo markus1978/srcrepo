@@ -102,29 +102,29 @@ public class SrcRepoGitTest {
 		
 		repositoryModel = (RepositoryModel)resource.getContents().get(0);
 		
-//		RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {			
-//			@Override
-//			protected void onRev(Model model) {
-//				System.out.println("-----------------------------------------");
-//				TreeIterator<EObject> i = model.eAllContents();
-//				while(i.hasNext()) {
-//					EObject next = i.next();
-//					if (next instanceof AbstractTypeDeclaration) {
-//						System.out.println("### " + ((AbstractTypeDeclaration)next).getName());
-//					}
-//				}
-//			}
-//		});
-		
-		RepositoryModelTraversal.traverse(repositoryModel, new RevVisitor() {
+		RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {			
 			@Override
-			protected void onRev(Rev rev, Map<String, AbstractFileRef> files) {
-				System.out.println(rev.getName());
-				for (AbstractFileRef file : files.values()) {
-					System.out.println(file.getPath());
+			protected void onRev(Model model) {
+				System.out.println("-----------------------------------------");
+				TreeIterator<EObject> i = model.eAllContents();
+				while(i.hasNext()) {
+					EObject next = i.next();
+					if (next instanceof AbstractTypeDeclaration) {
+						System.out.println("### " + ((AbstractTypeDeclaration)next).getName());
+					}
 				}
-			}						
+			}
 		});
+		
+//		RepositoryModelTraversal.traverse(repositoryModel, new RevVisitor() {
+//			@Override
+//			protected void onRev(Rev rev, Map<String, AbstractFileRef> files) {
+//				System.out.println(rev.getName());
+//				for (AbstractFileRef file : files.values()) {
+//					System.out.println(file.getPath());
+//				}
+//			}						
+//		});
 		
 //		javaModel = repositoryModel.getJavaModel();
 //		OclUtil scalaTest = new OclUtil();

@@ -20,6 +20,7 @@ import org.eclipse.gmt.modisco.java.Model;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
+import de.hub.srcrepo.repositorymodel.Target;
 import java.util.Collection;
 
 /**
@@ -32,6 +33,7 @@ import java.util.Collection;
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.JavaCompilationUnitRefImpl#getCompilationUnit <em>Compilation Unit</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.JavaCompilationUnitRefImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.JavaCompilationUnitRefImpl#getPendings <em>Pendings</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.impl.JavaCompilationUnitRefImpl#getTargets <em>Targets</em>}</li>
  * </ul>
  * </p>
  *
@@ -67,6 +69,16 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 	 * @ordered
 	 */
 	protected EList<PendingElement> pendings;
+
+	/**
+	 * The cached value of the '{@link #getTargets() <em>Targets</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTargets()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Target> targets;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -185,6 +197,18 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Target> getTargets() {
+		if (targets == null) {
+			targets = new EObjectContainmentEList<Target>(Target.class, this, RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS);
+		}
+		return targets;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -192,6 +216,8 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 				return basicSetJavaModel(null, msgs);
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__PENDINGS:
 				return ((InternalEList<?>)getPendings()).basicRemove(otherEnd, msgs);
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS:
+				return ((InternalEList<?>)getTargets()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -211,6 +237,8 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 				return getJavaModel();
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__PENDINGS:
 				return getPendings();
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS:
+				return getTargets();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -234,6 +262,10 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 				getPendings().clear();
 				getPendings().addAll((Collection<? extends PendingElement>)newValue);
 				return;
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS:
+				getTargets().clear();
+				getTargets().addAll((Collection<? extends Target>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -255,6 +287,9 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__PENDINGS:
 				getPendings().clear();
 				return;
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS:
+				getTargets().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -273,6 +308,8 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 				return javaModel != null;
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__PENDINGS:
 				return pendings != null && !pendings.isEmpty();
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS:
+				return targets != null && !targets.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

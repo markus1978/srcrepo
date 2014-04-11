@@ -21,6 +21,7 @@ import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -77,6 +78,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return createJavaCompilationUnitRef();
 			case RepositoryModelPackage.TRAVERSAL_STATE: return createTraversalState();
 			case RepositoryModelPackage.PENDING_ELEMENT: return createPendingElement();
+			case RepositoryModelPackage.TARGET: return createTarget();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -190,6 +192,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public PendingElement createPendingElement() {
 		PendingElementImpl pendingElement = new PendingElementImpl();
 		return pendingElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Target createTarget() {
+		TargetImpl target = new TargetImpl();
+		return target;
 	}
 
 	/**

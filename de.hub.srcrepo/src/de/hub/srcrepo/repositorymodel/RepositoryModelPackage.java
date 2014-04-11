@@ -428,13 +428,22 @@ public interface RepositoryModelPackage extends EPackage {
 	int JAVA_COMPILATION_UNIT_REF__PENDINGS = ABSTRACT_FILE_REF_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Targets</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF__TARGETS = ABSTRACT_FILE_REF_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Java Compilation Unit Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 3;
+	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl <em>Traversal State</em>}' class.
@@ -538,6 +547,43 @@ public interface RepositoryModelPackage extends EPackage {
 	int PENDING_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.impl.TargetImpl <em>Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.impl.TargetImpl
+	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getTarget()
+	 * @generated
+	 */
+	int TARGET = 9;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TARGET__ID = 0;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TARGET__TARGET = 1;
+
+	/**
+	 * The number of structural features of the '<em>Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TARGET_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -545,7 +591,7 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 9;
+	int CHANGE_TYPE = 10;
 
 
 	/**
@@ -905,6 +951,17 @@ public interface RepositoryModelPackage extends EPackage {
 	EReference getJavaCompilationUnitRef_Pendings();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getTargets <em>Targets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Targets</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getTargets()
+	 * @see #getJavaCompilationUnitRef()
+	 * @generated
+	 */
+	EReference getJavaCompilationUnitRef_Targets();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.TraversalState <em>Traversal State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1000,6 +1057,38 @@ public interface RepositoryModelPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPendingElement_LinkName();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Target <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Target</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.Target
+	 * @generated
+	 */
+	EClass getTarget();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.Target#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.Target#getId()
+	 * @see #getTarget()
+	 * @generated
+	 */
+	EAttribute getTarget_Id();
+
+	/**
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.Target#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.Target#getTarget()
+	 * @see #getTarget()
+	 * @generated
+	 */
+	EReference getTarget_Target();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
@@ -1313,6 +1402,14 @@ public interface RepositoryModelPackage extends EPackage {
 		EReference JAVA_COMPILATION_UNIT_REF__PENDINGS = eINSTANCE.getJavaCompilationUnitRef_Pendings();
 
 		/**
+		 * The meta object literal for the '<em><b>Targets</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JAVA_COMPILATION_UNIT_REF__TARGETS = eINSTANCE.getJavaCompilationUnitRef_Targets();
+
+		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl <em>Traversal State</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1387,6 +1484,32 @@ public interface RepositoryModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PENDING_ELEMENT__LINK_NAME = eINSTANCE.getPendingElement_LinkName();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.impl.TargetImpl <em>Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.impl.TargetImpl
+		 * @see de.hub.srcrepo.repositorymodel.impl.RepositoryModelPackageImpl#getTarget()
+		 * @generated
+		 */
+		EClass TARGET = eINSTANCE.getTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TARGET__ID = eINSTANCE.getTarget_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TARGET__TARGET = eINSTANCE.getTarget_Target();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.

@@ -115,6 +115,10 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 				return createPendingElementAdapter();
 			}
 			@Override
+			public Adapter caseTarget(Target object) {
+				return createTargetAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -257,6 +261,20 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPendingElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.Target <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.Target
+	 * @generated
+	 */
+	public Adapter createTargetAdapter() {
 		return null;
 	}
 

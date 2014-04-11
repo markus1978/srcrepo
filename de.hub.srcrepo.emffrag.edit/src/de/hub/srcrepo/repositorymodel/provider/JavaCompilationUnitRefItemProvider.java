@@ -103,6 +103,7 @@ public class JavaCompilationUnitRefItemProvider
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__JAVA_MODEL);
 			childrenFeatures.add(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__PENDINGS);
+			childrenFeatures.add(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__TARGETS);
 		}
 		return childrenFeatures;
 	}
@@ -159,6 +160,7 @@ public class JavaCompilationUnitRefItemProvider
 		switch (notification.getFeatureID(JavaCompilationUnitRef.class)) {
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__JAVA_MODEL:
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__PENDINGS:
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__TARGETS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -185,6 +187,11 @@ public class JavaCompilationUnitRefItemProvider
 			(createChildParameter
 				(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__PENDINGS,
 				 RepositoryModelFactory.eINSTANCE.createPendingElement()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__TARGETS,
+				 RepositoryModelFactory.eINSTANCE.createTarget()));
 	}
 
 }

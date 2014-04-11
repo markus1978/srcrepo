@@ -259,6 +259,29 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.Target} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TargetItemProvider targetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.Target}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTargetAdapter() {
+		if (targetItemProvider == null) {
+			targetItemProvider = new TargetItemProvider(this);
+		}
+
+		return targetItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -365,6 +388,7 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 		if (javaCompilationUnitRefItemProvider != null) javaCompilationUnitRefItemProvider.dispose();
 		if (traversalStateItemProvider != null) traversalStateItemProvider.dispose();
 		if (pendingElementItemProvider != null) pendingElementItemProvider.dispose();
+		if (targetItemProvider != null) targetItemProvider.dispose();
 	}
 
 }

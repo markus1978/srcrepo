@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -47,6 +48,7 @@ import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor, SourceVisitListener {
@@ -503,6 +505,15 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					ref.setCompilationUnit(importedCompilationUnit);
 					ref.setJavaModel(javaModel);
 					ref.setPath(compilationUnit.getPath().toOSString());
+					
+					// save targets
+					for(Map.Entry<String, NamedElement> target: bindings.getTargets().entrySet()) {
+						Target targetModel = repositoryFactory.createTarget();
+						targetModel.setId(target.getKey());
+						targetModel.setTarget(target.getValue());
+						ref.getTargets().add(targetModel);
+					}
+					
 					// save pending bindings
 					for(PendingElement pendingElement: bindings.getPendings()) {
 						de.hub.srcrepo.repositorymodel.PendingElement pendingElementModel = repositoryFactory.createPendingElement();

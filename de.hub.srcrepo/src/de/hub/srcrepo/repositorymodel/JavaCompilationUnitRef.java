@@ -21,6 +21,7 @@ import org.eclipse.gmt.modisco.java.Model;
  *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnit <em>Compilation Unit</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getPendings <em>Pendings</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getTargets <em>Targets</em>}</li>
  * </ul>
  * </p>
  *
@@ -96,5 +97,21 @@ public interface JavaCompilationUnitRef extends AbstractFileRef {
 	 * @generated
 	 */
 	EList<PendingElement> getPendings();
+
+	/**
+	 * Returns the value of the '<em><b>Targets</b></em>' containment reference list.
+	 * The list contents are of type {@link de.hub.srcrepo.repositorymodel.Target}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Targets</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Targets</em>' containment reference list.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getJavaCompilationUnitRef_Targets()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Target> getTargets();
 
 } // JavaCompilationUnitRef

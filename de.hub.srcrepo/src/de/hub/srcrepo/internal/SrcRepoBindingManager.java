@@ -75,7 +75,8 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.UnresolvedBi
  * @see #resolveBindings(Model)
  * @see PendingElement#affectTarget(ASTNode)
  * 
- * This is a copy from the MoDisco Indigo distribution with an additional getter for the pendings.
+ * This is a copy from the MoDisco Indigo distribution with an additional getters 
+ * for the pendings and targets.
  */
 public class SrcRepoBindingManager extends BindingManager {
 
@@ -83,6 +84,10 @@ public class SrcRepoBindingManager extends BindingManager {
 	 * the targets (declared Java entities).
 	 */
 	private Map<String, NamedElement> targets = new HashMap<String, NamedElement>();
+	
+	public Map<String, NamedElement> getTargets() {
+		return targets;
+	}
 
 	/**
 	 * Elements which causes problems during resolution.

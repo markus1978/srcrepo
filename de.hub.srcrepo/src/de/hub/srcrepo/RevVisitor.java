@@ -17,11 +17,9 @@ public abstract class RevVisitor implements IRepositoryModelVisitor {
 
 	@Override
 	public void onMerge(Rev mergeRev, Rev branchRev) {
+		files.clear();
 		Map<String, AbstractFileRef> oldFiles = branches.get(branchRev);
-		if (oldFiles == null) {			
-			branches.put(branchRev, new HashMap<String, AbstractFileRef>(files));	
-		} else {
-			files.clear();			
+		if (oldFiles != null) {	
 			files.putAll(oldFiles);
 		}		
 	}

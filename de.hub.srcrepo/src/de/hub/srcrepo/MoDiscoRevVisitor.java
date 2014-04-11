@@ -13,6 +13,7 @@ import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.Package;
+import org.eclipse.gmt.modisco.java.Type;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.gmt.modisco.java.internal.util.JavaUtil;
 
@@ -20,6 +21,7 @@ import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
 
 public abstract class MoDiscoRevVisitor extends RevVisitor {
 	
@@ -48,9 +50,23 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 			}
 		}
 		merge.completeMerge();
-						
+										
+		// load all targets for this rev
+		final Map<String, NamedElement> targets = new HashMap<String, NamedElement>();
+		for (AbstractFileRef ref: files.values()) {
+			if (ref instanceof JavaCompilationUnitRef) {
+				JavaCompilationUnitRef compilationUnitRef = (JavaCompilationUnitRef)ref;
+				for (Target target: compilationUnitRef.getTargets()) {
+					NamedElement targetElement = (NamedElement)merge.sourceToObject.get(target.getTarget());
+					if (targetElement == null) {
+						throw new NullPointerException();
+					}
+					targets.put(target.getId(), targetElement);
+				}
+			}
+		}
+		
 		// resolve the pending elements of all compilation units
-		final Map<String, NamedElement> helper = new HashMap<String, NamedElement>();
 		for (AbstractFileRef ref: files.values()) {
 			if (ref instanceof JavaCompilationUnitRef) {
 				JavaCompilationUnitRef compilationUnitRef = (JavaCompilationUnitRef)ref;
@@ -59,7 +75,14 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 							new org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement(targetMetaModel.getJavaFactory());
 					pendingElement.setClientNode((ASTNode)merge.sourceToObject.get(pendingElementModel.getClientNode()));
 					pendingElement.setLinkName(pendingElementModel.getLinkName());
-					ASTNode target = JavaUtil.getNamedElementByQualifiedName(targetModel, pendingElementModel.getBinding(), helper);
+					
+					String id = pendingElementModel.getBinding();
+					NamedElement target = targets.get(id);
+					
+					if (target == null) {
+						target = JavaUtil.getNamedElementByQualifiedName(targetModel, id, targets);
+					}
+					
 					if (target != null) {
 						pendingElement.affectTarget(target);
 					} else {
@@ -85,6 +108,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 	private class JavaModelMerge {
 		final SourceToTargetMetaModelCopier sourceToObject = new SourceToTargetMetaModelCopier();
 		final Model targetModel;
+		final Map<String, Type> orphanTypes = new HashMap<String, Type>();
 		
 		public JavaModelMerge(Model targetModel) {
 			super();
@@ -95,8 +119,23 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 			for (Package sourcePackage: sourceModel.getOwnedElements()) {
 				mergePackage(sourcePackage);
 			}
+			for (Type sourceOrphanType: sourceModel.getOrphanTypes()) {
+				mergeOrphanType(sourceOrphanType);
+			}
 		}
 		
+		void mergeOrphanType(Type sourceOrphanType) {
+			String id = sourceOrphanType.getName();
+			Type targetOrphanType = orphanTypes.get(id);
+			if (targetOrphanType == null) {
+				targetOrphanType = (Type)sourceToObject.copy(sourceOrphanType);
+				targetModel.getOrphanTypes().add(targetOrphanType);
+				orphanTypes.put(id, targetOrphanType);
+			} else {
+				sourceToObject.put(sourceOrphanType, targetOrphanType);
+			}
+		}
+
 		void completeMerge() {
 			sourceToObject.copyReferences();
 		}

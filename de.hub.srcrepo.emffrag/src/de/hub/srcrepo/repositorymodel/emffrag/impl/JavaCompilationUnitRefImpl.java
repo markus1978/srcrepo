@@ -13,6 +13,7 @@ import org.eclipse.gmt.modisco.java.Model;
 
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.PendingElement;
+import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -25,6 +26,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl#getCompilationUnit <em>Compilation Unit</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl#getPendings <em>Pendings</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl#getTargets <em>Targets</em>}</li>
  * </ul>
  * </p>
  *
@@ -94,6 +96,16 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 	@SuppressWarnings("unchecked")
 	public EList<PendingElement> getPendings() {
 		return (EList<PendingElement>)eGet(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__PENDINGS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public EList<Target> getTargets() {
+		return (EList<Target>)eGet(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__TARGETS, true);
 	}
 
 } //JavaCompilationUnitRefImpl
