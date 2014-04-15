@@ -12,7 +12,6 @@ import de.hub.srcrepo.emffrag.extensions.ImportLog;
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntry;
 import de.hub.srcrepo.emffrag.extensions.ImportLogEntryType;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.Rev;
 
 public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositoryModelImportVisitor {
 
@@ -38,12 +37,6 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 			importLogEntry.setExceptionMessage(e.getMessage());
 		}
 		importLog.getEntries().add(importLogEntry);
-	}
-
-	@Override
-	public void onCompleteRev(Rev rev) {
-		super.onCompleteRev(rev);
-		((FObjectImpl)repositoryModel).fFragmentation().save(null);
 	}
 
 	@Override
