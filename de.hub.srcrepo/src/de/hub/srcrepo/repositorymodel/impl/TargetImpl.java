@@ -6,18 +6,15 @@
  */
 package de.hub.srcrepo.repositorymodel.impl;
 
-import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
-import de.hub.srcrepo.repositorymodel.Target;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.gmt.modisco.java.NamedElement;
+
+import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
+import de.hub.srcrepo.repositorymodel.Target;
 
 /**
  * <!-- begin-user-doc -->

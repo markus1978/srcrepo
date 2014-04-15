@@ -282,6 +282,29 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link de.hub.srcrepo.repositorymodel.CompilationUnitModel} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CompilationUnitModelItemProvider compilationUnitModelItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link de.hub.srcrepo.repositorymodel.CompilationUnitModel}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCompilationUnitModelAdapter() {
+		if (compilationUnitModelItemProvider == null) {
+			compilationUnitModelItemProvider = new CompilationUnitModelItemProvider(this);
+		}
+
+		return compilationUnitModelItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -389,6 +412,7 @@ public class RepositoryModelItemProviderAdapterFactory extends RepositoryModelAd
 		if (traversalStateItemProvider != null) traversalStateItemProvider.dispose();
 		if (pendingElementItemProvider != null) pendingElementItemProvider.dispose();
 		if (targetItemProvider != null) targetItemProvider.dispose();
+		if (compilationUnitModelItemProvider != null) compilationUnitModelItemProvider.dispose();
 	}
 
 }

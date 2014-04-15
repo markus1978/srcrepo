@@ -6,9 +6,6 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
@@ -119,39 +116,6 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	 */
 	public void setTraversals(TraversalState newTraversals) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, newTraversals);
-	}
-
-	/**
-	 * @generated NOT
-	 */
-	private final Map<String, Rev> revisions = new HashMap<String, Rev>();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public Rev getRev(String name) {
-		Rev rev = revisions.get(name);
-		if (rev == null) {
-			revisions.clear();
-			for (Rev revision: getAllRevs()) {
-				revisions.put(revision.getName(), revision);				
-			}
-			return revisions.get(name);
-		} else {				
-			return rev;
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public void putRev(String name, Rev rev) {
-		getAllRevs().add(rev);
-		revisions.put(rev.getName(), rev);
 	}
 
 } //RepositoryModelImpl

@@ -12,6 +12,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -118,6 +119,10 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseTarget(Target object) {
 				return createTargetAdapter();
+			}
+			@Override
+			public Adapter caseCompilationUnitModel(CompilationUnitModel object) {
+				return createCompilationUnitModelAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -276,6 +281,20 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTargetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel <em>Compilation Unit Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel
+	 * @generated
+	 */
+	public Adapter createCompilationUnitModelAdapter() {
 		return null;
 	}
 

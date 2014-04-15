@@ -17,6 +17,7 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.gmt.modisco.java.internal.util.JavaUtil;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -45,7 +46,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		for (AbstractFileRef ref: files.values()) {
 			if (ref instanceof JavaCompilationUnitRef) {
 				JavaCompilationUnitRef compilationUnitRef = (JavaCompilationUnitRef)ref;
-				Model sourceModel = compilationUnitRef.getJavaModel();
+				Model sourceModel = compilationUnitRef.getCompilationUnitModel().getJavaModel();
 				merge.mergeModel(sourceModel);
 			}
 		}
@@ -55,8 +56,8 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		final Map<String, NamedElement> targets = new HashMap<String, NamedElement>();
 		for (AbstractFileRef ref: files.values()) {
 			if (ref instanceof JavaCompilationUnitRef) {
-				JavaCompilationUnitRef compilationUnitRef = (JavaCompilationUnitRef)ref;
-				for (Target target: compilationUnitRef.getTargets()) {
+				CompilationUnitModel compilationUnitModel = ((JavaCompilationUnitRef)ref).getCompilationUnitModel();
+				for (Target target: compilationUnitModel.getTargets()) {
 					NamedElement targetElement = (NamedElement)merge.sourceToObject.get(target.getTarget());
 					if (targetElement == null) {
 						throw new NullPointerException();
@@ -69,8 +70,8 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		// resolve the pending elements of all compilation units
 		for (AbstractFileRef ref: files.values()) {
 			if (ref instanceof JavaCompilationUnitRef) {
-				JavaCompilationUnitRef compilationUnitRef = (JavaCompilationUnitRef)ref;
-				for(PendingElement pendingElementModel: compilationUnitRef.getPendings()) {
+				CompilationUnitModel compilationUnitModel = ((JavaCompilationUnitRef)ref).getCompilationUnitModel();
+				for(PendingElement pendingElementModel: compilationUnitModel.getPendings()) {
 					org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement pendingElement = 
 							new org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement(targetMetaModel.getJavaFactory());
 					pendingElement.setClientNode((ASTNode)merge.sourceToObject.get(pendingElementModel.getClientNode()));

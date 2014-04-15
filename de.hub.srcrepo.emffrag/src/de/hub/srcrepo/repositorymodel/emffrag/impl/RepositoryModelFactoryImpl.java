@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -79,6 +80,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.TRAVERSAL_STATE: return createTraversalState();
 			case RepositoryModelPackage.PENDING_ELEMENT: return createPendingElement();
 			case RepositoryModelPackage.TARGET: return createTarget();
+			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return createCompilationUnitModel();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -202,6 +204,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public Target createTarget() {
 		TargetImpl target = new TargetImpl();
 		return target;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CompilationUnitModel createCompilationUnitModel() {
+		CompilationUnitModelImpl compilationUnitModel = new CompilationUnitModelImpl();
+		return compilationUnitModel;
 	}
 
 	/**

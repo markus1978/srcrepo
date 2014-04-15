@@ -6,9 +6,6 @@
  */
 package de.hub.srcrepo.repositorymodel;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.gmt.modisco.java.CompilationUnit;
-import org.eclipse.gmt.modisco.java.Model;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,10 +15,7 @@ import org.eclipse.gmt.modisco.java.Model;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnit <em>Compilation Unit</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel <em>Java Model</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getPendings <em>Pendings</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getTargets <em>Targets</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnitModel <em>Compilation Unit Model</em>}</li>
  * </ul>
  * </p>
  *
@@ -31,87 +25,30 @@ import org.eclipse.gmt.modisco.java.Model;
  */
 public interface JavaCompilationUnitRef extends AbstractFileRef {
 	/**
-	 * Returns the value of the '<em><b>Compilation Unit</b></em>' reference.
+	 * Returns the value of the '<em><b>Compilation Unit Model</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Compilation Unit</em>' reference isn't clear,
+	 * If the meaning of the '<em>Compilation Unit Model</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Compilation Unit</em>' reference.
-	 * @see #setCompilationUnit(CompilationUnit)
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getJavaCompilationUnitRef_CompilationUnit()
-	 * @model annotation="de.hub.emffrag Fragmentation='true'"
-	 * @generated
-	 */
-	CompilationUnit getCompilationUnit();
-
-	/**
-	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnit <em>Compilation Unit</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Compilation Unit</em>' reference.
-	 * @see #getCompilationUnit()
-	 * @generated
-	 */
-	void setCompilationUnit(CompilationUnit value);
-
-	/**
-	 * Returns the value of the '<em><b>Java Model</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Java Model</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Java Model</em>' containment reference.
-	 * @see #setJavaModel(Model)
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getJavaCompilationUnitRef_JavaModel()
+	 * @return the value of the '<em>Compilation Unit Model</em>' containment reference.
+	 * @see #setCompilationUnitModel(CompilationUnitModel)
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getJavaCompilationUnitRef_CompilationUnitModel()
 	 * @model containment="true"
+	 *        annotation="de.hub.emffrag fragments='true'"
 	 * @generated
 	 */
-	Model getJavaModel();
+	CompilationUnitModel getCompilationUnitModel();
 
 	/**
-	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel <em>Java Model</em>}' containment reference.
+	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnitModel <em>Compilation Unit Model</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Java Model</em>' containment reference.
-	 * @see #getJavaModel()
+	 * @param value the new value of the '<em>Compilation Unit Model</em>' containment reference.
+	 * @see #getCompilationUnitModel()
 	 * @generated
 	 */
-	void setJavaModel(Model value);
-
-	/**
-	 * Returns the value of the '<em><b>Pendings</b></em>' containment reference list.
-	 * The list contents are of type {@link de.hub.srcrepo.repositorymodel.PendingElement}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Pendings</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pendings</em>' containment reference list.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getJavaCompilationUnitRef_Pendings()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<PendingElement> getPendings();
-
-	/**
-	 * Returns the value of the '<em><b>Targets</b></em>' containment reference list.
-	 * The list contents are of type {@link de.hub.srcrepo.repositorymodel.Target}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Targets</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Targets</em>' containment reference list.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getJavaCompilationUnitRef_Targets()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Target> getTargets();
+	void setCompilationUnitModel(CompilationUnitModel value);
 
 } // JavaCompilationUnitRef

@@ -42,6 +42,7 @@
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.hadoop.hbase"/>
       <plugin id="org.eclipse.ant.core"/>
+      <plugin id="org.eclipse.compare"/>
       <plugin id="org.eclipse.compare.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
@@ -67,6 +68,7 @@
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.debug.core"/>
       <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.egit.core"/>
       <plugin id="org.eclipse.emf"/>
       <plugin id="org.eclipse.emf.common"/>
       <plugin id="org.eclipse.emf.common.ui"/>

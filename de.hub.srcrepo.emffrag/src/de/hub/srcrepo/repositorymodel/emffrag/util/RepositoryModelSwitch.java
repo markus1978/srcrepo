@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -137,6 +138,12 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.TARGET: {
 				Target target = (Target)theEObject;
 				T result = caseTarget(target);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: {
+				CompilationUnitModel compilationUnitModel = (CompilationUnitModel)theEObject;
+				T result = caseCompilationUnitModel(compilationUnitModel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -291,6 +298,21 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTarget(Target object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Compilation Unit Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Compilation Unit Model</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCompilationUnitModel(CompilationUnitModel object) {
 		return null;
 	}
 

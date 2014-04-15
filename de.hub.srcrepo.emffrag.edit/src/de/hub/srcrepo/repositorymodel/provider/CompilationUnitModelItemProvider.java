@@ -12,27 +12,31 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaFactory;
 
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
- * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef} object.
+ * This is the item provider adapter for a {@link de.hub.srcrepo.repositorymodel.CompilationUnitModel} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class JavaCompilationUnitRefItemProvider
-	extends AbstractFileRefItemProvider
+public class CompilationUnitModelItemProvider
+	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -45,7 +49,7 @@ public class JavaCompilationUnitRefItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public JavaCompilationUnitRefItemProvider(AdapterFactory adapterFactory) {
+	public CompilationUnitModelItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -60,8 +64,31 @@ public class JavaCompilationUnitRefItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addCompilationUnitPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Compilation Unit feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addCompilationUnitPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_CompilationUnitModel_compilationUnit_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_CompilationUnitModel_compilationUnit_feature", "_UI_CompilationUnitModel_type"),
+				 RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__COMPILATION_UNIT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -76,7 +103,9 @@ public class JavaCompilationUnitRefItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL);
+			childrenFeatures.add(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__JAVA_MODEL);
+			childrenFeatures.add(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PENDINGS);
+			childrenFeatures.add(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__TARGETS);
 		}
 		return childrenFeatures;
 	}
@@ -95,14 +124,14 @@ public class JavaCompilationUnitRefItemProvider
 	}
 
 	/**
-	 * This returns JavaCompilationUnitRef.gif.
+	 * This returns CompilationUnitModel.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/JavaCompilationUnitRef"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/CompilationUnitModel"));
 	}
 
 	/**
@@ -113,10 +142,7 @@ public class JavaCompilationUnitRefItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((JavaCompilationUnitRef)object).getPath();
-		return label == null || label.length() == 0 ?
-			getString("_UI_JavaCompilationUnitRef_type") :
-			getString("_UI_JavaCompilationUnitRef_type") + " " + label;
+		return getString("_UI_CompilationUnitModel_type");
 	}
 
 	/**
@@ -130,8 +156,10 @@ public class JavaCompilationUnitRefItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(JavaCompilationUnitRef.class)) {
-			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL:
+		switch (notification.getFeatureID(CompilationUnitModel.class)) {
+			case RepositoryModelPackage.COMPILATION_UNIT_MODEL__JAVA_MODEL:
+			case RepositoryModelPackage.COMPILATION_UNIT_MODEL__PENDINGS:
+			case RepositoryModelPackage.COMPILATION_UNIT_MODEL__TARGETS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -151,8 +179,29 @@ public class JavaCompilationUnitRefItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL,
-				 RepositoryModelFactory.eINSTANCE.createCompilationUnitModel()));
+				(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__JAVA_MODEL,
+				 JavaFactory.eINSTANCE.createModel()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PENDINGS,
+				 RepositoryModelFactory.eINSTANCE.createPendingElement()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__TARGETS,
+				 RepositoryModelFactory.eINSTANCE.createTarget()));
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return RepositoryModelEditPlugin.INSTANCE;
 	}
 
 }

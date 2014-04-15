@@ -44,7 +44,7 @@ class ImportedMoDiscoModelTests extends HandleCollectionConversions {
       .collect((e)=>e.getFile().asInstanceOf[JavaCompilationUnitRef])
       
     val allJavaDiffs = javaCompilationUnitRefs.size()
-    val javaDiffsWithCU = javaCompilationUnitRefs.collect((e)=>e.getCompilationUnit()).size()
+    val javaDiffsWithCU = javaCompilationUnitRefs.collect((e)=>e.getCompilationUnitModel().getCompilationUnit()).size()
     
     Assert.assertTrue(allJavaDiffs > 0);
     Assert.assertEquals(javaDiffsWithCU, allJavaDiffs);

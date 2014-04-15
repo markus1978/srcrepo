@@ -34,6 +34,7 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingEleme
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -329,8 +330,10 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					
 					CompilationUnit importedCompilationUnit = javaModel.getCompilationUnits().get(0);
 					JavaCompilationUnitRef ref = repositoryFactory.createJavaCompilationUnitRef();
-					ref.setCompilationUnit(importedCompilationUnit);
-					ref.setJavaModel(javaModel);
+					CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
+					ref.setCompilationUnitModel(compilationUnitModel);
+					compilationUnitModel.setCompilationUnit(importedCompilationUnit);
+					compilationUnitModel.setJavaModel(javaModel);
 					ref.setPath(compilationUnit.getPath().toOSString());
 					
 					// save targets
@@ -338,7 +341,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						Target targetModel = repositoryFactory.createTarget();
 						targetModel.setId(target.getKey());
 						targetModel.setTarget(target.getValue());
-						ref.getTargets().add(targetModel);
+						compilationUnitModel.getTargets().add(targetModel);
 					}
 					
 					// save pending bindings
@@ -347,7 +350,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						pendingElementModel.setBinding(pendingElement.getBinding().toString());
 						pendingElementModel.setLinkName(pendingElement.getLinkName());
 						pendingElementModel.setClientNode(pendingElement.getClientNode());
-						ref.getPendings().add(pendingElementModel);
+						compilationUnitModel.getPendings().add(pendingElementModel);
 					}
 					javaDiffs.get(compilationUnit).setFile(ref);
 					count++;

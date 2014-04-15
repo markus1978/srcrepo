@@ -107,6 +107,15 @@ public interface RepositoryModelFactory extends EFactory {
 	Target createTarget();
 
 	/**
+	 * Returns a new object of class '<em>Compilation Unit Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Compilation Unit Model</em>'.
+	 * @generated
+	 */
+	CompilationUnitModel createCompilationUnitModel();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

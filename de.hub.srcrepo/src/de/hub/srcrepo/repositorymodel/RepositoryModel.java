@@ -57,6 +57,7 @@ public interface RepositoryModel extends EObject {
 	 * @return the value of the '<em>All Revs</em>' containment reference list.
 	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_AllRevs()
 	 * @model containment="true"
+	 *        annotation="de.hub.emffrag fragments='true'"
 	 * @generated
 	 */
 	EList<Rev> getAllRevs();
@@ -113,21 +114,5 @@ public interface RepositoryModel extends EObject {
 	 * @generated
 	 */
 	void setTraversals(TraversalState value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	Rev getRev(String name);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void putRev(String name, Rev commit);
 
 } // RepositoryModel

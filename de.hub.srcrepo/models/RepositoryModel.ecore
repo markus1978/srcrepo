@@ -4,17 +4,14 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="repositorymodel"
     nsURI="http://hub.sam.repositorymodel/1.0" nsPrefix="repositorymodel">
   <eClassifiers xsi:type="ecore:EClass" name="RepositoryModel">
-    <eOperations name="getRev" eType="#//Rev">
-      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eOperations>
-    <eOperations name="putRev">
-      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eParameters name="commit" eType="#//Rev"/>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allRefs" upperBound="-1"
         eType="#//Ref" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allRevs" upperBound="-1"
-        eType="#//Rev" containment="true"/>
+        eType="#//Rev" containment="true">
+      <eAnnotations source="de.hub.emffrag">
+        <details key="fragments" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootRev" eType="#//Rev"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traversals" eType="#//TraversalState"
         containment="true">
@@ -59,17 +56,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaCompilationUnitRef" eSuperTypes="#//AbstractFileRef">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnitModel" eType="#//CompilationUnitModel"
+        containment="true">
       <eAnnotations source="de.hub.emffrag">
-        <details key="Fragmentation" value="true"/>
+        <details key="fragments" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pendings" upperBound="-1"
-        eType="#//PendingElement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
-        eType="#//Target" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraversalState">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -88,5 +80,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="Target">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//NamedElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CompilationUnitModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pendings" upperBound="-1"
+        eType="#//PendingElement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
+        eType="#//Target" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

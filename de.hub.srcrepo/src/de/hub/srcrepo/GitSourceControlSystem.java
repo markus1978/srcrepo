@@ -35,6 +35,7 @@ import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
 
 public class GitSourceControlSystem implements ISourceControlSystem {
 	
@@ -80,15 +81,17 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	public File getWorkingCopy() {
 		return git.getRepository().getWorkTree();
 	}
+	
+	private int importedRevCount = 0;
 
 	private Rev createRevModel(RepositoryModel model, RepositoryModelFactory factory, RevCommit commit) throws Exception {
 		String revName = commit.getName();
-		Rev revModel = model.getRev(revName);
+		Rev revModel = RepositoryModelUtil.getRev(model, revName);
 		if (revModel == null) {
 			revModel = factory.createRev();
 			revModel.setName(revName);
 			model.getAllRevs().add(revModel);
-			model.putRev(revName, revModel);			
+			SrcRepoActivator.INSTANCE.debug("Created a model for revision " + revModel.getName() + " (" + importedRevCount++ +")");
 		}
 		
 		return revModel;
@@ -139,7 +142,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 					de.hub.srcrepo.repositorymodel.Ref refModel = createRefModel(factory, ref);
 					Rev startRevModel = createRevModel(model, factory, startCommit);
 					refModel.setReferencedCommit(startRevModel);
-					model.getAllRefs().add(refModel);	
+					model.getAllRefs().add(refModel);
 				}					
 				
 				walk.markStart(startCommit);
@@ -161,7 +164,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		
 		for (RevCommit commit: commitsToImport.values()) {
 			SrcRepoActivator.INSTANCE.debug("import revision " + commit.getName());
-			Rev revModel = model.getRev(commit.getName());
+			Rev revModel = RepositoryModelUtil.getRev(model, commit.getName());
 			if (revModel == null) {
 				revModel = createRevModel(model, factory, commit);
 			}

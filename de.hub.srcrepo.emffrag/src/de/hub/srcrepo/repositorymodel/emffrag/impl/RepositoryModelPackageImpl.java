@@ -9,7 +9,6 @@ package de.hub.srcrepo.repositorymodel.emffrag.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -17,6 +16,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -105,6 +105,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass targetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass compilationUnitModelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -452,35 +459,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getJavaCompilationUnitRef_CompilationUnit() {
+	public EReference getJavaCompilationUnitRef_CompilationUnitModel() {
 		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaCompilationUnitRef_JavaModel() {
-		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaCompilationUnitRef_Pendings() {
-		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getJavaCompilationUnitRef_Targets() {
-		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -596,6 +576,51 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCompilationUnitModel() {
+		return compilationUnitModelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCompilationUnitModel_CompilationUnit() {
+		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCompilationUnitModel_JavaModel() {
+		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCompilationUnitModel_Pendings() {
+		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCompilationUnitModel_Targets() {
+		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getChangeType() {
 		return changeTypeEDataType;
 	}
@@ -664,10 +689,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(abstractFileRefEClass, ABSTRACT_FILE_REF__PATH);
 
 		javaCompilationUnitRefEClass = createEClass(JAVA_COMPILATION_UNIT_REF);
-		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT);
-		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__JAVA_MODEL);
-		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__PENDINGS);
-		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__TARGETS);
+		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL);
 
 		traversalStateEClass = createEClass(TRAVERSAL_STATE);
 		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NAME);
@@ -683,6 +705,12 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		targetEClass = createEClass(TARGET);
 		createEAttribute(targetEClass, TARGET__ID);
 		createEReference(targetEClass, TARGET__TARGET);
+
+		compilationUnitModelEClass = createEClass(COMPILATION_UNIT_MODEL);
+		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__COMPILATION_UNIT);
+		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__JAVA_MODEL);
+		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__PENDINGS);
+		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__TARGETS);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -728,13 +756,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getRepositoryModel_RootRev(), this.getRev(), null, "rootRev", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_Traversals(), this.getTraversalState(), null, "traversals", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(repositoryModelEClass, this.getRev(), "getRev", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = addEOperation(repositoryModelEClass, null, "putRev", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getRev(), "commit", 0, 1, IS_UNIQUE, IS_ORDERED);
-
 		initEClass(revEClass, Rev.class, "Rev", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getRev_Author(), ecorePackage.getEString(), "author", null, 0, 1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRev_Commiter(), ecorePackage.getEString(), "commiter", null, 0, 1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -765,10 +786,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getAbstractFileRef_Path(), ecorePackage.getEString(), "path", null, 0, 1, AbstractFileRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(javaCompilationUnitRefEClass, JavaCompilationUnitRef.class, "JavaCompilationUnitRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getJavaCompilationUnitRef_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJavaCompilationUnitRef_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJavaCompilationUnitRef_Pendings(), this.getPendingElement(), null, "pendings", null, 0, -1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJavaCompilationUnitRef_Targets(), this.getTarget(), null, "targets", null, 0, -1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJavaCompilationUnitRef_CompilationUnitModel(), this.getCompilationUnitModel(), null, "compilationUnitModel", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(traversalStateEClass, TraversalState.class, "TraversalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTraversalState_Name(), ecorePackage.getEString(), "name", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -784,6 +802,12 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEClass(targetEClass, Target.class, "Target", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTarget_Id(), ecorePackage.getEString(), "id", null, 0, 1, Target.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTarget_Target(), theJavaPackage.getNamedElement(), null, "target", null, 0, 1, Target.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(compilationUnitModelEClass, CompilationUnitModel.class, "CompilationUnitModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCompilationUnitModel_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCompilationUnitModel_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCompilationUnitModel_Pendings(), this.getPendingElement(), null, "pendings", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCompilationUnitModel_Targets(), this.getTarget(), null, "targets", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -805,16 +829,22 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	protected void createDeAnnotations() {
 		String source = "de.hub.emffrag";		
 		addAnnotation
+		  (getRepositoryModel_AllRevs(), 
+		   source, 
+		   new String[] {
+			 "fragments", "true"
+		   });		
+		addAnnotation
 		  (getRepositoryModel_Traversals(), 
 		   source, 
 		   new String[] {
 			 "Fragmentation", "true"
 		   });		
 		addAnnotation
-		  (getJavaCompilationUnitRef_CompilationUnit(), 
+		  (getJavaCompilationUnitRef_CompilationUnitModel(), 
 		   source, 
 		   new String[] {
-			 "Fragmentation", "true"
+			 "fragments", "true"
 		   });
 	}
 

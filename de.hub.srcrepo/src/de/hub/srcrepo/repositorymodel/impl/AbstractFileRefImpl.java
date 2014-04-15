@@ -6,13 +6,13 @@
  */
 package de.hub.srcrepo.repositorymodel.impl;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
-import org.eclipse.emf.common.notify.Notification;
 
 /**
  * <!-- begin-user-doc -->

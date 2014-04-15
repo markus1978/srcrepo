@@ -58,7 +58,6 @@ public class ParentRelationImpl extends EObjectImpl implements ParentRelation {
 	 * @ordered
 	 */
 	protected Rev parent;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

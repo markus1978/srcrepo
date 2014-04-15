@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -113,6 +114,15 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	Target createTarget();
+
+	/**
+	 * Returns a new object of class '<em>Compilation Unit Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Compilation Unit Model</em>'.
+	 * @generated
+	 */
+	CompilationUnitModel createCompilationUnitModel();
 
 	/**
 	 * Returns the package supported by this factory.

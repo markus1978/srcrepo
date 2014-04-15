@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
  * @model kind="package"
- * @generated NOT
+ * @generated
  */
 public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.RepositoryModelPackage {
 	/**
@@ -400,40 +400,13 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int JAVA_COMPILATION_UNIT_REF__PATH = ABSTRACT_FILE_REF__PATH;
 
 	/**
-	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
+	 * The feature id for the '<em><b>Compilation Unit Model</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT = ABSTRACT_FILE_REF_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Java Model</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_COMPILATION_UNIT_REF__JAVA_MODEL = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Pendings</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_COMPILATION_UNIT_REF__PENDINGS = ABSTRACT_FILE_REF_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Targets</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JAVA_COMPILATION_UNIT_REF__TARGETS = ABSTRACT_FILE_REF_FEATURE_COUNT + 3;
+	int JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL = ABSTRACT_FILE_REF_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Java Compilation Unit Ref</em>' class.
@@ -442,7 +415,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 4;
+	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl <em>Traversal State</em>}' class.
@@ -583,6 +556,61 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int TARGET_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl <em>Compilation Unit Model</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getCompilationUnitModel()
+	 * @generated
+	 */
+	int COMPILATION_UNIT_MODEL = 10;
+
+	/**
+	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL__COMPILATION_UNIT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Java Model</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL__JAVA_MODEL = 1;
+
+	/**
+	 * The feature id for the '<em><b>Pendings</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL__PENDINGS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Targets</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL__TARGETS = 3;
+
+	/**
+	 * The number of structural features of the '<em>Compilation Unit Model</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -590,7 +618,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 10;
+	int CHANGE_TYPE = 11;
 
 
 	/**
@@ -917,48 +945,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EClass getJavaCompilationUnitRef();
 
 	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnit <em>Compilation Unit</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnitModel <em>Compilation Unit Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Compilation Unit</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnit()
+	 * @return the meta object for the containment reference '<em>Compilation Unit Model</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getCompilationUnitModel()
 	 * @see #getJavaCompilationUnitRef()
 	 * @generated
 	 */
-	EReference getJavaCompilationUnitRef_CompilationUnit();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel <em>Java Model</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Java Model</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getJavaModel()
-	 * @see #getJavaCompilationUnitRef()
-	 * @generated
-	 */
-	EReference getJavaCompilationUnitRef_JavaModel();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getPendings <em>Pendings</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Pendings</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getPendings()
-	 * @see #getJavaCompilationUnitRef()
-	 * @generated
-	 */
-	EReference getJavaCompilationUnitRef_Pendings();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getTargets <em>Targets</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Targets</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getTargets()
-	 * @see #getJavaCompilationUnitRef()
-	 * @generated
-	 */
-	EReference getJavaCompilationUnitRef_Targets();
+	EReference getJavaCompilationUnitRef_CompilationUnitModel();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.TraversalState <em>Traversal State</em>}'.
@@ -1088,6 +1083,60 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EReference getTarget_Target();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel <em>Compilation Unit Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Compilation Unit Model</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel
+	 * @generated
+	 */
+	EClass getCompilationUnitModel();
+
+	/**
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getCompilationUnit <em>Compilation Unit</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Compilation Unit</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getCompilationUnit()
+	 * @see #getCompilationUnitModel()
+	 * @generated
+	 */
+	EReference getCompilationUnitModel_CompilationUnit();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getJavaModel <em>Java Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Java Model</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getJavaModel()
+	 * @see #getCompilationUnitModel()
+	 * @generated
+	 */
+	EReference getCompilationUnitModel_JavaModel();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getPendings <em>Pendings</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Pendings</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getPendings()
+	 * @see #getCompilationUnitModel()
+	 * @generated
+	 */
+	EReference getCompilationUnitModel_Pendings();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getTargets <em>Targets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Targets</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getTargets()
+	 * @see #getCompilationUnitModel()
+	 * @generated
+	 */
+	EReference getCompilationUnitModel_Targets();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
@@ -1377,36 +1426,12 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EClass JAVA_COMPILATION_UNIT_REF = eINSTANCE.getJavaCompilationUnitRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Compilation Unit</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Compilation Unit Model</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT = eINSTANCE.getJavaCompilationUnitRef_CompilationUnit();
-
-		/**
-		 * The meta object literal for the '<em><b>Java Model</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JAVA_COMPILATION_UNIT_REF__JAVA_MODEL = eINSTANCE.getJavaCompilationUnitRef_JavaModel();
-
-		/**
-		 * The meta object literal for the '<em><b>Pendings</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JAVA_COMPILATION_UNIT_REF__PENDINGS = eINSTANCE.getJavaCompilationUnitRef_Pendings();
-
-		/**
-		 * The meta object literal for the '<em><b>Targets</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JAVA_COMPILATION_UNIT_REF__TARGETS = eINSTANCE.getJavaCompilationUnitRef_Targets();
+		EReference JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL = eINSTANCE.getJavaCompilationUnitRef_CompilationUnitModel();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl <em>Traversal State</em>}' class.
@@ -1509,6 +1534,48 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference TARGET__TARGET = eINSTANCE.getTarget_Target();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl <em>Compilation Unit Model</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getCompilationUnitModel()
+		 * @generated
+		 */
+		EClass COMPILATION_UNIT_MODEL = eINSTANCE.getCompilationUnitModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Compilation Unit</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPILATION_UNIT_MODEL__COMPILATION_UNIT = eINSTANCE.getCompilationUnitModel_CompilationUnit();
+
+		/**
+		 * The meta object literal for the '<em><b>Java Model</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPILATION_UNIT_MODEL__JAVA_MODEL = eINSTANCE.getCompilationUnitModel_JavaModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Pendings</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPILATION_UNIT_MODEL__PENDINGS = eINSTANCE.getCompilationUnitModel_Pendings();
+
+		/**
+		 * The meta object literal for the '<em><b>Targets</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPILATION_UNIT_MODEL__TARGETS = eINSTANCE.getCompilationUnitModel_Targets();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.
