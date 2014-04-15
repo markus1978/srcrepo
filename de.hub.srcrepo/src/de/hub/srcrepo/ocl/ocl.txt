@@ -1,46 +1,34 @@
-
-Model:
- Objects, Labels
- objects: -> [Objects]
- ref: Objects x Labels -> [Objects]
- 
-Handle:
- value: -> Object
- next: -> Handle
- 
-Handle(set in [Objects]): Handle
- with {
-   value() = if set.isEmpty() then ND else set.first()
-   next() = if set.isEmty() then ND else Handle(set/[set.first()])
- }
- 
-Handle(o in Objects): Handle with {
-  value() = o
-  next() = ND
-}
- 
-TreeHandle: Handle
- parentHandle: -> Handle
- childHandle: -> Handle
- children: Object -> Handle
- 
- with {
-   value() = childHandle().value()
-   next() = if DEF(childHanlde().next()) then 
- 	  		  childHandle().next() 
- 		    else 		      
- 		  	  TreeHandle with {
- 		  	  	  parentHandle() = parentHandle().next()
- 		  	  	  childHandle() = children(parentHandle().value())
- 		  	  	  children(o) = children(o)
- 		  	  } 		  	   
- }
- 
-depthFirst(m:Model) = TreeHandle with {
-	parentHandle() = Handle(m.objects().first())
-	children(o) = UNION(l in m.Labels: ref(o,l))
-	childHandle() = Handle with {
-		value(): ND
-		next(): ND
-	}
-} 
+spec Model:
+	sorts 
+		Objects
+		Labels
+	ops
+		roots: -> {Objects}
+		ref: Objects x Labels -> [Objects]
+	
+spec Handle(m:Model):
+	ops
+		value: -> m.Objects + {NULL}
+		next: Handle(m) + {NULL}
+	vars
+		next != NULL -> next.value != NULL
+		value = NULL -> next = NULL
+		
+spec TreeHandle(m:Model): Handle(m)+
+	ops
+		parent: -> Handle(m)
+		current: -> Handle(m)
+		children: m.Objects -> Handle(m)
+	vars
+		value = current.value
+		if current.next != NULL then 
+			next.parent = parent
+			next.current = current.next
+			next.children(o) = children(o) 
+		else
+			if parent.next != NULL then
+				next.parent = parent.next
+				next.current = children(parent.next.value)
+				next.children(o) = children(o)
+			else
+				next = NULL
