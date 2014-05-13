@@ -486,8 +486,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTraversalState_Merges() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(1);
+	public EAttribute getTraversalState_NumberOfImportedRevs() {
+		return (EAttribute)traversalStateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -495,7 +495,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTraversalState_OpenBranches() {
+	public EReference getTraversalState_Merges() {
 		return (EReference)traversalStateEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -504,8 +504,17 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTraversalState_CompletedBranches() {
+	public EReference getTraversalState_OpenBranches() {
 		return (EReference)traversalStateEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTraversalState_CompletedBranches() {
+		return (EReference)traversalStateEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -693,6 +702,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		traversalStateEClass = createEClass(TRAVERSAL_STATE);
 		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NAME);
+		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__MERGES);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__OPEN_BRANCHES);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__COMPLETED_BRANCHES);
@@ -790,6 +800,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		initEClass(traversalStateEClass, TraversalState.class, "TraversalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTraversalState_Name(), ecorePackage.getEString(), "name", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTraversalState_NumberOfImportedRevs(), ecorePackage.getEInt(), "numberOfImportedRevs", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_Merges(), this.getRev(), null, "merges", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_OpenBranches(), this.getRev(), null, "openBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_CompletedBranches(), this.getRev(), null, "completedBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -6,6 +6,7 @@
  */
 package de.hub.srcrepo.repositorymodel.impl;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;

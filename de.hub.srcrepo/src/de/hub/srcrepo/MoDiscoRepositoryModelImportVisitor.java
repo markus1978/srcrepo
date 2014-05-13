@@ -58,7 +58,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private boolean updateJavaProjectStructureForMerge = false;	
 	
 	// statistics
-	private int RevCounter = 0;
 	private int importedCompilationUnits = 0;
 	private int createdProjects = 0;
 	private int knownProjects = 0;
@@ -109,18 +108,18 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public boolean onStartRev(final Rev ref) {		
+	public boolean onStartRev(final Rev rev, int number) {		
 	
-		SrcRepoActivator.INSTANCE.info("Visit ref " + ref.getName() + " "   				
-				+ "(" + ++RevCounter + "/" + repositoryModel.getAllRevs().size() + "), " 
+		SrcRepoActivator.INSTANCE.info("Visit rev " + rev.getName() + " "   				
+				+ "(" + number + "/" + repositoryModel.getAllRevs().size() + "), " 
 				+ importedCompilationUnits + "/" + createdProjects + "/" + knownProjects);
 		
-		String author = ref.getAuthor(); author = author == null ? "[NO AUTHOR]" : author.trim();		
-		String message = ref.getMessage(); message = message == null ? "[NO MESSAGE]" : message.trim();
-		SrcRepoActivator.INSTANCE.info("Info for visited ref; " + ref.getTime() +", " + author + ":\n" + message);
+		String author = rev.getAuthor(); author = author == null ? "[NO AUTHOR]" : author.trim();		
+		String message = rev.getMessage(); message = message == null ? "[NO MESSAGE]" : message.trim();
+		SrcRepoActivator.INSTANCE.info("Info for visited ref; " + rev.getTime() +", " + author + ":\n" + message);
 		
 		// move current ref to the new ref
-		currentRev = ref;
+		currentRev = rev;
 		
 		// checkout the new ref
 		runJob(new CheckoutAndRefreshJob());		

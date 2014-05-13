@@ -26,7 +26,7 @@ public interface IRepositoryModelVisitor {
 	 * 
 	 * @return false if the current branch should not be visited further.
 	 */
-	public boolean onStartRev(Rev rev);
+	public boolean onStartRev(Rev rev, int number);
 
 	/**
 	 * Is called when the currently visited commit is left, i.e. all diffs have

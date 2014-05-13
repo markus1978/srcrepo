@@ -437,13 +437,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int TRAVERSAL_STATE__NAME = 0;
 
 	/**
+	 * The feature id for the '<em><b>Number Of Imported Revs</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS = 1;
+
+	/**
 	 * The feature id for the '<em><b>Merges</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE__MERGES = 1;
+	int TRAVERSAL_STATE__MERGES = 2;
 
 	/**
 	 * The feature id for the '<em><b>Open Branches</b></em>' reference list.
@@ -452,7 +461,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE__OPEN_BRANCHES = 2;
+	int TRAVERSAL_STATE__OPEN_BRANCHES = 3;
 
 	/**
 	 * The feature id for the '<em><b>Completed Branches</b></em>' reference list.
@@ -461,7 +470,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE__COMPLETED_BRANCHES = 3;
+	int TRAVERSAL_STATE__COMPLETED_BRANCHES = 4;
 
 	/**
 	 * The number of structural features of the '<em>Traversal State</em>' class.
@@ -470,7 +479,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE_FEATURE_COUNT = 4;
+	int TRAVERSAL_STATE_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl <em>Pending Element</em>}' class.
@@ -977,6 +986,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getTraversalState_Name();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.TraversalState#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Number Of Imported Revs</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.TraversalState#getNumberOfImportedRevs()
+	 * @see #getTraversalState()
+	 * @generated
+	 */
+	EAttribute getTraversalState_NumberOfImportedRevs();
+
+	/**
 	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.TraversalState#getMerges <em>Merges</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1450,6 +1470,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EAttribute TRAVERSAL_STATE__NAME = eINSTANCE.getTraversalState_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Number Of Imported Revs</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS = eINSTANCE.getTraversalState_NumberOfImportedRevs();
 
 		/**
 		 * The meta object literal for the '<em><b>Merges</b></em>' reference list feature.

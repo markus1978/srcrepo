@@ -36,6 +36,7 @@ public class RepositoryModelTraversal {
 		lastImportedRev = null;
 		
 		int count = 0;
+		int importedRevs = state == null ? 0 : state.getNumberOfImportedRevs();
 		int maxRevCount = numberOfRevsToImport > 0 ? numberOfRevsToImport : Integer.MAX_VALUE;
 		
 		if (resume) {
@@ -59,7 +60,7 @@ public class RepositoryModelTraversal {
 				}
 							
 				// import current rev
-				visitRev(rev);
+				visitRev(rev, ++importedRevs);
 				count++;
 				
 				// is branch or branch complete: determine next rev
@@ -83,6 +84,7 @@ public class RepositoryModelTraversal {
 							state.getOpenBranches().add(rev);
 						}
 						state.getOpenBranches().addAll(openBranches);
+						state.setNumberOfImportedRevs(importedRevs);
 					}
 					return;
 				}
@@ -95,8 +97,8 @@ public class RepositoryModelTraversal {
 		}
 	}
 	
-	private void visitRev(Rev rev) {
-		visitor.onStartRev(rev);
+	private void visitRev(Rev rev, int number) {
+		visitor.onStartRev(rev, number);
 		for (ParentRelation parentRelation: rev.getParentRelations()) {
 			for (Diff diff : parentRelation.getDiffs()) {
 				if (diff.getType() == ChangeType.ADD) {

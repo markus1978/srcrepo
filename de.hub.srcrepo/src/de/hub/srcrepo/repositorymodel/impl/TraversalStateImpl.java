@@ -30,6 +30,7 @@ import de.hub.srcrepo.repositorymodel.TraversalState;
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl#getMerges <em>Merges</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl#getOpenBranches <em>Open Branches</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl#getCompletedBranches <em>Completed Branches</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.impl.TraversalStateImpl#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,6 +86,26 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 	 * @ordered
 	 */
 	protected EList<Rev> completedBranches;
+
+	/**
+	 * The default value of the '{@link #getNumberOfImportedRevs() <em>Number Of Imported Revs</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNumberOfImportedRevs()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int NUMBER_OF_IMPORTED_REVS_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getNumberOfImportedRevs() <em>Number Of Imported Revs</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNumberOfImportedRevs()
+	 * @generated
+	 * @ordered
+	 */
+	protected int numberOfImportedRevs = NUMBER_OF_IMPORTED_REVS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -167,6 +188,27 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getNumberOfImportedRevs() {
+		return numberOfImportedRevs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNumberOfImportedRevs(int newNumberOfImportedRevs) {
+		int oldNumberOfImportedRevs = numberOfImportedRevs;
+		numberOfImportedRevs = newNumberOfImportedRevs;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS, oldNumberOfImportedRevs, numberOfImportedRevs));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -178,6 +220,8 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 				return getOpenBranches();
 			case RepositoryModelPackage.TRAVERSAL_STATE__COMPLETED_BRANCHES:
 				return getCompletedBranches();
+			case RepositoryModelPackage.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS:
+				return getNumberOfImportedRevs();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -206,6 +250,9 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 				getCompletedBranches().clear();
 				getCompletedBranches().addAll((Collection<? extends Rev>)newValue);
 				return;
+			case RepositoryModelPackage.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS:
+				setNumberOfImportedRevs((Integer)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -230,6 +277,9 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 			case RepositoryModelPackage.TRAVERSAL_STATE__COMPLETED_BRANCHES:
 				getCompletedBranches().clear();
 				return;
+			case RepositoryModelPackage.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS:
+				setNumberOfImportedRevs(NUMBER_OF_IMPORTED_REVS_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -250,6 +300,8 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 				return openBranches != null && !openBranches.isEmpty();
 			case RepositoryModelPackage.TRAVERSAL_STATE__COMPLETED_BRANCHES:
 				return completedBranches != null && !completedBranches.isEmpty();
+			case RepositoryModelPackage.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS:
+				return numberOfImportedRevs != NUMBER_OF_IMPORTED_REVS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -266,6 +318,8 @@ public class TraversalStateImpl extends EObjectImpl implements TraversalState {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");
 		result.append(name);
+		result.append(", numberOfImportedRevs: ");
+		result.append(numberOfImportedRevs);
 		result.append(')');
 		return result.toString();
 	}

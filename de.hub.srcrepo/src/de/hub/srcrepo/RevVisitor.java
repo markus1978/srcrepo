@@ -25,7 +25,7 @@ public abstract class RevVisitor implements IRepositoryModelVisitor {
 
 
 	@Override
-	public boolean onStartRev(Rev rev) {
+	public boolean onStartRev(Rev rev, int number) {
 		return false;
 	}
 

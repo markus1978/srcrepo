@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link de.hub.srcrepo.repositorymodel.TraversalState#getMerges <em>Merges</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.TraversalState#getOpenBranches <em>Open Branches</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.TraversalState#getCompletedBranches <em>Completed Branches</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.TraversalState#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}</li>
  * </ul>
  * </p>
  *
@@ -102,5 +103,31 @@ public interface TraversalState extends EObject {
 	 * @generated
 	 */
 	EList<Rev> getCompletedBranches();
+
+	/**
+	 * Returns the value of the '<em><b>Number Of Imported Revs</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Number Of Imported Revs</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Number Of Imported Revs</em>' attribute.
+	 * @see #setNumberOfImportedRevs(int)
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getTraversalState_NumberOfImportedRevs()
+	 * @model
+	 * @generated
+	 */
+	int getNumberOfImportedRevs();
+
+	/**
+	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.TraversalState#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Number Of Imported Revs</em>' attribute.
+	 * @see #getNumberOfImportedRevs()
+	 * @generated
+	 */
+	void setNumberOfImportedRevs(int value);
 
 } // TraversalState

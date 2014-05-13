@@ -24,20 +24,12 @@
       <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
       <plugin id="de.hub.emffrag"/>
-      <plugin id="de.hub.emffrag.alltests"/>
       <plugin id="de.hub.emffrag.edit"/>
       <plugin id="de.hub.emffrag.editor"/>
       <plugin id="de.hub.emffrag.hbase"/>
-      <plugin id="de.hub.emffrag.hbase.tests"/>
       <plugin id="de.hub.emffrag.mongodb"/>
-      <plugin id="de.hub.emffrag.mongodb.tests"/>
-      <plugin id="de.hub.emffrag.testmodels"/>
-      <plugin id="de.hub.emffrag.tests"/>
       <plugin id="de.hub.srcrepo"/>
       <plugin id="de.hub.srcrepo.emffrag"/>
-      <plugin id="de.hub.srcrepo.emffrag.edit"/>
-      <plugin id="de.hub.srcrepo.emffrag.tests"/>
-      <plugin id="de.hub.srcrepo.tests"/>
       <plugin id="org.antlr.runtime"/>
       <plugin id="org.apache.ant"/>
       <plugin id="org.apache.hadoop.hbase"/>
@@ -86,7 +78,6 @@
       <plugin id="org.eclipse.emf.mapping.xsd2ecore"/>
       <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
-      <plugin id="org.eclipse.equinox.ds"/>
       <plugin id="org.eclipse.equinox.frameworkadmin"/>
       <plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
       <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
@@ -110,7 +101,6 @@
       <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator.manipulator"/>
-      <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.gmt.modisco.infra.common.core"/>
       <plugin id="org.eclipse.gmt.modisco.infra.discoverymanager"/>
@@ -143,7 +133,6 @@
       <plugin id="org.eclipse.modisco.kdm.source.extension"/>
       <plugin id="org.eclipse.modisco.util.atl.core"/>
       <plugin id="org.eclipse.osgi"/>
-      <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.pde.build"/>
       <plugin id="org.eclipse.pde.core"/>
       <plugin id="org.eclipse.swt"/>

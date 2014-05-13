@@ -22,6 +22,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getName <em>Name</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getMerges <em>Merges</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getOpenBranches <em>Open Branches</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getCompletedBranches <em>Completed Branches</em>}</li>
@@ -76,6 +77,24 @@ public class TraversalStateImpl extends FObjectImpl implements TraversalState {
 	 */
 	public void setName(String newName) {
 		eSet(RepositoryModelPackage.Literals.TRAVERSAL_STATE__NAME, newName);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getNumberOfImportedRevs() {
+		return (Integer)eGet(RepositoryModelPackage.Literals.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNumberOfImportedRevs(int newNumberOfImportedRevs) {
+		eSet(RepositoryModelPackage.Literals.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS, newNumberOfImportedRevs);
 	}
 
 	/**
