@@ -36,6 +36,10 @@ public class MemoryMoDiscoGitImportTest {
 		return URI.createURI("memory://localhost/srcrepos.example.gitmodel.bin");
 	}
 	
+	protected File getWorkingDirectory() {
+		return workingDirectory;
+	}
+	
 	@Before
 	public void loadDependencies() {
 		EmfFragActivator.class.getName();
@@ -44,9 +48,9 @@ public class MemoryMoDiscoGitImportTest {
 	
 	@Before
 	public void clearWorkspace() {
-		if (workingDirectory.exists()) {
+		if (getWorkingDirectory().exists()) {
 			try {
-				IProject[] projects = ProjectUtil.getValidOpenProjects(workingDirectory);
+				IProject[] projects = ProjectUtil.getValidOpenProjects(getWorkingDirectory());
 				for (IProject iProject : projects) {				
 					iProject.delete(true, new NullProgressMonitor());		
 				}
@@ -62,12 +66,12 @@ public class MemoryMoDiscoGitImportTest {
 	
 	protected Configuration prepareConfiguration() {
 		String repositoryURL = null;
-		if (!workingDirectory.exists()) {
+		if (!getWorkingDirectory().exists()) {
 			repositoryURL = "https://github.com/markus1978/srcrepo.example.git";
 		}		
 		URI modelURI = getTestRepositoryModelURI();
 		
-		return new EmfFragSrcRepoImport.GitConfiguration(workingDirectory, modelURI).
+		return new EmfFragSrcRepoImport.GitConfiguration(getWorkingDirectory(), modelURI).
 				repositoryURL(repositoryURL).
 				withBinaryResources(useBinaryFragments());
 	}

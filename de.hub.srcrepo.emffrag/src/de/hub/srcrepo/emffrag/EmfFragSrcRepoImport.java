@@ -53,6 +53,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private int fragmentCacheSize = 1000;
 		private boolean resume = false;
 		private int stopAfterNumberOfRevs = -1;
+		private boolean skipSourceCodeImport = false;
 		
 		public Configuration(ISourceControlSystem scs,
 				File workingDirectory, URI modelURI) {
@@ -100,7 +101,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 		public Configuration stopAfterNumberOfRevs(int stopAfterNumberOfRevs) {
 			this.stopAfterNumberOfRevs = stopAfterNumberOfRevs;
 			return this;
-		}					
+		}	
+		
+		public Configuration skipSourceCodeImport() {
+			this.skipSourceCodeImport = true;
+			return this;
+		}
 	}
 	
 	public static class GitConfiguration extends Configuration {
@@ -329,22 +335,24 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing source code
-		EmffragMoDiscoImportRepositoryModelVisitor visitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
-		if (config.resume) {
-			RepositoryModelTraversal.traverse(repositoryModel, visitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
-		} else {
-			if (stop) {
-				TraversalState traversalState = repositoryModelPackage.getRepositoryModelFactory().createTraversalState();
-				repositoryModel.setTraversals(traversalState);
-				RepositoryModelTraversal.traverse(repositoryModel, visitor, traversalState, false, config.stopAfterNumberOfRevs);	
+		EmffragMoDiscoImportRepositoryModelVisitor sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
+		if (!config.skipSourceCodeImport) {		
+			if (config.resume) {
+				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
 			} else {
-				RepositoryModelTraversal.traverse(repositoryModel, visitor, null, false, -1);
+				if (stop) {
+					TraversalState traversalState = repositoryModelPackage.getRepositoryModelFactory().createTraversalState();
+					repositoryModel.setTraversals(traversalState);
+					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, traversalState, false, config.stopAfterNumberOfRevs);	
+				} else {
+					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, null, false, -1);
+				}
 			}
 		}
 		
 		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
 		config.scs.close();
-		visitor.close();
+		sourceImportVisitor.close();
 		SrcRepoActivator.INSTANCE.info("Import done.");
 		
 		return repositoryModel;
