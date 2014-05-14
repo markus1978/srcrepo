@@ -2,8 +2,10 @@ package de.hub.srcrepo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,6 +74,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	public void setWorkingCopy(File target) throws SourceControlException {
 		try {
 			git = Git.open(target);
+			
 		} catch (IOException e) {
 			throw new SourceControlException(e);
 		}
@@ -124,7 +127,8 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	private void doImportRevisions(RepositoryModel model) throws Exception {	
 		// create helper
 		RepositoryModelFactory factory = (RepositoryModelFactory)model.eClass().getEPackage().getEFactoryInstance();
-		Map<String, RevCommit> commitsToImport = new HashMap<String, RevCommit>();		
+		List<RevCommit> commitsToImport = new ArrayList<RevCommit>();
+		Collection<String> commitNamesToImport = new HashSet<String>();
 		Repository jGitRepository = git.getRepository();
 		RevWalk walk = new RevWalk(jGitRepository);
 		
@@ -147,7 +151,9 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				
 				walk.markStart(startCommit);
 				for(RevCommit commit: walk) {
-					commitsToImport.put(commit.getName(), commit);					
+					if (commitNamesToImport.add(commit.getName())) {
+						commitsToImport.add(commit);
+					}
 				}
 			}
 		}
@@ -162,7 +168,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		df.setDiffComparator(RawTextComparator.DEFAULT);
 		df.setDetectRenames(true);
 		
-		for (RevCommit commit: commitsToImport.values()) {
+		for (RevCommit commit: commitsToImport) {
 			SrcRepoActivator.INSTANCE.debug("import revision " + commit.getName());
 			Rev revModel = RepositoryModelUtil.getRev(model, commit.getName());
 			if (revModel == null) {

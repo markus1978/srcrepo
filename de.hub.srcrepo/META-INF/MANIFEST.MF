@@ -53,5 +53,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: de.hub.srcrepo.SrcRepoActivator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/jsch-0.1.49.jar,
+ libs/jetm-1.2.3.jar,
+ libs/jetm-optional-1.2.3.jar,
  libs/org.eclipse.jgit-3.3.1.201403241930-r.jar,
  .

@@ -42,14 +42,18 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
+import etm.core.monitor.EtmMonitor;
+import etm.core.monitor.EtmPoint;
 
-public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {
+public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor, IRepositoryModelVisitor.ETMExtension {
 
 	protected final ISourceControlSystem sourceControlSystem;
 	protected final JavaFactory javaFactory;
 	protected final JavaPackage javaPackage;
 	protected final RepositoryModel repositoryModel;
 	protected final RepositoryModelFactory repositoryFactory;
+	
+	private EtmMonitor etmMonitor = null;
 	
 	// volatile
 	private IProject[] allProjects;
@@ -79,6 +83,13 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		this.absoluteWorkingDirectoryPath = new Path(sourceControlSystem.getWorkingCopy().getAbsolutePath());
 		Collections.addAll(javaLikeExtensions, JavaCore.getJavaLikeExtensions());
 	}
+
+	@Override
+	public void setETMMonitor(EtmMonitor monitor) {
+		this.etmMonitor = monitor;
+	}
+
+
 
 	@Override
 	public void onMerge(Rev mergeRev, Rev branchRev) {
@@ -183,13 +194,17 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {		
 			// checkout
-			try {
+			EtmPoint point = etmMonitor.createPoint("Rev:checkout");
+			try {				
 				sourceControlSystem.checkoutRevision(currentRev.getName());				
 			} catch (SourceControlException e) {							
 				reportImportError(currentRev, "Error while checking out.", e, true);
 			} catch (Exception e) {
 				reportImportError(currentRev, "Exception while checking out.", e, true);
-			} finally {								
+			} finally {
+				point.collect();
+				
+				point = etmMonitor.createPoint("Rev:refresh");
 				// refresh and remove deleted projects from workspace implicetely
 				ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
 				
@@ -241,6 +256,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					allProjects = ProjectUtil.getValidOpenProjects(sourceControlSystem.getWorkingCopy());
 					knownProjects = allProjects.length;
 				}		
+				point.collect();
 			}
 			
 			return Status.OK_STATUS;

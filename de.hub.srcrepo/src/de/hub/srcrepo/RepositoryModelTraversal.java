@@ -1,16 +1,25 @@
 package de.hub.srcrepo;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Stack;
 
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
+import de.hub.srcrepo.IRepositoryModelVisitor.ETMExtension;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.TraversalState;
+import etm.contrib.console.HttpConsoleServer;
+import etm.core.configuration.BasicEtmConfigurator;
+import etm.core.configuration.EtmManager;
+import etm.core.monitor.EtmMonitor;
+import etm.core.monitor.EtmPoint;
+import etm.core.renderer.SimpleTextRenderer;
 
 public class RepositoryModelTraversal {
 	
@@ -21,15 +30,26 @@ public class RepositoryModelTraversal {
 	private Collection<Rev> completedBranches = new HashSet<Rev>();
 	private Collection<Rev> merges = new HashSet<Rev>();
 	private Rev lastImportedRev = null;
+	private final EtmMonitor etmMonitor;
 	
 	public RepositoryModelTraversal(RepositoryModel repositoryModel,
 			IRepositoryModelVisitor visitor) {
 		super();
 		this.repositoryModel = repositoryModel;
 		this.visitor = visitor;
+		BasicEtmConfigurator.configure();
+		this.etmMonitor = EtmManager.getEtmMonitor();
+		if (visitor instanceof ETMExtension) {
+			((ETMExtension)visitor).setETMMonitor(etmMonitor);
+		}
 	}
 
 	public void run(boolean resume, boolean save, TraversalState state, int numberOfRevsToImport) {
+		etmMonitor.start();
+		HttpConsoleServer etmServer = new HttpConsoleServer(etmMonitor);
+		etmServer.setListenPort(45000);
+		etmServer.start();
+		
 		openBranches.clear();
 		completedBranches.clear();
 		merges.clear();
@@ -47,7 +67,7 @@ public class RepositoryModelTraversal {
 			openBranches.add(repositoryModel.getRootRev());
 		}
 		
-		while(!openBranches.isEmpty()) {
+		while(!openBranches.isEmpty()) {			
 			Rev rev = openBranches.pop();
 			visitor.onMerge(lastImportedRev, rev);
 			branchLoop: while(true) {
@@ -62,6 +82,13 @@ public class RepositoryModelTraversal {
 				// import current rev
 				visitRev(rev, ++importedRevs);
 				count++;
+				
+				// print performance data
+				if (count % 100 == 0 && count != 0) {
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					etmMonitor.render(new SimpleTextRenderer(new OutputStreamWriter(byteArrayOutputStream)));
+					SrcRepoActivator.INSTANCE.info(byteArrayOutputStream.toString());
+				}
 				
 				// is branch or branch complete: determine next rev
 				if (children == 1) {
@@ -95,12 +122,21 @@ public class RepositoryModelTraversal {
 				}
 			}						
 		}
+		
+		etmMonitor.stop();
+		etmServer.stop();
 	}
 	
 	private void visitRev(Rev rev, int number) {
+		EtmPoint visitPoint = etmMonitor.createPoint("Rev:whole_visit");
+		
+		EtmPoint startPoint = etmMonitor.createPoint("Rev:start");
 		visitor.onStartRev(rev, number);
+		startPoint.collect();
+		
 		for (ParentRelation parentRelation: rev.getParentRelations()) {
 			for (Diff diff : parentRelation.getDiffs()) {
+				EtmPoint diffPoint = etmMonitor.createPoint("Rev:diff");
 				if (diff.getType() == ChangeType.ADD) {
 					visitor.onAddedFile(diff);
 				} else if (diff.getType() == ChangeType.COPY) {
@@ -112,10 +148,14 @@ public class RepositoryModelTraversal {
 				} else if (diff.getType() == ChangeType.RENAME) {
 					visitor.onRenamedFile(diff);
 				}
+				diffPoint.collect();
 			}
 		}
+		EtmPoint completePoint = etmMonitor.createPoint("Rev:complete");
 		visitor.onCompleteRev(rev);
+		completePoint.collect();
 		lastImportedRev = rev;
+		visitPoint.collect();
 	}
 	
 	/**

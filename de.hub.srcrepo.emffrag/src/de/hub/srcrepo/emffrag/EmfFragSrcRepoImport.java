@@ -30,8 +30,11 @@ import de.hub.emffrag.hbase.HBaseUtil;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBUtil;
 import de.hub.srcrepo.GitSourceControlSystem;
+import de.hub.srcrepo.IRepositoryModelVisitor;
 import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
+import de.hub.srcrepo.RepositoryModelFlatTraversal;
+import de.hub.srcrepo.RepositoryModelRevisionCheckoutVisitor;
 import de.hub.srcrepo.RepositoryModelTraversal;
 import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -54,6 +57,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private boolean resume = false;
 		private int stopAfterNumberOfRevs = -1;
 		private boolean skipSourceCodeImport = false;
+		private boolean checkOutWithoutImport = false;
+		private boolean useFlatTraversal = false;
 		
 		public Configuration(ISourceControlSystem scs,
 				File workingDirectory, URI modelURI) {
@@ -107,6 +112,16 @@ public class EmfFragSrcRepoImport implements IApplication {
 			this.skipSourceCodeImport = true;
 			return this;
 		}
+		
+		public Configuration checkOutWithoutImport() {
+			this.checkOutWithoutImport = true;
+			return this;
+		}
+		
+		public Configuration useFlatTraversal() {
+			this.useFlatTraversal = true;
+			return this;
+		}
 	}
 	
 	public static class GitConfiguration extends Configuration {
@@ -147,7 +162,13 @@ public class EmfFragSrcRepoImport implements IApplication {
 				withLongOpt("abort-after").
 				withDescription("Abort after a given number of revisions. The traversal is saved to resume later.").
 				hasArg().withArgName("number-of-revs").create());
-		
+		options.addOption(OptionBuilder.
+				withLongOpt("checkout-without-import").
+				withDescription("Just checkout each rev, but do not import via MoDisco.").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("use-flat-traversal").
+				withDescription("Traverse the repository from refs to parents, not from root up.").create());
+	
 		return options;
 	}
 	
@@ -255,6 +276,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 		config.withDisabledUsages(commandLine.hasOption("disable-usages"));
 		config.withBinaryResources(!commandLine.hasOption("xmi-fragments"));
 		config.resume(commandLine.hasOption("resume"));
+		if (commandLine.hasOption("checkout-without-import")) {
+			config.checkOutWithoutImport();
+		}
+		if (commandLine.hasOption("use-flat-traversal")) {
+			config.useFlatTraversal();
+		}
 		
 		importRepository(config);
 		return IApplication.EXIT_OK;
@@ -335,7 +362,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing source code
-		EmffragMoDiscoImportRepositoryModelVisitor sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
+		IRepositoryModelVisitor sourceImportVisitor = null;
+		if (config.checkOutWithoutImport) {
+			sourceImportVisitor = new RepositoryModelRevisionCheckoutVisitor(config.scs, repositoryModel);
+		} else {
+			sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
+		}
 		if (!config.skipSourceCodeImport) {		
 			if (config.resume) {
 				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
@@ -343,9 +375,13 @@ public class EmfFragSrcRepoImport implements IApplication {
 				if (stop) {
 					TraversalState traversalState = repositoryModelPackage.getRepositoryModelFactory().createTraversalState();
 					repositoryModel.setTraversals(traversalState);
-					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, traversalState, false, config.stopAfterNumberOfRevs);	
+					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  traversalState, false, config.stopAfterNumberOfRevs);	
 				} else {
-					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, null, false, -1);
+					if (config.useFlatTraversal) {
+						RepositoryModelFlatTraversal.traverse(repositoryModel, sourceImportVisitor);
+					} else {
+						RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, -1);
+					}
 				}
 			}
 		}
