@@ -7,12 +7,15 @@
 package de.hub.srcrepo.repositorymodel.provider;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -25,6 +28,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -107,6 +111,22 @@ public class RepositoryModelItemProvider
 			childrenFeatures.add(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS);
 		}
 		return childrenFeatures;
+	}
+
+	@Override
+	protected Object getValue(EObject eObject, EStructuralFeature eStructuralFeature) {
+		if (eStructuralFeature == RepositoryModelPackage.eINSTANCE.getRepositoryModel_AllRevs()) {
+			// only supply the first couple of elements
+			List<EObject> revs = new ArrayList<EObject>();
+			Iterator<Rev> iterator = ((RepositoryModel)eObject).getAllRevs().iterator();
+			for (int i = 0; i < 10; i++) {
+				if (iterator.hasNext());
+				revs.add(iterator.next());
+			}
+			return revs;
+		} else {
+			return super.getValue(eObject, eStructuralFeature);
+		}
 	}
 
 	/**

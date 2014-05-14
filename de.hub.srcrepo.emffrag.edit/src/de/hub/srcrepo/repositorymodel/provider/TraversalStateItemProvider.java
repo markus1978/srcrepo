@@ -63,6 +63,7 @@ public class TraversalStateItemProvider
 			super.getPropertyDescriptors(object);
 
 			addNamePropertyDescriptor(object);
+			addNumberOfImportedRevsPropertyDescriptor(object);
 			addMergesPropertyDescriptor(object);
 			addOpenBranchesPropertyDescriptor(object);
 			addCompletedBranchesPropertyDescriptor(object);
@@ -88,6 +89,28 @@ public class TraversalStateItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Number Of Imported Revs feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addNumberOfImportedRevsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_TraversalState_numberOfImportedRevs_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_TraversalState_numberOfImportedRevs_feature", "_UI_TraversalState_type"),
+				 RepositoryModelPackage.Literals.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -196,6 +219,7 @@ public class TraversalStateItemProvider
 
 		switch (notification.getFeatureID(TraversalState.class)) {
 			case RepositoryModelPackage.TRAVERSAL_STATE__NAME:
+			case RepositoryModelPackage.TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
