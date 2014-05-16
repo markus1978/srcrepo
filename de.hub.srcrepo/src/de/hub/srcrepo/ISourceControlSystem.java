@@ -28,7 +28,7 @@ public interface ISourceControlSystem {
 		
 	}
 
-	public void createWorkingCopy(File target, String url) throws SourceControlException;
+	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException;
 	public void setWorkingCopy(File target) throws SourceControlException;
 	public File getWorkingCopy();
 	public void importRevisions(RepositoryModel model) throws SourceControlException;

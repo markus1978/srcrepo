@@ -9,13 +9,13 @@ public class MongoDBMoDiscoGitImportTest extends MemoryMoDiscoGitImportTest {
 	public static URI testModelURI = URI.createURI("mongodb://localhost/srcrepo.example.gitmodel.bin");
 	
 	@Override
-	protected URI getTestRepositoryModelURI() {
+	protected URI getTestModelURI() {
 		return testModelURI;
 	}		
 	
 	@Override
-	public void loadDependencies() {
-		super.loadDependencies();
+	public void initialize() {
+		super.initialize();
 		EmfFragMongoDBActivator.class.getName();
 	}
 
@@ -23,5 +23,6 @@ public class MongoDBMoDiscoGitImportTest extends MemoryMoDiscoGitImportTest {
 	protected boolean useBinaryFragments() {
 		return true;
 	}
+	
 	
 }

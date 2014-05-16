@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getAllRevs <em>All Revs</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev <em>Root Rev</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRevs <em>Root Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}</li>
  * </ul>
  * </p>
@@ -63,30 +63,20 @@ public interface RepositoryModel extends EObject {
 	EList<Rev> getAllRevs();
 
 	/**
-	 * Returns the value of the '<em><b>Root Rev</b></em>' reference.
+	 * Returns the value of the '<em><b>Root Revs</b></em>' reference list.
+	 * The list contents are of type {@link de.hub.srcrepo.repositorymodel.Rev}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Root Rev</em>' reference isn't clear,
+	 * If the meaning of the '<em>Root Revs</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Root Rev</em>' reference.
-	 * @see #setRootRev(Rev)
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_RootRev()
+	 * @return the value of the '<em>Root Revs</em>' reference list.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelPackage#getRepositoryModel_RootRevs()
 	 * @model
 	 * @generated
 	 */
-	Rev getRootRev();
-
-	/**
-	 * Sets the value of the '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev <em>Root Rev</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Root Rev</em>' reference.
-	 * @see #getRootRev()
-	 * @generated
-	 */
-	void setRootRev(Rev value);
+	EList<Rev> getRootRevs();
 
 	/**
 	 * Returns the value of the '<em><b>Traversals</b></em>' containment reference.

@@ -89,13 +89,13 @@ public interface RepositoryModelPackage extends EPackage {
 	int REPOSITORY_MODEL__ALL_REVS = 1;
 
 	/**
-	 * The feature id for the '<em><b>Root Rev</b></em>' reference.
+	 * The feature id for the '<em><b>Root Revs</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__ROOT_REV = 2;
+	int REPOSITORY_MODEL__ROOT_REVS = 2;
 
 	/**
 	 * The feature id for the '<em><b>Traversals</b></em>' containment reference.
@@ -664,15 +664,15 @@ public interface RepositoryModelPackage extends EPackage {
 	EReference getRepositoryModel_AllRevs();
 
 	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev <em>Root Rev</em>}'.
+	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRevs <em>Root Revs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Root Rev</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRev()
+	 * @return the meta object for the reference list '<em>Root Revs</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModel#getRootRevs()
 	 * @see #getRepositoryModel()
 	 * @generated
 	 */
-	EReference getRepositoryModel_RootRev();
+	EReference getRepositoryModel_RootRevs();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}'.
@@ -1219,12 +1219,12 @@ public interface RepositoryModelPackage extends EPackage {
 		EReference REPOSITORY_MODEL__ALL_REVS = eINSTANCE.getRepositoryModel_AllRevs();
 
 		/**
-		 * The meta object literal for the '<em><b>Root Rev</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Root Revs</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REPOSITORY_MODEL__ROOT_REV = eINSTANCE.getRepositoryModel_RootRev();
+		EReference REPOSITORY_MODEL__ROOT_REVS = eINSTANCE.getRepositoryModel_RootRevs();
 
 		/**
 		 * The meta object literal for the '<em><b>Traversals</b></em>' containment reference feature.

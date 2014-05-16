@@ -1,11 +1,7 @@
 package de.hub.srcrepo.emffrag;
 
-import java.io.File;
-
 import junit.framework.Assert;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -18,47 +14,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.hub.emffrag.EmfFragActivator;
+import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.MoDiscoRevVisitor;
-import de.hub.srcrepo.ProjectUtil;
 import de.hub.srcrepo.RepositoryModelTraversal;
 import de.hub.srcrepo.SrcRepoActivator;
-import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.ocl.OclUtil;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 
-public class MemoryMoDiscoGitImportTest {
+public class MemoryMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
-	public static File workingDirectory = new File("C:/tmp/srcrepo/clones/srcrepo.example.git");
-	
-	protected URI getTestRepositoryModelURI() {
-		return URI.createURI("memory://localhost/srcrepos.example.gitmodel.bin");
-	}
-	
-	protected File getWorkingDirectory() {
-		return workingDirectory;
-	}
-	
-	@Before
-	public void loadDependencies() {
+	@Before @Override
+	public void initialize() {
 		EmfFragActivator.class.getName();
 		SrcRepoActivator.class.getName();		
-	}
-	
-	@Before
-	public void clearWorkspace() {
-		if (getWorkingDirectory().exists()) {
-			try {
-				IProject[] projects = ProjectUtil.getValidOpenProjects(getWorkingDirectory());
-				for (IProject iProject : projects) {				
-					iProject.delete(true, new NullProgressMonitor());		
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	}	
 	
 	protected boolean useBinaryFragments() {
 		return true;
@@ -66,12 +37,12 @@ public class MemoryMoDiscoGitImportTest {
 	
 	protected Configuration prepareConfiguration() {
 		String repositoryURL = null;
-		if (!getWorkingDirectory().exists()) {
-			repositoryURL = "https://github.com/markus1978/srcrepo.example.git";
+		if (!getWorkingCopy().exists() || !onlyCloneIfNecessary()) {
+			repositoryURL = getCloneURL();
 		}		
-		URI modelURI = getTestRepositoryModelURI();
+		URI modelURI = getTestModelURI();
 		
-		return new EmfFragSrcRepoImport.GitConfiguration(getWorkingDirectory(), modelURI).
+		return new EmfFragSrcRepoImport.GitConfiguration(getWorkingCopy(), modelURI).
 				repositoryURL(repositoryURL).
 				withBinaryResources(useBinaryFragments());
 	}
@@ -81,14 +52,30 @@ public class MemoryMoDiscoGitImportTest {
 		Assert.assertTrue(importedRepository.getAllRevs().size() >= minimumNumberOfRevs);
 	}
 	
-	@Test
-	public void importTest() {		
+	
+	@Override
+	protected boolean onlyCloneIfNecessary() {
+		return true;
+	}
+
+	@Override
+	protected void runImport() {
 		assertRepositoryModel(EmfFragSrcRepoImport.importRepository(prepareConfiguration()), 10);
 	}
 	
+	@Test @Override // just to run it before next test
+	public void testClone() {	
+		super.testClone();
+	}
+
+	@Test @Override // just to run it before next test
+	public void modelImportTest() {	
+		super.modelImportTest();
+	}
+
 	@Test // can only run after import test
-	public void testImportedModel() {
-		EList<EObject> contents = new ResourceSetImpl().createResource(getTestRepositoryModelURI()).getContents();
+	final public void testImportedModel() {
+		EList<EObject> contents = new ResourceSetImpl().createResource(getTestModelURI()).getContents();
 		Assert.assertEquals("Repository model is empty.", 1, contents.size());
 		RepositoryModel repositoryModel = (RepositoryModel)contents.get(0);
 		

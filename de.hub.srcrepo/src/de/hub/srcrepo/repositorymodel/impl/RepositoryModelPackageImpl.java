@@ -216,7 +216,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRepositoryModel_RootRev() {
+	public EReference getRepositoryModel_RootRevs() {
 		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -665,7 +665,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		repositoryModelEClass = createEClass(REPOSITORY_MODEL);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REFS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REVS);
-		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ROOT_REV);
+		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ROOT_REVS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__TRAVERSALS);
 
 		revEClass = createEClass(REV);
@@ -763,7 +763,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEClass(repositoryModelEClass, RepositoryModel.class, "RepositoryModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRepositoryModel_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_AllRevs(), this.getRev(), null, "allRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRepositoryModel_RootRev(), this.getRev(), null, "rootRev", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepositoryModel_RootRevs(), this.getRev(), null, "rootRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_Traversals(), this.getTraversalState(), null, "traversals", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(revEClass, Rev.class, "Rev", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

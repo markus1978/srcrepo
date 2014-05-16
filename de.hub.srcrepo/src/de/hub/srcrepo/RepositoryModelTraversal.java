@@ -14,6 +14,7 @@ import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.TraversalState;
+import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
 import etm.contrib.console.HttpConsoleServer;
 import etm.core.configuration.BasicEtmConfigurator;
 import etm.core.configuration.EtmManager;
@@ -43,8 +44,24 @@ public class RepositoryModelTraversal {
 			((ETMExtension)visitor).setETMMonitor(etmMonitor);
 		}
 	}
+	
+	private Stats stats = new Stats();
+	
+	public class Stats {
+		public int importedRevsCounter = 0;
+		public int mergeCounter = 0;
+		public int branchCounter = 0;
+		public int openBranchCounter = 0;
+		
+		void reset() {
+			importedRevsCounter = 0;
+			mergeCounter = 0;
+			branchCounter = 0;
+			openBranchCounter = 0;
+		}
+	}
 
-	public void run(boolean resume, boolean save, TraversalState state, int numberOfRevsToImport) {
+	public Stats run(boolean resume, boolean save, TraversalState state, int numberOfRevsToImport) {	
 		etmMonitor.start();
 		HttpConsoleServer etmServer = new HttpConsoleServer(etmMonitor);
 		etmServer.setListenPort(45000);
@@ -56,31 +73,36 @@ public class RepositoryModelTraversal {
 		lastImportedRev = null;
 		
 		int count = 0;
-		int importedRevs = state == null ? 0 : state.getNumberOfImportedRevs();
-		int maxRevCount = numberOfRevsToImport > 0 ? numberOfRevsToImport : Integer.MAX_VALUE;
+		stats.reset();
+		stats.importedRevsCounter = state == null ? 0 : state.getNumberOfImportedRevs();
+		int maxRevCount = numberOfRevsToImport > 0 ? numberOfRevsToImport : Integer.MAX_VALUE;		
 		
 		if (resume) {
 			openBranches.addAll(state.getOpenBranches());
 			completedBranches.addAll(state.getCompletedBranches());
+			stats.branchCounter = openBranches.size() + completedBranches.size();
 			merges.addAll(state.getMerges());
+			stats.mergeCounter = merges.size();
 		} else {
-			openBranches.add(repositoryModel.getRootRev());
+			openBranches.addAll(repositoryModel.getRootRevs());
+			stats.branchCounter = repositoryModel.getRootRevs().size();
 		}
 		
-		while(!openBranches.isEmpty()) {			
+		branchesLoop: while(!openBranches.isEmpty()) {			
 			Rev rev = openBranches.pop();
 			visitor.onMerge(lastImportedRev, rev);
 			branchLoop: while(true) {
 				int children = rev.getChildRelations().size();
-				int parents = rev.getParentRelations().size();
+				int parents = RepositoryModelUtil.parents(rev);
 				
 				// is merge?
 				if (parents > 1 && !onMerge(rev)) {
+					stats.mergeCounter++;
 					break branchLoop;	
 				}
 							
 				// import current rev
-				visitRev(rev, ++importedRevs);
+				visitRev(rev, ++stats.importedRevsCounter);
 				count++;
 				
 				// print performance data
@@ -96,6 +118,7 @@ public class RepositoryModelTraversal {
 				} else if (children > 1) {
 					rev = onBranch(rev);						
 				} else {
+					stats.openBranchCounter++;
 					rev = null;
 				}
 				
@@ -111,9 +134,9 @@ public class RepositoryModelTraversal {
 							state.getOpenBranches().add(rev);
 						}
 						state.getOpenBranches().addAll(openBranches);
-						state.setNumberOfImportedRevs(importedRevs);
+						state.setNumberOfImportedRevs(stats.importedRevsCounter);
 					}
-					return;
+					break branchesLoop;
 				}
 				
 				// is branch completed?
@@ -125,6 +148,8 @@ public class RepositoryModelTraversal {
 		
 		etmMonitor.stop();
 		etmServer.stop();
+		
+		return stats;
 	}
 	
 	private void visitRev(Rev rev, int number) {
@@ -169,7 +194,10 @@ public class RepositoryModelTraversal {
 				if (continueWith == null) {
 					continueWith = child;
 				} else {
-					openBranches.push(child);
+					if (!openBranches.contains(child)) {
+						openBranches.push(child);
+						stats.branchCounter++;
+					}
 				}
 			}
 		}
@@ -188,12 +216,12 @@ public class RepositoryModelTraversal {
 		}
 	}
 
-	public static void traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor, TraversalState state, boolean resume, int stopAfterNumberOfRevs) {
-		new RepositoryModelTraversal(repositoryModel, visitor).run(resume, stopAfterNumberOfRevs > 0, state, stopAfterNumberOfRevs);
+	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor, TraversalState state, boolean resume, int stopAfterNumberOfRevs) {
+		return new RepositoryModelTraversal(repositoryModel, visitor).run(resume, stopAfterNumberOfRevs > 0, state, stopAfterNumberOfRevs);
 	}
 
-	public static void traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
-		traverse(repositoryModel, visitor, null, false, -1);		
+	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
+		return traverse(repositoryModel, visitor, null, false, -1);		
 	}
 	
 }

@@ -5,7 +5,7 @@ import org.eclipse.emf.common.util.URI;
 public class MongoDBXmiMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTest {
 	
 	@Override
-	protected URI getTestRepositoryModelURI() {
+	protected URI getTestModelURI() {
 		return URI.createURI("mongodb://localhost/srcrepo.example.java.gitmodel.xmi");
 	}		
 	

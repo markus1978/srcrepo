@@ -8,6 +8,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EReference;
 
+import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -51,5 +52,19 @@ public class RepositoryModelUtil {
 			revCacheAdapter = new RevCacheAdapter(model);			
 		}
 		return revCacheAdapter.revMap.get(name);
+	}
+	
+	public static boolean isRoot(Rev rev) {
+		return rev.getParentRelations().size() == 1 && rev.getParentRelations().get(0).getParent() == null;
+	}
+	
+	public static int parents(Rev rev) {
+		int result = 0;
+		for(ParentRelation parentRelation: rev.getParentRelations()) {
+			if (parentRelation.getParent() != null) {
+				result++;
+			}
+		}
+		return result;
 	}
 }

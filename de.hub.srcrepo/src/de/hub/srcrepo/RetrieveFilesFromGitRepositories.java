@@ -33,7 +33,7 @@ public class RetrieveFilesFromGitRepositories {
 		ISourceControlSystem sourceControlSystem = new GitSourceControlSystem();
 		for(String url: repositoryList) {
 			File workingCopy = new File(tmpDirectory.getAbsoluteFile() + "/" + url.substring(url.lastIndexOf("/")+1));
-			sourceControlSystem.createWorkingCopy(workingCopy, url);
+			sourceControlSystem.createWorkingCopy(workingCopy, url, false);
 			List<File> files = new ArrayList<File>();
 			walk(workingCopy, pattern, files);
 			for (File file: files) {

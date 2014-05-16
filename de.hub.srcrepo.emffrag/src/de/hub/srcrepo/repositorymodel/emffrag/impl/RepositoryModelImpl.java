@@ -25,7 +25,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getRootRev <em>Root Rev</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getRootRevs <em>Root Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
  * </ul>
  * </p>
@@ -87,17 +87,9 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Rev getRootRev() {
-		return (Rev)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REV, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRootRev(Rev newRootRev) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REV, newRootRev);
+	@SuppressWarnings("unchecked")
+	public EList<Rev> getRootRevs() {
+		return (EList<Rev>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REVS, true);
 	}
 
 	/**

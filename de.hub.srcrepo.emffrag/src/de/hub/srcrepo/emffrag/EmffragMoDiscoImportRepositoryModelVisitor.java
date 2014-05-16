@@ -3,7 +3,6 @@ package de.hub.srcrepo.emffrag;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.emffrag.util.Extensions;
 import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
@@ -42,7 +41,6 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 	@Override
 	public void close() {
 		super.close();
-		((FObjectImpl)repositoryModel).fFragmentation().save(null);
 	}	
 		
 }

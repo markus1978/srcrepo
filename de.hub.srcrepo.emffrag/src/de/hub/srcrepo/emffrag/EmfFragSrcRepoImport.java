@@ -22,6 +22,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.fragmentation.FGlobalEventListener;
+import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.emffrag.fragmentation.FragmentedModel;
 import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
 import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
@@ -43,6 +44,10 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class EmfFragSrcRepoImport implements IApplication {
 	
+	public interface RepositoryModelVisitorFactory {
+		public IRepositoryModelVisitor createRepositoryModelVisitor();
+	}
+	
 	public static class Configuration {
 		private final ISourceControlSystem scs; 
 		private final File workingDirectory;
@@ -59,6 +64,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private boolean skipSourceCodeImport = false;
 		private boolean checkOutWithoutImport = false;
 		private boolean useFlatTraversal = false;
+		
+		private RepositoryModelVisitorFactory visitorFactory = null;
 		
 		public Configuration(ISourceControlSystem scs,
 				File workingDirectory, URI modelURI) {
@@ -120,6 +127,11 @@ public class EmfFragSrcRepoImport implements IApplication {
 		
 		public Configuration useFlatTraversal() {
 			this.useFlatTraversal = true;
+			return this;
+		}
+		
+		public Configuration withRepositoryModelVisitorFactory(RepositoryModelVisitorFactory visitorFactory) {
+			this.visitorFactory = visitorFactory;
 			return this;
 		}
 	}
@@ -342,7 +354,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		try {
 			if (config.repositoryURL != null) {
 				SrcRepoActivator.INSTANCE.info("Cloning " + config.repositoryURL + " into " +  config.workingDirectory + ".");
-				config.scs.createWorkingCopy(config.workingDirectory, config.repositoryURL);
+				config.scs.createWorkingCopy(config.workingDirectory, config.repositoryURL, false);
 			} else {
 				config.scs.setWorkingCopy(config.workingDirectory);
 			}
@@ -363,10 +375,14 @@ public class EmfFragSrcRepoImport implements IApplication {
 		
 		// importing source code
 		IRepositoryModelVisitor sourceImportVisitor = null;
-		if (config.checkOutWithoutImport) {
-			sourceImportVisitor = new RepositoryModelRevisionCheckoutVisitor(config.scs, repositoryModel);
+		if (config.visitorFactory != null) {
+			sourceImportVisitor = config.visitorFactory.createRepositoryModelVisitor();
 		} else {
-			sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
+			if (config.checkOutWithoutImport) {
+				sourceImportVisitor = new RepositoryModelRevisionCheckoutVisitor(config.scs, repositoryModel);
+			} else {
+				sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
+			}
 		}
 		if (!config.skipSourceCodeImport) {		
 			if (config.resume) {
@@ -389,6 +405,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
 		config.scs.close();
 		sourceImportVisitor.close();
+		((FObjectImpl)repositoryModel).fFragmentation().save(null);
 		SrcRepoActivator.INSTANCE.info("Import done.");
 		
 		return repositoryModel;

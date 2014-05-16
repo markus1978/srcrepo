@@ -492,7 +492,7 @@
     </children>
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_lCRYUb8iEeO0npvdkJs6ew" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_lCRYUr8iEeO0npvdkJs6ew" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="RepositoryModel.ecore#//RepositoryModel/rootRev"/>
+    <element xmi:type="ecore:EReference" href="RepositoryModel.ecore#//RepositoryModel/rootRevs"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lCRYU78iEeO0npvdkJs6ew" points="[1, 1, -616, -560]$[556, 506, -61, -55]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_mYQT0L8iEeO0npvdkJs6ew" id="(0.7516339869281046,0.9852941176470589)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_msI5IL8iEeO0npvdkJs6ew" id="(0.8214285714285714,0.008849557522123894)"/>

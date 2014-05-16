@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import de.hub.srcrepo.repositorymodel.Ref;
@@ -33,7 +34,7 @@ import de.hub.srcrepo.repositorymodel.TraversalState;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getAllRefs <em>All Refs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getRootRev <em>Root Rev</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getRootRevs <em>Root Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
  * </ul>
  * </p>
@@ -62,14 +63,14 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	protected EList<Rev> allRevs;
 
 	/**
-	 * The cached value of the '{@link #getRootRev() <em>Root Rev</em>}' reference.
+	 * The cached value of the '{@link #getRootRevs() <em>Root Revs</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getRootRev()
+	 * @see #getRootRevs()
 	 * @generated
 	 * @ordered
 	 */
-	protected Rev rootRev;
+	protected EList<Rev> rootRevs;
 
 	/**
 	 * The cached value of the '{@link #getTraversals() <em>Traversals</em>}' containment reference.
@@ -129,39 +130,12 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Rev getRootRev() {
-		if (rootRev != null && rootRev.eIsProxy()) {
-			InternalEObject oldRootRev = (InternalEObject)rootRev;
-			rootRev = (Rev)eResolveProxy(oldRootRev);
-			if (rootRev != oldRootRev) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV, oldRootRev, rootRev));
-			}
+	public EList<Rev> getRootRevs() {
+		if (rootRevs == null) {
+			rootRevs = new EObjectResolvingEList<Rev>(Rev.class, this, RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REVS);
 		}
-		return rootRev;
+		return rootRevs;
 	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Rev basicGetRootRev() {
-		return rootRev;
-	}	
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRootRev(Rev newRootRev) {
-		Rev oldRootRev = rootRev;
-		rootRev = newRootRev;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV, oldRootRev, rootRev));
-	}
-	
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -236,9 +210,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				return getAllRefs();
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				return getAllRevs();
-			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
-				if (resolve) return getRootRev();
-				return basicGetRootRev();
+			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REVS:
+				return getRootRevs();
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
 				return getTraversals();
 		}
@@ -262,8 +235,9 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				getAllRevs().clear();
 				getAllRevs().addAll((Collection<? extends Rev>)newValue);
 				return;
-			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
-				setRootRev((Rev)newValue);
+			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REVS:
+				getRootRevs().clear();
+				getRootRevs().addAll((Collection<? extends Rev>)newValue);
 				return;
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
 				setTraversals((TraversalState)newValue);
@@ -286,8 +260,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				getAllRevs().clear();
 				return;
-			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
-				setRootRev((Rev)null);
+			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REVS:
+				getRootRevs().clear();
 				return;
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
 				setTraversals((TraversalState)null);
@@ -308,8 +282,8 @@ public class RepositoryModelImpl extends EObjectImpl implements RepositoryModel 
 				return allRefs != null && !allRefs.isEmpty();
 			case RepositoryModelPackage.REPOSITORY_MODEL__ALL_REVS:
 				return allRevs != null && !allRevs.isEmpty();
-			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REV:
-				return rootRev != null;
+			case RepositoryModelPackage.REPOSITORY_MODEL__ROOT_REVS:
+				return rootRevs != null && !rootRevs.isEmpty();
 			case RepositoryModelPackage.REPOSITORY_MODEL__TRAVERSALS:
 				return traversals != null;
 		}

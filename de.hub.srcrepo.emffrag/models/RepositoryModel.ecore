@@ -12,7 +12,8 @@
         <details key="fragments" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rootRev" eType="#//Rev"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootRevs" upperBound="-1"
+        eType="#//Rev"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traversals" eType="#//TraversalState"
         containment="true">
       <eAnnotations source="de.hub.emffrag">

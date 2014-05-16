@@ -67,25 +67,25 @@ public class RepositoryModelItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addRootRevPropertyDescriptor(object);
+			addRootRevsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Root Rev feature.
+	 * This adds a property descriptor for the Root Revs feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addRootRevPropertyDescriptor(Object object) {
+	protected void addRootRevsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_RepositoryModel_rootRev_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_rootRev_feature", "_UI_RepositoryModel_type"),
-				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REV,
+				 getString("_UI_RepositoryModel_rootRevs_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_RepositoryModel_rootRevs_feature", "_UI_RepositoryModel_type"),
+				 RepositoryModelPackage.Literals.REPOSITORY_MODEL__ROOT_REVS,
 				 true,
 				 false,
 				 true,

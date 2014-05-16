@@ -8,8 +8,7 @@ import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 public class ResumeMongoDBMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTest {
 
 	@Override
-	@Test
-	public void importTest() {
+	protected void runImport() {
 		Configuration configuration = prepareConfiguration();
 		configuration.stopAfterNumberOfRevs(5);
 		assertRepositoryModel(EmfFragSrcRepoImport.importRepository(configuration), 5);

@@ -38,6 +38,9 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
+import etm.core.configuration.EtmManager;
+import etm.core.monitor.EtmMonitor;
+import etm.core.monitor.EtmPoint;
 
 public class GitSourceControlSystem implements ISourceControlSystem {
 	
@@ -45,26 +48,28 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	private Git git = null;
 
 	@Override
-	public void createWorkingCopy(File target, String url) throws SourceControlException {
+	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {
 		CloneCommand cloneCommand = new CloneCommand();
 		cloneCommand.setCloneAllBranches(true);
 		cloneCommand.setRemote("origin");
-		cloneCommand.setURI(url);	
-		if (target.exists()) {			
-			try {
-				FileUtils.delete(target, FileUtils.RECURSIVE);
-			} catch (IOException e) {
-				throw new SourceControlException("Could not remove existing working copy: " + e.getMessage(), e);
+		cloneCommand.setURI(url);
+		if (!target.exists() || !onlyIfNecessary) {
+			if (target.exists()) {			
+				try {
+					FileUtils.delete(target, FileUtils.RECURSIVE);
+				} catch (IOException e) {
+					throw new SourceControlException("Could not remove existing working copy: " + e.getMessage(), e);
+				}
 			}
-		}
-		cloneCommand.setDirectory(target);
-		try {
-			cloneCommand.call();
-		} catch (Exception e) {
-			if (e.getCause() != null && e.getCause() instanceof IOException) {
-				throw new SourceControlException("IOException during cloning.", e.getCause());
-			} else {
-				throw new SourceControlException(e);
+			cloneCommand.setDirectory(target);
+			try {
+				cloneCommand.call();
+			} catch (Exception e) {
+				if (e.getCause() != null && e.getCause() instanceof IOException) {
+					throw new SourceControlException("IOException during cloning.", e.getCause());
+				} else {
+					throw new SourceControlException(e);
+				}
 			}
 		}
 		setWorkingCopy(target);
@@ -94,6 +99,9 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 			revModel = factory.createRev();
 			revModel.setName(revName);
 			model.getAllRevs().add(revModel);
+			if (RepositoryModelUtil.getRev(model, revName) != revModel) {
+				System.out.println("### NOOOOOOOOO WAAYYYYYYY");
+			}
 			SrcRepoActivator.INSTANCE.debug("Created a model for revision " + revModel.getName() + " (" + importedRevCount++ +")");
 		}
 		
@@ -173,7 +181,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 			Rev revModel = RepositoryModelUtil.getRev(model, commit.getName());
 			if (revModel == null) {
 				revModel = createRevModel(model, factory, commit);
-			}
+			} 
 	
 			revModel.setTime(new Date(((long) commit.getCommitTime()) * 1000));
 			revModel.setMessage(commit.getFullMessage());
@@ -189,15 +197,11 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 			} else {				
 				diffs = df.scan(new EmptyTreeIterator(), new CanonicalTreeParser(null, objectReader, commit.getTree()));
 				createParentRelation(factory, revModel, null, diffs);
-				if (model.getRootRev() == null) {
-					model.setRootRev(revModel);
-					SrcRepoActivator.INSTANCE.info("Root revision: " + revModel.getName() + ", " + revModel.getTime());
-				} else {					
-					SrcRepoActivator.INSTANCE.error("There are multiple root revisions, this can not happen: " + revModel.getName() + ", " + revModel.getTime() + ". Using the earlier one.");
-					if (model.getRootRev().getTime().after(revModel.getTime())) {
-						model.setRootRev(revModel);
-					}
-				}
+				if (!model.getRootRevs().isEmpty()) {
+					SrcRepoActivator.INSTANCE.warning("There are multiple root revisions, this should not happen: " + revModel.getName() + ", " + revModel.getTime() + ". Using the earlier one.");
+				}		
+				SrcRepoActivator.INSTANCE.info("Root revision: " + revModel.getName() + ", " + revModel.getTime());							
+				model.getRootRevs().add(revModel);
 			}
 		}
 		
@@ -238,16 +242,23 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 
 	@Override
 	public void checkoutRevision(String name) throws SourceControlException {
+		EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
 		try {
 			// remove a possible lock files from prior errors or crashes
 			removeLock(".git/index.lock");
 			removeLock(".git/HEAD.lock");
 			// clean the working tree from ignored or other untracked files
+			EtmPoint cleanPoint = etmMonitor.createPoint("GIT:clean");
 			clean();
+			cleanPoint.collect();
 			// reset possible changes
+			EtmPoint resetPoint = etmMonitor.createPoint("GIT:reset");
 			git.reset().setMode(ResetType.HARD).call();
+			resetPoint.collect();
 			// checkout the new revision
+			EtmPoint checkoutPoint = etmMonitor.createPoint("GIT:checkout");
 			git.checkout().setForce(true).setName(name).call();
+			checkoutPoint.collect();
 		} catch (JGitInternalException e) {
 			if (e.getCause() instanceof LockFailedException) {
 				throw new SourceControlException("Could not lock the repository.", e);
