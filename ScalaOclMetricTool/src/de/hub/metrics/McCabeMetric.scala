@@ -2,7 +2,6 @@ package de.hub.metrics
 
 import org.eclipse.emf.common.util.EList
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
-import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
 import org.eclipse.gmt.modisco.java.Block
 import org.eclipse.gmt.modisco.java.IfStatement
 import org.eclipse.gmt.modisco.java.MethodDeclaration
