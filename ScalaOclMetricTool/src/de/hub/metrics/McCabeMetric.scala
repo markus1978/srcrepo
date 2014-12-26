@@ -8,8 +8,15 @@ import org.eclipse.gmt.modisco.java.MethodDeclaration
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.Statement
 import org.eclipse.gmt.modisco.java.WhileStatement
-
 import de.hub.srcrepo.ocl.OclList
+import org.eclipse.gmt.modisco.java.SwitchStatement
+import org.eclipse.jdt.internal.compiler.ast.CaseStatement
+import org.eclipse.gmt.modisco.java.emf.impl.IfStatementImpl
+import org.eclipse.gmt.modisco.java.emf.impl.WhileStatementImpl
+import org.eclipse.gmt.modisco.java.emf.impl.SwitchStatementImpl
+import org.eclipse.gmt.modisco.java.Comment
+import org.eclipse.gmt.modisco.java.SwitchCase
+import org.eclipse.gmt.modisco.java.emf.impl.SwitchCaseImpl
 
 class McCabeMetric {
 	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l) 
@@ -22,8 +29,12 @@ def mcCabeMetric(block: Block): Double = {
 	    //Cast all Elements to Statement
 	    .collect((e)=>e.asInstanceOf[Statement])
 	    //add 1 for each keyword indicating a Branching or MethodDeclaration
-	    .sum((s)=> 
-	      if (s.isInstanceOf[IfStatement] || s.isInstanceOf[WhileStatement]) 1 // TODO cases
+	    .sum((s)=>	      
+	      if (s.isInstanceOf[SwitchStatement] || s.isInstanceOf[SwitchCaseImpl]) {
+	        System.out.println(s.toString());
+	        println(s.getClass());
+	        1 // TODO cases	      
+	      }
 	      else if (s.isInstanceOf[MethodDeclaration]) 1
 	      else 0
 	  ) + 1.0

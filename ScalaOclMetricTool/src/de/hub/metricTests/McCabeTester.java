@@ -17,9 +17,9 @@ import org.junit.Test;
 
 import de.hub.metrics.McCabeMetric;
 import de.hub.srcrepo.GitSourceControlSystem;
+import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
 import de.hub.srcrepo.RepositoryModelTraversal;
-import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
@@ -54,14 +54,14 @@ public class McCabeTester {
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
 //			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"modellImportTest.git"), LINUX_PATH_TO_REPO+"srcrepo_example");
-			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclImplementierung");
+			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses");
 		} catch (SourceControlException e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
 		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(URI.createURI("de.hub.metrics.testclasses.models/mcCabeTest.java.gitmodel"));
+		final Resource resource = rs.createResource(URI.createURI("models/mcCabeTest.java.gitmodel"));
 		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
 		Model javaModel = JavaFactory.eINSTANCE.createModel();		
 		repositoryModel.setJavaModel(javaModel);
@@ -86,8 +86,11 @@ public class McCabeTester {
 		
 		repositoryModel = (RepositoryModel)resource.getContents().get(0);
 		javaModel = repositoryModel.getJavaModel();		
-		McCabeMetric mcCabe = new McCabeMetric(); 
+		McCabeMetric mcCabe = new McCabeMetric();
+		System.out.println("#########################################################################");
+		System.out.println("--- Result Overview ---");
 		System.out.println("McCabe: " + mcCabe.mcCabeMetric(javaModel));
+		System.out.println("#########################################################################");
 	}
 
 }
