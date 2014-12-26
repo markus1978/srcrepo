@@ -15,9 +15,13 @@ class McCabeMetric {
 	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l) 
 
 def mcCabeMetric(block: Block): Double = {
+	  //gather all EStructuralFeature from Meta-Model
 	  block.eContents().closure((e)=>e.eContents())
+	  //Select all Statements
 	    .select((e)=>e.isInstanceOf[Statement])
+	    //Cast all Elements to Statement
 	    .collect((e)=>e.asInstanceOf[Statement])
+	    //add 1 for each keyword indicating a Branching or MethodDeclaration
 	    .sum((s)=> 
 	      if (s.isInstanceOf[IfStatement] || s.isInstanceOf[WhileStatement]) 1 // TODO cases
 	      else if (s.isInstanceOf[MethodDeclaration]) 1
@@ -26,9 +30,13 @@ def mcCabeMetric(block: Block): Double = {
 	}
 	
 	def mcCabeMetric(model: Model): Double = {
+	  //gather all EStructuralFeature from Meta-Model
 	  model.eContents().closure((e)=>e.eContents())
+	  //select all AbstractMethodDeclarations
 	  	.select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
+	  	//casting all Elements to AbstractMethodDeclaration, returns a new Collection
 	  	.collect((e)=>e.asInstanceOf[AbstractMethodDeclaration])
+	  	//calculate the McCabe-Metric
 	  	.sum((e)=>if (e.getBody()!=null) mcCabeMetric(e.getBody()) else 0)
 	}
 }
