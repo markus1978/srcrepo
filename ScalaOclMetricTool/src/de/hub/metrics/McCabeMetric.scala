@@ -17,11 +17,16 @@ import org.eclipse.gmt.modisco.java.emf.impl.SwitchStatementImpl
 import org.eclipse.gmt.modisco.java.Comment
 import org.eclipse.gmt.modisco.java.SwitchCase
 import org.eclipse.gmt.modisco.java.emf.impl.SwitchCaseImpl
+import org.eclipse.emf.ecore.EObject
+import scala.collection.mutable.ListBuffer
+import java.util.List
+import scala.collection.JavaConverters._
+
 
 class McCabeMetric {
 	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l) 
 
-def mcCabeMetric(block: Block): Double = {
+	def mcCabeMetric(block: Block): Double = {
 	  //gather all EStructuralFeature from Meta-Model
 	  block.eContents().closure((e)=>e.eContents())
 	  //Select all Statements
@@ -30,24 +35,62 @@ def mcCabeMetric(block: Block): Double = {
 	    .collect((e)=>e.asInstanceOf[Statement])
 	    //add 1 for each keyword indicating a Branching or MethodDeclaration
 	    .sum((s)=>	      
-	      if (s.isInstanceOf[SwitchStatement] || s.isInstanceOf[SwitchCaseImpl]) {
-	        System.out.println(s.toString());
-	        println(s.getClass());
-	        1 // TODO cases	      
-	      }
+	      if (s.isInstanceOf[SwitchCase]) 1 // TODO cases      
 	      else if (s.isInstanceOf[MethodDeclaration]) 1
 	      else 0
 	  ) + 1.0
 	}
 	
-	def mcCabeMetric(model: Model): Double = {
+	def mcCabeMetric(model: Model): List[_] = {
+	  var result:ListBuffer[ResultObject] = new ListBuffer[ResultObject];
+	 
 	  //gather all EStructuralFeature from Meta-Model
-	  model.eContents().closure((e)=>e.eContents())
+	  val vSelect = model.eContents().closure((e)=>e.eContents())
 	  //select all AbstractMethodDeclarations
-	  	.select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
+	 .select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
 	  	//casting all Elements to AbstractMethodDeclaration, returns a new Collection
-	  	.collect((e)=>e.asInstanceOf[AbstractMethodDeclaration])
-	  	//calculate the McCabe-Metric
-	  	.sum((e)=>if (e.getBody()!=null) mcCabeMetric(e.getBody()) else 0)
+	  val vCollect = vSelect.collect((e)=>e.asInstanceOf[AbstractMethodDeclaration]);
+	  	//calculate the McCabe-Metric and save in result List	  
+	  val iter = vCollect.iterator()
+	  var i : Int = 0;
+	  var lastCompilationUnit = "";
+      var resultObject:ResultObject = null;
+      var firstRun:Boolean = true;
+	  while (iter.hasNext){
+	    val item = iter.next();
+        val metric = mcCabeMetric(item.getBody());
+        
+        //if units differ
+        if(!(lastCompilationUnit.equals(item.getOriginalCompilationUnit().toString()))){
+            //it is either the same file with another body
+        	if(!firstRun){
+        	  result.append(resultObject);
+        	  resultObject = new ResultObject();
+        	}
+        	//or the first run
+        	else
+        	{
+        	  resultObject = new ResultObject();
+        	  firstRun = false;
+        	}        	
+        }        
+        resultObject.values.append(metric);                
+        lastCompilationUnit = item.getOriginalCompilationUnit().toString();
+	  }
+	  result.append(resultObject);
+	  //see: http://stackoverflow.com/questions/2429944/how-to-convert-a-scala-list-to-a-java-util-list
+	  return result.asJava	  
+	}
+	
+	private class ResultObject{
+	  var values:ListBuffer[Double] = new ListBuffer[Double];
+	  	  
+	  override def toString():String = {	    
+	    var string = "";	    
+	    for (iter <- values.toList.iterator) {	    
+			string = string.concat(iter.toString);			
+		}
+	    return string;
+	  }
 	}
 }

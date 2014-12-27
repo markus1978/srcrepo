@@ -2,8 +2,12 @@ package de.hub.metricTests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -15,14 +19,22 @@ import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+
+
+
+
+
+
 import de.hub.metrics.McCabeMetric;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
 import de.hub.srcrepo.RepositoryModelTraversal;
+import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
+import de.hub.srcrepo.repositorymodel.Rev;
 
 /**
  * @author Frederik Marticke
@@ -54,7 +66,7 @@ public class McCabeTester {
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
 //			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"modellImportTest.git"), LINUX_PATH_TO_REPO+"srcrepo_example");
-			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses");
+			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
 		} catch (SourceControlException e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
@@ -85,11 +97,27 @@ public class McCabeTester {
 		}
 		
 		repositoryModel = (RepositoryModel)resource.getContents().get(0);
+		
 		javaModel = repositoryModel.getJavaModel();		
 		McCabeMetric mcCabe = new McCabeMetric();
+		List<?> metricForEachCommit = mcCabe.mcCabeMetric(javaModel);
+		printFormattedResult(metricForEachCommit, "McCabeMetric");
+	}
+	
+	
+	/**
+	 * prints output like: 'commit: number *** <metricType: metricValue'
+	 * @param result
+	 * @param metricType
+	 */
+	private static void printFormattedResult(List<?> result, String metricType){
 		System.out.println("#########################################################################");
-		System.out.println("--- Result Overview ---");
-		System.out.println("McCabe: " + mcCabe.mcCabeMetric(javaModel));
+		System.out.println("--- Result Overview ---");		
+		int i = 0;
+		for (Iterator<?> iter = result.iterator(); iter.hasNext(); ) {
+			i++;
+			System.out.println("commit: " + i + " *** " + metricType + ": " + iter.next().toString());
+		}
 		System.out.println("#########################################################################");
 	}
 
