@@ -1,5 +1,5 @@
 package testclasses;
-@SuppressWarnings("javadoc")
+
 public class McCabeTest {
 	static String wochentagsName(int nummer) {
 		    
