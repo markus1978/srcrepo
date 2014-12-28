@@ -16,8 +16,6 @@ public class McCabeTestIfElse {
 			else
 				System.out.println("a>b");
 		else
-			System.out.println("a==b");
-		
+			System.out.println("a==b");		
 	}
-
 }
