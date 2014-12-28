@@ -1,6 +1,6 @@
 package testclasses;
 
-public class McCabeTest {
+public class McCabeTestSwitchCase {
 	
 	static String wochentagsName(int nummer) {
 		switch(nummer) {
@@ -26,5 +26,5 @@ public class McCabeTest {
 		    case 7: return "Sonntag2";
 		  }
 		return "unknown";
-	}	
+	}			
 }

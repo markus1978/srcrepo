@@ -1,7 +1,12 @@
 package testclasses;
 
-public class McCabeTest2 {
+public class McCabeTestSwitchCase2 {
 	
+	/**
+	 * Should give a McCabe value of 6
+	 * @param nummer
+	 * @return
+	 */
 	static String wochentagsName(int nummer) {
 		switch(nummer) {
 		    case 1: return "Montag";
@@ -13,6 +18,11 @@ public class McCabeTest2 {
 		return "unknown";
 	}	
 	
+	/**
+	 * Should give a McCabe value of 7
+	 * @param nummer
+	 * @return
+	 */
 	static String wochentagsName2(int nummer) {
 		switch(nummer) {
 		    case 1: return "Montag2";
@@ -25,6 +35,9 @@ public class McCabeTest2 {
 		return "unknown";
 	}
 	
+	/**
+	 * Comments should be ignored
+	 */
 //	static String wochentagsName2(int nummer) {
 //		switch(nummer) {
 //		    case 1: return "Montag2";
