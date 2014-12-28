@@ -35,7 +35,7 @@ class McCabeMetric {
 	    .collect((e)=>e.asInstanceOf[Statement])
 	    //add 1 for each keyword indicating a Branching or MethodDeclaration
 	    .sum((s)=>	      
-	      if (s.isInstanceOf[SwitchCase]) 1 // TODO cases      
+	      if (s.isInstanceOf[SwitchCase]  || s.isInstanceOf[IfStatement]) 1 // TODO cases      
 	      else if (s.isInstanceOf[MethodDeclaration]) 1
 	      else 0
 	  ) + 1.0
@@ -57,40 +57,43 @@ class McCabeMetric {
       var resultObject:ResultObject = null;
       var firstRun:Boolean = true;
 	  while (iter.hasNext){
+	    try{
 	    val item = iter.next();
         val metric = mcCabeMetric(item.getBody());
         
         //if units differ
         if(!(lastCompilationUnit.equals(item.getOriginalCompilationUnit().toString()))){
-            //it is either the same file with another body
+          
+            //it is either a new file
         	if(!firstRun){
+        	  //save the current resultObject according to the previous file
         	  result.append(resultObject);
+        	  //create a new resultObject for the current File
         	  resultObject = new ResultObject();
+        	  resultObject.setFileName(item.getOriginalCompilationUnit().getName());
         	}
+        	
         	//or the first run
         	else
         	{
+        	   //create a new resultObject for the current File
         	  resultObject = new ResultObject();
+        	  resultObject.setFileName(item.getOriginalCompilationUnit().getName());
         	  firstRun = false;
         	}        	
-        }        
-        resultObject.values.append(metric);                
+        } 
+        
+        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previoous
+        resultObject.getValues().append(metric);
         lastCompilationUnit = item.getOriginalCompilationUnit().toString();
-	  }
+	    } catch {
+	      case e: Exception => println("Probably no originalCompilationUnit exists. Exception caught: " + e); //TODO: why is it missing sometimes? 
+	    }
+	  
+	  }//while
 	  result.append(resultObject);
+	  
 	  //see: http://stackoverflow.com/questions/2429944/how-to-convert-a-scala-list-to-a-java-util-list
 	  return result.asJava	  
-	}
-	
-	private class ResultObject{
-	  var values:ListBuffer[Double] = new ListBuffer[Double];
-	  	  
-	  override def toString():String = {	    
-	    var string = "";	    
-	    for (iter <- values.toList.iterator) {	    
-			string = string.concat(iter.toString);			
-		}
-	    return string;
-	  }
 	}
 }
