@@ -36,8 +36,10 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
  */
 public class McCabeTester {
 	
-//	final String LINUX_PATH_TO_CLONE_DIR = "/home/smoovie/Git_Workspace/Studienarbeit/testGitRepoCheckoutDir/clones/";
-//	final String LINUX_PATH_TO_REPO = "/home/smoovie/Git_Workspace/Studienarbeit/";
+	/** The Linuxstyle formatted path to the cloned repository. */
+	final String LINUX_PATH_TO_CLONE_DIR = "/home/smoovie/Git_Workspace/Studienarbeit/testGitRepoCheckoutDir/clones/";
+	/** The Linuxstyle formatted path to the bare repository */
+	final String LINUX_PATH_TO_REPO = "/home/smoovie/Git_Workspace/Studienarbeit/";
 	
 	/** The Windowsstyle formatted path to the cloned repository. */
 	final String WIN_PATH_TO_CLONE_DIR = "C:/Users/Worm/Git_Workspace/Studienarbeit/testGitRepoCheckoutDir/clones/";
@@ -46,7 +48,7 @@ public class McCabeTester {
 
 	
 	/**
-	 * Loads the corresponding testfile McCabeTest.java and calculates for all non-commented lines the McCabe-Metric.
+	 * Creates a Model based on the referenced git repository and calculates the McCabe-Metric for each compilationunit inside.
 	 */
 	@Test
 	public void runMcCabeMetricTest() {
@@ -56,8 +58,8 @@ public class McCabeTester {
 		
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
-//			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"modellImportTest.git"), LINUX_PATH_TO_REPO+"srcrepo_example");
-			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
+			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), LINUX_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
+//			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
 		} catch (SourceControlException e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
