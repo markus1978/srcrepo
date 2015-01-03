@@ -52,5 +52,22 @@ public class McCabeLogicalOperatorsTest {
 		while(a!=b || a>b);
 			
 	}
-
+	
+	/**
+	 * Tester to find out how to calculate operators like &&, || correctly
+	 * Should give a McCabe value of 5 
+	 * = + 1 for[same like if] 
+	 * + 1 &&[what is the same like an if]
+	 * + 1 && [what is the same like an if]
+	 * + 1 ||[what is the same like an if]
+	 * + 1
+	 * @param pA
+	 * @param pB
+	 */
+	static void logicalOperatorsTest3(int pA, int pB){
+		int a = pA;
+		int b = pB;
+		for(a=0; a<5 && 0<b && a > 4 || a != b; a++)			
+			System.out.println("a!=b");
+		}
 }
