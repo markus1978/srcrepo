@@ -3,6 +3,8 @@ package testclasses;
 public class McCabeBreakTest {
 	
 	/**
+	 * DISCUSS: Why does break increase complexity?
+	 * 
 	 * Should give a McCabe value of 3 = 2 binary branches + 1
 	 * @param pA
 	 * @param pB
