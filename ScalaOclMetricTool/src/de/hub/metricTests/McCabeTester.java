@@ -58,8 +58,8 @@ public class McCabeTester {
 		
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
-			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), LINUX_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
-//			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
+//			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), LINUX_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
+			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
 		} catch (SourceControlException e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());

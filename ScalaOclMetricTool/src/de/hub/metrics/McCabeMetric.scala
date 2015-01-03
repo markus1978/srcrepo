@@ -21,6 +21,11 @@ import org.eclipse.emf.ecore.EObject
 import scala.collection.mutable.ListBuffer
 import java.util.List
 import scala.collection.JavaConverters._
+import org.eclipse.gmt.modisco.java.DoStatement
+import org.eclipse.gmt.modisco.java.ForStatement
+import org.eclipse.gmt.modisco.java.BreakStatement
+import org.eclipse.gmt.modisco.java.ContinueStatement
+import org.eclipse.gmt.modisco.java.ReturnStatement
 
 
 class McCabeMetric {
@@ -35,7 +40,16 @@ class McCabeMetric {
 	    .collect((e)=>e.asInstanceOf[Statement])
 	    //add 1 for each keyword indicating a Branching or MethodDeclaration
 	    .sum((s)=>	      
-	      if (s.isInstanceOf[SwitchCase]  || s.isInstanceOf[IfStatement]) 1 // TODO cases      
+	      if (s.isInstanceOf[SwitchCase]  
+	      || s.isInstanceOf[IfStatement]
+	      || s.isInstanceOf[WhileStatement]
+	      || s.isInstanceOf[DoStatement]
+	      || s.isInstanceOf[ForStatement]) 1
+	      
+//	      Discuss: why shall these words increase complexity?
+//	      || s.isInstanceOf[BreakStatement]
+//	      || s.isInstanceOf[ContinueStatement]) 1	      
+	      //|| s.isInstanceOf[ReturnStatement]) 1 TODO  only if not the last statement of function 	      
 	      else if (s.isInstanceOf[MethodDeclaration]) 1
 	      else 0
 	  ) + 1.0
