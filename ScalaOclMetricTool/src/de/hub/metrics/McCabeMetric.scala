@@ -26,10 +26,57 @@ import org.eclipse.gmt.modisco.java.ForStatement
 import org.eclipse.gmt.modisco.java.BreakStatement
 import org.eclipse.gmt.modisco.java.ContinueStatement
 import org.eclipse.gmt.modisco.java.ReturnStatement
+import org.eclipse.gmt.modisco.java.ConditionalExpression
+import org.eclipse.gmt.modisco.java.InfixExpression
 
 
 class McCabeMetric {
-	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l) 
+	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l)
+	
+	def searchForNestedInfixExpressions(exp:InfixExpression):Double = {
+	  var res:Double = 0.0;
+	  
+	  if(exp.getLeftOperand().isInstanceOf[InfixExpression])
+	    res = res + searchForNestedInfixExpressions(exp.getLeftOperand().asInstanceOf[InfixExpression]);
+	   
+	  if(exp.getRightOperand().isInstanceOf[InfixExpression])
+	    res = res + searchForNestedInfixExpressions(exp.getRightOperand().asInstanceOf[InfixExpression]);
+	  
+	  if(exp.getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || exp.getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR"))
+	    res = res + 1;
+	  
+	  return res;
+	}
+	
+	def checkForConditionalStatements(statement: Statement, kind:String):Double = {
+	  kind.toLowerCase() match {
+	    case "if" => {
+	      val exp = statement.asInstanceOf[IfStatement].getExpression().asInstanceOf[InfixExpression];
+	      val operator_name = exp.getOperator().getName();
+	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+	      else 1	      
+	    }
+	    case "do" => {
+	      val exp = statement.asInstanceOf[DoStatement].getExpression().asInstanceOf[InfixExpression];
+	      val operator_name = exp.getOperator().getName();
+	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+	      else 1	      
+	    }
+	    case "while" => {
+	      val exp = statement.asInstanceOf[WhileStatement].getExpression().asInstanceOf[InfixExpression];
+	      val operator_name = exp.getOperator().getName();
+	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+	      else 1	      
+	    }
+	    case "for" => {
+	      val exp = statement.asInstanceOf[ForStatement].getExpression().asInstanceOf[InfixExpression];
+	      val operator_name = exp.getOperator().getName();	     
+	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+	      else 1	      
+	    }
+	    case _ => 1
+	  }  
+	}
 
 	def mcCabeMetric(block: Block): Double = {
 	  //gather all EStructuralFeature from Meta-Model
@@ -40,11 +87,19 @@ class McCabeMetric {
 	    .collect((e)=>e.asInstanceOf[Statement])
 	    //add 1 for each keyword indicating a Branching or MethodDeclaration
 	    .sum((s)=>	      
-	      if (s.isInstanceOf[SwitchCase]  
-	      || s.isInstanceOf[IfStatement]
-	      || s.isInstanceOf[WhileStatement]
-	      || s.isInstanceOf[DoStatement]
-	      || s.isInstanceOf[ForStatement]) 1
+	      if (s.isInstanceOf[SwitchCase]) 1
+	      else if (s.isInstanceOf[IfStatement]) {
+	        checkForConditionalStatements(s, "if")
+	      } 
+	      else if (s.isInstanceOf[DoStatement]) {
+	        checkForConditionalStatements(s, "do")
+	      } 
+	      else if (s.isInstanceOf[WhileStatement]) {
+	        checkForConditionalStatements(s, "while")
+	      } 
+	      else if (s.isInstanceOf[ForStatement]) {
+	        checkForConditionalStatements(s, "for")
+	      } 
 	      
 //	      Discuss: why shall these words increase complexity?
 //	      || s.isInstanceOf[BreakStatement]
@@ -97,7 +152,7 @@ class McCabeMetric {
         	}        	
         } 
         
-        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previoous
+        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previous
         resultObject.getValues().append(metric);
         lastCompilationUnit = item.getOriginalCompilationUnit().toString();
 	    } catch {
