@@ -1,6 +1,7 @@
 package de.hub.metrics
 
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.gmt.modisco.java.Block
 import org.eclipse.gmt.modisco.java.IfStatement
@@ -9,6 +10,7 @@ import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.Statement
 import org.eclipse.gmt.modisco.java.WhileStatement
 import de.hub.srcrepo.ocl.OclList
+import de.hub.srcrepo.ocl.OclUtil
 import org.eclipse.gmt.modisco.java.SwitchStatement
 import org.eclipse.jdt.internal.compiler.ast.CaseStatement
 import org.eclipse.gmt.modisco.java.emf.impl.IfStatementImpl
@@ -29,53 +31,89 @@ import org.eclipse.gmt.modisco.java.ReturnStatement
 import org.eclipse.gmt.modisco.java.ConditionalExpression
 import org.eclipse.gmt.modisco.java.InfixExpression
 
-
 class McCabeMetric {
 	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l)
 	
-	def searchForNestedInfixExpressions(exp:InfixExpression):Double = {
-	  var res:Double = 0.0;
-	  
-	  if(exp.getLeftOperand().isInstanceOf[InfixExpression])
-	    res = res + searchForNestedInfixExpressions(exp.getLeftOperand().asInstanceOf[InfixExpression]);
-	   
-	  if(exp.getRightOperand().isInstanceOf[InfixExpression])
-	    res = res + searchForNestedInfixExpressions(exp.getRightOperand().asInstanceOf[InfixExpression]);
-	  
-	  if(exp.getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || exp.getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR"))
-	    res = res + 1;
-	  
-	  return res;
+	def checkForConditionalIfStatements(statement: IfStatement) : Double = {
+	  val elist = new BasicEList[IfStatement]();
+	  elist.add(statement)
+	  elist.collect((item) => item.getExpression().asInstanceOf[InfixExpression])
+	  .closure((expr) => {
+	    val foundInfixExpressions = new BasicEList[InfixExpression]();	    
+	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
+	    }
+	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
+	    }
+	    foundInfixExpressions;
+	  }).sum((infixExpression) => {
+	    if(infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || 
+	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
+	    else 0
+	  })      
 	}
 	
-	def checkForConditionalStatements(statement: Statement, kind:String):Double = {
-	  kind.toLowerCase() match {
-	    case "if" => {
-	      val exp = statement.asInstanceOf[IfStatement].getExpression().asInstanceOf[InfixExpression];
-	      val operator_name = exp.getOperator().getName();
-	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-	      else 1	      
+	def checkForConditionalDoStatements(statement: DoStatement) : Double = {
+	  val elist = new BasicEList[DoStatement]();
+	  elist.add(statement)	
+	  elist.collect((item) => item.getExpression().asInstanceOf[InfixExpression])
+	  .closure((expr) => {
+	    val foundInfixExpressions = new BasicEList[InfixExpression]();	    
+	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
 	    }
-	    case "do" => {
-	      val exp = statement.asInstanceOf[DoStatement].getExpression().asInstanceOf[InfixExpression];
-	      val operator_name = exp.getOperator().getName();
-	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-	      else 1	      
+	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
 	    }
-	    case "while" => {
-	      val exp = statement.asInstanceOf[WhileStatement].getExpression().asInstanceOf[InfixExpression];
-	      val operator_name = exp.getOperator().getName();
-	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-	      else 1	      
+	    foundInfixExpressions
+	  }).sum((infixExpression) => {
+	    if(infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || 
+	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
+	    else 0
+	  })      
+	}
+	
+	def checkForConditionalWhileStatements(statement: WhileStatement) : Double = {
+	  val elist = new BasicEList[WhileStatement]();
+	  elist.add(statement)
+	  elist.collect((item) => item.getExpression().asInstanceOf[InfixExpression])
+	  .closure((expr) => {
+	    val foundInfixExpressions = new BasicEList[InfixExpression]();
+	    
+	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
 	    }
-	    case "for" => {
-	      val exp = statement.asInstanceOf[ForStatement].getExpression().asInstanceOf[InfixExpression];
-	      val operator_name = exp.getOperator().getName();	     
-	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-	      else 1	      
+	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
 	    }
-	    case _ => 1
-	  }  
+	    foundInfixExpressions
+	  }).sum((infixExpression) => {
+	    if(infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || 
+	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
+	    else 0
+	  })      
+	}
+	
+	def checkForConditionalForStatements(statement: ForStatement) : Double = {
+	  val elist = new BasicEList[ForStatement]();
+	  elist.add(statement)
+	  elist.collect((item) => item.getExpression().asInstanceOf[InfixExpression])
+	  .closure((expr) => {
+	    val foundInfixExpressions = new BasicEList[InfixExpression]();
+	    
+	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
+	    }
+	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
+		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
+	    }
+	    foundInfixExpressions
+	  }).sum((infixExpression) => {
+	    if(infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || 
+	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
+	    else 0
+	  })      
 	}
 
 	def mcCabeMetric(block: Block): Double = {
@@ -89,16 +127,16 @@ class McCabeMetric {
 	    .sum((s)=>	      
 	      if (s.isInstanceOf[SwitchCase]) 1
 	      else if (s.isInstanceOf[IfStatement]) {
-	        checkForConditionalStatements(s, "if")
+	        1 + checkForConditionalIfStatements(s.asInstanceOf[IfStatement])
 	      } 
 	      else if (s.isInstanceOf[DoStatement]) {
-	        checkForConditionalStatements(s, "do")
+	        1 + checkForConditionalDoStatements(s.asInstanceOf[DoStatement])
 	      } 
 	      else if (s.isInstanceOf[WhileStatement]) {
-	        checkForConditionalStatements(s, "while")
+	        1 + checkForConditionalWhileStatements(s.asInstanceOf[WhileStatement])
 	      } 
 	      else if (s.isInstanceOf[ForStatement]) {
-	        checkForConditionalStatements(s, "for")
+	        1 + checkForConditionalForStatements(s.asInstanceOf[ForStatement])
 	      } 
 	      
 //	      Discuss: why shall these words increase complexity?
@@ -156,7 +194,7 @@ class McCabeMetric {
         resultObject.getValues().append(metric);
         lastCompilationUnit = item.getOriginalCompilationUnit().toString();
 	    } catch {
-	      case e: Exception => println("Probably no originalCompilationUnit exists. Exception caught: " + e); //TODO: why is it missing sometimes? 
+	      case e: Exception => println("Probably no originalCompilationUnit exists. Exception caught: " + e.printStackTrace()); //TODO: why is it missing sometimes? 
 	    }
 	  
 	  }//while
@@ -165,4 +203,56 @@ class McCabeMetric {
 	  //see: http://stackoverflow.com/questions/2429944/how-to-convert-a-scala-list-to-a-java-util-list
 	  return result.asJava	  
 	}
+	
+	
+	//	def searchForNestedInfixExpressions(exp:OclList[InfixExpression]):Double = {
+////	  var infixExpressionsList:EList[InfixExpression] = new BasicEList[InfixExpression]();
+////	  infixExpressionsList.add(exp);
+//	  val nestedInfixExpressions = exp.closure((expr) => {
+//	    var foundInfixExpressions = new BasicEList[InfixExpression]();
+//	    
+//	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
+//		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
+//	    }
+//	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
+//		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
+//	    }
+//	    foundInfixExpressions;
+//	  })
+//	  
+//	  nestedInfixExpressions.sum((infixExpression) => 
+//	    if(infixExpression.getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || infixExpression.getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
+//	    else 0
+//	  )  
+//	}
+	
+	//	def checkForConditionalStatements(statement: Statement, kind:String):Double = {
+//	  kind.toLowerCase() match {
+////	    case "if" => {
+////	      val exp = statement.asInstanceOf[IfStatement].getExpression().asInstanceOf[InfixExpression];
+////	      val operator_name = exp.getOperator().getName();
+////	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+////	      else 1	      
+////	    }
+//	    case "do" => {
+//	      val exp = statement.asInstanceOf[DoStatement].getExpression().asInstanceOf[InfixExpression];
+//	      val operator_name = exp.getOperator().getName();
+//	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+//	      else 1	      
+//	    }
+//	    case "while" => {
+//	      val exp = statement.asInstanceOf[WhileStatement].getExpression().asInstanceOf[InfixExpression];
+//	      val operator_name = exp.getOperator().getName();
+//	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+//	      else 1	      
+//	    }
+//	    case "for" => {
+//	      val exp = statement.asInstanceOf[ForStatement].getExpression().asInstanceOf[InfixExpression];
+//	      val operator_name = exp.getOperator().getName();	     
+//	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+//	      else 1	      
+//	    }
+//	    case _ => 1
+//	  }  
+//	}
 }
