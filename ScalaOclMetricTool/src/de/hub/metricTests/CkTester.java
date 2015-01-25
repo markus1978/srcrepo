@@ -18,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.hub.metrics.CKMetric;
+import de.hub.metrics.McCabeMetric;
 import de.hub.metrics.ResultObject;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
@@ -59,14 +60,14 @@ public class CkTester {
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
 //			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), LINUX_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
-			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"CkMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
+			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
 		} catch (SourceControlException e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
 		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(URI.createURI("models/CkTest.java.gitmodel"));
+		final Resource resource = rs.createResource(URI.createURI("models/mcCabeTest.java.gitmodel"));
 		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
 		Model javaModel = JavaFactory.eINSTANCE.createModel();		
 		repositoryModel.setJavaModel(javaModel);
@@ -103,7 +104,8 @@ public class CkTester {
 		
 		//test NOC-Metric
 		List<?> NocForEachCommit = ckMetric.WmcMetric(javaModel);
-		printFormattedResult(NocForEachCommit, "Noc-Metric");		
+		printFormattedResult(NocForEachCommit, "Noc-Metric");
+		
 	}
 	
 	
