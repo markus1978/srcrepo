@@ -11,6 +11,11 @@ import scala.collection.JavaConverters._
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
+import org.eclipse.gmt.modisco.java.BodyDeclaration
+import org.eclipse.gmt.modisco.java.MethodDeclaration
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList
+import org.eclipse.gmt.modisco.java.ClassDeclaration
 
 /**
  * @author Frederik Marticke
@@ -28,27 +33,38 @@ class CKMetric {
 	 * @return An List with WMC Values.
 	 */
 	def WmcMetric(model : Model ) : List[ResultObject] = {
-	    model.getCompilationUnits().collect((unit) => {
+	    val compilationUnits =  model.getCompilationUnits()	    
+	    compilationUnits.collect((unit) => {
 	      WmcMetricForUnit(unit)
 	  })
 	}
 	  
 	/**
 	 * Calculates the Weighted Method Complexity (WMC) for a unit. Basically it is expected that all 
-	 * methods will have the same Complexity.<br />
+	 * methods will have the same Complexity and no nested classes or anonymous functions are present, 
+	 * i.e. a Class has the normal structure of methods like in testclasses/CkWmcTest.java<br />
 	 * To use different weights, a concept has to be defined how this weights are tracked inside the MoDisco
 	 * model.
+	 * 
+	 * ToDo: Check the behaviour in case of nested classes or other special kinds of methoddeclarations.
 	 * @param unit
 	 * @return
 	 */
 	def WmcMetricForUnit(unit : CompilationUnit ) : ResultObject = {
 	  var resultObject:ResultObject = new ResultObject();
 	  resultObject.setFileName(unit.getName())
-	  resultObject.getValues().append(
-	      unit.eContents()
-	      .closure((e)=>e.eContents())
-	      .select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
-	      .size());  
+	  
+	  //get the 'Types' reference list for the current Unit
+	  val methodCount = unit.getTypes
+	  // get the 'Body Declarations' containment reference list for all Types
+	  .collectAll((typeEntry) => typeEntry.getBodyDeclarations())
+	  //select only the AbstractMethodDeclarations from the Body Declarations
+	  .select((s) => s.isInstanceOf[AbstractMethodDeclaration])
+	  //the final size equals the number of method declarations inside this Unit 
+	  .size()
+	  
+	  resultObject.getValues().append(methodCount)
+	        
 	  return resultObject;
 	  }
 	
