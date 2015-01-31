@@ -2,7 +2,6 @@ package de.hub.metricTests;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -18,7 +17,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.hub.metrics.McCabeMetric;
-import de.hub.metrics.ResultObject;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
@@ -36,6 +34,8 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
  */
 public class McCabeTester {
 	
+	//TODO: der ganze headerkram und das setup ist fuer die Tests relativ ähnlich, das sollte besser strukturiert werden
+	
 	/** The Linuxstyle formatted path to the cloned repository. */
 	final String LINUX_PATH_TO_CLONE_DIR = "/home/smoovie/Git_Workspace/Studienarbeit/testGitRepoCheckoutDir/clones/";
 	/** The Linuxstyle formatted path to the bare repository */
@@ -46,6 +46,8 @@ public class McCabeTester {
 	/** The Windowsstyle formatted path to the bare repository */
 	final String WIN_PATH_TO_REPO = "C:/Users/Worm/Git_Workspace/Studienarbeit/";
 
+	/** provides helpermethods e.g. for formatted output	 */
+	private final TesterTools testerTools = new TesterTools();
 	
 	/**
 	 * Creates a Model based on the referenced git repository and calculates the McCabe-Metric for each compilationunit inside.
@@ -93,26 +95,7 @@ public class McCabeTester {
 		
 		javaModel = repositoryModel.getJavaModel();		
 		McCabeMetric mcCabe = new McCabeMetric();
-		List<?> metricForEachCommit = mcCabe.mcCabeMetric(javaModel);
-		printFormattedResult(metricForEachCommit, "McCabeMetric");
+		List<?> metricForEachCommit = mcCabe.mcCabeMetric(javaModel);		
+		testerTools.printFormattedResult(metricForEachCommit, "McCabeMetric");
 	}
-	
-	
-	/**
-	 * prints output like: 'filename *** metricType: metricValue(s)'
-	 * @param result
-	 * @param metricType
-	 */
-	private static void printFormattedResult(List<?> result, String metricType){
-		System.out.println("#########################################################################");
-		System.out.println("--- Result Overview ---");	
-		int i = 0;
-		for (Iterator<?> iter = result.iterator(); iter.hasNext(); ) {
-			i++;
-			ResultObject item = (ResultObject)iter.next(); 
-			System.out.println("commit #" + i + ": " + item.getFileName() + " *** " + metricType + ": " + item.toString());
-		}
-		System.out.println("#########################################################################");
-	}
-
 }

@@ -30,6 +30,7 @@ import org.eclipse.gmt.modisco.java.ContinueStatement
 import org.eclipse.gmt.modisco.java.ReturnStatement
 import org.eclipse.gmt.modisco.java.ConditionalExpression
 import org.eclipse.gmt.modisco.java.InfixExpression
+import org.eclipse.gmt.modisco.java.emf.impl.MethodDeclarationImpl
 
 class McCabeMetric {
 	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l)
@@ -148,55 +149,61 @@ class McCabeMetric {
 	  ) + 1.0
 	}
 	
+	//TODO: Es gibt scheinbar in bestimmten Konstellationen einen Bug mit dem egit activator
+	//see: e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=370305, https://bugs.eclipse.org/bugs/show_bug.cgi?id=325829
+	//muss noch genauer analysiert werden ob/wo ein problem besteht
 	def mcCabeMetric(model: Model): List[_] = {
 	  var result:ListBuffer[ResultObject] = new ListBuffer[ResultObject];
+	  var resultObject:ResultObject = null;	  
+	  var lastCompilationUnit = "";      
+      var firstRun:Boolean = true;
 	 
 	  //gather all EStructuralFeature from Meta-Model
-	  val vSelect = model.eContents().closure((e)=>e.eContents())
+	  val abstractMethodDeclarations = model.eContents().closure((e)=>e.eContents())
 	  //select all AbstractMethodDeclarations
 	 .select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
-	  	//casting all Elements to AbstractMethodDeclaration, returns a new Collection
-	  val vCollect = vSelect.collect((e)=>e.asInstanceOf[AbstractMethodDeclaration]);
-	  	//calculate the McCabe-Metric and save in result List	  
-	  val iter = vCollect.iterator()
-	  var i : Int = 0;
-	  var lastCompilationUnit = "";
-      var resultObject:ResultObject = null;
-      var firstRun:Boolean = true;
+	  //casting all Elements to AbstractMethodDeclaration, returns a new Collection
+	 .collect((e)=>e.asInstanceOf[AbstractMethodDeclaration]);
+	  //calculate the McCabe-Metric and save in result List	  
+	  
+	  val iter = abstractMethodDeclarations.iterator();
+	   
 	  while (iter.hasNext){
 	    try{
-	    val item = iter.next();
-        val metric = mcCabeMetric(item.getBody());
-        
-        //if units differ
-        if(!(lastCompilationUnit.equals(item.getOriginalCompilationUnit().toString()))){
-          
-            //it is either a new file
-        	if(!firstRun){
-        	  //save the current resultObject according to the previous file
-        	  result.append(resultObject);
-        	  //create a new resultObject for the current File
-        	  resultObject = new ResultObject();
-        	  resultObject.setFileName(item.getOriginalCompilationUnit().getName());
-        	}
-        	
-        	//or the first run
-        	else
-        	{
-        	   //create a new resultObject for the current File
-        	  resultObject = new ResultObject();
-        	  resultObject.setFileName(item.getOriginalCompilationUnit().getName());
-        	  firstRun = false;
-        	}        	
-        } 
-        
-        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previous
-        resultObject.getValues().append(metric);
-        lastCompilationUnit = item.getOriginalCompilationUnit().toString();
+		    val abstractMethodDeclaration = iter.next();
+		    val methodBody = abstractMethodDeclaration.getBody();
+		    if(methodBody != null){
+		    	val metric = mcCabeMetric(methodBody);
+		        //if units differ
+		        if(!(lastCompilationUnit.equals(abstractMethodDeclaration.getOriginalCompilationUnit().toString()))){
+		          
+		            //it is either a new file
+		        	if(!firstRun){
+		        	  //save the current resultObject according to the previous file
+		        	  result.append(resultObject);
+		        	  //create a new resultObject for the current File
+		        	  resultObject = new ResultObject();
+		        	  resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
+		        	}
+		        	
+		        	//or the first run
+		        	else
+		        	{
+		        	   //create a new resultObject for the current File
+		        	  resultObject = new ResultObject();
+		        	  resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
+		        	  firstRun = false;
+		        	}        	
+		        } 
+		        
+		        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previous
+		        resultObject.getValues().append(metric);
+		        lastCompilationUnit = abstractMethodDeclaration.getOriginalCompilationUnit().toString();
+		    }
 	    } catch {
-	      case e: Exception => println("Probably no originalCompilationUnit exists. Exception caught: " + e.printStackTrace()); //TODO: why is it missing sometimes? 
-	    }
-	  
+	      case e: Exception => 
+	        println("Exception caught: " + e.printStackTrace()); //TODO: why is the body of an abstractMethodDeclaration missing sometimes?  
+	    }	  
 	  }//while
 	  result.append(resultObject);
 	  
