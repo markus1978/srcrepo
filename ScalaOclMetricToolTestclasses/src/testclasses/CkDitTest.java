@@ -7,7 +7,7 @@ package testclasses;
  * The simulated structure looks as follows:
  * 
  * 
- * 										CkDitLevelZeroWithNoParent
+ * 											CkDitLevelZeroWithNoParent
  * 													^
  * 													|
  * 													|
