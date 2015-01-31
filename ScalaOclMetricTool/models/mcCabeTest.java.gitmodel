@@ -1,11 +1,72 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java" xmlns:repositorymodel="http://hub.sam.repositorymodel/1.0">
-  <repositorymodel:RepositoryModel javaModel="/1" rootRev="/0/@allRevs.11">
-    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
+  <repositorymodel:RepositoryModel javaModel="/1" rootRev="/0/@allRevs.12">
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/heads/master"/>
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
-    <allRevs author="smoovie" name="e1ad16e670b35d0320715e720d048a3d53adceb1" time="2015-01-25T14:18:02.000+0100" message="Testclasses for the CK-Metrics {WMC, DIT, NOC}&#xA;">
+    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
+    <allRevs author="smoovie" name="5fdf40b57ba35d393e3cc77752560354b7c362ab" time="2015-01-25T14:51:24.000+0100" message="disabled eclipse metricsTool&#xA;">
       <parentRelations parent="/0/@allRevs.7">
+        <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/.project"/>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="8f84531dba0a4edd163650946cbd6e1a4de99bba" time="2014-12-27T02:30:20.000+0100" message="just try" childRelations="/0/@allRevs.10/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.2">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.4"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="eaf5356fb4929491da43a1ee91015eb9bfc0025a" time="2014-12-27T02:28:41.000+0100" message="senseless" childRelations="/0/@allRevs.1/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.15">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.3"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="13d729abf3144c35114c110b8f7603c9b359e7ce" time="2014-12-28T16:09:10.000+0100" message="add a second compilationUnit for McCabeTest" childRelations="/0/@allRevs.9/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.4">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java" type="ADD" oldPath="/dev/null">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.7"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="6407efdcf15b19184a868dd8e8321d65e1fa2979" time="2014-12-27T15:29:31.000+0100" message="added a seconds switch construct for testing" childRelations="/0/@allRevs.3/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.10">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.6"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="dfa968419428a7a98831e2f2c9b216ba0ac0619c" time="2015-01-11T19:04:54.000+0100" message="modified some testclasses (->Discussion)" childRelations="/0/@allRevs.18/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.6">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeBreakTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeBreakTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.18"/>
+        </diffs>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeContinueTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeContinueTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.19"/>
+        </diffs>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.20"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="8d61a7a1c66cae860872266eea59e65330d43c8a" time="2015-01-11T19:04:49.000+0100" message="[wip] Testcases for return. What about last statement restriction?" childRelations="/0/@allRevs.5/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.13">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java" type="ADD" oldPath="/dev/null">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.17"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="e1ad16e670b35d0320715e720d048a3d53adceb1" time="2015-01-25T14:18:02.000+0100" message="Testclasses for the CK-Metrics {WMC, DIT, NOC}&#xA;" childRelations="/0/@allRevs.0/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.8">
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/.project"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitInterfaceLevelOneWithNoParent.class" type="ADD" oldPath="/dev/null"/>
@@ -54,79 +115,23 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="8f84531dba0a4edd163650946cbd6e1a4de99bba" time="2014-12-27T02:30:20.000+0100" message="just try" childRelations="/0/@allRevs.9/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.2">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.4"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="eaf5356fb4929491da43a1ee91015eb9bfc0025a" time="2014-12-27T02:28:41.000+0100" message="senseless" childRelations="/0/@allRevs.1/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.14">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.3"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="dfa968419428a7a98831e2f2c9b216ba0ac0619c" time="2015-01-11T19:04:54.000+0100" message="modified some testclasses (->Discussion)" childRelations="/0/@allRevs.17/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.4">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeBreakTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeBreakTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.18"/>
-        </diffs>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeContinueTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeContinueTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.19"/>
-        </diffs>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.20"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="8d61a7a1c66cae860872266eea59e65330d43c8a" time="2015-01-11T19:04:49.000+0100" message="[wip] Testcases for return. What about last statement restriction?" childRelations="/0/@allRevs.3/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.12">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="ADD" oldPath="/dev/null"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java" type="ADD" oldPath="/dev/null">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.17"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="13d729abf3144c35114c110b8f7603c9b359e7ce" time="2014-12-28T16:09:10.000+0100" message="add a second compilationUnit for McCabeTest" childRelations="/0/@allRevs.8/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.6">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class" type="ADD" oldPath="/dev/null"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java" type="ADD" oldPath="/dev/null">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.7"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="6407efdcf15b19184a868dd8e8321d65e1fa2979" time="2014-12-27T15:29:31.000+0100" message="added a seconds switch construct for testing" childRelations="/0/@allRevs.5/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.9">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.6"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="cf0a017f66d82bc090b790d029b95fae2b6d09dd" time="2015-01-11T19:05:08.000+0100" message="added testmethod with multiple logical operators" childRelations="/0/@allRevs.0/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.15">
+    <allRevs author="smoovie" name="cf0a017f66d82bc090b790d029b95fae2b6d09dd" time="2015-01-11T19:05:08.000+0100" message="added testmethod with multiple logical operators" childRelations="/0/@allRevs.7/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.16">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.23"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="f260554ceeb335c2eeb3e8453e1269e98dc0f145" time="2014-12-28T16:12:29.000+0100" message="modified seconds cUnit and added commented blocks for testiing excludes" childRelations="/0/@allRevs.18/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.5">
+    <allRevs author="smoovie" name="f260554ceeb335c2eeb3e8453e1269e98dc0f145" time="2014-12-28T16:12:29.000+0100" message="modified seconds cUnit and added commented blocks for testiing excludes" childRelations="/0/@allRevs.19/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.3">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.8"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="7d8ebd362209ab4a1870f0546d75cf7fa2c94f67" time="2014-12-27T14:36:31.000+0100" message="expanded switch" childRelations="/0/@allRevs.6/@parentRelations.0">
+    <allRevs author="smoovie" name="7d8ebd362209ab4a1870f0546d75cf7fa2c94f67" time="2014-12-27T14:36:31.000+0100" message="expanded switch" childRelations="/0/@allRevs.4/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.1">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
@@ -134,14 +139,14 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="d60859dc1e4dd78eed1260334079834da3f4f551" time="2014-12-27T02:14:06.000+0100" message="test..." childRelations="/0/@allRevs.14/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.11">
+    <allRevs author="smoovie" name="d60859dc1e4dd78eed1260334079834da3f4f551" time="2014-12-27T02:14:06.000+0100" message="test..." childRelations="/0/@allRevs.15/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.12">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.1"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="b5180262aab6bd5ddeebd73a676b690444cdbee1" time="2014-12-27T02:12:28.000+0100" message="init" childRelations="/0/@allRevs.10/@parentRelations.0">
+    <allRevs author="smoovie" name="b5180262aab6bd5ddeebd73a676b690444cdbee1" time="2014-12-27T02:12:28.000+0100" message="init" childRelations="/0/@allRevs.11/@parentRelations.0">
       <parentRelations>
         <diffs newPath="ScalaOclMetricToolTestclasses/.classpath" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="ADD" oldPath="/dev/null"/>
@@ -152,8 +157,8 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="7c312339811b51501fc54d3c4330d36f672a5ca0" time="2015-01-11T19:04:45.000+0100" message="added testcases for break, while, doWhile, continue, for" childRelations="/0/@allRevs.4/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.13">
+    <allRevs author="smoovie" name="7c312339811b51501fc54d3c4330d36f672a5ca0" time="2015-01-11T19:04:45.000+0100" message="added testcases for break, while, doWhile, continue, for" childRelations="/0/@allRevs.6/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.14">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeDoWhileTest.class" type="ADD" oldPath="/dev/null"/>
@@ -176,8 +181,8 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="marticke" name="a6f3bac29f381924fc775aa0eedaf199472b9d2c" time="2014-12-29T13:49:29.000+0100" message="try to analyze strange behaviour on linux" childRelations="/0/@allRevs.12/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.16">
+    <allRevs author="marticke" name="a6f3bac29f381924fc775aa0eedaf199472b9d2c" time="2014-12-29T13:49:29.000+0100" message="try to analyze strange behaviour on linux" childRelations="/0/@allRevs.13/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.17">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.11"/>
@@ -185,39 +190,39 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="343ee224646b2c2f02d1ed4d125ccdacfc8bc28e" time="2014-12-27T02:25:30.000+0100" message="tae" childRelations="/0/@allRevs.2/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.10">
+      <parentRelations parent="/0/@allRevs.11">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.2"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="bd630d5e5418c6ec491effa8b15f3897e77bb07f" time="2015-01-11T19:05:03.000+0100" message="added methods for while, dowhile, for with logicalOperators" childRelations="/0/@allRevs.7/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.17">
+    <allRevs author="smoovie" name="bd630d5e5418c6ec491effa8b15f3897e77bb07f" time="2015-01-11T19:05:03.000+0100" message="added methods for while, dowhile, for with logicalOperators" childRelations="/0/@allRevs.8/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.18">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.22"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="f60155f274815ea12abf0e66fe23070098f2b5e9" time="2014-12-28T17:21:53.000+0100" message="added new testcase for if-Else" childRelations="/0/@allRevs.13/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.18">
+    <allRevs author="smoovie" name="f60155f274815ea12abf0e66fe23070098f2b5e9" time="2014-12-28T17:21:53.000+0100" message="added new testcase for if-Else" childRelations="/0/@allRevs.14/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.19">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestIfElse.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestIfElse.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.10"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="1601baa07cce740c96e085257d23ceeaec44bfc3" time="2015-01-11T19:04:58.000+0100" message="added testclass for logical operators" childRelations="/0/@allRevs.15/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.3">
+    <allRevs author="smoovie" name="1601baa07cce740c96e085257d23ceeaec44bfc3" time="2015-01-11T19:04:58.000+0100" message="added testclass for logical operators" childRelations="/0/@allRevs.16/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.5">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="ADD" oldPath="/dev/null">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.21"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="6edcb133e4b4504949dfd07ab8c03667d79f25ff" time="2014-12-28T16:31:21.000+0100" message="each testcase gets his own file to avoid massive testcommits" childRelations="/0/@allRevs.16/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.8">
+    <allRevs author="smoovie" name="6edcb133e4b4504949dfd07ab8c03667d79f25ff" time="2014-12-28T16:31:21.000+0100" message="each testcase gets his own file to avoid massive testcommits" childRelations="/0/@allRevs.17/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.9">
         <diffs newPath="/dev/null" type="DELETE" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class" type="RENAME" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
