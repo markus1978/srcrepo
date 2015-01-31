@@ -2,7 +2,6 @@ package de.hub.metricTests;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -18,8 +17,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.hub.metrics.CKMetric;
-import de.hub.metrics.McCabeMetric;
-import de.hub.metrics.ResultObject;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
@@ -47,12 +44,14 @@ public class CkTester {
 	/** The Windowsstyle formatted path to the bare repository */
 	final String WIN_PATH_TO_REPO = "C:/Users/Worm/Git_Workspace/Studienarbeit/";
 
+	/** provides helpermethods e.g. for formatted output	 */
+	private final TesterTools testerTools = new TesterTools();
 	
 	/**
 	 * Creates a Model based on the referenced git repository and calculates the McCabe-Metric for each compilationunit inside.
 	 */
 	@Test
-	public void runMcCabeMetricTest() {
+	public void runCkMetricTest() {
 		EPackage.Registry.INSTANCE.put(RepositoryModelPackage.eINSTANCE.getNsURI(), RepositoryModelPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(EcorePackage.eINSTANCE.getNsURI(), EcorePackage.eINSTANCE);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("gitmodel", new XMIResourceFactoryImpl());
@@ -95,35 +94,20 @@ public class CkTester {
 		javaModel = repositoryModel.getJavaModel();		
 		CKMetric ckMetric = new CKMetric();
 		//test WMC-Metric
-		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);
-		printFormattedResult(WmcForEachCommit, "Wmc-Metric");
+		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);		
+		testerTools.printFormattedResult(WmcForEachCommit, "Wmc-Metric");
 		
 		//test DIT-Metric
-		List<?> DitForEachCommit = ckMetric.WmcMetric(javaModel);
-		printFormattedResult(DitForEachCommit, "Dit-Metric");
+		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);		
+		testerTools.printFormattedResult(DitForEachCommit, "Dit-Metric");
 		
 		//test NOC-Metric
-		List<?> NocForEachCommit = ckMetric.WmcMetric(javaModel);
-		printFormattedResult(NocForEachCommit, "Noc-Metric");
+		List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
+		testerTools.printFormattedResult(NocForEachCommit, "Noc-Metric");
 		
 	}
 	
 	
-	/**
-	 * prints output like: 'filename *** metricType: metricValue(s)'
-	 * @param result
-	 * @param metricType
-	 */
-	private static void printFormattedResult(List<?> result, String metricType){
-		System.out.println("#########################################################################");
-		System.out.println("--- Result Overview ---");	
-		int i = 0;
-		for (Iterator<?> iter = result.iterator(); iter.hasNext(); ) {
-			i++;
-			ResultObject item = (ResultObject)iter.next(); 
-			System.out.println("commit #" + i + ": " + item.getFileName() + " *** " + metricType + ": " + item.toString());
-		}
-		System.out.println("#########################################################################");
-	}
+	
 
 }
