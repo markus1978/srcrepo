@@ -118,28 +118,44 @@ class CKMetric {
 	 */
 	def NocMetric(model : Model ) : List[ResultObject] = {
 	    model.getCompilationUnits().collect((unit) => {
-	      NocMetricForClass(unit.eClass())
+	      NocMetricForUnit(unit, model.getCompilationUnits())
 	  })
 	}
 	
 	/**
-	 * Calculates the Number of Children (NOC) for a eClass inside a MoDisco Model.	  
-	 * @param currentClass : the class to calculate
-	 * @return a @see{ResultObject} containing the deepest inheritance value and the name of
-	 * the corresponding eclass.
+	 * Calculates the Number of Children (NOC) for a compilationUnit inside a MoDisco Model.
+	 * @param currentUnit : the unit to calculate
+	 * @param allUnits : the corresponding modisco java model
+	 * @return a @see{ResultObject} containing the the number of direct subclasses for the currentUnit
 	 */
-	def NocMetricForClass(currentClass : EClass ) : ResultObject = {
+	def NocMetricForUnit(currentUnit : CompilationUnit, allUnits: EList[CompilationUnit] ) : ResultObject = {
 	  var resultObject:ResultObject = new ResultObject();
-	  resultObject.setFileName(currentClass.getName())
-	  resultObject.getValues().append(
-	      currentClass
-	      .getEAllReferences()	      
-	      .sum((reference)=>
-	        if(currentClass.isSuperTypeOf(reference.getEReferenceType()))
-	          1
-	        else 0
-	        ))
+	  resultObject.setFileName(currentUnit.getName())
+	  
+	  val nocValue = allUnits
+	  //get all other compilationUnits
+	  .select((unit) => !(unit.getName().equals(currentUnit.getName())))	  
+	  //sum up all classes having the current class as a direct superclass
+	  .sum((otherUnit) => {
+		  otherUnit.getTypes()
+		  //select all classdeclarations for this unit from the types set
+		  .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+		  //cast all those items to classdeclarations 
+		  .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+		  //calculate the NOC-value
+		  .select((node)=>	    
+	    	//select all classes having the current class as superClass and return the total number 
+	        (
+	            (
+	                node.getSuperClass() != null 
+	                && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())
+	            ) || (
+	                node.getSuperInterfaces() != null
+	                && node.getSuperInterfaces().collect((interface) => interface.getType().getOriginalCompilationUnit().getName()).contains(currentUnit.getName())	            
+	            )	            
+	        )).size();		  
+	  })	  
+	  resultObject.getValues().append(nocValue);	  
 	  return resultObject;
-	  }
-
+	}
 }
