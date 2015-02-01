@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java" xmlns:repositorymodel="http://hub.sam.repositorymodel/1.0">
   <repositorymodel:RepositoryModel javaModel="/1" rootRev="/0/@allRevs.12">
+    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/heads/master"/>
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
-    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
-    <allRevs author="smoovie" name="778abd261c691136e231fa1ac14792778ec9601a" time="2015-01-31T22:34:57.000+0100" message="Tests for CkMetric-DIT&#xA;">
+    <allRevs author="smoovie" name="bfb274c3c6eff4a7021c19f051ffb1816c6febb2" time="2015-02-01T14:36:42.000+0100" message="small restructioring&#xA;">
       <parentRelations parent="/0/@allRevs.15">
-        <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitInterfaceLevelTwoWithNoParents.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitLevelOneWithParent.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitLevelOneWithParent.class"/>
+        <diffs newPath="/dev/null" type="DELETE" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitLevelTwoWithNoParent.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitInterfaceLevelTwoWithNoParents.java" type="RENAME" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitLevelTwoWithNoParent.java"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitLevelOneWithParent.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitLevelOneWithParent.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.37"/>
+        </diffs>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.35"/>
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.36"/>
         </diffs>
       </parentRelations>
     </allRevs>
@@ -21,7 +28,7 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="eaf5356fb4929491da43a1ee91015eb9bfc0025a" time="2014-12-27T02:28:41.000+0100" message="senseless" childRelations="/0/@allRevs.1/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.16">
+      <parentRelations parent="/0/@allRevs.17">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.3"/>
@@ -44,7 +51,7 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="dfa968419428a7a98831e2f2c9b216ba0ac0619c" time="2015-01-11T19:04:54.000+0100" message="modified some testclasses (->Discussion)" childRelations="/0/@allRevs.19/@parentRelations.0">
+    <allRevs author="smoovie" name="dfa968419428a7a98831e2f2c9b216ba0ac0619c" time="2015-01-11T19:04:54.000+0100" message="modified some testclasses (->Discussion)" childRelations="/0/@allRevs.20/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.6">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class"/>
@@ -68,7 +75,7 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="f260554ceeb335c2eeb3e8453e1269e98dc0f145" time="2014-12-28T16:12:29.000+0100" message="modified seconds cUnit and added commented blocks for testiing excludes" childRelations="/0/@allRevs.20/@parentRelations.0">
+    <allRevs author="smoovie" name="f260554ceeb335c2eeb3e8453e1269e98dc0f145" time="2014-12-28T16:12:29.000+0100" message="modified seconds cUnit and added commented blocks for testiing excludes" childRelations="/0/@allRevs.21/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.3">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java">
@@ -76,7 +83,7 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="e1ad16e670b35d0320715e720d048a3d53adceb1" time="2015-01-25T14:18:02.000+0100" message="Testclasses for the CK-Metrics {WMC, DIT, NOC}&#xA;" childRelations="/0/@allRevs.15/@parentRelations.0">
+    <allRevs author="smoovie" name="e1ad16e670b35d0320715e720d048a3d53adceb1" time="2015-01-25T14:18:02.000+0100" message="Testclasses for the CK-Metrics {WMC, DIT, NOC}&#xA;" childRelations="/0/@allRevs.16/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.9">
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/.project"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="ADD" oldPath="/dev/null"/>
@@ -127,7 +134,7 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="cf0a017f66d82bc090b790d029b95fae2b6d09dd" time="2015-01-11T19:05:08.000+0100" message="added testmethod with multiple logical operators" childRelations="/0/@allRevs.8/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.17">
+      <parentRelations parent="/0/@allRevs.18">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.23"/>
@@ -142,7 +149,7 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="d60859dc1e4dd78eed1260334079834da3f4f551" time="2014-12-27T02:14:06.000+0100" message="test..." childRelations="/0/@allRevs.16/@parentRelations.0">
+    <allRevs author="smoovie" name="d60859dc1e4dd78eed1260334079834da3f4f551" time="2014-12-27T02:14:06.000+0100" message="test..." childRelations="/0/@allRevs.17/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.12">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.1"/>
@@ -185,14 +192,22 @@
       </parentRelations>
     </allRevs>
     <allRevs author="marticke" name="a6f3bac29f381924fc775aa0eedaf199472b9d2c" time="2014-12-29T13:49:29.000+0100" message="try to analyze strange behaviour on linux" childRelations="/0/@allRevs.13/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.18">
+      <parentRelations parent="/0/@allRevs.19">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.11"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="5fdf40b57ba35d393e3cc77752560354b7c362ab" time="2015-01-25T14:51:24.000+0100" message="disabled eclipse metricsTool&#xA;" childRelations="/0/@allRevs.0/@parentRelations.0">
+    <allRevs author="smoovie" name="778abd261c691136e231fa1ac14792778ec9601a" time="2015-01-31T22:34:57.000+0100" message="Tests for CkMetric-DIT&#xA;" childRelations="/0/@allRevs.0/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.16">
+        <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.35"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="5fdf40b57ba35d393e3cc77752560354b7c362ab" time="2015-01-25T14:51:24.000+0100" message="disabled eclipse metricsTool&#xA;" childRelations="/0/@allRevs.15/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.8">
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/.project"/>
       </parentRelations>
@@ -206,7 +221,7 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="bd630d5e5418c6ec491effa8b15f3897e77bb07f" time="2015-01-11T19:05:03.000+0100" message="added methods for while, dowhile, for with logicalOperators" childRelations="/0/@allRevs.9/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.19">
+      <parentRelations parent="/0/@allRevs.20">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.22"/>
@@ -214,14 +229,14 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="f60155f274815ea12abf0e66fe23070098f2b5e9" time="2014-12-28T17:21:53.000+0100" message="added new testcase for if-Else" childRelations="/0/@allRevs.14/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.20">
+      <parentRelations parent="/0/@allRevs.21">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestIfElse.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestIfElse.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.10"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="1601baa07cce740c96e085257d23ceeaec44bfc3" time="2015-01-11T19:04:58.000+0100" message="added testclass for logical operators" childRelations="/0/@allRevs.17/@parentRelations.0">
+    <allRevs author="smoovie" name="1601baa07cce740c96e085257d23ceeaec44bfc3" time="2015-01-11T19:04:58.000+0100" message="added testclass for logical operators" childRelations="/0/@allRevs.18/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.5">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="ADD" oldPath="/dev/null">
@@ -229,7 +244,7 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="6edcb133e4b4504949dfd07ab8c03667d79f25ff" time="2014-12-28T16:31:21.000+0100" message="each testcase gets his own file to avoid massive testcommits" childRelations="/0/@allRevs.18/@parentRelations.0">
+    <allRevs author="smoovie" name="6edcb133e4b4504949dfd07ab8c03667d79f25ff" time="2014-12-28T16:31:21.000+0100" message="each testcase gets his own file to avoid massive testcommits" childRelations="/0/@allRevs.19/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.7">
         <diffs newPath="/dev/null" type="DELETE" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class" type="ADD" oldPath="/dev/null"/>
@@ -2258,7 +2273,7 @@
         <modifier visibility="public"/>
         <superClass type="/1/@ownedElements.0/@ownedElements.26"/>
       </ownedElements>
-      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.26" name="CkDitLevelTwoWithTwoParents" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.25/@superClass /1/@ownedElements.0/@ownedElements.35/@superClass">
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.26" name="CkDitLevelTwoWithTwoParents" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.25/@superClass /1/@ownedElements.0/@ownedElements.35/@superClass /1/@ownedElements.0/@ownedElements.36/@superClass">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.26" content="/** &#xA; * @author Frederik MartickePart of the structure used for the CkDitTest.&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.26" tagName="@author">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.26" text=" Frederik Marticke"/>
@@ -2445,7 +2460,7 @@
           <returnType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.7"/>
         </bodyDeclarations>
       </ownedElements>
-      <ownedElements xsi:type="java:InterfaceDeclaration" originalCompilationUnit="/1/@compilationUnits.33" name="CkDitInterfaceLevelOneWithNoParent" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.26/@superInterfaces.0">
+      <ownedElements xsi:type="java:InterfaceDeclaration" originalCompilationUnit="/1/@compilationUnits.33" name="CkDitInterfaceLevelOneWithNoParent" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.26/@superInterfaces.0 /1/@ownedElements.0/@ownedElements.37/@superInterfaces.0">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.33" content="/** &#xA; * @author Frederik MartickePart of the structure used for the CkDitTest&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.33" tagName="@author">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.33" text=" Frederik Marticke"/>
@@ -2455,7 +2470,7 @@
         <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.33" content="//nothing to do here." enclosedByParent="true"/>
         <modifier visibility="public"/>
       </ownedElements>
-      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.34" name="CkDitLevelZeroWithNoParent" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.29/@superClass">
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.34" name="CkDitLevelZeroWithNoParent" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.29/@superClass /1/@ownedElements.0/@ownedElements.37/@superClass">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.34" content="/** &#xA; * @author Frederik MartickePart of the structure used for the CkDitTest.&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.34" tagName="@author">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.34" text=" Frederik Marticke"/>
@@ -2495,6 +2510,50 @@
         <modifier visibility="public"/>
         <superClass type="/1/@ownedElements.0/@ownedElements.26"/>
       </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.36" name="CkDitTest">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.36" content="/** &#xA; * @author Frederik MartickeThis is a testclass for the Depth inheritance tree (DIT) metric from the CK metricssuite. The simulated structure looks as follows: CkDitLevelZeroWithNoParent ^ | | CkDitInterfaceLevelOneWithNoParent &lt;------ CkDitLevelOneWithParent&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; ^&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;^ |&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| |&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| ----------------------------------------- | CkDitLevelTwoWithTwoParents&#x9;&#x9;&#x9;CkDitInterfaceLevelTwoWithNoParents ^&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;^ |&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| |&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| CkDitTest ----------------------------------- Therefore the result should be DIT(CkDitTest) = 3, because  CkDitLevelTwoWithTwoParents -> CkDitLevelOneWithParent -> CkDitLevelZeroWithNoParent is the longest Path inside the inheritance tree.&#xA; */&#xA;" prefixOfParent="true">
+          <tags originalCompilationUnit="/1/@compilationUnits.36" tagName="@author">
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text=" Frederik Marticke"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="This is a testclass for the Depth inheritance tree (DIT) metric from the CK metricssuite."/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="The simulated structure looks as follows:"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="CkDitLevelZeroWithNoParent"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="^"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="CkDitInterfaceLevelOneWithNoParent &lt;------ CkDitLevelOneWithParent&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="^&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;^"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="-----------------------------------------"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="CkDitLevelTwoWithTwoParents&#x9;&#x9;&#x9;CkDitInterfaceLevelTwoWithNoParents"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="^&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;^"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;|"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="CkDitTest -----------------------------------"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="Therefore the result should be DIT(CkDitTest) = 3, because "/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="CkDitLevelTwoWithTwoParents -> CkDitLevelOneWithParent -> CkDitLevelZeroWithNoParent"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.36" text="is the longest Path inside the inheritance tree."/>
+          </tags>
+        </comments>
+        <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.36" content="//nothing to do here." enclosedByParent="true"/>
+        <modifier visibility="public"/>
+        <superInterfaces type="/1/@ownedElements.0/@ownedElements.38"/>
+        <superClass type="/1/@ownedElements.0/@ownedElements.26"/>
+      </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.37" name="CkDitLevelOneWithParent">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.37" content="/** &#xA; * @author Frederik MartickePart of the structure used for the CkDitTest.&#xA; */&#xA;" prefixOfParent="true">
+          <tags originalCompilationUnit="/1/@compilationUnits.37" tagName="@author">
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.37" text=" Frederik Marticke"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.37" text="Part of the structure used for the CkDitTest."/>
+          </tags>
+        </comments>
+        <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.37" content="//nothing to do here." enclosedByParent="true"/>
+        <modifier visibility="public"/>
+        <superInterfaces type="/1/@ownedElements.0/@ownedElements.33"/>
+        <superClass type="/1/@ownedElements.0/@ownedElements.34"/>
+      </ownedElements>
+      <ownedElements xsi:type="java:InterfaceDeclaration" name="CkDitInterfaceLevelTwoWithNoParents" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.36/@superInterfaces.0"/>
     </ownedElements>
     <ownedElements name="java" proxy="true">
       <ownedPackages name="lang" proxy="true">
@@ -2587,5 +2646,7 @@
     <compilationUnits name="CkDitInterfaceLevelOneWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitInterfaceLevelOneWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.33/@comments.0 /1/@ownedElements.0/@ownedElements.33/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.33"/>
     <compilationUnits name="CkDitLevelZeroWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelZeroWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.34/@comments.0 /1/@ownedElements.0/@ownedElements.34/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.34"/>
     <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.35/@comments.0 /1/@ownedElements.0/@ownedElements.35/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.35"/>
+    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.36/@comments.0 /1/@ownedElements.0/@ownedElements.36/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.36"/>
+    <compilationUnits name="CkDitLevelOneWithParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelOneWithParent.java" commentList="/1/@ownedElements.0/@ownedElements.37/@comments.0 /1/@ownedElements.0/@ownedElements.37/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.37"/>
   </java:Model>
 </xmi:XMI>

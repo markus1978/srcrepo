@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList
 import org.eclipse.gmt.modisco.java.ClassDeclaration
 import org.eclipse.gmt.modisco.java.emf.impl.TypeAccessImpl
 import org.eclipse.gmt.modisco.java.emf.impl.ClassDeclarationImpl
+import org.eclipse.gmt.modisco.java.TypeAccess
 
 /**
  * @author Frederik Marticke
@@ -123,6 +124,13 @@ class CKMetric {
 	}
 	
 	/**
+	 * TODO: der Kurs ist schon ganz okay, aber wie zum geier kommt man an den Namen einer 
+	 * CompilationUnit die umbenannt wurde??? bzw. an irgendwas anderes woran sich erkennen lässt
+	 * dass ein Interface implementiert wurde bzw. eine Klasse geerbt hat.
+	 * Ausserdem könnte es sein, dass Klassen mehrfach gezählt werden, wenn sie mehrfach als
+	 * CompilationUnit auftreten was z.B. den Wert 3.0 für #CompilationUnit #27: CkDitLevelTwoWithTwoParents.java *** Noc-Metric: 3.0#
+	 * erklären könnte der eigentlich nur 1.0 sein dürfte 
+	 * 
 	 * Calculates the Number of Children (NOC) for a compilationUnit inside a MoDisco Model.
 	 * @param currentUnit : the unit to calculate
 	 * @param allUnits : the corresponding modisco java model
@@ -150,12 +158,22 @@ class CKMetric {
 	                node.getSuperClass() != null 
 	                && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())
 	            ) || (
-	                node.getSuperInterfaces() != null
-	                && node.getSuperInterfaces().collect((interface) => interface.getType().getOriginalCompilationUnit().getName()).contains(currentUnit.getName())	            
+	                !(node.getSuperInterfaces().isEmpty())
+	                && foo(node.getSuperInterfaces(), currentUnit.getName().split(".java")(0))	            
 	            )	            
 	        )).size();		  
 	  })	  
 	  resultObject.getValues().append(nocValue);	  
 	  return resultObject;
+	}
+	
+	def foo(list : EList[TypeAccess], name:String):Boolean = {	 
+	  val l = list;
+	  val gg = l.collect((interface) => interface.getType());
+	  val n = gg.collect((g) => g.getName())	  
+	  if(n.contains(name))
+	    println("<"+name+"> is contained in list: <"+n+">___");
+	  
+	  n.contains(name);	  
 	}
 }

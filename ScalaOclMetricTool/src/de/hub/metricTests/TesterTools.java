@@ -28,6 +28,11 @@ public class TesterTools {
 		System.out.println("#########################################################################");
 	}
 	
+	/**
+	 * prints output like: 'filename *** metricType: metricValue(s)' for all values > 0
+	 * @param result
+	 * @param metricType
+	 */
 	public void printFormattedResultGreaterZero(List<?> result, String metricType){
 		System.out.println("#########################################################################");
 		System.out.println("--- Result Overview ---");	
