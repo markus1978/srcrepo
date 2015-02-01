@@ -27,5 +27,18 @@ public class TesterTools {
 		}
 		System.out.println("#########################################################################");
 	}
+	
+	public void printFormattedResultGreaterZero(List<?> result, String metricType){
+		System.out.println("#########################################################################");
+		System.out.println("--- Result Overview ---");	
+		int i = 0;
+		for (Iterator<?> iter = result.iterator(); iter.hasNext(); ) {
+			i++;
+			ResultObject item = (ResultObject)iter.next();	
+			if(!(item.toStringOnlyGreaterZero().isEmpty()))
+				System.out.println("CompilationUnit #" + i + ": " + item.getFileName() + " *** " + metricType + ": " + item.toStringOnlyGreaterZero());
+		}
+		System.out.println("#########################################################################");
+	}
 
 }

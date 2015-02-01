@@ -14,6 +14,15 @@ class ResultObject {
     return string;
   }
   
+  def toStringOnlyGreaterZero():String = {	    
+    var string = "";	    
+    for (iter <- values.toList.iterator) {	
+      if(iter > 0.0)
+		string = string.concat(iter.toString);			
+	}
+    return string;
+  }
+  
   def getFileName():String = {
     return this.fileName ;
   }
