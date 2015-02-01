@@ -42,7 +42,7 @@ public class CkWmcTest {
 	}
 	
 	private int WmcTestPrivate(int i){
-		return 1 + i;
+		return 1 + CkWmcSecondClass.WmcVariableAccess;
 	}
 	
 	protected Object WmcTestProtected(Object o){
