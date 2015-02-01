@@ -102,13 +102,17 @@ public class CkTester {
 //		testerTools.printFormattedResult(DitForEachCommit, "Dit-Metric");
 		
 		//test NOC-Metric
-		try{
-			List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
-			testerTools.printFormattedResult(NocForEachCommit, "Noc-Metric");
-		//	testerTools.printFormattedResultGreaterZero(NocForEachCommit, "Noc-Metric");
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+//		try{
+//			List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
+//			testerTools.printFormattedResult(NocForEachCommit, "Noc-Metric");
+//		//	testerTools.printFormattedResultGreaterZero(NocForEachCommit, "Noc-Metric");
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		//test CBO-Metric
+		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);		
+		testerTools.printFormattedResultGreaterZero(CboForEachCommit, "Cbo-Metric");
 	}
 	
 	

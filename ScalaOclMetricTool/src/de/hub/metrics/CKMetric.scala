@@ -78,7 +78,7 @@ class CKMetric {
 	 */
 	def DitMetric(model : Model ) : List[ResultObject] = {
 	  return model.getCompilationUnits().collect((unit) => {
-	    DitMetricForClass(unit)
+	    DitMetricForUnit(unit)
 	  })
 	}
 	
@@ -88,7 +88,7 @@ class CKMetric {
 	 * @return a @see{ResultObject} containing the deepest inheritance value and the name of
 	 * the corresponding CompilationUnit.
 	 */
-	def DitMetricForClass(currentUnit : CompilationUnit) : ResultObject = {
+	def DitMetricForUnit(currentUnit : CompilationUnit) : ResultObject = {
 	  val resultObject:ResultObject = new ResultObject();
 	  resultObject.setFileName(currentUnit.getName())
 	  
@@ -106,7 +106,7 @@ class CKMetric {
 	          0
 	        else	        
 	          //In Java multiple inheritance is not allowed, but in general the longest path must be returned
-	          1 + DitMetricForClass(currentClass.getSuperClass().getType().getOriginalCompilationUnit()).getValues.max	        
+	          1 + DitMetricForUnit(currentClass.getSuperClass().getType().getOriginalCompilationUnit()).getValues.max	        
 	        )
 	  resultObject.getValues().append(ditValue)	      
 	  return resultObject;
@@ -176,4 +176,43 @@ class CKMetric {
 	  
 	  n.contains(name);	  
 	}
+	
+	/**
+	 * Calculates the Coupling Between Objects (CBO) for each CompilationUnit inside a MoDisco Model.
+	 * @param model
+	 * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
+	 */
+	def CboMetric(model : Model ) : List[ResultObject] = {
+	  return model.getCompilationUnits().collect((unit) => {
+	    CboMetricForUnit(unit)
+	  })
+	}
+	
+	/**
+	 * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.	  
+	 * @param currentUnit : the Unit to calculate
+	 * @return a @see{ResultObject} containing the deepest inheritance value and the name of
+	 * the corresponding CompilationUnit.
+	 */
+	def CboMetricForUnit(currentUnit : CompilationUnit) : ResultObject = {
+	  val resultObject:ResultObject = new ResultObject();
+	  resultObject.setFileName(currentUnit.getName())
+	  
+	  val CboValue = currentUnit
+	  //get the 'Types' reference list for the current Unit
+	  val methodCount = CboValue.getTypes();
+	  val b = methodCount.select((s) => s.isInstanceOf[ClassDeclaration])
+//	  //the final size equals the number of method declarations inside this Unit
+	  val c = b.collect((s) => s.asInstanceOf[ClassDeclaration])
+	  val d = c.sum((k) => k.getUsagesInTypeAccess().size());
+	  // get the 'Body Declarations' containment reference list for all Types
+//	  val a = methodCount.collectAll((typeEntry) => typeEntry.getBodyDeclarations())
+//	  //select only the AbstractMethodDeclarations from the Body Declarations
+//	  val b = a.select((s) => s.isInstanceOf[MethodDeclaration])
+//	  //the final size equals the number of method declarations inside this Unit
+//	  val c = b.collect((s) => s.asInstanceOf[MethodDeclaration])
+//	  val d = c.sum((aa) => aa.getUsages().size())
+	  resultObject.getValues().append(d)      
+	  return resultObject;
+	  }
 }
