@@ -11,13 +11,13 @@ package testclasses;
  * 													^
  * 													|
  * 													|
- * CkDitInterfaceLevelOneWithNoParent			CkDitLevelOneWithParent						
+ * CkDitInterfaceLevelOneWithNoParent <------ CkDitLevelOneWithParent						
  *			^										^
  * 			|										|
  * 			|										|
  * 			-----------------------------------------
  * 			|
- * 	CkDitLevelTwoWithTwoParents			CkDitLevelTwoWithNoParents
+ * 	CkDitLevelTwoWithTwoParents			CkDitInterfaceLevelTwoWithNoParents
  * 			^										^
  * 			|										|
  * 			|										|
@@ -27,6 +27,7 @@ package testclasses;
  * CkDitLevelTwoWithTwoParents -> CkDitLevelOneWithParent -> CkDitLevelZeroWithNoParent
  * is the longest Path inside the inheritance tree.
  */
-public class CkDitTest extends CkDitLevelTwoWithTwoParents{
+public class CkDitTest extends CkDitLevelTwoWithTwoParents
+implements CkDitInterfaceLevelTwoWithNoParents{
 	//nothing to do here.
 }
