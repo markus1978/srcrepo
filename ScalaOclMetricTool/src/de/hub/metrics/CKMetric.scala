@@ -19,6 +19,17 @@ import org.eclipse.gmt.modisco.java.ClassDeclaration
 import org.eclipse.gmt.modisco.java.emf.impl.TypeAccessImpl
 import org.eclipse.gmt.modisco.java.emf.impl.ClassDeclarationImpl
 import org.eclipse.gmt.modisco.java.TypeAccess
+import org.eclipse.gmt.modisco.java.VariableDeclaration
+import org.eclipse.gmt.modisco.java.MethodInvocation
+import org.eclipse.gmt.modisco.java.emf.impl.SingleVariableDeclarationImpl
+import org.eclipse.gmt.modisco.java.PrimitiveType
+import org.eclipse.gmt.modisco.java.Statement
+import org.eclipse.gmt.modisco.java.VariableDeclarationStatement
+import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
+import org.eclipse.gmt.modisco.java.FieldAccess
+import org.eclipse.gmt.modisco.java.SingleVariableAccess
+import org.eclipse.gmt.modisco.java.Expression
+import org.eclipse.gmt.modisco.java.Block
 
 /**
  * @author Frederik Marticke
@@ -182,10 +193,91 @@ class CKMetric {
 	 * @param model
 	 * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
 	 */
-	def CboMetric(model : Model ) : List[ResultObject] = {
+	def CboMetric(model : Model ) : List[ResultObject] = {	  
+	  var content = model.eContents().closure((e)=>e.eContents())	 
+	  var variableDeclarationStatements = content
+	  .select((e)=>e.isInstanceOf[VariableDeclarationStatement])
+	  .collect((e)=>e.asInstanceOf[VariableDeclarationStatement]);
+	  variableDeclarationStatements.closure((vdStatement) => {			    
+		    var statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
+		    //1. getType = variableAccessImpl; 2.getType = typ der Variablen => only interessted in not primitive types
+		    if(!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])){
+		      println("[CBO-VarDeclaration]: ->>> variableType: " + vdStatement.getType().getType().getName() 
+		          + "  ---  declared in Unit:" + statementContainingUnit.toString().split('.')(0) 
+		          +" --- couples: " + statementContainingUnit.split('.')(0) + " --> " + vdStatement.getType().getType().getName());
+		    } 		    
+		    new BasicEList();
+		  });
+	  
+	  content = model.eContents().closure((e)=>e.eContents());	 
+	  var methodInvocations = content
+	  .select((e)=>e.isInstanceOf[MethodInvocation])
+	  .collect((e)=>e.asInstanceOf[MethodInvocation]);	  
+	  methodInvocations.closure((method) => {
+		  //only not default methods have an original compilation unit
+		    if((method.getMethod().getOriginalCompilationUnit() != null
+		        //only interessed in methods defined in classes other than the one invoking the method
+		        && !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName())))){
+		      println("[CBO-Method]: ->>> method: " + method.getMethod().getName() 
+		          + " --- declared in: " + method.getMethod().getOriginalCompilationUnit().getName() 
+		          + " --- is used in: " + method.getOriginalCompilationUnit().getName().toString().split('.')(0) 
+		          + " --- couples: " + method.getOriginalCompilationUnit().getName().toString().split('.')(0)
+		          + " --> " + method.getMethod().getOriginalCompilationUnit().getName().toString().split('.')(0));
+		    }		    
+		    new BasicEList();
+		  });
+	  
+	  content = model.eContents().closure((e)=>e.eContents());	 
+	  var singleVariableAccess = content
+	  .select((e)=>e.isInstanceOf[SingleVariableAccess])
+	  .collect((e)=>e.asInstanceOf[SingleVariableAccess]);
+	  
+	  singleVariableAccess.select((s) =>
+	    s.eContainer().isInstanceOf[Statement]
+	    )
+	    //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
+	  .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+	  .closure((variable) => {
+		   //the unit inside the variable was declared
+		   var declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
+		   //the units inside the variable is accessed
+		   var usedIn = variable.eContainer();
+		   var usedIn2 = usedIn.asInstanceOf[Statement].getOriginalCompilationUnit().getName();
+		  		  
+		   if(!(declaredIn.equalsIgnoreCase(usedIn2))){		     
+		     	printCboCoupling(usedIn2, declaredIn, variable, "Statement");
+		    } 
+		   new BasicEList();
+		  });
+	  
+	  singleVariableAccess.select((s) =>
+	    s.eContainer().isInstanceOf[Expression]
+	    )
+	    //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
+	  .select((item) => item.getVariable().getOriginalCompilationUnit() != null)	  
+	  .closure((variable) => {		
+	    //the unit inside the variable was declared
+		   var declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
+		   //the units inside the variable is accessed
+		   var usedIn = variable.eContainer();
+		   var usedIn2 = usedIn.asInstanceOf[Expression].getOriginalCompilationUnit().getName();
+		  		  
+		   if(!(declaredIn.equalsIgnoreCase(usedIn2))){	     
+		     	printCboCoupling(usedIn2, declaredIn, variable, "Expression");
+		    } 
+		   new BasicEList();
+		  });
+		    	
 	  return model.getCompilationUnits().collect((unit) => {
 	    CboMetricForUnit(unit)
 	  })
+	}	
+	
+	def printCboCoupling(usedIn : String, declaredIn: String, variable:SingleVariableAccess, kind:String) = {
+	  println("[CBO-"+kind+"-VarAccess]: ->>> " 
+		     	    + "Class: <" + usedIn + "> "
+		     	    + "gets coupled to <" + declaredIn + "> " 
+		     	    + "by using the field: <" + variable.getVariable().getName() + ">");
 	}
 	
 	/**
