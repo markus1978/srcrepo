@@ -36,304 +36,303 @@ import org.eclipse.gmt.modisco.java.Block
  *
  */
 class CKMetric {
-  implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l)
-	
-	/**
-	 * Calculates the Weighted Method Complexity (WMC) for each CompilationUnit inside a MoDisco Model.
-	 * Basically it is expected that all methods will have the same Complexity.<br />
-	 * To use different weights, a concept has to be defined how this weights are tracked inside the 
-	 * model.
-	 * @param model
-	 * @return An List with WMC Values.
-	 */
-	def WmcMetric(model : Model ) : List[ResultObject] = {
-	    val compilationUnits =  model.getCompilationUnits()	    
-	    compilationUnits.collect((unit) => {
-	      WmcMetricForUnit(unit)
-	  })
-	}
-	  
-	/**
-	 * Calculates the Weighted Method Complexity (WMC) for a CompilationUnit. <br />
-	 * Basically it is expected that all methods will have the same Complexity and no nested classes or anonymous functions are present, 
-	 * i.e. a Class has the normal structure of methods like in testclasses/CkWmcTest.java<br />
-	 * To use different weights, a concept has to be defined how this weights are tracked inside the MoDisco model.
-	 * 
-	 * ToDo: Check the behaviour in case of nested classes or other special kinds of methoddeclarations. <br />
-	 * How to handle different weights?
-	 * @param unit
-	 * @return
-	 */
-	def WmcMetricForUnit(unit : CompilationUnit ) : ResultObject = {
-	  val resultObject:ResultObject = new ResultObject();
-	  resultObject.setFileName(unit.getName());
-	  
-	  //get the 'Types' reference list for the current Unit
-	  val methodCount = unit.getTypes
-	  // get the 'Body Declarations' containment reference list for all Types
-	  .collectAll((typeEntry) => typeEntry.getBodyDeclarations())
-	  //select only the AbstractMethodDeclarations from the Body Declarations
-	  .select((s) => s.isInstanceOf[AbstractMethodDeclaration])
-	  //the final size equals the number of method declarations inside this Unit 
-	  .size()
-	  
-	  resultObject.getValues().append(methodCount)
-	        
-	  return resultObject;
-	  }
-	
-	/**
-	 * Calculates the Depth Inheritance Tree (DIT) for each CompilationUnit inside a MoDisco Model.
-	 * @param model
-	 * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
-	 */
-	def DitMetric(model : Model ) : List[ResultObject] = {
-	  return model.getCompilationUnits().collect((unit) => {
-	    DitMetricForUnit(unit)
-	  })
-	}
-	
-	/**
-	 * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.	  
-	 * @param currentUnit : the Unit to calculate
-	 * @return a @see{ResultObject} containing the deepest inheritance value and the name of
-	 * the corresponding CompilationUnit.
-	 */
-	def DitMetricForUnit(currentUnit : CompilationUnit) : ResultObject = {
-	  val resultObject:ResultObject = new ResultObject();
-	  resultObject.setFileName(currentUnit.getName())
-	  
-	  val ditValue = currentUnit
-  	  //get the 'Types' reference list for the current Unit
-	  .getTypes()
-	  //select all classdeclarations for this unit from the types set
-	  .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-	  //cast all those items to classdeclarations 
-	  .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-	  //calculate the DIT-value
-	  .sum((currentClass)=>
-	    	//no superclass yields a DIT of 0
-	        if(currentClass.getSuperClass() == null) 
-	          0
-	        else	        
-	          //In Java multiple inheritance is not allowed, but in general the longest path must be returned
-	          1 + DitMetricForUnit(currentClass.getSuperClass().getType().getOriginalCompilationUnit()).getValues.max	        
-	        )
-	  resultObject.getValues().append(ditValue)	      
-	  return resultObject;
-	  }
-	
-	/**
-	 * Calculates the Number of Children (NOC) for each CompilationUnit inside a MoDisco Model.
-	 * @param model
-	 * @return a List of ResultObjects containing the NOC values for each Compilation Unit
-	 */
-	def NocMetric(model : Model ) : List[ResultObject] = {
-	    model.getCompilationUnits().collect((unit) => {
-	      NocMetricForUnit(unit, model.getCompilationUnits())
-	  })
-	}
-	
-	/**
-	 * TODO: der Kurs ist schon ganz okay, aber wie zum geier kommt man an den Namen einer 
-	 * CompilationUnit die umbenannt wurde??? bzw. an irgendwas anderes woran sich erkennen lässt
-	 * dass ein Interface implementiert wurde bzw. eine Klasse geerbt hat.
-	 * Ausserdem könnte es sein, dass Klassen mehrfach gezählt werden, wenn sie mehrfach als
-	 * CompilationUnit auftreten was z.B. den Wert 3.0 für #CompilationUnit #27: CkDitLevelTwoWithTwoParents.java *** Noc-Metric: 3.0#
-	 * erklären könnte der eigentlich nur 1.0 sein dürfte 
-	 * 
-	 * Calculates the Number of Children (NOC) for a compilationUnit inside a MoDisco Model.
-	 * @param currentUnit : the unit to calculate
-	 * @param allUnits : the corresponding modisco java model
-	 * @return a @see{ResultObject} containing the the number of direct subclasses for the currentUnit
-	 */
-	def NocMetricForUnit(currentUnit : CompilationUnit, allUnits: EList[CompilationUnit] ) : ResultObject = {
-	  var resultObject:ResultObject = new ResultObject();
-	  resultObject.setFileName(currentUnit.getName())
-	  
-	  val nocValue = allUnits
-	  //get all other compilationUnits
-	  .select((unit) => !(unit.getName().equals(currentUnit.getName())))	  
-	  //sum up all classes having the current class as a direct superclass
-	  .sum((otherUnit) => {
-		  otherUnit.getTypes()
-		  //select all classdeclarations for this unit from the types set
-		  .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-		  //cast all those items to classdeclarations 
-		  .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-		  //calculate the NOC-value
-		  .select((node)=>	    
-	    	//select all classes having the current class as superClass and return the total number 
-	        (
-	            (
-	                node.getSuperClass() != null 
-	                && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())
-	            ) || (
-	                !(node.getSuperInterfaces().isEmpty())
-	                && foo(node.getSuperInterfaces(), currentUnit.getName().split(".java")(0))	            
-	            )	            
-	        )).size();		  
-	  })	  
-	  resultObject.getValues().append(nocValue);	  
-	  return resultObject;
-	}	
-	
-	def foo(list : EList[TypeAccess], name:String):Boolean = {	 
-	  val l = list;
-	  val gg = l.collect((interface) => interface.getType());
-	  val n = gg.collect((g) => g.getName())	  
-	  if(n.contains(name))
-	    println("<"+name+"> is contained in list: <"+n+">___");
-	  
-	  n.contains(name);	  
-	}
-	
-	
-	def addToCboList(currentUnit : String, coupledUnit: String, resultList: EList[ResultObject]): EList[ResultObject] = {
-	  var curUnit = resultList.select((e) => e.getFileName.equalsIgnoreCase(currentUnit));
-  	  //current unit has already couplings
-	  if(curUnit.size() == 1){
-	    var isCoupled = curUnit.get(0).getCoupledUnits.select((e) => e.equalsIgnoreCase(coupledUnit))
-	    //the coupled class is not part of the list yet
-	    if(isCoupled.size() == 0){
-	      curUnit.get(0).getCoupledUnits.add(coupledUnit);
-	      curUnit.get(0).getValues()(0) = curUnit.get(0).getValues()(0)+1;
-	    }	    
-	  } else {
-	    //the current unit has no couplings until now
-	    var resultObject = new ResultObject();
-	    var values = new ListBuffer[Double];
-	    values.append(1.0);
-	    resultObject.setValues(values);
-	    resultObject.setFileName(currentUnit);
-	    resultObject.getCoupledUnits.add(coupledUnit);
-	    resultList.add(resultObject);
-	  }
-	  resultList;
-	} 
-	
-	/**
-	 * Calculates the Coupling Between Objects (CBO) for each CompilationUnit inside a MoDisco Model.
-	 * @param model
-	 * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
-	 */
-	def CboMetric(model : Model ) : List[ResultObject] = {	  
-	  var cboResultList : EList[ResultObject] = new BasicEList[ResultObject];	  
-	  var content = model.eContents().closure((e)=>e.eContents())	 
-	  var variableDeclarationStatements = content
-	  .select((e)=>e.isInstanceOf[VariableDeclarationStatement])
-	  .collect((e)=>e.asInstanceOf[VariableDeclarationStatement]);
-	  variableDeclarationStatements.closure((vdStatement) => {			    
-		    var statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
-		    //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
-		    if(!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])){
-		      println("[CBO-VarDeclaration]: ->>> variableType: " + vdStatement.getType().getType().getName() 
-		          + "  ---  declared in Unit:" + statementContainingUnit.toString().split('.')(0) 
-		          +" --- couples: " + statementContainingUnit.split('.')(0) + " --> " + vdStatement.getType().getType().getName());
-		      
-		      cboResultList = addToCboList(statementContainingUnit.split('.')(0), vdStatement.getType().getType().getName().split('.')(0), cboResultList)
-		    } 		    
-		    new BasicEList();
-		  });
-	  
-	  content = model.eContents().closure((e)=>e.eContents());	 
-	  var methodInvocations = content
-	  .select((e)=>e.isInstanceOf[MethodInvocation])
-	  .collect((e)=>e.asInstanceOf[MethodInvocation]);	  
-	  methodInvocations.closure((method) => {
-		  //only not default methods have an original compilation unit
-		    if((method.getMethod().getOriginalCompilationUnit() != null
-		        //only interessed in methods defined in classes other than the one invoking the method
-		        && !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName())))){
-		      println("[CBO-Method]: ->>> method: " + method.getMethod().getName() 
-		          + " --- declared in: " + method.getMethod().getOriginalCompilationUnit().getName().split('.')(0)
-		          + " --- is used in: " + method.getOriginalCompilationUnit().getName().toString().split('.')(0) 
-		          + " --- couples: " + method.getOriginalCompilationUnit().getName().toString().split('.')(0)
-		          + " --> " + method.getMethod().getOriginalCompilationUnit().getName().toString().split('.')(0));
-		      
-		      cboResultList = addToCboList(method.getOriginalCompilationUnit().getName().toString().split('.')(0),  method.getMethod().getOriginalCompilationUnit().getName().toString().split('.')(0), cboResultList)
-		    }		    
-		    new BasicEList();
-		  });
-	  
-	  content = model.eContents().closure((e)=>e.eContents());	 
-	  var singleVariableAccess = content
-	  .select((e)=>e.isInstanceOf[SingleVariableAccess])
-	  .collect((e)=>e.asInstanceOf[SingleVariableAccess]);
-	  
-	  singleVariableAccess.select((s) =>
-	    s.eContainer().isInstanceOf[Statement]
-	    )
-	    //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
-	  .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
-	  .closure((variable) => {
-		   //the unit inside the variable was declared
-		   var declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
-		   //the units inside the variable is accessed
-		   var usedIn = variable.eContainer();
-		   var usedIn2 = usedIn.asInstanceOf[Statement].getOriginalCompilationUnit().getName();
-		  		  
-		   if(!(declaredIn.equalsIgnoreCase(usedIn2))){		     
-		     	printCboCoupling(usedIn2, declaredIn, variable, "Statement");
-		     	cboResultList = addToCboList(usedIn2.toString().split('.')(0), declaredIn.toString().split('.')(0),cboResultList)
-		    } 
-		   new BasicEList();
-		  });
-	  
-	  singleVariableAccess.select((s) =>
-	    s.eContainer().isInstanceOf[Expression]
-	    )
-	    //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
-	  .select((item) => item.getVariable().getOriginalCompilationUnit() != null)	  
-	  .closure((variable) => {		
-	    //the unit inside the variable was declared
-		   var declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
-		   //the units inside the variable is accessed
-		   var usedIn = variable.eContainer();
-		   var usedIn2 = usedIn.asInstanceOf[Expression].getOriginalCompilationUnit().getName();
-		  		  
-		   if(!(declaredIn.equalsIgnoreCase(usedIn2))){	     
-		     	printCboCoupling(usedIn2, declaredIn, variable, "Expression");
-		     	cboResultList = addToCboList(usedIn2.toString().split('.')(0),declaredIn.toString().split('.')(0), cboResultList)
-		    } 
-		   new BasicEList();
-		  });
-		    	
-	  return cboResultList;
-	}	
-	
-	def printCboCoupling(usedIn : String, declaredIn: String, variable:SingleVariableAccess, kind:String) = {
-	  println("[CBO-"+kind+"-VarAccess]: ->>> " 
-		     	    + "Class: <" + usedIn + "> "
-		     	    + "gets coupled to <" + declaredIn + "> " 
-		     	    + "by using the field: <" + variable.getVariable().getName() + ">");
-	}
-	
-	/**
-	 * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.	  
-	 * @param currentUnit : the Unit to calculate
-	 * @return a @see{ResultObject} containing the deepest inheritance value and the name of
-	 * the corresponding CompilationUnit.
-	 */
-	def CboMetricForUnit(currentUnit : CompilationUnit) : ResultObject = {
-	  val resultObject:ResultObject = new ResultObject();
-	  resultObject.setFileName(currentUnit.getName())
-	  
-	  val CboValue = currentUnit
-	  //get the 'Types' reference list for the current Unit
-	  val methodCount = CboValue.getTypes();
-	  val b = methodCount.select((s) => s.isInstanceOf[ClassDeclaration])
-//	  //the final size equals the number of method declarations inside this Unit
-	  val c = b.collect((s) => s.asInstanceOf[ClassDeclaration])
-	  val d = c.sum((k) => k.getUsagesInTypeAccess().size());
-	  // get the 'Body Declarations' containment reference list for all Types
-//	  val a = methodCount.collectAll((typeEntry) => typeEntry.getBodyDeclarations())
-//	  //select only the AbstractMethodDeclarations from the Body Declarations
-//	  val b = a.select((s) => s.isInstanceOf[MethodDeclaration])
-//	  //the final size equals the number of method declarations inside this Unit
-//	  val c = b.collect((s) => s.asInstanceOf[MethodDeclaration])
-//	  val d = c.sum((aa) => aa.getUsages().size())
-	  resultObject.getValues().append(d)      
-	  return resultObject;
-	  }
+  implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]): OclList[E] = new OclList[E](l)
+
+  /**
+   * Calculates the Weighted Method Complexity (WMC) for each CompilationUnit inside a MoDisco Model.
+   * Basically it is expected that all methods will have the same Complexity.<br />
+   * To use different weights, a concept has to be defined how this weights are tracked inside the
+   * model.
+   * @param model
+   * @return An List with WMC Values.
+   */
+  def WmcMetric(model: Model): List[ResultObject] = {
+    val compilationUnits = model.getCompilationUnits()
+    compilationUnits.collect((unit) => {
+      WmcMetricForUnit(unit)
+    })
+  }
+
+  /**
+   * Calculates the Weighted Method Complexity (WMC) for a CompilationUnit. <br />
+   * Basically it is expected that all methods will have the same Complexity and no nested classes or anonymous functions are present,
+   * i.e. a Class has the normal structure of methods like in testclasses/CkWmcTest.java<br />
+   * To use different weights, a concept has to be defined how this weights are tracked inside the MoDisco model.
+   *
+   * ToDo: Check the behaviour in case of nested classes or other special kinds of methoddeclarations. <br />
+   * How to handle different weights?
+   * @param unit
+   * @return
+   */
+  def WmcMetricForUnit(unit: CompilationUnit): ResultObject = {
+    val resultObject: ResultObject = new ResultObject();
+    resultObject.setFileName(unit.getName());
+
+    //get the 'Types' reference list for the current Unit
+    val methodCount = unit.getTypes
+      // get the 'Body Declarations' containment reference list for all Types
+      .collectAll((typeEntry) => typeEntry.getBodyDeclarations())
+      //select only the AbstractMethodDeclarations from the Body Declarations
+      .select((s) => s.isInstanceOf[AbstractMethodDeclaration])
+      //the final size equals the number of method declarations inside this Unit 
+      .size()
+
+    resultObject.getValues().append(methodCount)
+
+    return resultObject;
+  }
+
+  /**
+   * Calculates the Depth Inheritance Tree (DIT) for each CompilationUnit inside a MoDisco Model.
+   * @param model
+   * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
+   */
+  def DitMetric(model: Model): List[ResultObject] = {
+    return model.getCompilationUnits().collect((unit) => {
+      DitMetricForUnit(unit)
+    })
+  }
+
+  /**
+   * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.
+   * @param currentUnit : the Unit to calculate
+   * @return a @see{ResultObject} containing the deepest inheritance value and the name of
+   * the corresponding CompilationUnit.
+   */
+  def DitMetricForUnit(currentUnit: CompilationUnit): ResultObject = {
+    val resultObject: ResultObject = new ResultObject();
+    resultObject.setFileName(currentUnit.getName())
+
+    val ditValue = currentUnit
+      //get the 'Types' reference list for the current Unit
+      .getTypes()
+      //select all classdeclarations for this unit from the types set
+      .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+      //cast all those items to classdeclarations 
+      .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+      //calculate the DIT-value
+      .sum((currentClass) =>
+        //no superclass yields a DIT of 0
+        if (currentClass.getSuperClass() == null)
+          0
+        else
+          //In Java multiple inheritance is not allowed, but in general the longest path must be returned
+          1 + DitMetricForUnit(currentClass.getSuperClass().getType().getOriginalCompilationUnit()).getValues.max)
+    resultObject.getValues().append(ditValue)
+    return resultObject;
+  }
+
+  /**
+   * Calculates the Number of Children (NOC) for each CompilationUnit inside a MoDisco Model.
+   * @param model
+   * @return a List of ResultObjects containing the NOC values for each Compilation Unit
+   */
+  def NocMetric(model: Model): List[ResultObject] = {
+    model.getCompilationUnits().collect((unit) => {
+      NocMetricForUnit(unit, model.getCompilationUnits())
+    })
+  }
+
+  /**
+   * TODO: der Kurs ist schon ganz okay, aber wie zum geier kommt man an den Namen einer
+   * CompilationUnit die umbenannt wurde??? bzw. an irgendwas anderes woran sich erkennen lässt
+   * dass ein Interface implementiert wurde bzw. eine Klasse geerbt hat.
+   * Ausserdem könnte es sein, dass Klassen mehrfach gezählt werden, wenn sie mehrfach als
+   * CompilationUnit auftreten was z.B. den Wert 3.0 für #CompilationUnit #27: CkDitLevelTwoWithTwoParents.java *** Noc-Metric: 3.0#
+   * erklären könnte der eigentlich nur 1.0 sein dürfte
+   *
+   * Calculates the Number of Children (NOC) for a compilationUnit inside a MoDisco Model.
+   * @param currentUnit : the unit to calculate
+   * @param allUnits : the corresponding modisco java model
+   * @return a @see{ResultObject} containing the the number of direct subclasses for the currentUnit
+   */
+  def NocMetricForUnit(currentUnit: CompilationUnit, allUnits: EList[CompilationUnit]): ResultObject = {
+    var resultObject: ResultObject = new ResultObject();
+    resultObject.setFileName(currentUnit.getName())
+
+    val nocValue = allUnits
+      //get all other compilationUnits
+      .select((unit) => !(unit.getName().equals(currentUnit.getName())))
+      //sum up all classes having the current class as a direct superclass
+      .sum((otherUnit) => {
+        otherUnit.getTypes()
+          //select all classdeclarations for this unit from the types set
+          .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+          //cast all those items to classdeclarations 
+          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+          //calculate the NOC-value
+          .select((node) =>
+            //select all classes having the current class as superClass and return the total number 
+            (
+              (
+                node.getSuperClass() != null
+                && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) || (
+                  !(node.getSuperInterfaces().isEmpty())
+                  && foo(node.getSuperInterfaces(), currentUnit.getName().split(".java")(0))))).size();
+      })
+    resultObject.getValues().append(nocValue);
+    return resultObject;
+  }
+
+  /**
+   * TODO: Das muss noch weg, aber dazu muss NOC richtig funktionieren...
+   */
+  def foo(list: EList[TypeAccess], name: String): Boolean = {
+    val l = list;
+    val gg = l.collect((interface) => interface.getType());
+    val n = gg.collect((g) => g.getName())
+    if (n.contains(name))
+      println("<" + name + "> is contained in list: <" + n + ">___");
+
+    n.contains(name);
+  }
+
+  /**
+   * Calculates the Coupling Between Objects (CBO) inside a MoDisco model.
+   * @param model: the MoDisco model to calculate
+   * @return a List of ResultObjects containing the coupling value for each compilationUnit
+   */
+  def CboMetric(model: Model): List[ResultObject] = {
+    val cboResultList: EList[ResultObject] = new BasicEList[ResultObject];
+
+    //as part of an Type for 'VariableDeclaration'
+    cboResultList.union(
+      model.eContents().closure((e) => e.eContents())
+        .select((e) => e.isInstanceOf[VariableDeclarationStatement])
+        .collect((e) => e.asInstanceOf[VariableDeclarationStatement])
+        .iterate(() => cboResultList, (vdStatement, cboList: EList[ResultObject]) => {
+          val statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
+          //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
+          if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])) {
+
+            printCboCoupling("VariableDeclarationType",
+              stripCompilationUnitName(vdStatement.getType().getType().getName()),
+              stripCompilationUnitName(statementContainingUnit),
+              stripCompilationUnitName(vdStatement.getType().getType().getName()))
+
+            addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
+          }
+          cboList;
+        }));
+
+    //as part of an 'MethodInvocation'
+    cboResultList.union(
+      model.eContents().closure((e) => e.eContents())
+        .select((e) => e.isInstanceOf[MethodInvocation])
+        .collect((e) => e.asInstanceOf[MethodInvocation])
+        .iterate(() => cboResultList, (method, cboList: EList[ResultObject]) => {
+          //only not default methods have an original compilation unit
+          if ((method.getMethod().getOriginalCompilationUnit() != null
+            //only interessed in methods defined in classes other than the one invoking the method
+            && !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName())))) {
+
+            printCboCoupling("Method",
+              stripCompilationUnitName(method.getMethod().getName()),
+              stripCompilationUnitName(method.getOriginalCompilationUnit().getName()),
+              stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()))
+
+            addToCboList(stripCompilationUnitName(method.getOriginalCompilationUnit().getName()), stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()), cboResultList)
+          }
+          cboList;
+        }));
+
+    //reusable, see below
+    val singleVariableAccess = model.eContents().closure((e) => e.eContents())
+      .select((e) => e.isInstanceOf[SingleVariableAccess])
+      .collect((e) => e.asInstanceOf[SingleVariableAccess]);
+
+    //as part of an 'Statement'
+    cboResultList.union(
+      singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Statement])
+        //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
+        .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+        .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
+          //the unit inside the variable was declared
+          val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
+          //the units inside the variable is used
+          val usedIn = variable.eContainer().asInstanceOf[Statement].getOriginalCompilationUnit().getName();
+          if (!(declaredIn.equalsIgnoreCase(usedIn))) {
+            printCboCoupling("SingleVariableAccess-Statement",
+              stripCompilationUnitName(variable.getVariable().getName()),
+              stripCompilationUnitName(usedIn),
+              stripCompilationUnitName(declaredIn))
+
+            addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboResultList)
+          }
+          cboList;
+        }));
+
+    //as part of an 'Expression'
+    cboResultList.union(
+      singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Expression])
+        .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+        .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
+          val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
+          val usedIn = variable.eContainer().asInstanceOf[Expression].getOriginalCompilationUnit().getName();
+          if (!(declaredIn.equalsIgnoreCase(usedIn))) {
+            printCboCoupling("SingleVariableAccess-Expression",
+              stripCompilationUnitName(variable.getVariable().getName()),
+              stripCompilationUnitName(usedIn),
+              stripCompilationUnitName(declaredIn))
+
+            addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboResultList)
+          }
+          cboList
+        }));
+
+    return cboResultList;
+  }
+
+  /**
+   * Helpermethod: Returns the filename of the Compilationunit without its extension
+   * @param unit: the unit to strip
+   * @return: the stripped filename
+   */
+  def stripCompilationUnitName(unitName: String): String = {
+    return unitName.toString().split('.')(0);
+  }
+
+  /**
+   * Helpermethod: Prints the given coupling in an verbose way
+   * @param accessedType: the kind of coupling as a description, e.g. 'SingleVariableAccess-Expression' for a variable accessed inside an expression
+   * @param accessedObjectName: the name of the used object, e.g. the variable name
+   * @param usedIn: the compilationUnit using the object
+   * @param declaredIn: the object where the used part is declared in
+   */
+  def printCboCoupling(accessedType: String, accessedObjectName: String, usedIn: String, declaredIn: String) = {
+    println("[CBO-" + accessedType + "]: ---> " + accessedType + ": <" + accessedObjectName + ">"
+      + " declared in: <" + declaredIn + ">"
+      + " is used in: <" + usedIn + ">"
+      + " and couples: <" + usedIn + "> --> <" + declaredIn + ">");
+  }
+
+  /**
+   * Helpermethod: If an objectcoupling was detected, this methods checks if the coupling already exists and add a new coupling for this class otherwise
+   * @param currentUnit - the unit which gets coupled by usng another component
+   * @param coupledUnit - the unit defining the component
+   * @param resultList - the list to collect all couples
+   * @return the updated resultList
+   */
+  def addToCboList(currentUnit: String, coupledUnit: String, resultList: EList[ResultObject]): EList[ResultObject] = {
+    val dependingUnit = resultList.select((e) => e.getFileName.equalsIgnoreCase(currentUnit));
+    //current unit has already couplings if its contained inside the select-result
+    if (dependingUnit.size() == 1) {
+      val isCoupled = dependingUnit.get(0).getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(coupledUnit))
+      //the coupled class is not part of the list yet, otherwise it's nothing to do, because classes get count only once
+      if (isCoupled.size() == 0) {
+        dependingUnit.get(0).getCoupledUnits.add(coupledUnit);
+        dependingUnit.get(0).getValues()(0) = dependingUnit.get(0).getValues()(0) + 1;
+      }
+    } else {
+      //the current unit has no couplings until now
+      val resultObject = new ResultObject();
+      val values = new ListBuffer[Double];
+      values.append(1.0);
+      resultObject.setValues(values);
+      resultObject.setFileName(currentUnit);
+      resultObject.getCoupledUnits.add(coupledUnit);
+      resultList.add(resultObject);
+    }
+    resultList;
+  }
 }
