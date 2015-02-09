@@ -176,7 +176,7 @@ class CKMetric {
 	  })	  
 	  resultObject.getValues().append(nocValue);	  
 	  return resultObject;
-	}
+	}	
 	
 	def foo(list : EList[TypeAccess], name:String):Boolean = {	 
 	  val l = list;
@@ -188,23 +188,50 @@ class CKMetric {
 	  n.contains(name);	  
 	}
 	
+	
+	def addToCboList(currentUnit : String, coupledUnit: String, resultList: EList[ResultObject]): EList[ResultObject] = {
+	  var curUnit = resultList.select((e) => e.getFileName.equalsIgnoreCase(currentUnit));
+  	  //current unit has already couplings
+	  if(curUnit.size() == 1){
+	    var isCoupled = curUnit.get(0).getCoupledUnits.select((e) => e.equalsIgnoreCase(coupledUnit))
+	    //the coupled class is not part of the list yet
+	    if(isCoupled.size() == 0){
+	      curUnit.get(0).getCoupledUnits.add(coupledUnit);
+	      curUnit.get(0).getValues()(0) = curUnit.get(0).getValues()(0)+1;
+	    }	    
+	  } else {
+	    //the current unit has no couplings until now
+	    var resultObject = new ResultObject();
+	    var values = new ListBuffer[Double];
+	    values.append(1.0);
+	    resultObject.setValues(values);
+	    resultObject.setFileName(currentUnit);
+	    resultObject.getCoupledUnits.add(coupledUnit);
+	    resultList.add(resultObject);
+	  }
+	  resultList;
+	} 
+	
 	/**
 	 * Calculates the Coupling Between Objects (CBO) for each CompilationUnit inside a MoDisco Model.
 	 * @param model
 	 * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
 	 */
 	def CboMetric(model : Model ) : List[ResultObject] = {	  
+	  var cboResultList : EList[ResultObject] = new BasicEList[ResultObject];	  
 	  var content = model.eContents().closure((e)=>e.eContents())	 
 	  var variableDeclarationStatements = content
 	  .select((e)=>e.isInstanceOf[VariableDeclarationStatement])
 	  .collect((e)=>e.asInstanceOf[VariableDeclarationStatement]);
 	  variableDeclarationStatements.closure((vdStatement) => {			    
 		    var statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
-		    //1. getType = variableAccessImpl; 2.getType = typ der Variablen => only interessted in not primitive types
+		    //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
 		    if(!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])){
 		      println("[CBO-VarDeclaration]: ->>> variableType: " + vdStatement.getType().getType().getName() 
 		          + "  ---  declared in Unit:" + statementContainingUnit.toString().split('.')(0) 
 		          +" --- couples: " + statementContainingUnit.split('.')(0) + " --> " + vdStatement.getType().getType().getName());
+		      
+		      cboResultList = addToCboList(statementContainingUnit.split('.')(0), vdStatement.getType().getType().getName().split('.')(0), cboResultList)
 		    } 		    
 		    new BasicEList();
 		  });
@@ -219,10 +246,12 @@ class CKMetric {
 		        //only interessed in methods defined in classes other than the one invoking the method
 		        && !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName())))){
 		      println("[CBO-Method]: ->>> method: " + method.getMethod().getName() 
-		          + " --- declared in: " + method.getMethod().getOriginalCompilationUnit().getName() 
+		          + " --- declared in: " + method.getMethod().getOriginalCompilationUnit().getName().split('.')(0)
 		          + " --- is used in: " + method.getOriginalCompilationUnit().getName().toString().split('.')(0) 
 		          + " --- couples: " + method.getOriginalCompilationUnit().getName().toString().split('.')(0)
 		          + " --> " + method.getMethod().getOriginalCompilationUnit().getName().toString().split('.')(0));
+		      
+		      cboResultList = addToCboList(method.getOriginalCompilationUnit().getName().toString().split('.')(0),  method.getMethod().getOriginalCompilationUnit().getName().toString().split('.')(0), cboResultList)
 		    }		    
 		    new BasicEList();
 		  });
@@ -246,6 +275,7 @@ class CKMetric {
 		  		  
 		   if(!(declaredIn.equalsIgnoreCase(usedIn2))){		     
 		     	printCboCoupling(usedIn2, declaredIn, variable, "Statement");
+		     	cboResultList = addToCboList(usedIn2.toString().split('.')(0), declaredIn.toString().split('.')(0),cboResultList)
 		    } 
 		   new BasicEList();
 		  });
@@ -264,13 +294,12 @@ class CKMetric {
 		  		  
 		   if(!(declaredIn.equalsIgnoreCase(usedIn2))){	     
 		     	printCboCoupling(usedIn2, declaredIn, variable, "Expression");
+		     	cboResultList = addToCboList(usedIn2.toString().split('.')(0),declaredIn.toString().split('.')(0), cboResultList)
 		    } 
 		   new BasicEList();
 		  });
 		    	
-	  return model.getCompilationUnits().collect((unit) => {
-	    CboMetricForUnit(unit)
-	  })
+	  return cboResultList;
 	}	
 	
 	def printCboCoupling(usedIn : String, declaredIn: String, variable:SingleVariableAccess, kind:String) = {
