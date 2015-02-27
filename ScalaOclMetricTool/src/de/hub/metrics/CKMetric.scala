@@ -196,45 +196,45 @@ class CKMetric {
     val cboResultList: EList[ResultObject] = new BasicEList[ResultObject];
 
     //as part of an Type for 'VariableDeclaration'
-    cboResultList.union(
-      model.eContents().closure((e) => e.eContents())
-        .select((e) => e.isInstanceOf[VariableDeclarationStatement])
-        .collect((e) => e.asInstanceOf[VariableDeclarationStatement])
-        .iterate(() => cboResultList, (vdStatement, cboList: EList[ResultObject]) => {
-          val statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
-          //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
-          if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])) {
 
-            printCboCoupling("VariableDeclarationType",
-              stripCompilationUnitName(vdStatement.getType().getType().getName()),
-              stripCompilationUnitName(statementContainingUnit),
-              stripCompilationUnitName(vdStatement.getType().getType().getName()))
+    model.eContents().closure((e) => e.eContents())
+      .select((e) => e.isInstanceOf[VariableDeclarationStatement])
+      .collect((e) => e.asInstanceOf[VariableDeclarationStatement])
+      .iterate(() => cboResultList, (vdStatement, cboList: EList[ResultObject]) => {
+        val statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
+        //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
+        if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])) {
 
-            addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
-          }
-          cboList;
-        }));
+          printCboCoupling("VariableDeclarationType",
+            stripCompilationUnitName(vdStatement.getType().getType().getName()),
+            stripCompilationUnitName(statementContainingUnit),
+            stripCompilationUnitName(vdStatement.getType().getType().getName()))
+
+          addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
+        }
+        cboList;
+      });
 
     //as part of an 'MethodInvocation'
-    cboResultList.union(
-      model.eContents().closure((e) => e.eContents())
-        .select((e) => e.isInstanceOf[MethodInvocation])
-        .collect((e) => e.asInstanceOf[MethodInvocation])
-        .iterate(() => cboResultList, (method, cboList: EList[ResultObject]) => {
-          //only not default methods have an original compilation unit
-          if ((method.getMethod().getOriginalCompilationUnit() != null
-            //only interessed in methods defined in classes other than the one invoking the method
-            && !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName())))) {
 
-            printCboCoupling("Method",
-              stripCompilationUnitName(method.getMethod().getName()),
-              stripCompilationUnitName(method.getOriginalCompilationUnit().getName()),
-              stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()))
+    model.eContents().closure((e) => e.eContents())
+      .select((e) => e.isInstanceOf[MethodInvocation])
+      .collect((e) => e.asInstanceOf[MethodInvocation])
+      .iterate(() => cboResultList, (method, cboList: EList[ResultObject]) => {
+        //only not default methods have an original compilation unit
+        if ((method.getMethod().getOriginalCompilationUnit() != null
+          //only interessed in methods defined in classes other than the one invoking the method
+          && !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName())))) {
 
-            addToCboList(stripCompilationUnitName(method.getOriginalCompilationUnit().getName()), stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()), cboResultList)
-          }
-          cboList;
-        }));
+          printCboCoupling("Method",
+            stripCompilationUnitName(method.getMethod().getName()),
+            stripCompilationUnitName(method.getOriginalCompilationUnit().getName()),
+            stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()))
+
+          addToCboList(stripCompilationUnitName(method.getOriginalCompilationUnit().getName()), stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()), cboList)
+        }
+        cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
+      });
 
     //reusable, see below
     val singleVariableAccess = model.eContents().closure((e) => e.eContents())
@@ -242,43 +242,62 @@ class CKMetric {
       .collect((e) => e.asInstanceOf[SingleVariableAccess]);
 
     //as part of an 'Statement'
-    cboResultList.union(
-      singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Statement])
-        //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
-        .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
-        .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
-          //the unit inside the variable was declared
-          val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
-          //the units inside the variable is used
-          val usedIn = variable.eContainer().asInstanceOf[Statement].getOriginalCompilationUnit().getName();
-          if (!(declaredIn.equalsIgnoreCase(usedIn))) {
-            printCboCoupling("SingleVariableAccess-Statement",
-              stripCompilationUnitName(variable.getVariable().getName()),
-              stripCompilationUnitName(usedIn),
-              stripCompilationUnitName(declaredIn))
 
-            addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboResultList)
-          }
-          cboList;
-        }));
+    singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Statement])
+      //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
+      .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+      .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
+        //the unit inside the variable was declared
+        val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
+        //the units inside the variable is used
+        val usedIn = variable.eContainer().asInstanceOf[Statement].getOriginalCompilationUnit().getName();
+        if (!(declaredIn.equalsIgnoreCase(usedIn))) {
+          printCboCoupling("SingleVariableAccess-Statement",
+            stripCompilationUnitName(variable.getVariable().getName()),
+            stripCompilationUnitName(usedIn),
+            stripCompilationUnitName(declaredIn))
 
-    //as part of an 'Expression'
-    cboResultList.union(
-      singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Expression])
-        .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
-        .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
-          val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
-          val usedIn = variable.eContainer().asInstanceOf[Expression].getOriginalCompilationUnit().getName();
-          if (!(declaredIn.equalsIgnoreCase(usedIn))) {
-            printCboCoupling("SingleVariableAccess-Expression",
-              stripCompilationUnitName(variable.getVariable().getName()),
-              stripCompilationUnitName(usedIn),
-              stripCompilationUnitName(declaredIn))
+          addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboList)
+        }
+        cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
+      });
 
-            addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboResultList)
-          }
-          cboList
-        }));
+    //as part of an 'Expression'    
+
+    singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Expression])
+      .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+      .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
+        val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
+        val usedIn = variable.eContainer().asInstanceOf[Expression].getOriginalCompilationUnit().getName();
+        if (!(declaredIn.equalsIgnoreCase(usedIn))) {
+          printCboCoupling("SingleVariableAccess-Expression",
+            stripCompilationUnitName(variable.getVariable().getName()),
+            stripCompilationUnitName(usedIn),
+            stripCompilationUnitName(declaredIn))
+
+          addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboList)
+        }
+        cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
+      });
+
+    //Interface Implementation
+    model.getCompilationUnits()
+      .collectAll((unit) =>
+        unit.getTypes()
+          .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+          .select((classDeclarationWithInterface) => !classDeclarationWithInterface.getSuperInterfaces().isEmpty()))
+
+      .iterate(() => cboResultList, (classDec, cboList: EList[ResultObject]) => {
+        classDec.getSuperInterfaces().iterate(() => cboList, (interface, resList: EList[ResultObject]) => {
+          printCboCoupling("Interface-Implementation",
+            stripCompilationUnitName(interface.getType().getName()),
+            stripCompilationUnitName(classDec.getName()),
+            stripCompilationUnitName(interface.getType().getName()))
+
+          addToCboList(stripCompilationUnitName(classDec.getName()), stripCompilationUnitName(interface.getType().getName()), resList)
+        })
+      })
 
     return cboResultList;
   }
