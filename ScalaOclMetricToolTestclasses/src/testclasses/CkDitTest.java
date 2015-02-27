@@ -12,22 +12,22 @@ package testclasses;
  * 													|
  * 													|
  * CkDitInterfaceLevelOneWithNoParent <------ CkDitLevelOneWithParent						
- *			^										^
- * 			|										|
- * 			|										|
- * 			-----------------------------------------
- * 			|
- * 	CkDitLevelTwoWithTwoParents			CkDitInterfaceLevelTwoWithNoParents
- * 			^										^
- * 			|										|
- * 			|										|
- * 		CkDitTest -----------------------------------
+ *	^		^										^
+ * 	|		|										|
+ * 	|		|										|
+ * 	|		-----------------------------------------
+ * 	|		|
+ *  |	CkDitLevelTwoWithTwoParents			CkDitInterfaceLevelTwoWithNoParents
+ * 	|		^										^
+ * 	|		|										|
+ * 	|		|										|
+ * 	-----CkDitTest -----------------------------------
  * 
  * Therefore the result should be DIT(CkDitTest) = 3, because 
  * CkDitLevelTwoWithTwoParents -> CkDitLevelOneWithParent -> CkDitLevelZeroWithNoParent
  * is the longest Path inside the inheritance tree.
  */
 public class CkDitTest extends CkDitLevelTwoWithTwoParents
-implements CkDitInterfaceLevelTwoWithNoParents{
+implements CkDitInterfaceLevelTwoWithNoParents, CkDitInterfaceLevelOneWithNoParent {
 	//nothing to do here.
 }
