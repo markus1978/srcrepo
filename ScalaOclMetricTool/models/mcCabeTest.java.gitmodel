@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java" xmlns:repositorymodel="http://hub.sam.repositorymodel/1.0">
   <repositorymodel:RepositoryModel javaModel="/1" rootRev="/0/@allRevs.7">
-    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/heads/master"/>
+    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
     <allRevs author="smoovie" name="5eafd73353fc51f4d967b0f382e663b7dabc94f9" time="2015-02-27T13:39:37.000+0100" message="[CKMetric_CBO] added second interface implementation for further testing&#xA;">
       <parentRelations parent="/0/@allRevs.4">
