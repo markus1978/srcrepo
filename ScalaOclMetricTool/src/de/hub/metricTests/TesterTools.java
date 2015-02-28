@@ -41,7 +41,10 @@ public class TesterTools {
 			i++;
 			ResultObject item = (ResultObject)iter.next();	
 			if(!(item.toStringOnlyGreaterZero().isEmpty()))
-				System.out.println("CompilationUnit #" + i + ": " + item.getFileName() + " *** " + metricType + ": " + item.toStringOnlyGreaterZero());
+				System.out.println("CompilationUnit #" + i + ": " + item.getFileName() + " *** " + metricType 
+						+ ": " + item.toStringOnlyGreaterZero());
+			if(item.getCoupledUnits().size() > 0)
+				System.out.println(" --- couplings: <" + item.getCoupledUnits().toString() + ">");
 		}
 		System.out.println("#########################################################################");
 	}
