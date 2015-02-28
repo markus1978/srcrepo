@@ -93,6 +93,7 @@ public class CkTester {
 		
 		javaModel = repositoryModel.getJavaModel();		
 		CKMetric ckMetric = new CKMetric();
+		
 		//test WMC-Metric
 		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);		
 		testerTools.printFormattedResult(WmcForEachCommit, "Wmc-Metric");
@@ -101,7 +102,7 @@ public class CkTester {
 		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);		
 		testerTools.printFormattedResult(DitForEachCommit, "Dit-Metric");
 		
-		//test NOC-Metric
+//		test NOC-Metric
 //		try{
 //			List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
 //			testerTools.printFormattedResult(NocForEachCommit, "Noc-Metric");
@@ -109,10 +110,14 @@ public class CkTester {
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}
-//		
+		
 		//test CBO-Metric
 		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);		
 		testerTools.printFormattedResultGreaterZero(CboForEachCommit, "Cbo-Metric");
+		
+		//test CBO-Metric
+		List<?> RfcForEachCommit = ckMetric.RfcMetric(javaModel);		
+		testerTools.printFormattedResultGreaterZero(RfcForEachCommit, "Rfc-Metric");
 	}
 	
 	
