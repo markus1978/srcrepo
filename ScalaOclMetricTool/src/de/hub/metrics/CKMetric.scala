@@ -30,6 +30,10 @@ import org.eclipse.gmt.modisco.java.FieldAccess
 import org.eclipse.gmt.modisco.java.SingleVariableAccess
 import org.eclipse.gmt.modisco.java.Expression
 import org.eclipse.gmt.modisco.java.Block
+import org.eclipse.gmt.modisco.java.AbstractMethodInvocation
+import org.eclipse.gmt.modisco.java.ASTNode
+import org.eclipse.gmt.modisco.java.emf.impl.MethodDeclarationImpl
+import com.sun.org.apache.xpath.internal.operations.Equals
 
 /**
  * @author Frederik Marticke
@@ -43,7 +47,7 @@ class CKMetric {
    * Basically it is expected that all methods will have the same Complexity.<br />
    * To use different weights, a concept has to be defined how this weights are tracked inside the
    * model.
-   * @param model
+   * @param model: the MoDisco Model
    * @return An List with WMC Values.
    */
   def WmcMetric(model: Model): List[ResultObject] = {
@@ -61,8 +65,8 @@ class CKMetric {
    *
    * ToDo: Check the behaviour in case of nested classes or other special kinds of methoddeclarations. <br />
    * How to handle different weights?
-   * @param unit
-   * @return
+   * @param unit: the compilation unit to analyze
+   * @return a ResultObject containing the WMC-Value
    */
   def WmcMetricForUnit(unit: CompilationUnit): ResultObject = {
     val resultObject: ResultObject = new ResultObject();
@@ -71,9 +75,9 @@ class CKMetric {
     //get the 'Types' reference list for the current Unit
     val methodCount = unit.getTypes
       // get the 'Body Declarations' containment reference list for all Types
-      .collectAll((typeEntry) => typeEntry.getBodyDeclarations())
+      .collectAll((currentType) => currentType.getBodyDeclarations())
       //select only the AbstractMethodDeclarations from the Body Declarations
-      .select((s) => s.isInstanceOf[AbstractMethodDeclaration])
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
       //the final size equals the number of method declarations inside this Unit 
       .size()
 
@@ -84,7 +88,7 @@ class CKMetric {
 
   /**
    * Calculates the Depth Inheritance Tree (DIT) for each CompilationUnit inside a MoDisco Model.
-   * @param model
+   * @param model: the MoDisco Model
    * @return a List of ResultObjects containing the longest inheritance tree for each Compilation Unit
    */
   def DitMetric(model: Model): List[ResultObject] = {
@@ -96,7 +100,7 @@ class CKMetric {
   /**
    * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.
    * @param currentUnit : the Unit to calculate
-   * @return a @see{ResultObject} containing the deepest inheritance value and the name of
+   * @return a ResultObject containing the deepest inheritance value and the name of
    * the corresponding CompilationUnit.
    */
   def DitMetricForUnit(currentUnit: CompilationUnit): ResultObject = {
@@ -124,7 +128,7 @@ class CKMetric {
 
   /**
    * Calculates the Number of Children (NOC) for each CompilationUnit inside a MoDisco Model.
-   * @param model
+   * @param model: the MoDisco Model
    * @return a List of ResultObjects containing the NOC values for each Compilation Unit
    */
   def NocMetric(model: Model): List[ResultObject] = {
@@ -168,7 +172,7 @@ class CKMetric {
                 node.getSuperClass() != null
                 && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) || (
                   !(node.getSuperInterfaces().isEmpty())
-                  && foo(node.getSuperInterfaces(), currentUnit.getName().split(".java")(0))))).size();
+                  && foo(node.getSuperInterfaces(), currentUnit.getName().split(".")(0))))).size();
       })
     resultObject.getValues().append(nocValue);
     return resultObject;
@@ -189,17 +193,16 @@ class CKMetric {
 
   /**
    * Calculates the Coupling Between Objects (CBO) inside a MoDisco model.
-   * @param model: the MoDisco model to calculate
+   * @param model: the MoDisco model
    * @return a List of ResultObjects containing the coupling value for each compilationUnit
    */
   def CboMetric(model: Model): List[ResultObject] = {
     val cboResultList: EList[ResultObject] = new BasicEList[ResultObject];
 
     //as part of an Type for 'VariableDeclaration'
-
     model.eContents().closure((e) => e.eContents())
-      .select((e) => e.isInstanceOf[VariableDeclarationStatement])
-      .collect((e) => e.asInstanceOf[VariableDeclarationStatement])
+      .select((content) => content.isInstanceOf[VariableDeclarationStatement])
+      .collect((varDecStatement) => varDecStatement.asInstanceOf[VariableDeclarationStatement])
       .iterate(() => cboResultList, (vdStatement, cboList: EList[ResultObject]) => {
         val statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
         //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
@@ -218,8 +221,8 @@ class CKMetric {
     //as part of an 'MethodInvocation'
 
     model.eContents().closure((e) => e.eContents())
-      .select((e) => e.isInstanceOf[MethodInvocation])
-      .collect((e) => e.asInstanceOf[MethodInvocation])
+      .select((content) => content.isInstanceOf[MethodInvocation])
+      .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
       .iterate(() => cboResultList, (method, cboList: EList[ResultObject]) => {
         //only not default methods have an original compilation unit
         if ((method.getMethod().getOriginalCompilationUnit() != null
@@ -238,14 +241,13 @@ class CKMetric {
 
     //reusable, see below
     val singleVariableAccess = model.eContents().closure((e) => e.eContents())
-      .select((e) => e.isInstanceOf[SingleVariableAccess])
-      .collect((e) => e.asInstanceOf[SingleVariableAccess]);
+      .select((content) => content.isInstanceOf[SingleVariableAccess])
+      .collect((singleVarAccess) => singleVarAccess.asInstanceOf[SingleVariableAccess]);
 
     //as part of an 'Statement'
-
-    singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Statement])
+    singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Statement])
       //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
-      .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+      .select((statement) => statement.getVariable().getOriginalCompilationUnit() != null)
       .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
         //the unit inside the variable was declared
         val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
@@ -262,10 +264,9 @@ class CKMetric {
         cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
       });
 
-    //as part of an 'Expression'    
-
-    singleVariableAccess.select((s) => s.eContainer().isInstanceOf[Expression])
-      .select((item) => item.getVariable().getOriginalCompilationUnit() != null)
+    //as part of an 'Expression'   
+    singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Expression])
+      .select((expression) => expression.getVariable().getOriginalCompilationUnit() != null)
       .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
         val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
         val usedIn = variable.eContainer().asInstanceOf[Expression].getOriginalCompilationUnit().getName();
@@ -300,6 +301,54 @@ class CKMetric {
       })
 
     return cboResultList;
+  }
+
+  /**
+   * Calculates the Response for a Class (RFC) Value for each CompilationUnit inside a MoDisco Model.
+   * @param model: the MoDisco Model
+   * @return a List of ResultObjects containing the RFC-Value for each compilationUnit
+   */
+  def RfcMetric(model: Model): List[ResultObject] = {
+    val methInvocations = model.eContents().closure((e) => e.eContents())
+      .select((content) => content.isInstanceOf[MethodInvocation])
+      .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
+      .select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
+
+    model.getCompilationUnits().collect((unit) =>
+      RfcMetricForUnit(unit, methInvocations))
+  }
+
+  /**
+   * Calculates the RFC-Value for a compilation Unit, depending on the given Set of overall existing MethodInvocations inside a MoDisco Model
+   * @param unit: the compilation unit to analyze
+   * @param methodInvocations: the set of existing MethodInvocations
+   * @return a ResultObject containing the RFC-Value
+   */
+  def RfcMetricForUnit(unit: CompilationUnit, methodInvocations: EList[MethodInvocation]): ResultObject = {
+    val resultObject: ResultObject = new ResultObject();
+    resultObject.setFileName(unit.getName());
+
+    //This would be the {M} - Set according to C. & K.
+    val methodsInsideClass = unit.getTypes
+      // get the 'Body Declarations' containment reference list for all Types
+      .collectAll((currentType) => currentType.getBodyDeclarations())
+      //select only the MethodDeclarationImpl from the Body Declarations
+      .select((bodyDeclarations) => bodyDeclarations.isInstanceOf[MethodDeclarationImpl])
+      .collect((methodDeclarationImpl) => methodDeclarationImpl.asInstanceOf[MethodDeclarationImpl])
+
+    //the whole set is the {R}-Set as union of all method calls for this Unit according to C. & K.
+    val calledMethods = methodInvocations.select((method) =>
+      //the units where the method was declared and where it is used has to be different
+      !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName()))
+        //and the unit where it used has to be the current unit
+        && method.getOriginalCompilationUnit().getName().equals(unit.getName()))
+
+    //The RFC-Value is the size of the union of {M} & {R} 
+    val rfc = methodsInsideClass.union(calledMethods.asInstanceOf[EList[ASTNode]]);
+
+    resultObject.getValues().append(rfc.size());
+
+    return resultObject;
   }
 
   /**
