@@ -34,6 +34,9 @@ import org.eclipse.gmt.modisco.java.AbstractMethodInvocation
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.emf.impl.MethodDeclarationImpl
 import com.sun.org.apache.xpath.internal.operations.Equals
+import org.eclipse.gmt.modisco.java.FieldDeclaration
+import org.eclipse.jdt.core.dom.InfixExpression
+import org.eclipse.gmt.modisco.java.PostfixExpression
 
 /**
  * @author Frederik Marticke
@@ -350,6 +353,85 @@ class CKMetric {
 
     return resultObject;
   }
+
+  /**
+   * @param model
+   * @return
+   */
+  def LcomMetric(model: Model): List[ResultObject] = {
+    val compilationUnits = model.getCompilationUnits()
+    compilationUnits.collect((unit) => {
+      LcomMetricForUnit(unit)
+    })
+  }
+
+  /**
+   *
+   * @param unit: the compilation unit to analyze
+   * @return a ResultObject containing the WMC-Value
+   */
+  def LcomMetricForUnit(unit: CompilationUnit): ResultObject = {
+    val resultObject: ResultObject = new ResultObject();
+    resultObject.setFileName(unit.getName());
+
+    //get the 'Types' reference list for the current Unit
+    val methodsInsideUnit = unit.getTypes
+      // get the 'Body Declarations' containment reference list for all Types
+      .collectAll((currentType) => currentType.getBodyDeclarations())
+      //select only the AbstractMethodDeclarations from the Body Declarations
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
+      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[AbstractMethodDeclaration])
+
+    val instanceVariablesInsideUnit = unit.getTypes
+      // get the 'Body Declarations' containment reference list for all Types
+      .collectAll((currentType) => currentType.getBodyDeclarations())
+      //select only the FieldDeclaration representing class instance variables from the Body Declarations
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
+      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
+      .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
+
+    val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: EList[EList[String]]) => {
+      val usedInstanceVariables = method.getBody().getStatements()
+        .select((statement) => statement.isInstanceOf[PostfixExpression])
+        .collect((statement) => statement.asInstanceOf[PostfixExpression])
+        .collect((postfixExpression) => postfixExpression.getOperand())
+        .select((operand) => operand.isInstanceOf[SingleVariableAccess])
+        .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+        .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
+
+      val instanceVariableSet = usedInstanceVariables.intersectForString(instanceVariablesInsideUnit);
+      variablesSet.add(instanceVariableSet);
+      variablesSet;
+    })
+
+    val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
+      SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
+        if (!(setI.intersectForString(otherSetI).isEmpty()))
+          otherListP.add(new BinaryTupleType(setI, otherSetI))
+        otherListP;
+      })
+      listP;
+    })
+
+    val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
+      SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
+        if (setI.intersectForString(otherSetI).isEmpty())
+          otherListP.add(new BinaryTupleType(setI, otherSetI))
+        otherListP;
+      })
+      listP;
+    })
+
+    if (P.size() > Q.size())
+      resultObject.getValues().append(P.size() - Q.size())
+    else
+      resultObject.getValues().append(0)
+    return resultObject;
+  }
+
+  //########################################
+  //#			Helpermethods			   #
+  //########################################
 
   /**
    * Helpermethod: Returns the filename of the Compilationunit without its extension

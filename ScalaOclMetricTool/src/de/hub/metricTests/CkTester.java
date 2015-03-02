@@ -95,12 +95,12 @@ public class CkTester {
 		CKMetric ckMetric = new CKMetric();
 		
 		//test WMC-Metric
-		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);		
-		testerTools.printFormattedResult(WmcForEachCommit, "Wmc-Metric");
-		
+//		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);		
+//		testerTools.printFormattedResult(WmcForEachCommit, "Wmc-Metric");
+//		
 		//test DIT-Metric
-		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);		
-		testerTools.printFormattedResult(DitForEachCommit, "Dit-Metric");
+//		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);		
+//		testerTools.printFormattedResult(DitForEachCommit, "Dit-Metric");
 		
 //		test NOC-Metric
 //		try{
@@ -112,12 +112,15 @@ public class CkTester {
 //		}
 		
 		//test CBO-Metric
-		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);		
-		testerTools.printFormattedResultGreaterZero(CboForEachCommit, "Cbo-Metric");
+//		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);		
+//		testerTools.printFormattedResultGreaterZero(CboForEachCommit, "Cbo-Metric");
 		
 		//test CBO-Metric
-		List<?> RfcForEachCommit = ckMetric.RfcMetric(javaModel);		
-		testerTools.printFormattedResultGreaterZero(RfcForEachCommit, "Rfc-Metric");
+//		List<?> RfcForEachCommit = ckMetric.RfcMetric(javaModel);		
+//		testerTools.printFormattedResultGreaterZero(RfcForEachCommit, "Rfc-Metric");
+		
+		List<?> LcomForEachCommit = ckMetric.LcomMetric(javaModel);		
+		testerTools.printFormattedResultGreaterZero(LcomForEachCommit, "LCOM-Metric");
 	}
 	
 	
