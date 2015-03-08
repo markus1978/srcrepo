@@ -51,13 +51,13 @@ public class CkLcomTest {
 	public int ifFoo(){
 		if(instanceVar1 > 0)
 			return 0;					
-		return instanceVar1 = instanceVar1 + 3;
+		return instanceVar1 + 3;
 	}
 	
 	public int ifFooNestedOperators(){
 		if((instanceVar3 > 0) || (3 < ((instanceVar4 + instanceVar3))))
 			return 0;					
-		return instanceVar1 = instanceVar1 + 3;
+		return instanceVar1 + 3;
 	}
 	
 	public int whileFoo(){
