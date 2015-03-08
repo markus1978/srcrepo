@@ -35,9 +35,11 @@ import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.emf.impl.MethodDeclarationImpl
 import com.sun.org.apache.xpath.internal.operations.Equals
 import org.eclipse.gmt.modisco.java.FieldDeclaration
-import org.eclipse.jdt.core.dom.InfixExpression
 import org.eclipse.gmt.modisco.java.PostfixExpression
 import org.eclipse.gmt.modisco.java.ExpressionStatement
+import org.eclipse.gmt.modisco.java.InstanceofExpression
+import org.eclipse.gmt.modisco.java.ReturnStatement
+import org.eclipse.gmt.modisco.java.InfixExpression
 
 /**
  * @author Frederik Marticke
@@ -399,17 +401,29 @@ class CKMetric {
         .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
 
       val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: EList[EList[String]]) => {
-        val usedInstanceVariables = method.getBody().getStatements()
-        var foo = usedInstanceVariables.select((statement) => statement.isInstanceOf[ExpressionStatement])
-        .collect((expr) => expr.asInstanceOf[ExpressionStatement])
-        .select((expr) => expr.getExpression().isInstanceOf[PostfixExpression])
-        var bar = foo.collect((expr) => expr.getExpression().asInstanceOf[PostfixExpression])
-        var bbar = bar.collect((postfixExpression) => postfixExpression.getOperand())
-        var baz = bbar.select((operand) => operand.isInstanceOf[SingleVariableAccess])
-        var bus = baz.collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-        var bbus = bus.collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
 
-        val instanceVariableSet = bbus.intersectForString(instanceVariablesInsideUnit);
+        //Used as Variable Access inside ExpressionStatement
+        var usedInstanceVariables = method.getBody().getStatements()
+          .select((statement) => statement.isInstanceOf[ExpressionStatement])
+          .collect((expr) => expr.asInstanceOf[ExpressionStatement])
+          .select((expr) => expr.getExpression().isInstanceOf[PostfixExpression])
+          .collect((expr) => expr.getExpression().asInstanceOf[PostfixExpression])
+          .collect((postfixExpression) => postfixExpression.getOperand())
+          .select((operand) => operand.isInstanceOf[SingleVariableAccess])
+          .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())   
+
+          //Used as variable access inside ReturnStatement
+        usedInstanceVariables.union(method.getBody().getStatements()
+          .select((statement) => statement.isInstanceOf[ReturnStatement])
+          .collect((expr) => expr.asInstanceOf[ReturnStatement])
+          .select((expr) => expr.getExpression().isInstanceOf[InfixExpression])
+          .collect((expr) => expr.getExpression().asInstanceOf[InfixExpression])
+          .select((infix) => infix.getLeftOperand().isInstanceOf[SingleVariableAccess])
+          .collect((infix) => infix.getLeftOperand().asInstanceOf[SingleVariableAccess])
+          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
+        
+        var instanceVariableSet = usedInstanceVariables.intersectForString(instanceVariablesInsideUnit);
         variablesSet.add(instanceVariableSet);
         variablesSet;
       })
@@ -425,7 +439,7 @@ class CKMetric {
 
       val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: BasicEList[BinaryTupleType]) => {
         SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: BasicEList[BinaryTupleType]) => {
-          if ((!otherSetI.isEmpty()) && setI.intersectForString(otherSetI).isEmpty())
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && setI.intersectForString(otherSetI).isEmpty())
             otherListQ.add(new BinaryTupleType(setI, otherSetI))
           otherListQ;
         })
@@ -447,7 +461,7 @@ class CKMetric {
   //########################################
   //#			Helpermethods			   #
   //########################################
-
+    
   /**
    * Helpermethod: Returns the filename of the Compilationunit without its extension
    * @param unit: the unit to strip
