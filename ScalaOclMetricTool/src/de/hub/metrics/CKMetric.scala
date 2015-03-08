@@ -37,6 +37,7 @@ import com.sun.org.apache.xpath.internal.operations.Equals
 import org.eclipse.gmt.modisco.java.FieldDeclaration
 import org.eclipse.jdt.core.dom.InfixExpression
 import org.eclipse.gmt.modisco.java.PostfixExpression
+import org.eclipse.gmt.modisco.java.ExpressionStatement
 
 /**
  * @author Frederik Marticke
@@ -373,60 +374,74 @@ class CKMetric {
   def LcomMetricForUnit(unit: CompilationUnit): ResultObject = {
     val resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(unit.getName());
+    try {
+      if (unit.getName().equalsIgnoreCase("CkLcomTest.java"))
+        println("---->" + unit.getName() + "<------")
 
-    //get the 'Types' reference list for the current Unit
-    val methodsInsideUnit = unit.getTypes
-      // get the 'Body Declarations' containment reference list for all Types
-      .collectAll((currentType) => currentType.getBodyDeclarations())
-      //select only the AbstractMethodDeclarations from the Body Declarations
-      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
-      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[AbstractMethodDeclaration])
+      //get the 'Types' reference list for the current Unit
+      val methodsInsideUnit = unit.getTypes
+        // get the 'Body Declarations' containment reference list for all Types
+        //filter all empty classes
+        .select((currentType) => !(currentType.getBodyDeclarations().isEmpty()))
+        .collectAll((currentType) => currentType.getBodyDeclarations())
+        //select only the AbstractMethodDeclarations from the Body Declarations
+        .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
+        .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[AbstractMethodDeclaration])
+        //e. g. implicit declared construtor methods have an empty body
+        .select((method) => method.getBody() != null && method.getBody().getStatements() != null)
 
-    val instanceVariablesInsideUnit = unit.getTypes
-      // get the 'Body Declarations' containment reference list for all Types
-      .collectAll((currentType) => currentType.getBodyDeclarations())
-      //select only the FieldDeclaration representing class instance variables from the Body Declarations
-      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
-      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
-      .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
+      val instanceVariablesInsideUnit = unit.getTypes
+        // get the 'Body Declarations' containment reference list for all Types
+        .collectAll((currentType) => currentType.getBodyDeclarations())
+        //select only the FieldDeclaration representing class instance variables from the Body Declarations
+        .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
+        .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
+        .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
 
-    val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: EList[EList[String]]) => {
-      val usedInstanceVariables = method.getBody().getStatements()
-        .select((statement) => statement.isInstanceOf[PostfixExpression])
-        .collect((statement) => statement.asInstanceOf[PostfixExpression])
-        .collect((postfixExpression) => postfixExpression.getOperand())
-        .select((operand) => operand.isInstanceOf[SingleVariableAccess])
-        .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-        .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
+      val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: EList[EList[String]]) => {
+        val usedInstanceVariables = method.getBody().getStatements()
+        var foo = usedInstanceVariables.select((statement) => statement.isInstanceOf[ExpressionStatement])
+        .collect((expr) => expr.asInstanceOf[ExpressionStatement])
+        .select((expr) => expr.getExpression().isInstanceOf[PostfixExpression])
+        var bar = foo.collect((expr) => expr.getExpression().asInstanceOf[PostfixExpression])
+        var bbar = bar.collect((postfixExpression) => postfixExpression.getOperand())
+        var baz = bbar.select((operand) => operand.isInstanceOf[SingleVariableAccess])
+        var bus = baz.collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+        var bbus = bus.collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
 
-      val instanceVariableSet = usedInstanceVariables.intersectForString(instanceVariablesInsideUnit);
-      variablesSet.add(instanceVariableSet);
-      variablesSet;
-    })
-
-    val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
-      SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
-        if (!(setI.intersectForString(otherSetI).isEmpty()))
-          otherListP.add(new BinaryTupleType(setI, otherSetI))
-        otherListP;
+        val instanceVariableSet = bbus.intersectForString(instanceVariablesInsideUnit);
+        variablesSet.add(instanceVariableSet);
+        variablesSet;
       })
-      listP;
-    })
 
-    val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
-      SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
-        if (setI.intersectForString(otherSetI).isEmpty())
-          otherListP.add(new BinaryTupleType(setI, otherSetI))
-        otherListP;
+      val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
+        SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
+          if (!(setI.intersectForString(otherSetI).isEmpty()))
+            otherListP.add(new BinaryTupleType(setI, otherSetI))
+          otherListP;
+        })
+        listP;
       })
-      listP;
-    })
 
-    if (P.size() > Q.size())
-      resultObject.getValues().append(P.size() - Q.size())
-    else
-      resultObject.getValues().append(0)
-    return resultObject;
+      val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: BasicEList[BinaryTupleType]) => {
+        SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: BasicEList[BinaryTupleType]) => {
+          if ((!otherSetI.isEmpty()) && setI.intersectForString(otherSetI).isEmpty())
+            otherListQ.add(new BinaryTupleType(setI, otherSetI))
+          otherListQ;
+        })
+        listQ;
+      })
+
+      if (P.size() > Q.size())
+        resultObject.getValues().append(P.size() - Q.size())
+      else
+        resultObject.getValues().append(0)
+
+    } catch {
+      case ioe: Exception => ioe.printStackTrace()
+    }
+
+    resultObject;
   }
 
   //########################################
