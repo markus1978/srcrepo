@@ -1,34 +1,88 @@
 package testclasses;
 
 /**
- * ClassVariables = {instanceVar1, instanceVar2}
- * MethodsInsideClass = {foo, bar, fooBar}
- * Mfoo = {instanceVar1}
- * Mbar = {instanceVar1}
+ * ClassVariables = {instanceVar1, instanceVar2, instanceVar3}
+ * 
+ * MethodsInsideClass = {fooPostfixPrefix, ifFoo, ifFooNestedOperators, whileFoo, whileFooNestedOperators, barAssignment, bar2ComplexReturn, fooBar}
+ *  
+ * MfooPostfixPrefix = {instanceVar1}
+ * MifFoo = {instanceVar1}
+ * MifFooNestedOperators = {instanceVar1, instanceVar3, instanceVar4}
+ * MwhileFoo = {instanceVar3, instanceVar5}
+ * MWhileFooNestedOperators = {instanceVar4, instanceVar5}
+ * MbarAssignment = {instanceVar3}
+ * Mbar2ComplexReturn = {instanceVar1}
  * MfooBar = {instanceVar2}
  * 
- * P = {(Mfoo, MfooBar), (Mbar, MfooBar)} //intersection is empty
- * Q = {(Mfoo, Mbar) } //intersection is not empty
+ * P = { (MfooPostfixPrefix, MwhileFoo),  (MfooPostfixPrefix, MWhileFooNestedOperators), (MfooPostfixPrefix, MbarAssignment), (MfooPostfixPrefix, MfooBar)
+ * 		 (MifFoo, MWhileFooNestedOperators), (MifFoo, MbarAssignment), (MifFoo, MfooBar)
+ * 		 (MifFooNestedOperators, MfooBar), 
+ *  	 (MwhileFoo, Mbar2ComplexReturn),  (MwhileFoo, MfooBar),
+ *    	 (MWhileFooNestedOperators,MbarAssignment),(MWhileFooNestedOperators,Mbar2ComplexReturn),(MWhileFooNestedOperators,MfooBar),
+ *	  	 (MbarAssignment, MfooBar)	
+ * } //intersection is empty
  * 
- * Because of|P| = 2 > 1 = |Q| 
- * => LCOM = |P| - |Q| = 2 - 1 = 1
+ * Q = {(fooPostfixPrefix, ifFoo),(fooPostfixPrefix, ifFooNestedOperators), (fooPostfixPrefix, bar2ComplexReturn)
+ * 		(ifFoo, ifFooNestedOperators), (ifFoo, bar2ComplexReturn)
+ * 		(ifFooNestedOperators, bar2ComplexReturn),(ifFooNestedOperators, MWhileFooNestedOperators),(ifFooNestedOperators, MbarAssignment) 
+ * 		(whileFoo, MWhileFooNestedOperators), (whileFoo, MbarAssignment) * 		
+ * } //intersection is not empty
+ *
+ * |P| = 13
+ * |Q| = 10
+ * 
+ * Because of|P| = 13 > 10 = |Q| 
+ * => LCOM = |P| - |Q| = 13 - 10 = 3
  * 
  * @author Frederik Marticke
  */
 public class CkLcomTest {
 	int instanceVar1 = 0;
+	int instanceVar3 = 0;
+	int instanceVar4 = 0;
+	int instanceVar5 = 0;
 	String instanceVar2 = "tester";
 	
-	public void foo(){
-		instanceVar1++;
+	public void fooPostfixPrefix(){
+		instanceVar1++;			
+		instanceVar1 = ++instanceVar1 + 3;
 	}
 	
-	private int bar(){
-		return instanceVar1 + 100;
+	public int ifFoo(){
+		if(instanceVar1 > 0)
+			return 0;					
+		return instanceVar1 = instanceVar1 + 3;
+	}
+	
+	public int ifFooNestedOperators(){
+		if((instanceVar3 > 0) || (3 < ((instanceVar4 + instanceVar3))))
+			return 0;					
+		return instanceVar1 = instanceVar1 + 3;
+	}
+	
+	public int whileFoo(){
+		while(instanceVar3 > 0)
+			System.out.println("fooWriteLine");					
+		return instanceVar5 + 3;
+	}
+	
+	public int whileFooNestedOperators(){
+		while((instanceVar4 > 0) || (3 < ((instanceVar4 + instanceVar5))))
+			System.out.println("fooWriteLine");					
+		return instanceVar4 + 3;
+	}
+	
+	private int barAssignment(){
+		instanceVar3 = bar2ComplexReturn();
+		return 0;
+	}
+	
+	private int bar2ComplexReturn(){
+		return ((instanceVar5 + 100) + 100);		
 	}
 	
 	protected String fooBar(){
-		int baz = bar();
+		int baz = barAssignment();
 		return instanceVar2+baz;
 	}
 
