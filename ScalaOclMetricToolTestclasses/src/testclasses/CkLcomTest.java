@@ -5,34 +5,40 @@ package testclasses;
  * 
  * MethodsInsideClass = {fooPostfixPrefix, ifFoo, ifFooNestedOperators, whileFoo, whileFooNestedOperators, barAssignment, bar2ComplexReturn, fooBar}
  *  
- * MfooPostfixPrefix = {instanceVar1}
- * MifFoo = {instanceVar1}
- * MifFooNestedOperators = {instanceVar1, instanceVar3, instanceVar4}
- * MwhileFoo = {instanceVar3, instanceVar5}
- * MWhileFooNestedOperators = {instanceVar4, instanceVar5}
- * MbarAssignment = {instanceVar3}
- * Mbar2ComplexReturn = {instanceVar1}
+ *  
+ *  
+ *  
+ * MfooPostfixPrefix = {instanceVar1} * 
+ * MifFoo = {instanceVar1} 
+ * MifFooNestedOperators = {instanceVar1, instanceVar3, instanceVar4} * 
+ * MwhileFoo = {instanceVar3, instanceVar5} 
+ * MWhileFooNestedOperators = {instanceVar4, instanceVar5} 
+ * MbarAssignment = {instanceVar3} 
+ * Mbar2ComplexReturn = {instanceVar1} 
  * MfooBar = {instanceVar2}
  * 
+ * //intersection is empty
  * P = { (MfooPostfixPrefix, MwhileFoo),  (MfooPostfixPrefix, MWhileFooNestedOperators), (MfooPostfixPrefix, MbarAssignment), (MfooPostfixPrefix, MfooBar)
- * 		 (MifFoo, MWhileFooNestedOperators), (MifFoo, MbarAssignment), (MifFoo, MfooBar)
+ * 		 (MifFoo, MwhileFoo), (MifFoo, MWhileFooNestedOperators), (MifFoo, MbarAssignment), (MifFoo, MfooBar)
  * 		 (MifFooNestedOperators, MfooBar), 
  *  	 (MwhileFoo, Mbar2ComplexReturn),  (MwhileFoo, MfooBar),
  *    	 (MWhileFooNestedOperators,MbarAssignment),(MWhileFooNestedOperators,Mbar2ComplexReturn),(MWhileFooNestedOperators,MfooBar),
- *	  	 (MbarAssignment, MfooBar)	
- * } //intersection is empty
+ *	  	 (MbarAssignment, Mbar2ComplexReturn), (MbarAssignment, MfooBar)	
+ *		 (Mbar2ComplexReturn, MfooBar)
+ * } 
  * 
+ * //intersection is not empty
  * Q = {(fooPostfixPrefix, ifFoo),(fooPostfixPrefix, ifFooNestedOperators), (fooPostfixPrefix, bar2ComplexReturn)
  * 		(ifFoo, ifFooNestedOperators), (ifFoo, bar2ComplexReturn)
- * 		(ifFooNestedOperators, bar2ComplexReturn),(ifFooNestedOperators, MWhileFooNestedOperators),(ifFooNestedOperators, MbarAssignment) 
- * 		(whileFoo, MWhileFooNestedOperators), (whileFoo, MbarAssignment) * 		
- * } //intersection is not empty
+ * 		(ifFooNestedOperators, bar2ComplexReturn),(ifFooNestedOperators, MwhileFoo),(ifFooNestedOperators, MWhileFooNestedOperators),(ifFooNestedOperators, MbarAssignment) 
+ * 		(whileFoo, MWhileFooNestedOperators), (whileFoo, MbarAssignment)  		
+ * } 
  *
- * |P| = 13
- * |Q| = 10
+ * |P| = 17
+ * |Q| = 11
  * 
- * Because of|P| = 13 > 10 = |Q| 
- * => LCOM = |P| - |Q| = 13 - 10 = 3
+ * Because of|P| = 17 > 11 = |Q| 
+ * => LCOM = |P| - |Q| = 17 - 11 = 6
  * 
  * @author Frederik Marticke
  */
