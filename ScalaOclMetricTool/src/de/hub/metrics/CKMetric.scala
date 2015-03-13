@@ -40,6 +40,7 @@ import org.eclipse.gmt.modisco.java.ExpressionStatement
 import org.eclipse.gmt.modisco.java.InstanceofExpression
 import org.eclipse.gmt.modisco.java.ReturnStatement
 import org.eclipse.gmt.modisco.java.InfixExpression
+import org.eclipse.gmt.modisco.java.ParenthesizedExpression
 
 /**
  * @author Frederik Marticke
@@ -403,7 +404,10 @@ class CKMetric {
       val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: EList[EList[String]]) => {
 
         //Used as Variable Access inside ExpressionStatement
-        var usedInstanceVariables = method.getBody().getStatements()
+        var usedInstanceVariables: EList[String] = new BasicEList[String];
+        var tempSet: EList[String] = new BasicEList[String];
+
+        tempSet = method.getBody().getStatements()
           .select((statement) => statement.isInstanceOf[ExpressionStatement])
           .collect((expr) => expr.asInstanceOf[ExpressionStatement])
           .select((expr) => expr.getExpression().isInstanceOf[PostfixExpression])
@@ -411,26 +415,30 @@ class CKMetric {
           .collect((postfixExpression) => postfixExpression.getOperand())
           .select((operand) => operand.isInstanceOf[SingleVariableAccess])
           .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())   
+          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
 
-          //Used as variable access inside ReturnStatement
-        usedInstanceVariables.union(method.getBody().getStatements()
+        if (!tempSet.isEmpty())
+          usedInstanceVariables = usedInstanceVariables.union(tempSet);
+
+        //Used as variable access inside ReturnStatement
+        tempSet = method.getBody().getStatements()
           .select((statement) => statement.isInstanceOf[ReturnStatement])
           .collect((expr) => expr.asInstanceOf[ReturnStatement])
-          .select((expr) => expr.getExpression().isInstanceOf[InfixExpression])
-          .collect((expr) => expr.getExpression().asInstanceOf[InfixExpression])
-          .select((infix) => infix.getLeftOperand().isInstanceOf[SingleVariableAccess])
-          .collect((infix) => infix.getLeftOperand().asInstanceOf[SingleVariableAccess])
-          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
-        
-        var instanceVariableSet = usedInstanceVariables.intersectForString(instanceVariablesInsideUnit);
-        variablesSet.add(instanceVariableSet);
+          .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideReturnStatements(returnStatement.getExpression())))
+
+        if (!tempSet.isEmpty())
+          usedInstanceVariables = usedInstanceVariables.union(tempSet);
+
+        var instanceVariableSet = usedInstanceVariables.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
+        if (!instanceVariableSet.isEmpty())
+          variablesSet.add(instanceVariableSet);
         variablesSet;
       })
 
       val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
         SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
-          if (!(setI.intersectForString(otherSetI).isEmpty()))
+          //avoid tuple with empty/null items
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (setI.intersectForString(otherSetI).isEmpty()))
             otherListP.add(new BinaryTupleType(setI, otherSetI))
           otherListP;
         })
@@ -439,7 +447,7 @@ class CKMetric {
 
       val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: BasicEList[BinaryTupleType]) => {
         SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: BasicEList[BinaryTupleType]) => {
-          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && setI.intersectForString(otherSetI).isEmpty())
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && !(setI.intersectForString(otherSetI).isEmpty()))
             otherListQ.add(new BinaryTupleType(setI, otherSetI))
           otherListQ;
         })
@@ -461,7 +469,52 @@ class CKMetric {
   //########################################
   //#			Helpermethods			   #
   //########################################
-    
+
+  def collectVariablesUsedInsideReturnStatements(expression: Expression): EList[String] = {
+    val elist = new BasicEList[Expression]();
+    var tempList: EList[String] = new BasicEList[String];
+
+    if (expression.isInstanceOf[SingleVariableAccess]) {
+      tempList.add(expression.asInstanceOf[SingleVariableAccess].getVariable().getName())
+    } else {
+
+      if (expression.isInstanceOf[ParenthesizedExpression]) {
+        tempList = tempList.union(collectVariablesUsedInsideReturnStatements(expression.asInstanceOf[ParenthesizedExpression]
+          .getExpression().asInstanceOf[InfixExpression].getLeftOperand()));
+        tempList = tempList.union(collectVariablesUsedInsideReturnStatements(expression.asInstanceOf[ParenthesizedExpression]
+          .getExpression().asInstanceOf[InfixExpression].getRightOperand()));
+      } else {
+        elist.add(expression);
+
+        var tempList2 = elist.select((item) => item.isInstanceOf[InfixExpression])
+          .collect((item) => item.asInstanceOf[InfixExpression])
+          .closure((expr) => {
+            val foundInfixExpressions = new BasicEList[InfixExpression]();
+
+            if (expr.getLeftOperand().isInstanceOf[InfixExpression]) {
+              foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
+            }
+            if (expr.getRightOperand().isInstanceOf[InfixExpression]) {
+              foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
+            }
+
+            foundInfixExpressions;
+          })
+
+        var tempList3 = tempList2.select((infix) => infix.getLeftOperand().isInstanceOf[SingleVariableAccess])
+          .collect((infix) => infix.getLeftOperand().asInstanceOf[SingleVariableAccess])
+          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName());
+
+        tempList = tempList3.union(tempList2.select((infix) => infix.getRightOperand().isInstanceOf[SingleVariableAccess])
+          .collect((infix) => infix.getRightOperand().asInstanceOf[SingleVariableAccess])
+          .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
+
+        var tempList4 = tempList;
+      }
+    }
+    tempList
+  }
+
   /**
    * Helpermethod: Returns the filename of the Compilationunit without its extension
    * @param unit: the unit to strip
