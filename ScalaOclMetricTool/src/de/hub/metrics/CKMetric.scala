@@ -406,8 +406,9 @@ class CKMetric {
         .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
         .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
 
-      val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[BasicEList[String]], (method, variablesSet: EList[BasicEList[String]]) => {
-        variablesSet.union(analyseMethodForLcom(method, instanceVariablesInsideUnit))
+      val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
+        variablesSet.add(analyseMethodForLcom(method, instanceVariablesInsideUnit))
+        variablesSet;
       })
 
       val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
@@ -430,7 +431,7 @@ class CKMetric {
       })
 
       if (P.size() > Q.size())
-        resultObject.getValues().append(P.size() - Q.size())
+        resultObject.getValues().append((P.size() - Q.size()) / 2) //The Sets intersection(Mi, C) include for each pair (i,j) the symetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value 
       else
         resultObject.getValues().append(0)
 
@@ -444,140 +445,135 @@ class CKMetric {
   //########################################
   //#			Helpermethods			   #
   //########################################
-  def analyseMethodForLcom(method: AbstractMethodDeclaration, instanceVariablesInsideUnit: EList[String]): EList[BasicEList[String]] = {
-    var variablesSet: EList[BasicEList[String]] = new BasicEList[BasicEList[String]];
+  
+  //TODO: lokale variablen declarationen die auf werte von Instanzvariablen gesetzt werden
+  
+  def analyseMethodForLcom(method: AbstractMethodDeclaration, instanceVariablesInsideUnit: EList[String]): EList[String] = {
     var usedInstanceVariables: EList[String] = new BasicEList[String];
-    var tempSet: EList[String] = new BasicEList[String];
+    var methodVariablesSet: EList[String] = new BasicEList[String];
 
-    //ifStatement
-    tempSet = method.getBody().getStatements()
-      .select((statement) => statement.isInstanceOf[IfStatement])
-      .collect((expr) => expr.asInstanceOf[IfStatement])
-      .iterate(() => new BasicEList[String], (ifstatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(ifstatement.getExpression())))
+    methodVariablesSet = method.getBody().getStatements().iterate(() => new BasicEList[String], (statement, myList: EList[String]) => {
+      var tempSet: EList[String] = new BasicEList[String];
+      var statementAsSet = new BasicEList[Statement];
 
-    if (!tempSet.isEmpty())
-      tempSet = tempSet.union(tempSet);
+      statementAsSet.add(statement);
+      //ifStatement
+      if (statement.isInstanceOf[IfStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[IfStatement])
+          .iterate(() => new BasicEList[String], (ifstatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(ifstatement.getExpression())))
 
-    //DoStatement
-    tempSet = method.getBody().getStatements()
-      .select((statement) => statement.isInstanceOf[DoStatement])
-      .collect((expr) => expr.asInstanceOf[DoStatement])
-      .iterate(() => new BasicEList[String], (doStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(doStatement.getExpression())))
+      //DoStatement
+      if (statement.isInstanceOf[DoStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[DoStatement])
+          .iterate(() => new BasicEList[String], (doStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(doStatement.getExpression())))
 
-    if (!tempSet.isEmpty())
-      tempSet = tempSet.union(tempSet);
+      //whileStatement
+      if (statement.isInstanceOf[WhileStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[WhileStatement])
+          .iterate(() => new BasicEList[String], (whileStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(whileStatement.getExpression())))
 
-    //whileStatement
-    tempSet = method.getBody().getStatements()
-      .select((statement) => statement.isInstanceOf[WhileStatement])
-      .collect((expr) => expr.asInstanceOf[WhileStatement])
-      .iterate(() => new BasicEList[String], (whileStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(whileStatement.getExpression())))
+      //Return statement
+      if (statement.isInstanceOf[ReturnStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ReturnStatement])
+          .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(returnStatement.getExpression())))
 
-    if (!tempSet.isEmpty())
-      tempSet = tempSet.union(tempSet);
+      //Prefix/PostfixExpression
+      if (statement.isInstanceOf[ExpressionStatement] &&
+        (statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PostfixExpression]
+          || statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PrefixExpression]))
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement])
+          .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression.getExpression())))
 
-    //Assignment Expression         
-    var assignmnet = method.getBody().getStatements()
-      .select((statement) => statement.isInstanceOf[ExpressionStatement])
-      .collect((expr) => expr.asInstanceOf[ExpressionStatement])
-      .select((expr) => expr.getExpression().isInstanceOf[Assignment])
-      .collect((expr) => expr.getExpression().asInstanceOf[Assignment])
+      //Assignment Expression         
+      if (statement.isInstanceOf[ExpressionStatement] &&
+        statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[Assignment]) {
+        var assignmnet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement].getExpression().asInstanceOf[Assignment])
 
-    //left Hand Side always should be a var or val
-    if (!assignmnet.isEmpty()) {
-      tempSet = assignmnet.collect((assignmentExpression) => assignmentExpression.getLeftHandSide())
-        .select((operand) => operand.isInstanceOf[SingleVariableAccess])
-        .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-        .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
+        //left Hand Side always should be a var or val
+        if (!assignmnet.isEmpty()) {
+          tempSet = assignmnet.collect((assignmentExpression) => assignmentExpression.getLeftHandSide())
+            .select((operand) => operand.isInstanceOf[SingleVariableAccess])
+            .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+            .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
 
-      //right Hand side either can be an expression, literal or variable. We are only interessted in expressions and variables
-      //variable
-      tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
-        .select((operand) => operand.isInstanceOf[SingleVariableAccess])
-        .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-        .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
+          //right Hand side either can be an expression, literal or variable. We are only interessted in expressions and variables
+          //variable
+          tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+            .select((operand) => operand.isInstanceOf[SingleVariableAccess])
+            .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+            .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
 
-      //expression
-      tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
-        .select((operand) => operand.isInstanceOf[Expression])
-        .collect((operand) => operand.asInstanceOf[Expression])
-        .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression))))
+          //expression
+          var foo = assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+            .select((operand) => operand.isInstanceOf[Expression])
+            .collect((operand) => operand.asInstanceOf[Expression])
+            .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression)))
 
-      if (!tempSet.isEmpty())
-        tempSet = tempSet.union(tempSet);
-    }
+          tempSet = tempSet.union(foo);
+        }
+      }
 
-    //Prefix/PostfixExpression
-    tempSet = method.getBody().getStatements()
-      .select((statement) => statement.isInstanceOf[ExpressionStatement])
-      .collect((expr) => expr.asInstanceOf[ExpressionStatement])
-      .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression.getExpression())))
-     
-    if (!tempSet.isEmpty())
-      tempSet = tempSet.union(tempSet);
+      var iter = tempSet.iterator();
+      while (iter.hasNext()) {
+        myList.add(iter.next())
+      }
+      myList.asSet;
+    }) //iterate to collect used variables
 
-    
-    
-    //Used as variable access inside ReturnStatement
-    tempSet = method.getBody().getStatements()
-      .select((statement) => statement.isInstanceOf[ReturnStatement])
-      .collect((expr) => expr.asInstanceOf[ReturnStatement])
-      .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(returnStatement.getExpression())))
+    usedInstanceVariables = methodVariablesSet.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
 
-    if (!tempSet.isEmpty())
-      tempSet = tempSet.union(tempSet);
-
-    var instanceVariableSet = tempSet.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
-    if (!instanceVariableSet.isEmpty())
-      variablesSet.add(instanceVariableSet.asInstanceOf[BasicEList[String]]);
-
-    variablesSet;
+    usedInstanceVariables;
   }
 
   def collectVariablesUsedInsideExpression(expression: Expression): EList[String] = {
     val elist = new BasicEList[InfixExpression]();
     var tempList: EList[String] = new BasicEList[String];
-    
+
     if (expression.isInstanceOf[PostfixExpression]) {
       tempList.add(expression.asInstanceOf[PostfixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
     }
-    
+
     if (expression.isInstanceOf[PrefixExpression]) {
       tempList.add(expression.asInstanceOf[PrefixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
     }
-     
+
     //expression is leaf of AST and the leaf is a VariableAccess
     if (expression.isInstanceOf[SingleVariableAccess]) {
       tempList.add(expression.asInstanceOf[SingleVariableAccess].getVariable().getName())
-    } //expression is somewhere inside the AST and looks like (any_expression)
-    else if (expression.isInstanceOf[ParenthesizedExpression]) {
+    }
+
+    //expression is somewhere inside the AST and looks like (any_expression)
+    if (expression.isInstanceOf[ParenthesizedExpression]) {
       tempList = tempList.union(collectVariablesUsedInsideExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression()));
-    } //expression is somewhere inside the AST and looks like any_expression
-    else if (expression.isInstanceOf[InfixExpression]) {
-      elist.add(expression.asInstanceOf[InfixExpression]);
+    }
+
+    //expression is somewhere inside the AST and looks like any_expression
+    if (expression.isInstanceOf[InfixExpression]) {
+      elist.add(expression.asInstanceOf[InfixExpression])
+
       tempList = tempList.union(elist.iterate(() => new BasicEList[String], (infixExpression, list: EList[String]) => {
-        var tlist: EList[String] = new BasicEList[String];
+        var mutableList: EList[String] = new BasicEList[String];
 
         //we have to carefully order the instanceOf tests from more specialized --> lower specialized
         //Left hand side
         if (infixExpression.getLeftOperand().isInstanceOf[InfixExpression])
-          tlist = tlist.union(collectVariablesUsedInsideExpression(infixExpression.getLeftOperand().asInstanceOf[InfixExpression]))
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getLeftOperand().asInstanceOf[InfixExpression]))
         else if (infixExpression.getLeftOperand().isInstanceOf[SingleVariableAccess])
-          tlist.add(infixExpression.getLeftOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+          mutableList.add(infixExpression.getLeftOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
         else if (infixExpression.getLeftOperand().isInstanceOf[Expression])
-          tempList = tempList.union(collectVariablesUsedInsideExpression(infixExpression.getLeftOperand().asInstanceOf[Expression]));
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getLeftOperand().asInstanceOf[Expression]));
 
         //Right hand side
         if (infixExpression.getRightOperand().isInstanceOf[InfixExpression])
-          tlist = tlist.union(collectVariablesUsedInsideExpression(infixExpression.getRightOperand().asInstanceOf[InfixExpression]))
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getRightOperand().asInstanceOf[InfixExpression]))
         else if (infixExpression.getRightOperand.isInstanceOf[SingleVariableAccess])
-          tlist.add(infixExpression.getRightOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+          mutableList.add(infixExpression.getRightOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
         else if (infixExpression.getRightOperand().isInstanceOf[Expression])
-          tempList = tempList.union(collectVariablesUsedInsideExpression(infixExpression.getRightOperand().asInstanceOf[Expression]));
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getRightOperand().asInstanceOf[Expression]));
 
         //this is a bit hacky, but in scala it is impossible to define mutable function parameters and because iterate always returns the 
-        //initially passed list, we have to fill it after finishing the recursion
-        var iter = tlist.iterator();
+        //initially passed list, we have to fill it manually after finishing the recursion
+        var iter = mutableList.iterator();
         while (iter.hasNext()) {
           list.add(iter.next())
         }
@@ -585,7 +581,7 @@ class CKMetric {
       }))
     }
     tempList;
-  }
+  } // collectVariablesUsedInsideExpression
 
   /**
    * Helpermethod: Returns the filename of the Compilationunit without its extension
