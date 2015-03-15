@@ -411,19 +411,20 @@ class CKMetric {
         variablesSet;
       })
 
-      val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: BasicEList[BinaryTupleType]) => {
-        SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: BasicEList[BinaryTupleType]) => {
-          //avoid tuple with empty/null items
-          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (setI.intersectForString(otherSetI).isEmpty()))
+      val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: EList[BinaryTupleType]) => {
+        SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: EList[BinaryTupleType]) => {
+          //avoid tuple with empty/null items and avoid reflexive tuple, i.e. don't calculate intersection(setI, setI)
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && (setI.intersectForString(otherSetI).isEmpty()))
             otherListP.add(new BinaryTupleType(setI, otherSetI))
           otherListP;
         })
         listP;
       })
 
-      val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: BasicEList[BinaryTupleType]) => {
-        SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: BasicEList[BinaryTupleType]) => {
-          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && !(setI.intersectForString(otherSetI).isEmpty()))
+      val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: EList[BinaryTupleType]) => {
+        SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: EList[BinaryTupleType]) => {
+          
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && !(setI.intersectForString(otherSetI).isEmpty()))
             otherListQ.add(new BinaryTupleType(setI, otherSetI))
           otherListQ;
         })
@@ -431,7 +432,7 @@ class CKMetric {
       })
 
       if (P.size() > Q.size())
-        resultObject.getValues().append((P.size() - Q.size()) / 2) //The Sets intersection(Mi, C) include for each pair (i,j) the symetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value 
+        resultObject.getValues().append((P.size() - Q.size()) / 2) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value 
       else
         resultObject.getValues().append(0)
 
@@ -445,58 +446,69 @@ class CKMetric {
   //########################################
   //#			Helpermethods			   #
   //########################################
-  
+
   //TODO: lokale variablen declarationen die auf werte von Instanzvariablen gesetzt werden
-  
+
   def analyseMethodForLcom(method: AbstractMethodDeclaration, instanceVariablesInsideUnit: EList[String]): EList[String] = {
     var usedInstanceVariables: EList[String] = new BasicEList[String];
     var methodVariablesSet: EList[String] = new BasicEList[String];
 
     methodVariablesSet = method.getBody().getStatements().iterate(() => new BasicEList[String], (statement, myList: EList[String]) => {
+      //the tempSet is used, because we need a mutable Set during the iteration to expand the collection using the union operation
+      //the standard iterate works only for adding items to the same list, but union returns a new list to save
       var tempSet: EList[String] = new BasicEList[String];
-      var statementAsSet = new BasicEList[Statement];
 
+      //equivalent to ocl: statement->...do something with statement in a set
+      var statementAsSet = new BasicEList[Statement];
       statementAsSet.add(statement);
-      //ifStatement
+
+      /**
+       * Because the Model already defines the kind of the statement as ifstatement, dostatement... we could check the kind inside ONE if like
+       * (statement.isInstanceOf[IfStatement] || statement.isInstanceOf[DoStatement] || ...) but we cannot use the same CAST for each of them.
+       * i.e. statementAsSet.collect((expr) => expr.asInstanceOf[IfStatement]) on a doStatement leads to an invalidCastExpception.
+       * Therefore the following, bit ugly, redundant code is needed.
+       */
+
+      //if Statement
       if (statement.isInstanceOf[IfStatement])
         tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[IfStatement])
           .iterate(() => new BasicEList[String], (ifstatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(ifstatement.getExpression())))
 
-      //DoStatement
+      //do Statement
       if (statement.isInstanceOf[DoStatement])
         tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[DoStatement])
           .iterate(() => new BasicEList[String], (doStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(doStatement.getExpression())))
 
-      //whileStatement
+      //while Statement
       if (statement.isInstanceOf[WhileStatement])
         tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[WhileStatement])
           .iterate(() => new BasicEList[String], (whileStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(whileStatement.getExpression())))
 
-      //Return statement
+      //return statement
       if (statement.isInstanceOf[ReturnStatement])
         tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ReturnStatement])
           .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(returnStatement.getExpression())))
 
-      //Prefix/PostfixExpression
+      //prefix and postfix Expression
       if (statement.isInstanceOf[ExpressionStatement] &&
         (statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PostfixExpression]
           || statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PrefixExpression]))
         tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement])
           .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression.getExpression())))
 
-      //Assignment Expression         
+      //assignment Expression         
       if (statement.isInstanceOf[ExpressionStatement] &&
         statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[Assignment]) {
         var assignmnet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement].getExpression().asInstanceOf[Assignment])
 
-        //left Hand Side always should be a var or val
+        //left hand side always should be a var or val
         if (!assignmnet.isEmpty()) {
           tempSet = assignmnet.collect((assignmentExpression) => assignmentExpression.getLeftHandSide())
             .select((operand) => operand.isInstanceOf[SingleVariableAccess])
             .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
             .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
 
-          //right Hand side either can be an expression, literal or variable. We are only interessted in expressions and variables
+          //right hand side either can be an expression, literal or variable. We are only interessted in expressions and variables
           //variable
           tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
             .select((operand) => operand.isInstanceOf[SingleVariableAccess])
@@ -504,12 +516,11 @@ class CKMetric {
             .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
 
           //expression
-          var foo = assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+          tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
             .select((operand) => operand.isInstanceOf[Expression])
             .collect((operand) => operand.asInstanceOf[Expression])
-            .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression)))
+            .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression))))
 
-          tempSet = tempSet.union(foo);
         }
       }
 
