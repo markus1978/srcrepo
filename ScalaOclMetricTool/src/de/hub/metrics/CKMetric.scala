@@ -364,8 +364,9 @@ class CKMetric {
   }
 
   /**
-   * @param model
-   * @return
+   * Calculates the Lack Of Cohesion in Methods (LCOM) inside a MoDisco model.
+   * @param model: the MoDisco model
+   * @return a List of ResultObjects containing the coupling value for each compilationUnit
    */
   def LcomMetric(model: Model): List[ResultObject] = {
     val compilationUnits = model.getCompilationUnits()
@@ -375,17 +376,14 @@ class CKMetric {
   }
 
   /**
-   *
+   * Calculates the Lack Of Cohesion in Methods (LCOM) for a compilationUnit inside a MoDisco Model.
    * @param unit: the compilation unit to analyze
-   * @return a ResultObject containing the WMC-Value
+   * @return a ResultObject containing the LCOM-Value
    */
   def LcomMetricForUnit(unit: CompilationUnit): ResultObject = {
     val resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(unit.getName());
     try {
-      if (unit.getName().equalsIgnoreCase("CkLcomTest.java"))
-        println("---->" + unit.getName() + "<------")
-
       //get the 'Types' reference list for the current Unit
       val methodsInsideUnit = unit.getTypes
         // get the 'Body Declarations' containment reference list for all Types
@@ -406,11 +404,13 @@ class CKMetric {
         .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
         .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
 
+        ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
       val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
         variablesSet.add(analyseMethodForLcom(method, instanceVariablesInsideUnit))
         variablesSet;
       })
 
+      //the set of null intersections
       val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: EList[BinaryTupleType]) => {
         SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: EList[BinaryTupleType]) => {
           //avoid tuple with empty/null items and avoid reflexive tuple, i.e. don't calculate intersection(setI, setI)
@@ -421,9 +421,9 @@ class CKMetric {
         listP;
       })
 
+      //the set of nonempty intersections
       val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: EList[BinaryTupleType]) => {
         SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: EList[BinaryTupleType]) => {
-          
           if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && !(setI.intersectForString(otherSetI).isEmpty()))
             otherListQ.add(new BinaryTupleType(setI, otherSetI))
           otherListQ;
@@ -431,6 +431,7 @@ class CKMetric {
         listQ;
       })
 
+      //LCOM = number of nullintersections - number of nonempty intersections if P > Q, else 0
       if (P.size() > Q.size())
         resultObject.getValues().append((P.size() - Q.size()) / 2) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value 
       else
