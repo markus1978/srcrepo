@@ -8,37 +8,41 @@ package testclasses;
  *  
  *  
  *  
- * MfooPostfixPrefix = {instanceVar1} * 
+ * MfooPostfixPrefix = {instanceVar1}  
  * MifFoo = {instanceVar1} 
- * MifFooNestedOperators = {instanceVar1, instanceVar3, instanceVar4} * 
+ * MifFooNestedOperators = {instanceVar1, instanceVar3, instanceVar4} 
  * MwhileFoo = {instanceVar3, instanceVar5} 
  * MWhileFooNestedOperators = {instanceVar4, instanceVar5} 
  * MbarAssignment = {instanceVar3} 
- * Mbar2ComplexReturn = {instanceVar1} 
+ * Mbar2ComplexReturn = {instanceVar5} 
  * MfooBar = {instanceVar2}
+ * MfooBarField = {instanceVar3}
  * 
  * //intersection is empty
- * P = { (MfooPostfixPrefix, MwhileFoo),  (MfooPostfixPrefix, MWhileFooNestedOperators), (MfooPostfixPrefix, MbarAssignment), (MfooPostfixPrefix, MfooBar)
- * 		 (MifFoo, MwhileFoo), (MifFoo, MWhileFooNestedOperators), (MifFoo, MbarAssignment), (MifFoo, MfooBar)
- * 		 (MifFooNestedOperators, MfooBar), 
- *  	 (MwhileFoo, Mbar2ComplexReturn),  (MwhileFoo, MfooBar),
- *    	 (MWhileFooNestedOperators,MbarAssignment),(MWhileFooNestedOperators,Mbar2ComplexReturn),(MWhileFooNestedOperators,MfooBar),
+ * P = { (MfooPostfixPrefix, MwhileFoo),  (MfooPostfixPrefix, MWhileFooNestedOperators), (MfooPostfixPrefix, MbarAssignment),(fooPostfixPrefix, bar2ComplexReturn), (MfooPostfixPrefix, MfooBar), (MfooPostfixPrefixMfooBarField)
+ * 		 (MifFoo, MwhileFoo), (MifFoo, MWhileFooNestedOperators), (MifFoo, MbarAssignment),(ifFoo, bar2ComplexReturn), (MifFoo, MfooBar), (MifFoo, MfooBarField)
+ * 		 (MifFooNestedOperators, MfooBar), (ifFooNestedOperators, bar2ComplexReturn)
+ *  	 (MwhileFoo, MfooBar)
+ *    	 (MWhileFooNestedOperators,MbarAssignment),(MWhileFooNestedOperators,MfooBar), (MWhileFooNestedOperators,MfooBarField)
  *	  	 (MbarAssignment, Mbar2ComplexReturn), (MbarAssignment, MfooBar)	
- *		 (Mbar2ComplexReturn, MfooBar)
+ *		 (Mbar2ComplexReturn, MfooBar), (Mbar2ComplexReturn, MfooBarField)
+ *		 (MfooBar, MfooBarField)
  * } 
  * 
  * //intersection is not empty
- * Q = {(fooPostfixPrefix, ifFoo),(fooPostfixPrefix, ifFooNestedOperators), (fooPostfixPrefix, bar2ComplexReturn)
- * 		(ifFoo, ifFooNestedOperators), (ifFoo, bar2ComplexReturn)
- * 		(ifFooNestedOperators, bar2ComplexReturn),(ifFooNestedOperators, MwhileFoo),(ifFooNestedOperators, MWhileFooNestedOperators),(ifFooNestedOperators, MbarAssignment) 
- * 		(whileFoo, MWhileFooNestedOperators), (whileFoo, MbarAssignment)  		
+ * Q = {(MfooPostfixPrefix, MifFoo),(MfooPostfixPrefix, MifFooNestedOperators)
+ * 		(MifFoo, MifFooNestedOperators)
+ * 		(MifFooNestedOperators, MwhileFoo),(MifFooNestedOperators, MWhileFooNestedOperators),(MifFooNestedOperators, MbarAssignment), (MifFooNestedOperators, MfooBarField) 
+ * 		(MwhileFoo, MWhileFooNestedOperators), (MwhileFoo, MbarAssignment), (MwhileFoo, Mbar2ComplexReturn), (MwhileFoo, MfooBarField)
+ * 		(MbarAssignment, MfooBarField)
+ * 		(MWhileFooNestedOperators,Mbar2ComplexReturn)  		
  * } 
  *
- * |P| = 17
- * |Q| = 11
+ * |P| = 23
+ * |Q| = 13
  * 
- * Because of|P| = 17 > 11 = |Q| 
- * => LCOM = |P| - |Q| = 17 - 11 = 6
+ * Because of|P| = 18 > 10 = |Q| 
+ * => LCOM = |P| - |Q| = 18 - 10 = 8
  * 
  * @author Frederik Marticke
  */
@@ -90,6 +94,11 @@ public class CkLcomTest {
 	protected String fooBar(){
 		int baz = barAssignment();
 		return instanceVar2+baz;
+	}
+	
+	protected int fooBarField(){
+		int fieldDec = instanceVar3;
+		return fieldDec;
 	}
 
 }
