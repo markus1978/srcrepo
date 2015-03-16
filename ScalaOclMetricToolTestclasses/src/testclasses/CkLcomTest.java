@@ -41,8 +41,8 @@ package testclasses;
  * |P| = 23
  * |Q| = 13
  * 
- * Because of|P| = 18 > 10 = |Q| 
- * => LCOM = |P| - |Q| = 18 - 10 = 8
+ * Because of|P| = 23 > 13 = |Q| 
+ * => LCOM = |P| - |Q| = 23 - 13 = 10
  * 
  * @author Frederik Marticke
  */
