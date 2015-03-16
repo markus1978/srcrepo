@@ -404,7 +404,7 @@ class CKMetric {
         .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
         .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
 
-        ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
+      ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
       val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
         variablesSet.add(analyseMethodForLcom(method, instanceVariablesInsideUnit))
         variablesSet;
@@ -448,8 +448,13 @@ class CKMetric {
   //#			Helpermethods			   #
   //########################################
 
-  //TODO: lokale variablen declarationen die auf werte von Instanzvariablen gesetzt werden
-
+  /**
+   * Helpermethod: Returns a list of names of all variables, which are used inside the analyzed methods and which are class instance variables as well.
+   * The set of class instance variables has to be passed as argument
+   * @param method: the method to analyze
+   * @param instanceVariablesInsideUnit: the set of class instance variables
+   * @return a list of names of used class instance variables
+   */
   def analyseMethodForLcom(method: AbstractMethodDeclaration, instanceVariablesInsideUnit: EList[String]): EList[String] = {
     var usedInstanceVariables: EList[String] = new BasicEList[String];
     var methodVariablesSet: EList[String] = new BasicEList[String];
@@ -489,6 +494,15 @@ class CKMetric {
       if (statement.isInstanceOf[ReturnStatement])
         tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ReturnStatement])
           .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(returnStatement.getExpression())))
+
+      //variable declaration statement
+      if (statement.isInstanceOf[VariableDeclarationStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[VariableDeclarationStatement])
+          .select((variableDeclarationStatement) => variableDeclarationStatement.getFragments().get(0) != null)
+          .collect((variableDeclarationStatement) => variableDeclarationStatement.getFragments().get(0))
+          .select((fragment) => fragment.isInstanceOf[VariableDeclarationFragment])
+          .collect((fragement) => fragement.asInstanceOf[VariableDeclarationFragment])
+          .iterate(() => new BasicEList[String], (variableDeclaration, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(variableDeclaration.getInitializer())))
 
       //prefix and postfix Expression
       if (statement.isInstanceOf[ExpressionStatement] &&
@@ -537,6 +551,12 @@ class CKMetric {
     usedInstanceVariables;
   }
 
+  /**
+   * Helpermethod: Returns a List of Names, containing all used variables of this expression. If a further expression is part of the current expression,
+   * this gets analyzed as well, i. e. foo = (var1+4)-var5 returns [var1, var5] if the right hand side is given.
+   * @param expression: the expression to analyze
+   * @return a list of names of the used variables
+   */
   def collectVariablesUsedInsideExpression(expression: Expression): EList[String] = {
     val elist = new BasicEList[InfixExpression]();
     var tempList: EList[String] = new BasicEList[String];
