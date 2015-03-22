@@ -28,6 +28,6 @@ package testclasses;
  * is the longest Path inside the inheritance tree.
  */
 public class CkDitTest extends CkDitLevelTwoWithTwoParents
-implements CkDitInterfaceLevelTwoWithNoParents, CkDitInterfaceLevelOneWithNoParent {
+implements CkDitInterfaceLevelTwoWithNoParents, CkDitInterfaceLevelOneWithNoParent, CkNocInterfaceTest {
 	//nothing to do here.
 }
