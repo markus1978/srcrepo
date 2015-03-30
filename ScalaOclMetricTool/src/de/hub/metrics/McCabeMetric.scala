@@ -35,267 +35,272 @@ import org.eclipse.gmt.modisco.java.ParenthesizedExpression
 import org.eclipse.gmt.modisco.java.Expression
 
 class McCabeMetric {
-	implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]):OclList[E] = new OclList[E](l)
-	
-	def checkForConditionalIfStatements(statement: IfStatement) : Double = {
-	  val elist = new BasicEList[IfStatement]();
-	  elist.add(statement)
-	  elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
-	  .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression])) 
-	  
-	  //TODO: der Fall muss vermutlich überall noch rein, aber dafür gibts grade noch keinen Test
-//	  +
-//	  elist.select((item) => item.getExpression().isInstanceOf[ParenthesizedExpression])
-//	  .sum((item) => analyzeExpression(item.getExpression().asInstanceOf[ParenthesizedExpression].getExpression()))
-	}
-	
-	def checkForConditionalDoStatements(statement: DoStatement) : Double = {
-	  val elist = new BasicEList[DoStatement]();
-	  elist.add(statement)	
-	  elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
-	  .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression]))     
-	}
-	
-	def checkForConditionalWhileStatements(statement: WhileStatement) : Double = {
-	  val elist = new BasicEList[WhileStatement]();
-	  elist.add(statement)
-	  elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
-	  .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression]))      
-	}
-	
-	def checkForConditionalForStatements(statement: ForStatement) : Double = {
-	  val elist = new BasicEList[ForStatement]();
-	  elist.add(statement)
-	  elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
-	  .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression]))  
-	}
-	
-	def checkForConditionalReturnStatements(statement: ReturnStatement) : Double = {
-	  val elist = new BasicEList[ReturnStatement]();
-	  elist.add(statement)
-	  
-	  elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
-	  .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression]))+
-	  elist.select((item) => item.getExpression().isInstanceOf[ConditionalExpression])
-	  .sum((item) => analyzeConditionalExpression(item.getExpression().asInstanceOf[ConditionalExpression]))	  
-	}
-	
-	
-	
-	def analyzeInfixExpression(expression : InfixExpression) : Double = {
-	  val elist = new BasicEList[InfixExpression]();
-	  var result = 0.0;
-	  elist.add(expression)
-	  val t = elist.union(elist.iterate(() => new BasicEList[InfixExpression],(expr, foundInfixExpressions:EList[InfixExpression]) => {
-	    	    
-	    if(expr.getLeftOperand().isInstanceOf[InfixExpression])
-		    if(expr.getLeftOperand().asInstanceOf[InfixExpression].getLeftOperand().isInstanceOf[InfixExpression])
-	    	{
-			    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
-		    }
-	    else if(expr.getLeftOperand().isInstanceOf[ParenthesizedExpression]){
-		    result = result + analyzeExpression((expr.getLeftOperand().asInstanceOf[ParenthesizedExpression]).getExpression())
-	    }
-	    if(expr.getRightOperand().isInstanceOf[InfixExpression])
-	      if(expr.getRightOperand().asInstanceOf[InfixExpression].getRightOperand().isInstanceOf[InfixExpression])
-		    {
-			    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
-		    }
-	    else if(expr.getRightOperand().isInstanceOf[ParenthesizedExpression]){
-		    result = result + analyzeExpression((expr.getRightOperand().asInstanceOf[ParenthesizedExpression]).getExpression())
-	    }
-	    	    
-	    foundInfixExpressions;
-	    
-	  }));
-	  
-	  t.sum((infixExpression) => {
-	    if(infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || 
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR") ||
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("GREATER") ||
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("LESS") ||
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("GREATER_EQUALS") ||
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("LESS_EQUALS") ||
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("EQUALS") ||
-	        infixExpression.asInstanceOf[InfixExpression].getOperator().getName().equalsIgnoreCase("NOT_EQUALS")
-	        ) 1
-	    else 0
-	  }) + result; 
-	}	
-	
-	
-	def analyzeExpression(expression : Expression) : Double = {
-	  if (expression.isInstanceOf[ParenthesizedExpression]){
-	    val foo = analyzeExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression());
-		  return foo;
-	  }
-	  else if (expression.isInstanceOf[InfixExpression]){
-	    val foo = analyzeInfixExpression(expression.asInstanceOf[InfixExpression])
-	    return foo;
-	  }
-	  else
-	   return 0 
-	}
-			
-	def analyzeConditionalExpression(expression : ConditionalExpression) : Double = {
-	  val elist = new BasicEList[ConditionalExpression]();
-	  elist.add(expression);
-	  
-	  val foo = elist.sum((expression) => {
-	    analyzeExpression(expression.getExpression()) +
-		analyzeExpression(expression.getElseExpression()) +
-		analyzeExpression(expression.getThenExpression())
-	  })
-	  foo;
-	}
+  implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]): OclList[E] = new OclList[E](l)
 
-	def mcCabeMetric(block: Block): Double = {
-	  //gather all EStructuralFeature from Meta-Model
-	  block.eContents().closure((e)=>e.eContents())
-	  //Select all Statements
-	    .select((e)=>e.isInstanceOf[Statement])
-	    //Cast all Elements to Statement
-	    .collect((e)=>e.asInstanceOf[Statement])
-	    //add 1 for each keyword indicating a Branching or MethodDeclaration
-	    .sum((s)=>	      
-	      if (s.isInstanceOf[SwitchCase]) 1
-	      else if (s.isInstanceOf[IfStatement]) {
-	        1 + checkForConditionalIfStatements(s.asInstanceOf[IfStatement])
-	      } 
-	      else if (s.isInstanceOf[DoStatement]) {
-	        1 + checkForConditionalDoStatements(s.asInstanceOf[DoStatement])
-	      } 
-	      else if (s.isInstanceOf[WhileStatement]) {
-	        1 + checkForConditionalWhileStatements(s.asInstanceOf[WhileStatement])
-	      } 
-	      else if (s.isInstanceOf[ForStatement]) {
-	        1 + checkForConditionalForStatements(s.asInstanceOf[ForStatement])
-	      } 
-	      else if (s.isInstanceOf[ReturnStatement]) {	        
-	        checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])
-	        //1 + checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])	diskussionswürdig: warum gibt return IMMER +1?        	
-	      } 
-	      
-//	      Discuss: why shall these words increase complexity?
-//	      || s.isInstanceOf[BreakStatement]
-//	      || s.isInstanceOf[ContinueStatement]) 1	      
-	      //|| s.isInstanceOf[ReturnStatement]) 1 TODO  only if not the last statement of function 	      
-	      //else if (s.isInstanceOf[MethodDeclaration]) 1
-	      else 0
-	  ) + 1.0
-	}
-	
-	//TODO: Es gibt scheinbar in bestimmten Konstellationen einen Bug mit dem egit activator
-	//see: e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=370305, https://bugs.eclipse.org/bugs/show_bug.cgi?id=325829
-	//muss noch genauer analysiert werden ob/wo ein problem besteht
-	def mcCabeMetric(model: Model): List[_] = {
-	  var result:ListBuffer[ResultObject] = new ListBuffer[ResultObject];
-	  var resultObject:ResultObject = null;	  
-	  var lastCompilationUnit = "";      
-      var firstRun:Boolean = true;
-	 
-	  //gather all EStructuralFeature from Meta-Model
-	  val abstractMethodDeclarations = model.eContents().closure((e)=>e.eContents())
-	  //select all AbstractMethodDeclarations
-	 .select((e)=>e.isInstanceOf[AbstractMethodDeclaration])
-	  //casting all Elements to AbstractMethodDeclaration, returns a new Collection
-	 .collect((e)=>e.asInstanceOf[AbstractMethodDeclaration]);
-	  //calculate the McCabe-Metric and save in result List	  
-	  
-	  val iter = abstractMethodDeclarations.iterator();
-	   
-	  while (iter.hasNext){
-	    try{
-		    val abstractMethodDeclaration = iter.next();
-		    val methodBody = abstractMethodDeclaration.getBody();
-		    if(methodBody != null){
-		    	val metric = mcCabeMetric(methodBody);
-		        //if units differ
-		        if(!(lastCompilationUnit.equals(abstractMethodDeclaration.getOriginalCompilationUnit().toString()))){
-		          
-		            //it is either a new file
-		        	if(!firstRun){
-		        	  //save the current resultObject according to the previous file
-		        	  result.append(resultObject);
-		        	  //create a new resultObject for the current File
-		        	  resultObject = new ResultObject();
-		        	  resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
-		        	}
-		        	
-		        	//or the first run
-		        	else
-		        	{
-		        	   //create a new resultObject for the current File
-		        	  resultObject = new ResultObject();
-		        	  resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
-		        	  firstRun = false;
-		        	}        	
-		        } 
-		        
-		        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previous
-		        resultObject.getValues().append(metric);
-		        lastCompilationUnit = abstractMethodDeclaration.getOriginalCompilationUnit().toString();
-		    }
-	    } catch {
-	      case e: Exception => 
-	        println("Exception caught: " + e.printStackTrace()); //TODO: why is the body of an abstractMethodDeclaration missing sometimes?  
-	    }	  
-	  }//while
-	  result.append(resultObject);
-	  
-	  //see: http://stackoverflow.com/questions/2429944/how-to-convert-a-scala-list-to-a-java-util-list
-	  return result.asJava	  
-	}
-	
-	
-	//	def searchForNestedInfixExpressions(exp:OclList[InfixExpression]):Double = {
-////	  var infixExpressionsList:EList[InfixExpression] = new BasicEList[InfixExpression]();
-////	  infixExpressionsList.add(exp);
-//	  val nestedInfixExpressions = exp.closure((expr) => {
-//	    var foundInfixExpressions = new BasicEList[InfixExpression]();
-//	    
-//	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
-//		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
-//	    }
-//	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
-//		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
-//	    }
-//	    foundInfixExpressions;
-//	  })
-//	  
-//	  nestedInfixExpressions.sum((infixExpression) => 
-//	    if(infixExpression.getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || infixExpression.getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
-//	    else 0
-//	  )  
-//	}
-	
-	//	def checkForConditionalStatements(statement: Statement, kind:String):Double = {
-//	  kind.toLowerCase() match {
-////	    case "if" => {
-////	      val exp = statement.asInstanceOf[IfStatement].getExpression().asInstanceOf[InfixExpression];
-////	      val operator_name = exp.getOperator().getName();
-////	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-////	      else 1	      
-////	    }
-//	    case "do" => {
-//	      val exp = statement.asInstanceOf[DoStatement].getExpression().asInstanceOf[InfixExpression];
-//	      val operator_name = exp.getOperator().getName();
-//	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-//	      else 1	      
-//	    }
-//	    case "while" => {
-//	      val exp = statement.asInstanceOf[WhileStatement].getExpression().asInstanceOf[InfixExpression];
-//	      val operator_name = exp.getOperator().getName();
-//	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-//	      else 1	      
-//	    }
-//	    case "for" => {
-//	      val exp = statement.asInstanceOf[ForStatement].getExpression().asInstanceOf[InfixExpression];
-//	      val operator_name = exp.getOperator().getName();	     
-//	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
-//	      else 1	      
-//	    }
-//	    case _ => 1
-//	  }  
-//	}
+  def checkForConditionalIfStatements(statement: IfStatement): Double = {
+    val elist = new BasicEList[IfStatement]();
+    elist.add(statement)
+    elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
+      .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
+      elist.select((item) => item.getExpression().isInstanceOf[ParenthesizedExpression])
+      .sum((item) => analyzeExpression(item.getExpression().asInstanceOf[ParenthesizedExpression].getExpression(), false))
+  }
+
+  def checkForConditionalDoStatements(statement: DoStatement): Double = {
+    val elist = new BasicEList[DoStatement]();
+    elist.add(statement)
+    elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
+      .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
+      elist.select((item) => item.getExpression().isInstanceOf[ParenthesizedExpression])
+      .sum((item) => analyzeExpression(item.getExpression().asInstanceOf[ParenthesizedExpression].getExpression(), false))
+  }
+
+  def checkForConditionalWhileStatements(statement: WhileStatement): Double = {
+    val elist = new BasicEList[WhileStatement]();
+    elist.add(statement)
+    elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
+      .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
+      elist.select((item) => item.getExpression().isInstanceOf[ParenthesizedExpression])
+      .sum((item) => analyzeExpression(item.getExpression().asInstanceOf[ParenthesizedExpression].getExpression(), false))
+  }
+
+  def checkForConditionalForStatements(statement: ForStatement): Double = {
+    val elist = new BasicEList[ForStatement]();
+    elist.add(statement)
+    elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
+      .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
+      elist.select((item) => item.getExpression().isInstanceOf[ParenthesizedExpression])
+      .sum((item) => analyzeExpression(item.getExpression().asInstanceOf[ParenthesizedExpression].getExpression(), false))
+  }
+
+  def checkForConditionalReturnStatements(statement: ReturnStatement): Double = {
+    val elist = new BasicEList[ReturnStatement]();
+    elist.add(statement)
+
+    elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
+      .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
+      elist.select((item) => item.getExpression().isInstanceOf[ConditionalExpression])
+      .sum((item) => analyzeConditionalExpression(item.getExpression().asInstanceOf[ConditionalExpression], false)) +
+      elist.select((item) => item.getExpression().isInstanceOf[ParenthesizedExpression])
+      .sum((item) => analyzeExpression(item.getExpression().asInstanceOf[ParenthesizedExpression].getExpression(), false))
+  }
+
+  /**
+   * @param expression: the expression to analyze
+   * @param nestedTerm : a boolean value to indicate if the given Expression is part of an Left/Right hand side, representing an inner term to evaluate like in (a < (3+6))
+   * @return The McCabe-Metric value for the whole expression.
+   */
+  def analyzeInfixExpression(expression: InfixExpression, nestedTerm: Boolean): Double = {
+    val elist = new BasicEList[InfixExpression]();
+    var result = 0.0;
+    elist.add(expression)
+
+    //elemental infix expression with logical operator e.g. "if( a < b )"
+    if (checkOperator(expression) && isElementalInfixExpression(expression)) {
+      result = result + 1.0
+    } //if(a < b && b > 100) [s. McCabe: if(c1 AND c2) == if(c1) then if(c2) => count the conditions, and not the AND-Operator itself]
+    else if (checkOperator(expression) && !isElementalInfixExpression(expression)) {
+
+      if (expression.getLeftOperand().isInstanceOf[InfixExpression]) {
+        result = result + analyzeInfixExpression(expression.getLeftOperand().asInstanceOf[InfixExpression], true);
+      } else if (expression.getLeftOperand().isInstanceOf[ParenthesizedExpression]) {
+        result = result + analyzeExpression((expression.getLeftOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true)
+      }
+
+      if (expression.getRightOperand().isInstanceOf[InfixExpression]) {
+        result = result + analyzeInfixExpression(expression.getRightOperand().asInstanceOf[InfixExpression], true);
+      } else if (expression.getRightOperand().isInstanceOf[ParenthesizedExpression]) {
+        result = result + analyzeExpression((expression.getRightOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true)
+      }
+    } //this line is used in the case of nested Terms within a branchcondition, e.g. (a < (3+6)), the right hand side doesn't cause
+    //a branch on its own and therefore would return 0. However, the LESS has to be counted. 
+    else if (nestedTerm) {
+      result = result + 1.0;
+    }
+    result;
+  }
+
+  def isElementalInfixExpression(expr: InfixExpression): Boolean = {
+    if (expr.getLeftOperand().isInstanceOf[InfixExpression]
+      || expr.getLeftOperand().isInstanceOf[ParenthesizedExpression]
+      || expr.getRightOperand().isInstanceOf[InfixExpression]
+      || expr.getRightOperand().isInstanceOf[ParenthesizedExpression])
+      false
+    else
+      true
+  }
+
+  def checkOperator(expr: InfixExpression): Boolean = {
+    if (expr.getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") ||
+      expr.getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR") ||
+      expr.getOperator().getName().equalsIgnoreCase("GREATER") ||
+      expr.getOperator().getName().equalsIgnoreCase("LESS") ||
+      expr.getOperator().getName().equalsIgnoreCase("GREATER_EQUALS") ||
+      expr.getOperator().getName().equalsIgnoreCase("LESS_EQUALS") ||
+      expr.getOperator().getName().equalsIgnoreCase("EQUALS") ||
+      expr.getOperator().getName().equalsIgnoreCase("NOT_EQUALS")) true
+    else false
+  }
+
+  def analyzeExpression(expression: Expression, nestedTerm: Boolean): Double = {
+    if (expression.isInstanceOf[ParenthesizedExpression]) {
+      val foo = analyzeExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression(), nestedTerm);
+      return foo;
+    } else if (expression.isInstanceOf[InfixExpression]) {
+      val foo = analyzeInfixExpression(expression.asInstanceOf[InfixExpression], nestedTerm)
+      return foo;
+    } else
+      return 0
+  }
+
+  def analyzeConditionalExpression(expression: ConditionalExpression, nestedTerm: Boolean): Double = {
+    val elist = new BasicEList[ConditionalExpression]();
+    elist.add(expression);
+
+    val foo = elist.sum((expression) => {
+      analyzeExpression(expression.getExpression(), nestedTerm) +
+        analyzeExpression(expression.getElseExpression(), nestedTerm) +
+        analyzeExpression(expression.getThenExpression(), nestedTerm)
+    })
+    foo;
+  }
+
+  def mcCabeMetric(block: Block): Double = {
+    //gather all EStructuralFeature from Meta-Model
+    block.eContents().closure((e) => e.eContents())
+      //Select all Statements
+      .select((e) => e.isInstanceOf[Statement])
+      //Cast all Elements to Statement
+      .collect((e) => e.asInstanceOf[Statement])
+      //add 1 for each keyword indicating a Branching or MethodDeclaration
+      .sum((s) =>
+        if (s.isInstanceOf[SwitchCase]) 1
+        else if (s.isInstanceOf[IfStatement]) {
+          checkForConditionalIfStatements(s.asInstanceOf[IfStatement])
+        } else if (s.isInstanceOf[DoStatement]) {
+          checkForConditionalDoStatements(s.asInstanceOf[DoStatement])
+        } else if (s.isInstanceOf[WhileStatement]) {
+          checkForConditionalWhileStatements(s.asInstanceOf[WhileStatement])
+        } else if (s.isInstanceOf[ForStatement]) {
+          checkForConditionalForStatements(s.asInstanceOf[ForStatement])
+        } else if (s.isInstanceOf[ReturnStatement]) {
+          checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])
+          //1 + checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])	diskussionswürdig: warum gibt return IMMER +1?        	
+        } //	      Discuss: why shall these words increase complexity?
+        //	      || s.isInstanceOf[BreakStatement]
+        //	      || s.isInstanceOf[ContinueStatement]) 1	      
+        //|| s.isInstanceOf[ReturnStatement]) 1 TODO  only if not the last statement of function 	      
+        //else if (s.isInstanceOf[MethodDeclaration]) 1
+        else 0) + 1.0
+  }
+
+  //TODO: Es gibt scheinbar in bestimmten Konstellationen einen Bug mit dem egit activator
+  //see: e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=370305, https://bugs.eclipse.org/bugs/show_bug.cgi?id=325829
+  //muss noch genauer analysiert werden ob/wo ein problem besteht
+  def mcCabeMetric(model: Model): List[_] = {
+    var result: ListBuffer[ResultObject] = new ListBuffer[ResultObject];
+    var resultObject: ResultObject = null;
+    var lastCompilationUnit = "";
+    var firstRun: Boolean = true;
+
+    //gather all EStructuralFeature from Meta-Model
+    val abstractMethodDeclarations = model.eContents().closure((e) => e.eContents())
+      //select all AbstractMethodDeclarations
+      .select((e) => e.isInstanceOf[AbstractMethodDeclaration])
+      //casting all Elements to AbstractMethodDeclaration, returns a new Collection
+      .collect((e) => e.asInstanceOf[AbstractMethodDeclaration]);
+    //calculate the McCabe-Metric and save in result List	  
+
+    val iter = abstractMethodDeclarations.iterator();
+
+    while (iter.hasNext) {
+      try {
+        val abstractMethodDeclaration = iter.next();
+        val methodBody = abstractMethodDeclaration.getBody();
+        if (methodBody != null) {
+          val metric = mcCabeMetric(methodBody);
+          //if units differ
+          if (!(lastCompilationUnit.equals(abstractMethodDeclaration.getOriginalCompilationUnit().toString()))) {
+
+            //it is either a new file
+            if (!firstRun) {
+              //save the current resultObject according to the previous file
+              result.append(resultObject);
+              //create a new resultObject for the current File
+              resultObject = new ResultObject();
+              resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
+            } //or the first run
+            else {
+              //create a new resultObject for the current File
+              resultObject = new ResultObject();
+              resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
+              firstRun = false;
+            }
+          }
+
+          //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previous
+          resultObject.getValues().append(metric);
+          lastCompilationUnit = abstractMethodDeclaration.getOriginalCompilationUnit().toString();
+        }
+      } catch {
+        case e: Exception =>
+          println("Exception caught: " + e.printStackTrace()); //TODO: why is the body of an abstractMethodDeclaration missing sometimes?  
+      }
+    } //while
+    result.append(resultObject);
+
+    //see: http://stackoverflow.com/questions/2429944/how-to-convert-a-scala-list-to-a-java-util-list
+    return result.asJava
+  }
+
+  //	def searchForNestedInfixExpressions(exp:OclList[InfixExpression]):Double = {
+  ////	  var infixExpressionsList:EList[InfixExpression] = new BasicEList[InfixExpression]();
+  ////	  infixExpressionsList.add(exp);
+  //	  val nestedInfixExpressions = exp.closure((expr) => {
+  //	    var foundInfixExpressions = new BasicEList[InfixExpression]();
+  //	    
+  //	    if(expr.getLeftOperand().isInstanceOf[InfixExpression]){
+  //		    foundInfixExpressions.add(expr.getLeftOperand().asInstanceOf[InfixExpression]);
+  //	    }
+  //	    if(expr.getRightOperand().isInstanceOf[InfixExpression]){
+  //		    foundInfixExpressions.add(expr.getRightOperand().asInstanceOf[InfixExpression]);
+  //	    }
+  //	    foundInfixExpressions;
+  //	  })
+  //	  
+  //	  nestedInfixExpressions.sum((infixExpression) => 
+  //	    if(infixExpression.getOperator().getName().equalsIgnoreCase("CONDITIONAL_AND") || infixExpression.getOperator().getName().equalsIgnoreCase("CONDITIONAL_OR")) 1
+  //	    else 0
+  //	  )  
+  //	}
+
+  //	def checkForConditionalStatements(statement: Statement, kind:String):Double = {
+  //	  kind.toLowerCase() match {
+  ////	    case "if" => {
+  ////	      val exp = statement.asInstanceOf[IfStatement].getExpression().asInstanceOf[InfixExpression];
+  ////	      val operator_name = exp.getOperator().getName();
+  ////	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+  ////	      else 1	      
+  ////	    }
+  //	    case "do" => {
+  //	      val exp = statement.asInstanceOf[DoStatement].getExpression().asInstanceOf[InfixExpression];
+  //	      val operator_name = exp.getOperator().getName();
+  //	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+  //	      else 1	      
+  //	    }
+  //	    case "while" => {
+  //	      val exp = statement.asInstanceOf[WhileStatement].getExpression().asInstanceOf[InfixExpression];
+  //	      val operator_name = exp.getOperator().getName();
+  //	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+  //	      else 1	      
+  //	    }
+  //	    case "for" => {
+  //	      val exp = statement.asInstanceOf[ForStatement].getExpression().asInstanceOf[InfixExpression];
+  //	      val operator_name = exp.getOperator().getName();	     
+  //	      if(operator_name.equalsIgnoreCase("CONDITIONAL_AND") || operator_name.equalsIgnoreCase("CONDITIONAL_OR")) 1 + searchForNestedInfixExpressions(exp)
+  //	      else 1	      
+  //	    }
+  //	    case _ => 1
+  //	  }  
+  //	}
 }
