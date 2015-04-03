@@ -77,7 +77,7 @@ class McCabeMetric {
     val elist = new BasicEList[ReturnStatement]();
     elist.add(statement)
 
-    elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
+    1 + elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
       .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
       elist.select((item) => item.getExpression().isInstanceOf[ConditionalExpression])
       .sum((item) => analyzeConditionalExpression(item.getExpression().asInstanceOf[ConditionalExpression], false)) +
@@ -184,8 +184,12 @@ class McCabeMetric {
         } else if (s.isInstanceOf[ForStatement]) {
           checkForConditionalForStatements(s.asInstanceOf[ForStatement])
         } else if (s.isInstanceOf[ReturnStatement]) {
-          checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])
-          //1 + checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])	diskussionswürdig: warum gibt return IMMER +1?        	
+          if((s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[Block]
+          && s.asInstanceOf[ReturnStatement].eContainer().asInstanceOf[Block].eContainer().isInstanceOf[MethodDeclaration])
+          || s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[SwitchStatement]) //avoid counting switch-statements two times (s.a.)
+            0 //return statements, which are the last statement in a MethodDeclaration doesnt increase complexity
+          else
+            checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])        	
         } //	      Discuss: why shall these words increase complexity?
         //	      || s.isInstanceOf[BreakStatement]
         //	      || s.isInstanceOf[ContinueStatement]) 1	      
