@@ -3,9 +3,7 @@ package testclasses;
 public class McCabeContinueTest {
 	
 	/**
-	 * DISCUSS: Why does continue or break increase complexity?
-	 * 
-	 * Should give a McCabe value of 4 = 3 binary branches + 1
+	 * Should give a McCabe value of 6 = 3 binary branches + 1 break + 1 continue + 1
 	 * @param pA
 	 * @param pB
 	 */

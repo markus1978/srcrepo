@@ -18,7 +18,7 @@ public class McCabeTernaryOperatorTest {
 	}
 
 	/**
-	 * should give a McCabe metric of 5 = 4 binary branches + 1
+	 * should give a McCabe metric of 7 = 4 binary branches + 2 inner return + 1
 	 * @return
 	 */
 	public boolean complexTernaryTest() {
