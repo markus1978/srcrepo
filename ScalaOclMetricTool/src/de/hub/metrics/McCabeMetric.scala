@@ -33,6 +33,8 @@ import org.eclipse.gmt.modisco.java.InfixExpression
 import org.eclipse.gmt.modisco.java.emf.impl.MethodDeclarationImpl
 import org.eclipse.gmt.modisco.java.ParenthesizedExpression
 import org.eclipse.gmt.modisco.java.Expression
+import org.eclipse.gmt.modisco.java.CatchClause
+import org.eclipse.gmt.modisco.java.ThrowStatement
 
 class McCabeMetric {
   implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]): OclList[E] = new OclList[E](l)
@@ -77,6 +79,8 @@ class McCabeMetric {
     val elist = new BasicEList[ReturnStatement]();
     elist.add(statement)
 
+    // return statements, which gets analyzed here, are already checked not to be the last statement of a method and therefore has to be counted at least + 1
+    // + whatever is defined inside the return
     1 + elist.select((item) => item.getExpression().isInstanceOf[InfixExpression])
       .sum((item) => analyzeInfixExpression(item.getExpression().asInstanceOf[InfixExpression], false)) +
       elist.select((item) => item.getExpression().isInstanceOf[ConditionalExpression])
@@ -144,25 +148,21 @@ class McCabeMetric {
 
   def analyzeExpression(expression: Expression, nestedTerm: Boolean): Double = {
     if (expression.isInstanceOf[ParenthesizedExpression]) {
-      val foo = analyzeExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression(), nestedTerm);
-      return foo;
+      return analyzeExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression(), nestedTerm);
     } else if (expression.isInstanceOf[InfixExpression]) {
-      val foo = analyzeInfixExpression(expression.asInstanceOf[InfixExpression], nestedTerm)
-      return foo;
-    } else
-      return 0
+      return analyzeInfixExpression(expression.asInstanceOf[InfixExpression], nestedTerm)
+    } else return 0
   }
 
   def analyzeConditionalExpression(expression: ConditionalExpression, nestedTerm: Boolean): Double = {
     val elist = new BasicEList[ConditionalExpression]();
     elist.add(expression);
 
-    val foo = elist.sum((expression) => {
+    elist.sum((expression) => {
       analyzeExpression(expression.getExpression(), nestedTerm) +
         analyzeExpression(expression.getElseExpression(), nestedTerm) +
         analyzeExpression(expression.getThenExpression(), nestedTerm)
     })
-    foo;
   }
 
   def mcCabeMetric(block: Block): Double = {
@@ -184,18 +184,18 @@ class McCabeMetric {
         } else if (s.isInstanceOf[ForStatement]) {
           checkForConditionalForStatements(s.asInstanceOf[ForStatement])
         } else if (s.isInstanceOf[ReturnStatement]) {
-          if((s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[Block]
-          && s.asInstanceOf[ReturnStatement].eContainer().asInstanceOf[Block].eContainer().isInstanceOf[MethodDeclaration])
-          || s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[SwitchStatement]) //avoid counting switch-statements two times (s.a.)
+          if ((s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[Block]
+            && s.asInstanceOf[ReturnStatement].eContainer().asInstanceOf[Block].eContainer().isInstanceOf[MethodDeclaration])
+            || s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[SwitchStatement]) //avoid counting switch-statements two times (s.a.)
             0 //return statements, which are the last statement in a MethodDeclaration doesnt increase complexity
           else
-            checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])        	
-        } //	      Discuss: why shall these words increase complexity?
-        //	      || s.isInstanceOf[BreakStatement]
-        //	      || s.isInstanceOf[ContinueStatement]) 1	      
-        //|| s.isInstanceOf[ReturnStatement]) 1 TODO  only if not the last statement of function 	      
-        //else if (s.isInstanceOf[MethodDeclaration]) 1
-        else 0) + 1.0
+            checkForConditionalReturnStatements(s.asInstanceOf[ReturnStatement])
+        } else if (s.isInstanceOf[CatchClause]) 1
+        else if (s.isInstanceOf[ThrowStatement]) 1
+        else if (s.isInstanceOf[BreakStatement]) 1
+        else if (s.isInstanceOf[ContinueStatement]) 1
+        else 0) +
+      1.0 //each not empty Method has at least complexity 1
   }
 
   //TODO: Es gibt scheinbar in bestimmten Konstellationen einen Bug mit dem egit activator
