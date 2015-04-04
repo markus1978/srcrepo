@@ -150,13 +150,20 @@ class CKMetric {
   }
 
   /**
-   * TODO: der Kurs ist schon ganz okay, aber wie zum geier kommt man an den Namen einer
-   * CompilationUnit die umbenannt wurde??? bzw. an irgendwas anderes woran sich erkennen lässt
-   * dass ein Interface implementiert wurde bzw. eine Klasse geerbt hat.
-   * Ausserdem könnte es sein, dass Klassen mehrfach gezählt werden, wenn sie mehrfach als
-   * CompilationUnit auftreten was z.B. den Wert 3.0 für #CompilationUnit #27: CkDitLevelTwoWithTwoParents.java *** Noc-Metric: 3.0#
-   * erklären könnte der eigentlich nur 1.0 sein dürfte
+   * TODO_update: Das Kernproblem ist der Umstand, dass das Model immer über die gesamte CommitHistorie gebaut wird. Das
+   * führt dazu, dass wenn eine Interface implementierende Unit bearbeitet wird, diese im Modell 2 bzw. N - Mal auftritt und
+   * der NOC Wert des Interfaces entsprechend auf N steigt, selbst wenn es nur 1 mal Implementiert wird.
    *
+   * aktueller Workaround: Die Menge der gefundenen Subklassen wird über den Namen auf ein duplikatefreies Set reduziert. Das ist zwar
+   * besser als alles zu zählen, da es für einzelne commits korrekt ist, aber es spiegelt dennoch nicht den Zeitverlauf, sondern nur den letzten Stand wieder.
+   * Um die Entwicklung über den Zeitverlauf zu betrachten, müsste das Model pro commit analysiert werden.
+   *
+   * Ausserdem wäre es toll zu wissen wie man aus dem Modell den AKTUELLEN bezeichner einer Unit erhält, denn die Liste der Interfaces
+   * arbeitet auf ggf. umbenannten Units, aber die gelieferte Liste der Compilation Units auf den Namen der  ursprünglich angelegten Unit.
+   * M.a.W. Eine umbenannte Unit taucht unter ihrem NEUEN Namen nicht in der erstellten .gitmodel File auf, wohl aber in der Liste der implementierten Interfaces
+   * einer Unit.
+   * => Problem: Wie soll man diese dann matchen??
+   * --------
    * Calculates the Number of Children (NOC) for a compilationUnit inside a MoDisco Model.
    * @param currentUnit : the unit to calculate
    * @param allUnits : the corresponding modisco java model
@@ -166,42 +173,44 @@ class CKMetric {
     var resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(currentUnit.getName())
 
-    val nocValue = allUnits
+    var units = allUnits
       //get all other compilationUnits
       .select((unit) => !(unit.getName().equals(currentUnit.getName())))
-      //sum up all classes having the current class as a direct superclass
-      .sum((otherUnit) => {
-        otherUnit.getTypes()
-          //select all classdeclarations for this unit from the types set
-          .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-          //cast all those items to classdeclarations 
-          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-          //calculate the NOC-value
-          .select((node) =>
-            //select all classes having the current class as superClass and return the total number 
-            (
-              (
-                node.getSuperClass() != null
-                && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) || (
-                  !(node.getSuperInterfaces().isEmpty())
-                  && foo(node.getSuperInterfaces(), currentUnit.getName().split(".")(0))))).size();
-      })
-    resultObject.getValues().append(nocValue);
+
+    var subclasses = units.collectAll((otherUnit) => {
+      otherUnit.getTypes()
+        //select all classdeclarations for this unit from the types set
+        .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+        //cast all those items to classdeclarations 
+        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+        //calculate
+        .select((node) =>
+          //select all classes having the current class as superClass and return the total number
+          if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
+            println("Class: <" + currentUnit.getName() + "> is SuperClass of: <" + node.getName() + ">")
+            true;
+          } else
+            false)
+    }) //avoid multiple counting of edited Units
+      .collect((child) => child.getName()).asSet().size();
+
+    var interfaces = units.collectAll((otherUnit) => {
+      otherUnit.getTypes()
+        .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+        .select((node) =>
+          if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName()).contains(currentUnit.getName().split('.')(0)))) {
+            var interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
+            println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
+            println("Interface: <" + stripCompilationUnitName(currentUnit.getName()) + "> gets implemented by: <" + node.getName() + ">")
+            true;
+          } else false);
+    }) //avoid multiple counting of edited Units
+      .collect((child) => child.getName()).asSet().size();
+
+    resultObject.getValues().append(subclasses + interfaces);
     return resultObject;
-  }
-
-  /**
-   * TODO: Das muss noch weg, aber dazu muss NOC richtig funktionieren...
-   */
-  def foo(list: EList[TypeAccess], name: String): Boolean = {
-    val l = list;
-    val gg = l.collect((interface) => interface.getType());
-    val n = gg.collect((g) => g.getName())
-    if (n.contains(name))
-      println("<" + name + "> is contained in list: <" + n + ">___");
-
-    n.contains(name);
-  }
+  } 
 
   /**
    * Calculates the Coupling Between Objects (CBO) inside a MoDisco model.
@@ -231,7 +240,6 @@ class CKMetric {
       });
 
     //as part of an 'MethodInvocation'
-
     model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
