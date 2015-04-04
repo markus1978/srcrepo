@@ -240,7 +240,6 @@ class CKMetric {
       });
 
     //as part of an 'MethodInvocation'
-
     model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
