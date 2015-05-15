@@ -12,9 +12,9 @@ class ResultObject {
   override def toString():String = {	    
     var string = "";	    
     for (iter <- values.toList.iterator) {	    
-		string = string.concat(iter.toString);			
+		string = string.concat(iter.toString).concat(" - ");			
 	}
-    return string;
+    return string.substring(0, string.length()-3);
   }
   
   def toStringOnlyGreaterZero():String = {	    
