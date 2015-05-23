@@ -34,6 +34,18 @@ import org.eclipse.gmt.modisco.java.AbstractMethodInvocation
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.emf.impl.MethodDeclarationImpl
 import com.sun.org.apache.xpath.internal.operations.Equals
+import org.eclipse.gmt.modisco.java.FieldDeclaration
+import org.eclipse.gmt.modisco.java.PostfixExpression
+import org.eclipse.gmt.modisco.java.ExpressionStatement
+import org.eclipse.gmt.modisco.java.InstanceofExpression
+import org.eclipse.gmt.modisco.java.ReturnStatement
+import org.eclipse.gmt.modisco.java.InfixExpression
+import org.eclipse.gmt.modisco.java.ParenthesizedExpression
+import org.eclipse.gmt.modisco.java.IfStatement
+import org.eclipse.gmt.modisco.java.WhileStatement
+import org.eclipse.gmt.modisco.java.DoStatement
+import org.eclipse.gmt.modisco.java.Assignment
+import org.eclipse.gmt.modisco.java.PrefixExpression
 
 /**
  * @author Frederik Marticke
@@ -138,13 +150,20 @@ class CKMetric {
   }
 
   /**
-   * TODO: der Kurs ist schon ganz okay, aber wie zum geier kommt man an den Namen einer
-   * CompilationUnit die umbenannt wurde??? bzw. an irgendwas anderes woran sich erkennen lässt
-   * dass ein Interface implementiert wurde bzw. eine Klasse geerbt hat.
-   * Ausserdem könnte es sein, dass Klassen mehrfach gezählt werden, wenn sie mehrfach als
-   * CompilationUnit auftreten was z.B. den Wert 3.0 für #CompilationUnit #27: CkDitLevelTwoWithTwoParents.java *** Noc-Metric: 3.0#
-   * erklären könnte der eigentlich nur 1.0 sein dürfte
+   * TODO_update: Das Kernproblem ist der Umstand, dass das Model immer über die gesamte CommitHistorie gebaut wird. Das
+   * führt dazu, dass wenn eine Interface implementierende Unit bearbeitet wird, diese im Modell 2 bzw. N - Mal auftritt und
+   * der NOC Wert des Interfaces entsprechend auf N steigt, selbst wenn es nur 1 mal Implementiert wird.
    *
+   * aktueller Workaround: Die Menge der gefundenen Subklassen wird über den Namen auf ein duplikatefreies Set reduziert. Das ist zwar
+   * besser als alles zu zählen, da es für einzelne commits korrekt ist, aber es spiegelt dennoch nicht den Zeitverlauf, sondern nur den letzten Stand wieder.
+   * Um die Entwicklung über den Zeitverlauf zu betrachten, müsste das Model pro commit analysiert werden.
+   *
+   * Ausserdem wäre es toll zu wissen wie man aus dem Modell den AKTUELLEN bezeichner einer Unit erhält, denn die Liste der Interfaces
+   * arbeitet auf ggf. umbenannten Units, aber die gelieferte Liste der Compilation Units auf den Namen der  ursprünglich angelegten Unit.
+   * M.a.W. Eine umbenannte Unit taucht unter ihrem NEUEN Namen nicht in der erstellten .gitmodel File auf, wohl aber in der Liste der implementierten Interfaces
+   * einer Unit.
+   * => Problem: Wie soll man diese dann matchen??
+   * --------
    * Calculates the Number of Children (NOC) for a compilationUnit inside a MoDisco Model.
    * @param currentUnit : the unit to calculate
    * @param allUnits : the corresponding modisco java model
@@ -154,42 +173,44 @@ class CKMetric {
     var resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(currentUnit.getName())
 
-    val nocValue = allUnits
+    var units = allUnits
       //get all other compilationUnits
       .select((unit) => !(unit.getName().equals(currentUnit.getName())))
-      //sum up all classes having the current class as a direct superclass
-      .sum((otherUnit) => {
-        otherUnit.getTypes()
-          //select all classdeclarations for this unit from the types set
-          .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-          //cast all those items to classdeclarations 
-          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-          //calculate the NOC-value
-          .select((node) =>
-            //select all classes having the current class as superClass and return the total number 
-            (
-              (
-                node.getSuperClass() != null
-                && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) || (
-                  !(node.getSuperInterfaces().isEmpty())
-                  && foo(node.getSuperInterfaces(), currentUnit.getName().split(".")(0))))).size();
-      })
-    resultObject.getValues().append(nocValue);
+
+    var subclasses = units.collectAll((otherUnit) => {
+      otherUnit.getTypes()
+        //select all classdeclarations for this unit from the types set
+        .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+        //cast all those items to classdeclarations 
+        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+        //calculate
+        .select((node) =>
+          //select all classes having the current class as superClass and return the total number
+          if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
+            println("Class: <" + currentUnit.getName() + "> is SuperClass of: <" + node.getName() + ">")
+            true;
+          } else
+            false)
+    }) //avoid multiple counting of edited Units
+      .collect((child) => child.getName()).asSet().size();
+
+    var interfaces = units.collectAll((otherUnit) => {
+      otherUnit.getTypes()
+        .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+        .select((node) =>
+          if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName()).contains(currentUnit.getName().split('.')(0)))) {
+            var interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
+            println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
+            println("Interface: <" + stripCompilationUnitName(currentUnit.getName()) + "> gets implemented by: <" + node.getName() + ">")
+            true;
+          } else false);
+    }) //avoid multiple counting of edited Units
+      .collect((child) => child.getName()).asSet().size();
+
+    resultObject.getValues().append(subclasses + interfaces);
     return resultObject;
-  }
-
-  /**
-   * TODO: Das muss noch weg, aber dazu muss NOC richtig funktionieren...
-   */
-  def foo(list: EList[TypeAccess], name: String): Boolean = {
-    val l = list;
-    val gg = l.collect((interface) => interface.getType());
-    val n = gg.collect((g) => g.getName())
-    if (n.contains(name))
-      println("<" + name + "> is contained in list: <" + n + ">___");
-
-    n.contains(name);
-  }
+  } 
 
   /**
    * Calculates the Coupling Between Objects (CBO) inside a MoDisco model.
@@ -219,7 +240,6 @@ class CKMetric {
       });
 
     //as part of an 'MethodInvocation'
-
     model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
@@ -350,6 +370,258 @@ class CKMetric {
 
     return resultObject;
   }
+
+  /**
+   * Calculates the Lack Of Cohesion in Methods (LCOM) inside a MoDisco model.
+   * @param model: the MoDisco model
+   * @return a List of ResultObjects containing the coupling value for each compilationUnit
+   */
+  def LcomMetric(model: Model): List[ResultObject] = {
+    val compilationUnits = model.getCompilationUnits()
+    compilationUnits.collect((unit) => {
+      LcomMetricForUnit(unit)
+    })
+  }
+
+  /**
+   * Calculates the Lack Of Cohesion in Methods (LCOM) for a compilationUnit inside a MoDisco Model.
+   * @param unit: the compilation unit to analyze
+   * @return a ResultObject containing the LCOM-Value
+   */
+  def LcomMetricForUnit(unit: CompilationUnit): ResultObject = {
+    val resultObject: ResultObject = new ResultObject();
+    resultObject.setFileName(unit.getName());
+    try {
+      //get the 'Types' reference list for the current Unit
+      val methodsInsideUnit = unit.getTypes
+        // get the 'Body Declarations' containment reference list for all Types
+        //filter all empty classes
+        .select((currentType) => !(currentType.getBodyDeclarations().isEmpty()))
+        .collectAll((currentType) => currentType.getBodyDeclarations())
+        //select only the AbstractMethodDeclarations from the Body Declarations
+        .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
+        .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[AbstractMethodDeclaration])
+        //e. g. implicit declared construtor methods have an empty body
+        .select((method) => method.getBody() != null && method.getBody().getStatements() != null)
+
+      val instanceVariablesInsideUnit = unit.getTypes
+        // get the 'Body Declarations' containment reference list for all Types
+        .collectAll((currentType) => currentType.getBodyDeclarations())
+        //select only the FieldDeclaration representing class instance variables from the Body Declarations
+        .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
+        .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
+        .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
+
+      ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
+      val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
+        variablesSet.add(analyseMethodForLcom(method, instanceVariablesInsideUnit))
+        variablesSet;
+      })
+
+      //the set of null intersections
+      val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: EList[BinaryTupleType]) => {
+        SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: EList[BinaryTupleType]) => {
+          //avoid tuple with empty/null items and avoid reflexive tuple, i.e. don't calculate intersection(setI, setI)
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && (setI.intersectForString(otherSetI).isEmpty()))
+            otherListP.add(new BinaryTupleType(setI, otherSetI))
+          otherListP;
+        })
+        listP;
+      })
+
+      //the set of nonempty intersections
+      val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: EList[BinaryTupleType]) => {
+        SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: EList[BinaryTupleType]) => {
+          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && !(setI.intersectForString(otherSetI).isEmpty()))
+            otherListQ.add(new BinaryTupleType(setI, otherSetI))
+          otherListQ;
+        })
+        listQ;
+      })
+
+      //LCOM = number of nullintersections - number of nonempty intersections if P > Q, else 0
+      if (P.size() > Q.size())
+        resultObject.getValues().append((P.size() - Q.size()) / 2) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value 
+      else
+        resultObject.getValues().append(0)
+
+    } catch {
+      case ioe: Exception => ioe.printStackTrace()
+    }
+
+    resultObject;
+  }
+
+  //########################################
+  //#			Helpermethods			   #
+  //########################################
+
+  /**
+   * Helpermethod: Returns a list of names of all variables, which are used inside the analyzed methods and which are class instance variables as well.
+   * The set of class instance variables has to be passed as argument
+   * @param method: the method to analyze
+   * @param instanceVariablesInsideUnit: the set of class instance variables
+   * @return a list of names of used class instance variables
+   */
+  def analyseMethodForLcom(method: AbstractMethodDeclaration, instanceVariablesInsideUnit: EList[String]): EList[String] = {
+    var usedInstanceVariables: EList[String] = new BasicEList[String];
+    var methodVariablesSet: EList[String] = new BasicEList[String];
+
+    methodVariablesSet = method.getBody().getStatements().iterate(() => new BasicEList[String], (statement, myList: EList[String]) => {
+      //the tempSet is used, because we need a mutable Set during the iteration to expand the collection using the union operation
+      //the standard iterate works only for adding items to the same list, but union returns a new list to save
+      var tempSet: EList[String] = new BasicEList[String];
+
+      //equivalent to ocl: statement->...do something with statement in a set
+      var statementAsSet = new BasicEList[Statement];
+      statementAsSet.add(statement);
+
+      /**
+       * Because the Model already defines the kind of the statement as ifstatement, dostatement... we could check the kind inside ONE if like
+       * (statement.isInstanceOf[IfStatement] || statement.isInstanceOf[DoStatement] || ...) but we cannot use the same CAST for each of them.
+       * i.e. statementAsSet.collect((expr) => expr.asInstanceOf[IfStatement]) on a doStatement leads to an invalidCastExpception.
+       * Therefore the following, bit ugly, redundant code is needed.
+       */
+
+      //if Statement
+      if (statement.isInstanceOf[IfStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[IfStatement])
+          .iterate(() => new BasicEList[String], (ifstatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(ifstatement.getExpression())))
+
+      //do Statement
+      if (statement.isInstanceOf[DoStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[DoStatement])
+          .iterate(() => new BasicEList[String], (doStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(doStatement.getExpression())))
+
+      //while Statement
+      if (statement.isInstanceOf[WhileStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[WhileStatement])
+          .iterate(() => new BasicEList[String], (whileStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(whileStatement.getExpression())))
+
+      //return statement
+      if (statement.isInstanceOf[ReturnStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ReturnStatement])
+          .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(returnStatement.getExpression())))
+
+      //variable declaration statement
+      if (statement.isInstanceOf[VariableDeclarationStatement])
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[VariableDeclarationStatement])
+          .select((variableDeclarationStatement) => variableDeclarationStatement.getFragments().get(0) != null)
+          .collect((variableDeclarationStatement) => variableDeclarationStatement.getFragments().get(0))
+          .select((fragment) => fragment.isInstanceOf[VariableDeclarationFragment])
+          .collect((fragement) => fragement.asInstanceOf[VariableDeclarationFragment])
+          .iterate(() => new BasicEList[String], (variableDeclaration, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(variableDeclaration.getInitializer())))
+
+      //prefix and postfix Expression
+      if (statement.isInstanceOf[ExpressionStatement] &&
+        (statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PostfixExpression]
+          || statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PrefixExpression]))
+        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement])
+          .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression.getExpression())))
+
+      //assignment Expression         
+      if (statement.isInstanceOf[ExpressionStatement] &&
+        statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[Assignment]) {
+        var assignmnet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement].getExpression().asInstanceOf[Assignment])
+
+        //left hand side always should be a var or val
+        if (!assignmnet.isEmpty()) {
+          tempSet = assignmnet.collect((assignmentExpression) => assignmentExpression.getLeftHandSide())
+            .select((operand) => operand.isInstanceOf[SingleVariableAccess])
+            .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+            .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
+
+          //right hand side either can be an expression, literal or variable. We are only interessted in expressions and variables
+          //variable
+          tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+            .select((operand) => operand.isInstanceOf[SingleVariableAccess])
+            .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
+            .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
+
+          //expression
+          tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+            .select((operand) => operand.isInstanceOf[Expression])
+            .collect((operand) => operand.asInstanceOf[Expression])
+            .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression))))
+
+        }
+      }
+
+      var iter = tempSet.iterator();
+      while (iter.hasNext()) {
+        myList.add(iter.next())
+      }
+      myList.asSet;
+    }) //iterate to collect used variables
+
+    usedInstanceVariables = methodVariablesSet.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
+
+    usedInstanceVariables;
+  }
+
+  /**
+   * Helpermethod: Returns a List of Names, containing all used variables of this expression. If a further expression is part of the current expression,
+   * this gets analyzed as well, i. e. foo = (var1+4)-var5 returns [var1, var5] if the right hand side is given.
+   * @param expression: the expression to analyze
+   * @return a list of names of the used variables
+   */
+  def collectVariablesUsedInsideExpression(expression: Expression): EList[String] = {
+    val elist = new BasicEList[InfixExpression]();
+    var tempList: EList[String] = new BasicEList[String];
+
+    if (expression.isInstanceOf[PostfixExpression]) {
+      tempList.add(expression.asInstanceOf[PostfixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+    }
+
+    if (expression.isInstanceOf[PrefixExpression]) {
+      tempList.add(expression.asInstanceOf[PrefixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+    }
+
+    //expression is leaf of AST and the leaf is a VariableAccess
+    if (expression.isInstanceOf[SingleVariableAccess]) {
+      tempList.add(expression.asInstanceOf[SingleVariableAccess].getVariable().getName())
+    }
+
+    //expression is somewhere inside the AST and looks like (any_expression)
+    if (expression.isInstanceOf[ParenthesizedExpression]) {
+      tempList = tempList.union(collectVariablesUsedInsideExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression()));
+    }
+
+    //expression is somewhere inside the AST and looks like any_expression
+    if (expression.isInstanceOf[InfixExpression]) {
+      elist.add(expression.asInstanceOf[InfixExpression])
+
+      tempList = tempList.union(elist.iterate(() => new BasicEList[String], (infixExpression, list: EList[String]) => {
+        var mutableList: EList[String] = new BasicEList[String];
+
+        //we have to carefully order the instanceOf tests from more specialized --> lower specialized
+        //Left hand side
+        if (infixExpression.getLeftOperand().isInstanceOf[InfixExpression])
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getLeftOperand().asInstanceOf[InfixExpression]))
+        else if (infixExpression.getLeftOperand().isInstanceOf[SingleVariableAccess])
+          mutableList.add(infixExpression.getLeftOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+        else if (infixExpression.getLeftOperand().isInstanceOf[Expression])
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getLeftOperand().asInstanceOf[Expression]));
+
+        //Right hand side
+        if (infixExpression.getRightOperand().isInstanceOf[InfixExpression])
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getRightOperand().asInstanceOf[InfixExpression]))
+        else if (infixExpression.getRightOperand.isInstanceOf[SingleVariableAccess])
+          mutableList.add(infixExpression.getRightOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+        else if (infixExpression.getRightOperand().isInstanceOf[Expression])
+          mutableList = mutableList.union(collectVariablesUsedInsideExpression(infixExpression.getRightOperand().asInstanceOf[Expression]));
+
+        //this is a bit hacky, but in scala it is impossible to define mutable function parameters and because iterate always returns the 
+        //initially passed list, we have to fill it manually after finishing the recursion
+        var iter = mutableList.iterator();
+        while (iter.hasNext()) {
+          list.add(iter.next())
+        }
+        list;
+      }))
+    }
+    tempList;
+  } // collectVariablesUsedInsideExpression
 
   /**
    * Helpermethod: Returns the filename of the Compilationunit without its extension

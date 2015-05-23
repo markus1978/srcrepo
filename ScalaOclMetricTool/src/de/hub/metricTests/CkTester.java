@@ -66,7 +66,7 @@ public class CkTester {
 		}
 		
 		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(URI.createURI("models/mcCabeTest.java.gitmodel"));
+		final Resource resource = rs.createResource(URI.createURI("models/CkTest.java.gitmodel"));
 		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
 		Model javaModel = JavaFactory.eINSTANCE.createModel();		
 		repositoryModel.setJavaModel(javaModel);
@@ -96,28 +96,27 @@ public class CkTester {
 		
 		//test WMC-Metric
 		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);		
-		testerTools.printFormattedResult(WmcForEachCommit, "Wmc-Metric");
+		testerTools.printFormattedResultGreaterZero(WmcForEachCommit, "Wmc-Metric");
 		
 		//test DIT-Metric
 		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);		
-		testerTools.printFormattedResult(DitForEachCommit, "Dit-Metric");
+		testerTools.printFormattedResultGreaterZero(DitForEachCommit, "Dit-Metric");
 		
-//		test NOC-Metric
-//		try{
-//			List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
-//			testerTools.printFormattedResult(NocForEachCommit, "Noc-Metric");
-//		//	testerTools.printFormattedResultGreaterZero(NocForEachCommit, "Noc-Metric");
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
+		//test NOC-Metric		
+		List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
+		testerTools.printFormattedResultGreaterZero(NocForEachCommit, "Noc-Metric");		
 		
 		//test CBO-Metric
 		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);		
 		testerTools.printFormattedResultGreaterZero(CboForEachCommit, "Cbo-Metric");
 		
-		//test CBO-Metric
+		//test RFC-Metric
 		List<?> RfcForEachCommit = ckMetric.RfcMetric(javaModel);		
 		testerTools.printFormattedResultGreaterZero(RfcForEachCommit, "Rfc-Metric");
+		
+		//test LCOM-Metric
+		List<?> LcomForEachCommit = ckMetric.LcomMetric(javaModel);		
+		testerTools.printFormattedResultGreaterZero(LcomForEachCommit, "LCOM-Metric");
 	}
 	
 	
