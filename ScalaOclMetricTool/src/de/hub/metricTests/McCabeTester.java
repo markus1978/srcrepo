@@ -95,7 +95,10 @@ public class McCabeTester {
 		
 		javaModel = repositoryModel.getJavaModel();		
 		McCabeMetric mcCabe = new McCabeMetric();
-		List<?> metricForEachCommit = mcCabe.mcCabeMetric(javaModel);		
+		long start_time = System.nanoTime();
+		List<?> metricForEachCommit = mcCabe.mcCabeMetric(javaModel);
+		long end_time = System.nanoTime();
+		testerTools.printTimeDifference(start_time, end_time, "WMC-Metric on a given Model");
 		testerTools.printFormattedResult(metricForEachCommit, "McCabeMetric");
 	}
 }

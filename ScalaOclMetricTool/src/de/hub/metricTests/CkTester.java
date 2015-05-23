@@ -59,7 +59,7 @@ public class CkTester {
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {
 //			scs.createWorkingCopy(new File(LINUX_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), LINUX_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
-			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"mcCabeMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
+			scs.createWorkingCopy(new File(WIN_PATH_TO_CLONE_DIR+"CkMetricTest.git"), WIN_PATH_TO_REPO+"ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses");
 		} catch (SourceControlException e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
@@ -94,30 +94,53 @@ public class CkTester {
 		javaModel = repositoryModel.getJavaModel();		
 		CKMetric ckMetric = new CKMetric();
 		
+		long start_time = 0;
+		long end_time = 0;
+		
 		//test WMC-Metric
-		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);		
+		start_time = System.nanoTime();
+		List<?> WmcForEachCommit = ckMetric.WmcMetric(javaModel);
+		end_time = System.nanoTime();
+		//testerTools.printTimeDifference(start_time, end_time, "WMC-Metric on a given Model");
 		testerTools.printFormattedResultGreaterZero(WmcForEachCommit, "Wmc-Metric");
 		
-		//test DIT-Metric
-		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);		
+		//test DIT-Metric		
+		start_time = System.nanoTime();
+		List<?> DitForEachCommit = ckMetric.DitMetric(javaModel);
+		end_time = System.nanoTime();
+		//testerTools.printTimeDifference(start_time, end_time, "DIT-Metric on a given Model");
 		testerTools.printFormattedResultGreaterZero(DitForEachCommit, "Dit-Metric");
 		
 		//test NOC-Metric		
+		start_time = System.nanoTime();
 		List<?> NocForEachCommit = ckMetric.NocMetric(javaModel);
+		end_time = System.nanoTime();
+		//testerTools.printTimeDifference(start_time, end_time, "NOC-Metric on a given Model");
 		testerTools.printFormattedResultGreaterZero(NocForEachCommit, "Noc-Metric");		
 		
 		//test CBO-Metric
-		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);		
+		start_time = System.nanoTime();
+		List<?> CboForEachCommit = ckMetric.CboMetric(javaModel);
+		end_time = System.nanoTime();
+		//testerTools.printTimeDifference(start_time, end_time, "CBO-Metric on a given Model");
 		testerTools.printFormattedResultGreaterZero(CboForEachCommit, "Cbo-Metric");
 		
 		//test RFC-Metric
-		List<?> RfcForEachCommit = ckMetric.RfcMetric(javaModel);		
+		start_time = System.nanoTime();
+		List<?> RfcForEachCommit = ckMetric.RfcMetric(javaModel);
+		end_time = System.nanoTime();
+		//testerTools.printTimeDifference(start_time, end_time, "RFC-Metric on a given Model");
 		testerTools.printFormattedResultGreaterZero(RfcForEachCommit, "Rfc-Metric");
 		
 		//test LCOM-Metric
-		List<?> LcomForEachCommit = ckMetric.LcomMetric(javaModel);		
+		start_time = System.nanoTime();
+		List<?> LcomForEachCommit = ckMetric.LcomMetric(javaModel);
+		end_time = System.nanoTime();
+		//testerTools.printTimeDifference(start_time, end_time, "LCOM-Metric on a given Model");
 		testerTools.printFormattedResultGreaterZero(LcomForEachCommit, "LCOM-Metric");
 	}
+
+	
 	
 	
 	

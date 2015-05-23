@@ -48,5 +48,16 @@ public class TesterTools {
 		}
 		System.out.println("#########################################################################");
 	}
+	
+	/**
+	 * Prints the time difference in nanoseconds.
+	 * @param start_time
+	 * @param end_time
+	 * @param reason : can be null, string to describe which time was measured.
+	 */
+	public void printTimeDifference(long start_time, long end_time, String reason) {
+		double difference = (end_time - start_time)/1e6;
+		System.out.println("Time to calculate "+reason+": <" + difference + ">");
+	}
 
 }
