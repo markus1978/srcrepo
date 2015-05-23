@@ -332,7 +332,7 @@ class CKMetric {
     val methInvocations = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
-      .select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
+      //.select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
 
     model.getCompilationUnits().collect((unit) =>
       RfcMetricForUnit(unit, methInvocations))
@@ -355,13 +355,10 @@ class CKMetric {
       //select only the MethodDeclarationImpl from the Body Declarations
       .select((bodyDeclarations) => bodyDeclarations.isInstanceOf[MethodDeclarationImpl])
       .collect((methodDeclarationImpl) => methodDeclarationImpl.asInstanceOf[MethodDeclarationImpl])
-
+          
     //the whole set is the {R}-Set as union of all method calls for this Unit according to C. & K.
     val calledMethods = methodInvocations.select((method) =>
-      //the units where the method was declared and where it is used has to be different
-      !(method.getMethod().getOriginalCompilationUnit().getName().equals(method.getOriginalCompilationUnit().getName()))
-        //and the unit where it used has to be the current unit
-        && method.getOriginalCompilationUnit().getName().equals(unit.getName()))
+      method.getOriginalCompilationUnit().equals(unit))
 
     //The RFC-Value is the size of the union of {M} & {R} 
     val rfc = methodsInsideClass.union(calledMethods.asInstanceOf[EList[ASTNode]]);
