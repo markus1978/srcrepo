@@ -14,10 +14,9 @@
     <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@compilationUnits.1" name="McCabeBreakTest">
       <modifier visibility="public"/>
       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.1" name="breakTest">
-        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.1" content="/** &#xA; * DISCUSS: Why does break increase complexity? Should give a McCabe value of 3 = 2 binary branches + 1&#xA; * @param pA&#xA; * @param pB&#xA; */&#xA;" prefixOfParent="true">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.1" content="/** &#xA; * Should give a McCabe value of 4 = 2 binary branches + 1 break + 1&#xA; * @param pA&#xA; * @param pB&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="//@compilationUnits.1">
-            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.1" text="DISCUSS: Why does break increase complexity?"/>
-            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.1" text="Should give a McCabe value of 3 = 2 binary branches + 1"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.1" text="Should give a McCabe value of 4 = 2 binary branches + 1 break + 1"/>
           </tags>
           <tags originalCompilationUnit="//@compilationUnits.1" tagName="@param">
             <fragments xsi:type="java:SingleVariableAccess" variable="//@ownedElements.0/@ownedElements.1/@bodyDeclarations.0/@parameters.0"/>
@@ -121,9 +120,9 @@
         <returnType type="//@orphanTypes.0"/>
       </bodyDeclarations>
       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.2" name="complexTernaryTest">
-        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.2" content="/** &#xA; * should give a McCabe metric of 5 = 4 binary branches + 1&#xA; * @return&#xA; */&#xA;" prefixOfParent="true">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.2" content="/** &#xA; * should give a McCabe metric of 7 = 4 binary branches + 2 inner return + 1&#xA; * @return&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="//@compilationUnits.2">
-            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.2" text="should give a McCabe metric of 5 = 4 binary branches + 1"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.2" text="should give a McCabe metric of 7 = 4 binary branches + 2 inner return + 1"/>
           </tags>
           <tags originalCompilationUnit="//@compilationUnits.2" tagName="@return"/>
         </comments>
@@ -1396,6 +1395,12 @@
     <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@compilationUnits.19" name="McCabeExceptionsTest">
       <modifier visibility="public"/>
       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.19" name="tryCatchTest">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.19" content="/** &#xA; * Should give McCabe value = 3: 1 inner return + 1 catch + 1&#xA; * @return&#xA; */&#xA;" prefixOfParent="true">
+          <tags originalCompilationUnit="//@compilationUnits.19">
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.19" text="Should give McCabe value = 3: 1 inner return + 1 catch + 1"/>
+          </tags>
+          <tags originalCompilationUnit="//@compilationUnits.19" tagName="@return"/>
+        </comments>
         <modifier visibility="public"/>
         <body originalCompilationUnit="//@compilationUnits.19">
           <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="//@compilationUnits.19">
@@ -1450,6 +1455,15 @@
         <returnType type="//@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
       </bodyDeclarations>
       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.19" name="throwsTest">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.19" content="/** &#xA; * Should give McCabe value = 4 : 1 inner return + 1 catch + 1 throw + 1&#xA; * @return&#xA; * @throws Exception&#xA; */&#xA;" prefixOfParent="true">
+          <tags originalCompilationUnit="//@compilationUnits.19">
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.19" text="Should give McCabe value = 4 : 1 inner return + 1 catch + 1 throw + 1"/>
+          </tags>
+          <tags originalCompilationUnit="//@compilationUnits.19" tagName="@return"/>
+          <tags originalCompilationUnit="//@compilationUnits.19" tagName="@throws">
+            <fragments xsi:type="java:TypeAccess" type="//@ownedElements.1/@ownedPackages.0/@ownedElements.8"/>
+          </tags>
+        </comments>
         <modifier visibility="public"/>
         <body originalCompilationUnit="//@compilationUnits.19">
           <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="//@compilationUnits.19">
@@ -1709,10 +1723,9 @@
     <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@compilationUnits.22" name="McCabeContinueTest">
       <modifier visibility="public"/>
       <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.22" name="continueTest">
-        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.22" content="/** &#xA; * DISCUSS: Why does continue or break increase complexity? Should give a McCabe value of 4 = 3 binary branches + 1&#xA; * @param pA&#xA; * @param pB&#xA; */&#xA;" prefixOfParent="true">
+        <comments xsi:type="java:Javadoc" originalCompilationUnit="//@compilationUnits.22" content="/** &#xA; * Should give a McCabe value of 6 = 3 binary branches + 1 break + 1 continue + 1&#xA; * @param pA&#xA; * @param pB&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="//@compilationUnits.22">
-            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.22" text="DISCUSS: Why does continue or break increase complexity?"/>
-            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.22" text="Should give a McCabe value of 4 = 3 binary branches + 1"/>
+            <fragments xsi:type="java:TextElement" originalCompilationUnit="//@compilationUnits.22" text="Should give a McCabe value of 6 = 3 binary branches + 1 break + 1 continue + 1"/>
           </tags>
           <tags originalCompilationUnit="//@compilationUnits.22" tagName="@param">
             <fragments xsi:type="java:SingleVariableAccess" variable="//@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@parameters.0"/>
@@ -1936,7 +1949,7 @@
       <ownedElements xsi:type="java:ClassDeclaration" name="RuntimeException" proxy="true" usagesInTypeAccess="//@ownedElements.1/@ownedPackages.0/@ownedElements.6/@superClass">
         <superClass type="//@ownedElements.1/@ownedPackages.0/@ownedElements.8"/>
       </ownedElements>
-      <ownedElements xsi:type="java:ClassDeclaration" name="Exception" proxy="true" usagesInTypeAccess="//@ownedElements.1/@ownedPackages.0/@ownedElements.7/@superClass //@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@thrownExceptions.0 //@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@type">
+      <ownedElements xsi:type="java:ClassDeclaration" name="Exception" proxy="true" usagesInTypeAccess="//@ownedElements.1/@ownedPackages.0/@ownedElements.7/@superClass //@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@comments.0/@tags.2/@fragments.0 //@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@thrownExceptions.0 //@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@type">
         <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="Exception" proxy="true" usages="//@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression">
           <parameters name="arg0" proxy="true">
             <type type="//@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
@@ -2005,7 +2018,7 @@
   <compilationUnits name="CkDitLevelZeroWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelZeroWithNoParent.java" commentList="//@ownedElements.0/@ownedElements.16/@comments.0 //@ownedElements.0/@ownedElements.16/@comments.1" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.16"/>
   <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="//@ownedElements.0/@ownedElements.17/@comments.0 //@ownedElements.0/@ownedElements.17/@comments.1" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.17"/>
   <compilationUnits name="CkDitLevelTwoWithTwoParents.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelTwoWithTwoParents.java" commentList="//@ownedElements.0/@ownedElements.18/@comments.0 //@ownedElements.0/@ownedElements.18/@comments.1" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.18"/>
-  <compilationUnits name="McCabeExceptionsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\McCabeExceptionsTest.java" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.19"/>
+  <compilationUnits name="McCabeExceptionsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\McCabeExceptionsTest.java" commentList="//@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@comments.0 //@ownedElements.0/@ownedElements.19/@bodyDeclarations.1/@comments.0" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.19"/>
   <compilationUnits name="McCabeTestIfElse.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestIfElse.java" commentList="//@ownedElements.0/@ownedElements.20/@bodyDeclarations.0/@comments.0" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.20"/>
   <compilationUnits name="McCabeTestSwitchCase2.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestSwitchCase2.java" commentList="//@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@comments.0 //@ownedElements.0/@ownedElements.21/@bodyDeclarations.1/@comments.0 //@ownedElements.0/@ownedElements.21/@comments.0 //@ownedElements.0/@ownedElements.21/@comments.1 //@ownedElements.0/@ownedElements.21/@comments.2 //@ownedElements.0/@ownedElements.21/@comments.3 //@ownedElements.0/@ownedElements.21/@comments.4 //@ownedElements.0/@ownedElements.21/@comments.5 //@ownedElements.0/@ownedElements.21/@comments.6 //@ownedElements.0/@ownedElements.21/@comments.7 //@ownedElements.0/@ownedElements.21/@comments.8" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.21"/>
   <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="//@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@comments.0" package="//@ownedElements.0" types="//@ownedElements.0/@ownedElements.22"/>
