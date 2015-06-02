@@ -2,7 +2,7 @@ package testclasses;
 
 public class NestedClasses {
 
-	public class nested1{
+	public class nested1 extends CkNocTest implements CkDitInterfaceLevelOneWithNoParent{
 		String s1 = "string1";
 		
 		private void nestedMethod1(){
