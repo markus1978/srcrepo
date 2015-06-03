@@ -83,15 +83,13 @@ class CKMetric {
   def WmcMetricForUnit(unit: CompilationUnit): ResultObject = {
     val resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(unit.getName());
-
-    //get the 'Types' reference list for the current Unit
-    val methodCount = unit.getTypes
-      // get the 'Body Declarations' containment reference list for all Types
-      .collectAll((currentType) => currentType.getBodyDeclarations())
-      //select only the AbstractMethodDeclarations from the Body Declarations
-      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
-      //the final size equals the number of method declarations inside this Unit 
-      .size()
+    
+    val methodCount = unit.getTypes().closure((currentType) => currentType.getBodyDeclarations()
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[ClassDeclaration])
+      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[ClassDeclaration])) //closure to get all classDeclaration ends
+      .collectAll((classDeclaration) => classDeclaration.getBodyDeclarations())
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])      
+      .size();
 
     resultObject.getValues().append(methodCount)
 
