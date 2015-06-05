@@ -169,7 +169,9 @@ class CKMetric {
       //get all other compilationUnits
       .select((unit) => !(unit.getName().equals(currentUnit.getName())))
 
-    val subclasses = units.collectAll((otherUnit) => {
+    val numberOfChildren =
+  //all subclasses
+      units.collectAll((otherUnit) => {
       otherUnit.getTypes()
         .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
         .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
@@ -181,16 +183,17 @@ class CKMetric {
           } else
             false)
     }) //avoid multiple counting of edited Units
-      .collect((child) => child.getName()).asSet().size();
-
-    val interfaces = units.collectAll((otherUnit) => {      
+      .collect((child) => child.getName()).asSet()
+      
+  //union Interfaces
+      .union(units.collectAll((otherUnit) => {      
     	otherUnit.getTypes()
         .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
         .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
         .select((node) =>
           if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType())
             .collect((currentType) => currentType.getName())
-            .contains(currentUnit.getTypes().collect((currentType) => currentType.getName()).first))) 
+            .exists((currentName) => currentName.equals(currentUnit.getTypes().collect((currentType) => currentType.getName()).first)))) 
           	{
 	            val interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
 	            println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
@@ -198,9 +201,12 @@ class CKMetric {
 	            true;
           	} else false);
     	}) //avoid multiple counting of edited Units
-    	.collect((child) => child.getName()).asSet().size();
+    	.collect((child) => child.getName()).asSet())
+	
+  //NOC = size of union 	
+	.size();
 
-    resultObject.getValues().append(subclasses + interfaces);
+    resultObject.getValues().append(numberOfChildren);
     return resultObject;
   }
 
@@ -211,31 +217,56 @@ class CKMetric {
    */
   def CboMetric(model: Model): List[ResultObject] = {
     val cboResultList: EList[ResultObject] = new BasicEList[ResultObject];
+    val cboResultList2: EList[ResultObject] = new BasicEList[ResultObject];
 
     //as part of an Type for 'VariableDeclaration'
-    model.eContents().closure((e) => e.eContents())
+   val list1 = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[VariableDeclarationStatement])
       .collect((varDecStatement) => varDecStatement.asInstanceOf[VariableDeclarationStatement])
-      .iterate(() => cboResultList, (vdStatement, cboList: EList[ResultObject]) => {
+      .iterate(() => new BasicEList[ResultObject], (vdStatement, cboList: EList[ResultObject]) => {
         val statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
-        //1. getType = variableAccessImpl; 2.getType = typ of Variable => only interessted in not primitive types
-        if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType])) {
-
-          printCboCoupling("VariableDeclarationType",
+        //1. getType = variableAccessImpl; 2.getType = type of Variable => only interessted in not primitive types
+        if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType] || 
+            vdStatement.getType().getType().getName().contains("String"))) {
+          
+        	printCboCoupling("VariableDeclarationType",
             stripCompilationUnitName(vdStatement.getType().getType().getName()),
             stripCompilationUnitName(statementContainingUnit),
             stripCompilationUnitName(vdStatement.getType().getType().getName()))
+            
+            /** addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
+             *
+             *  For the sake of demonstration, the addToCboList method was removed here, and replaced by its implementation to show that its just a refactoring  
+             */          
 
-          addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
+		    val dependingUnit = cboList.select((e) => e.getFileName.equalsIgnoreCase(stripCompilationUnitName(statementContainingUnit)));
+		    //current unit has already couplings if its contained inside the select-result
+		    if (dependingUnit.size() == 1) {
+		      val isCoupled = dependingUnit.get(0).getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(stripCompilationUnitName(vdStatement.getType().getType().getName())))
+		      //the coupled class is not part of the list yet, otherwise it's nothing to do, because classes get count only once
+		      if (isCoupled.size() == 0) {
+		        dependingUnit.get(0).getCoupledUnits.add(stripCompilationUnitName(vdStatement.getType().getType().getName()));
+		        dependingUnit.get(0).getValues()(0) = dependingUnit.get(0).getValues()(0) + 1;
+		      }
+		    } else {		      
+		      //the current unit has no couplings until now	
+		      //it seems impossible to create a 'special' kind of List, and initialize it with values at the same time		      
+		      val valueBuffer = new ListBuffer[Double];
+		      valueBuffer.append(1.0);		      
+		      val couplings = new BasicEList[String];
+		      couplings.add(vdStatement.getType().getType().getName());
+		     
+		      cboList.add(new ResultObject(valueBuffer, couplings , stripCompilationUnitName(statementContainingUnit)));	      	      	      
+		    }         
         }
         cboList;
       });
-
+      
     //as part of an 'MethodInvocation'
-    model.eContents().closure((e) => e.eContents())
+    val list2 = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
-      .iterate(() => cboResultList, (method, cboList: EList[ResultObject]) => {
+      .iterate(() => list1, (method, cboList: EList[ResultObject]) => {
         //only not default methods have an original compilation unit
         if ((method.getMethod().getOriginalCompilationUnit() != null
           //only interessed in methods defined in classes other than the one invoking the method
@@ -248,7 +279,7 @@ class CKMetric {
 
           addToCboList(stripCompilationUnitName(method.getOriginalCompilationUnit().getName()), stripCompilationUnitName(method.getMethod().getOriginalCompilationUnit().getName()), cboList)
         }
-        cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
+        cboList;
       });
 
     //reusable, see below
@@ -257,10 +288,10 @@ class CKMetric {
       .collect((singleVarAccess) => singleVarAccess.asInstanceOf[SingleVariableAccess]);
 
     //as part of an 'Statement'
-    singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Statement])
+    val list3 = singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Statement])
       //we only need those fields, which are part of an comppilationUnit not the one who are system defaults (i.e. "out" in system.out.println)
       .select((statement) => statement.getVariable().getOriginalCompilationUnit() != null)
-      .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
+      .iterate(() => list2, (variable, cboList: EList[ResultObject]) => {
         //the unit inside the variable was declared
         val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
         //the units inside the variable is used
@@ -273,13 +304,13 @@ class CKMetric {
 
           addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboList)
         }
-        cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
+        cboList; 
       });
 
     //as part of an 'Expression'   
-    singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Expression])
+   val list4 = singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Expression])
       .select((expression) => expression.getVariable().getOriginalCompilationUnit() != null)
-      .iterate(() => cboResultList, (variable, cboList: EList[ResultObject]) => {
+      .iterate(() => list3, (variable, cboList: EList[ResultObject]) => {
         val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
         val usedIn = variable.eContainer().asInstanceOf[Expression].getOriginalCompilationUnit().getName();
         if (!(declaredIn.equalsIgnoreCase(usedIn))) {
@@ -290,18 +321,18 @@ class CKMetric {
 
           addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboList)
         }
-        cboList; //this line is only needed because iterate has to return something. Due to reference semantics the cboResultList already was updated
+        cboList; 
       });
 
     //Interface Implementation
-    model.getCompilationUnits()
+   val list5 = model.getCompilationUnits()
       .collectAll((unit) =>
         unit.getTypes()
           .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
           .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
           .select((classDeclarationWithInterface) => !classDeclarationWithInterface.getSuperInterfaces().isEmpty()))
 
-      .iterate(() => cboResultList, (classDec, cboList: EList[ResultObject]) => {
+      .iterate(() => list4, (classDec, cboList: EList[ResultObject]) => {
         classDec.getSuperInterfaces().iterate(() => cboList, (interface, resList: EList[ResultObject]) => {
           printCboCoupling("Interface-Implementation",
             stripCompilationUnitName(interface.getType().getName()),
@@ -312,7 +343,7 @@ class CKMetric {
         })
       })
 
-    return cboResultList;
+    return list5;
   }
 
   /**
