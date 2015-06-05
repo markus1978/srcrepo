@@ -71,24 +71,22 @@ class CKMetric {
 
   /**
    * Calculates the Weighted Method Complexity (WMC) for a CompilationUnit. <br />
-   * Basically it is expected that all methods will have the same Complexity and no nested classes or anonymous functions are present,
+   * Basically it is expected that all methods will have the same Complexity.
    * i.e. a Class has the normal structure of methods like in testclasses/CkWmcTest.java<br />
    * To use different weights, a concept has to be defined how this weights are tracked inside the MoDisco model.
    *
-   * ToDo: Check the behaviour in case of nested classes or other special kinds of methoddeclarations. <br />
-   * How to handle different weights?
    * @param unit: the compilation unit to analyze
    * @return a ResultObject containing the WMC-Value
    */
   def WmcMetricForUnit(unit: CompilationUnit): ResultObject = {
     val resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(unit.getName());
-    
+
     val methodCount = unit.getTypes().closure((currentType) => currentType.getBodyDeclarations()
       .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[ClassDeclaration])
       .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[ClassDeclaration])) //closure to get all classDeclaration ends
       .collectAll((classDeclaration) => classDeclaration.getBodyDeclarations())
-      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])      
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
       .size();
 
     resultObject.getValues().append(methodCount)
@@ -118,13 +116,9 @@ class CKMetric {
     resultObject.setFileName(currentUnit.getName())
 
     val ditValue = currentUnit
-      //get the 'Types' reference list for the current Unit
       .getTypes()
-      //select all classdeclarations for this unit from the types set
       .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-      //cast all those items to classdeclarations 
       .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-      //calculate the DIT-value
       .sum((currentClass) =>
         //no superclass yields a DIT of 0
         if (currentClass.getSuperClass() == null)
@@ -168,20 +162,17 @@ class CKMetric {
    * @return a @see{ResultObject} containing the the number of direct subclasses for the currentUnit
    */
   def NocMetricForUnit(currentUnit: CompilationUnit, allUnits: EList[CompilationUnit]): ResultObject = {
-    var resultObject: ResultObject = new ResultObject();
+    val resultObject: ResultObject = new ResultObject();
     resultObject.setFileName(currentUnit.getName())
 
-    var units = allUnits
+    val units = allUnits
       //get all other compilationUnits
       .select((unit) => !(unit.getName().equals(currentUnit.getName())))
 
-    var subclasses = units.collectAll((otherUnit) => {
+    val subclasses = units.collectAll((otherUnit) => {
       otherUnit.getTypes()
-        //select all classdeclarations for this unit from the types set
         .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-        //cast all those items to classdeclarations 
         .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-        //calculate
         .select((node) =>
           //select all classes having the current class as superClass and return the total number
           if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
@@ -192,23 +183,26 @@ class CKMetric {
     }) //avoid multiple counting of edited Units
       .collect((child) => child.getName()).asSet().size();
 
-    var interfaces = units.collectAll((otherUnit) => {
-      otherUnit.getTypes()
+    val interfaces = units.collectAll((otherUnit) => {      
+    	otherUnit.getTypes()
         .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
         .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
         .select((node) =>
-          if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName()).contains(currentUnit.getName().split('.')(0)))) {
-            var interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
-            println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
-            println("Interface: <" + stripCompilationUnitName(currentUnit.getName()) + "> gets implemented by: <" + node.getName() + ">")
-            true;
-          } else false);
-    }) //avoid multiple counting of edited Units
-      .collect((child) => child.getName()).asSet().size();
+          if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType())
+            .collect((currentType) => currentType.getName())
+            .contains(currentUnit.getTypes().collect((currentType) => currentType.getName()).first))) 
+          	{
+	            val interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
+	            println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
+	            println("Interface: <" + stripCompilationUnitName(currentUnit.getName()) + "> gets implemented by: <" + node.getName() + ">")
+	            true;
+          	} else false);
+    	}) //avoid multiple counting of edited Units
+    	.collect((child) => child.getName()).asSet().size();
 
     resultObject.getValues().append(subclasses + interfaces);
     return resultObject;
-  } 
+  }
 
   /**
    * Calculates the Coupling Between Objects (CBO) inside a MoDisco model.
@@ -330,7 +324,7 @@ class CKMetric {
     val methInvocations = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
-      //.select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
+    //.select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
 
     model.getCompilationUnits().collect((unit) =>
       RfcMetricForUnit(unit, methInvocations))
@@ -353,7 +347,7 @@ class CKMetric {
       //select only the MethodDeclarationImpl from the Body Declarations
       .select((bodyDeclarations) => bodyDeclarations.isInstanceOf[MethodDeclarationImpl])
       .collect((methodDeclarationImpl) => methodDeclarationImpl.asInstanceOf[MethodDeclarationImpl])
-          
+
     //the whole set is the {R}-Set as union of all method calls for this Unit according to C. & K.
     val calledMethods = methodInvocations.select((method) =>
       method.getOriginalCompilationUnit().equals(unit))
