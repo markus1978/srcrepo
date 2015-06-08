@@ -170,41 +170,40 @@ class CKMetric {
       .select((unit) => !(unit.getName().equals(currentUnit.getName())))
 
     val numberOfChildren =
-  //all subclasses
+      //all subclasses
       units.collectAll((otherUnit) => {
-      otherUnit.getTypes()
-        .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-        .select((node) =>
-          //select all classes having the current class as superClass and return the total number
-          if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
-            println("Class: <" + currentUnit.getName() + "> is SuperClass of: <" + node.getName() + ">")
-            true;
-          } else
-            false)
-    }) //avoid multiple counting of edited Units
-      .collect((child) => child.getName()).asSet()
-      
-  //union Interfaces
-      .union(units.collectAll((otherUnit) => {      
-    	otherUnit.getTypes()
-        .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-        .select((node) =>
-          if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType())
-            .collect((currentType) => currentType.getName())
-            .exists((currentName) => currentName.equals(currentUnit.getTypes().collect((currentType) => currentType.getName()).first)))) 
-          	{
-	            val interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
-	            println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
-	            println("Interface: <" + stripCompilationUnitName(currentUnit.getName()) + "> gets implemented by: <" + node.getName() + ">")
-	            true;
-          	} else false);
-    	}) //avoid multiple counting of edited Units
-    	.collect((child) => child.getName()).asSet())
-	
-  //NOC = size of union 	
-	.size();
+        otherUnit.getTypes()
+          .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+          .select((node) =>
+            //select all classes having the current class as superClass and return the total number
+            if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
+              println("Class: <" + currentUnit.getName() + "> is SuperClass of: <" + node.getName() + ">")
+              true;
+            } else
+              false)
+      }) //avoid multiple counting of edited Units
+        .collect((child) => child.getName()).asSet()
+
+        //union Interfaces
+        .union(units.collectAll((otherUnit) => {
+          otherUnit.getTypes()
+            .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+            .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+            .select((node) =>
+              if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType())
+                .collect((currentType) => currentType.getName())
+                .exists((currentName) => currentName.equals(currentUnit.getTypes().collect((currentType) => currentType.getName()).first)))) {
+                val interfacList = node.getSuperInterfaces().collect((interface) => interface.getType()).collect((currentType) => currentType.getName())
+                println("interfaces of <" + node.getName() + ">: <" + interfacList + "> --- currentUnit: <" + stripCompilationUnitName(currentUnit.getName()) + ">")
+                println("Interface: <" + stripCompilationUnitName(currentUnit.getName()) + "> gets implemented by: <" + node.getName() + ">")
+                true;
+              } else false);
+        }) //avoid multiple counting of edited Units
+          .collect((child) => child.getName()).asSet())
+
+        //NOC = size of union 	
+        .size();
 
     resultObject.getValues().append(numberOfChildren);
     return resultObject;
@@ -220,48 +219,49 @@ class CKMetric {
     val cboResultList2: EList[ResultObject] = new BasicEList[ResultObject];
 
     //as part of an Type for 'VariableDeclaration'
-   val list1 = model.eContents().closure((e) => e.eContents())
+    val list1 = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[VariableDeclarationStatement])
       .collect((varDecStatement) => varDecStatement.asInstanceOf[VariableDeclarationStatement])
       .iterate(() => new BasicEList[ResultObject], (vdStatement, cboList: EList[ResultObject]) => {
         val statementContainingUnit = vdStatement.getOriginalCompilationUnit().getName();
         //1. getType = variableAccessImpl; 2.getType = type of Variable => only interessted in not primitive types
-        if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType] || 
-            vdStatement.getType().getType().getName().contains("String"))) {
-          
-        	printCboCoupling("VariableDeclarationType",
+        if (!(vdStatement.getType().getType().isInstanceOf[PrimitiveType] ||
+          vdStatement.getType().getType().getName().contains("String"))) {
+
+          printCboCoupling("VariableDeclarationType",
             stripCompilationUnitName(vdStatement.getType().getType().getName()),
             stripCompilationUnitName(statementContainingUnit),
             stripCompilationUnitName(vdStatement.getType().getType().getName()))
-            
-            /** addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
-             *
-             *  For the sake of demonstration, the addToCboList method was removed here, and replaced by its implementation to show that its just a refactoring  
-             */          
 
-		    val dependingUnit = cboList.select((e) => e.getFileName.equalsIgnoreCase(stripCompilationUnitName(statementContainingUnit)));
-		    //current unit has already couplings if its contained inside the select-result
-		    if (dependingUnit.size() == 1) {
-		      val isCoupled = dependingUnit.get(0).getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(stripCompilationUnitName(vdStatement.getType().getType().getName())))
-		      //the coupled class is not part of the list yet, otherwise it's nothing to do, because classes get count only once
-		      if (isCoupled.size() == 0) {
-		        dependingUnit.get(0).getCoupledUnits.add(stripCompilationUnitName(vdStatement.getType().getType().getName()));
-		        dependingUnit.get(0).getValues()(0) = dependingUnit.get(0).getValues()(0) + 1;
-		      }
-		    } else {		      
-		      //the current unit has no couplings until now	
-		      //it seems impossible to create a 'special' kind of List, and initialize it with values at the same time		      
-		      val valueBuffer = new ListBuffer[Double];
-		      valueBuffer.append(1.0);		      
-		      val couplings = new BasicEList[String];
-		      couplings.add(vdStatement.getType().getType().getName());
-		     
-		      cboList.add(new ResultObject(valueBuffer, couplings , stripCompilationUnitName(statementContainingUnit)));	      	      	      
-		    }         
+          /**
+           * addToCboList(stripCompilationUnitName(statementContainingUnit), stripCompilationUnitName(vdStatement.getType().getType().getName()), cboList);
+           *
+           *  For the sake of demonstration, the addToCboList method was removed here, and replaced by its implementation to show that its just a refactoring
+           */
+
+          val dependingUnit = cboList.select((e) => e.getFileName.equalsIgnoreCase(stripCompilationUnitName(statementContainingUnit)));
+          //current unit has already couplings if its contained inside the select-result
+          if (dependingUnit.size() == 1) {
+            val isCoupled = dependingUnit.get(0).getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(stripCompilationUnitName(vdStatement.getType().getType().getName())))
+            //the coupled class is not part of the list yet, otherwise it's nothing to do, because classes get count only once
+            if (isCoupled.size() == 0) {
+              dependingUnit.get(0).getCoupledUnits.add(stripCompilationUnitName(vdStatement.getType().getType().getName()));
+              dependingUnit.get(0).getValues()(0) = dependingUnit.get(0).getValues()(0) + 1;
+            }
+          } else {
+            //the current unit has no couplings until now	
+            //it seems impossible to create a 'special' kind of List, and initialize it with values at the same time		      
+            val valueBuffer = new ListBuffer[Double];
+            valueBuffer.append(1.0);
+            val couplings = new BasicEList[String];
+            couplings.add(vdStatement.getType().getType().getName());
+
+            cboList.add(new ResultObject(valueBuffer, couplings, stripCompilationUnitName(statementContainingUnit)));
+          }
         }
         cboList;
       });
-      
+
     //as part of an 'MethodInvocation'
     val list2 = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
@@ -304,11 +304,11 @@ class CKMetric {
 
           addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboList)
         }
-        cboList; 
+        cboList;
       });
 
     //as part of an 'Expression'   
-   val list4 = singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Expression])
+    val list4 = singleVariableAccess.select((singleVarAccess) => singleVarAccess.eContainer().isInstanceOf[Expression])
       .select((expression) => expression.getVariable().getOriginalCompilationUnit() != null)
       .iterate(() => list3, (variable, cboList: EList[ResultObject]) => {
         val declaredIn = variable.getVariable().getOriginalCompilationUnit().getName();
@@ -321,11 +321,11 @@ class CKMetric {
 
           addToCboList(stripCompilationUnitName(usedIn), stripCompilationUnitName(declaredIn), cboList)
         }
-        cboList; 
+        cboList;
       });
 
     //Interface Implementation
-   val list5 = model.getCompilationUnits()
+    val list5 = model.getCompilationUnits()
       .collectAll((unit) =>
         unit.getTypes()
           .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
@@ -484,18 +484,9 @@ class CKMetric {
    * @return a list of names of used class instance variables
    */
   def analyseMethodForLcom(method: AbstractMethodDeclaration, instanceVariablesInsideUnit: EList[String]): EList[String] = {
-    var usedInstanceVariables: EList[String] = new BasicEList[String];
-    var methodVariablesSet: EList[String] = new BasicEList[String];
 
-    methodVariablesSet = method.getBody().getStatements().iterate(() => new BasicEList[String], (statement, myList: EList[String]) => {
-      //the tempSet is used, because we need a mutable Set during the iteration to expand the collection using the union operation
-      //the standard iterate works only for adding items to the same list, but union returns a new list to save
-      var tempSet: EList[String] = new BasicEList[String];
-
-      //equivalent to ocl: statement->...do something with statement in a set
-      var statementAsSet = new BasicEList[Statement];
-      statementAsSet.add(statement);
-
+    val methodVariablesSet: EList[String] = method.getBody().getStatements().iterate(() => new BasicEList[String], (statement, myList: EList[String]) => {
+ 
       /**
        * Because the Model already defines the kind of the statement as ifstatement, dostatement... we could check the kind inside ONE if like
        * (statement.isInstanceOf[IfStatement] || statement.isInstanceOf[DoStatement] || ...) but we cannot use the same CAST for each of them.
@@ -504,79 +495,92 @@ class CKMetric {
        */
 
       //if Statement
-      if (statement.isInstanceOf[IfStatement])
-        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[IfStatement])
-          .iterate(() => new BasicEList[String], (ifstatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(ifstatement.getExpression())))
-
-      //do Statement
-      if (statement.isInstanceOf[DoStatement])
-        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[DoStatement])
-          .iterate(() => new BasicEList[String], (doStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(doStatement.getExpression())))
-
-      //while Statement
-      if (statement.isInstanceOf[WhileStatement])
-        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[WhileStatement])
-          .iterate(() => new BasicEList[String], (whileStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(whileStatement.getExpression())))
-
-      //return statement
-      if (statement.isInstanceOf[ReturnStatement])
-        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ReturnStatement])
-          .iterate(() => new BasicEList[String], (returnStatement, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(returnStatement.getExpression())))
-
-      //variable declaration statement
-      if (statement.isInstanceOf[VariableDeclarationStatement])
-        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[VariableDeclarationStatement])
-          .select((variableDeclarationStatement) => variableDeclarationStatement.getFragments().get(0) != null)
-          .collect((variableDeclarationStatement) => variableDeclarationStatement.getFragments().get(0))
-          .select((fragment) => fragment.isInstanceOf[VariableDeclarationFragment])
-          .collect((fragement) => fragement.asInstanceOf[VariableDeclarationFragment])
-          .iterate(() => new BasicEList[String], (variableDeclaration, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(variableDeclaration.getInitializer())))
-
-      //prefix and postfix Expression
-      if (statement.isInstanceOf[ExpressionStatement] &&
-        (statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PostfixExpression]
-          || statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PrefixExpression]))
-        tempSet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement])
-          .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression.getExpression())))
-
-      //assignment Expression         
-      if (statement.isInstanceOf[ExpressionStatement] &&
+      if (statement.isInstanceOf[IfStatement]) {
+        collectVariablesUsedInsideExpression(statement.asInstanceOf[IfStatement].getExpression())
+          .iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
+      } //do Statement
+      else if (statement.isInstanceOf[DoStatement]) {
+        collectVariablesUsedInsideExpression(statement.asInstanceOf[DoStatement].getExpression())
+          .iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
+      } //while Statement
+      else if (statement.isInstanceOf[WhileStatement]) {
+        collectVariablesUsedInsideExpression(statement.asInstanceOf[WhileStatement].getExpression())
+          .iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
+      } //return statement
+      else if (statement.isInstanceOf[ReturnStatement]) {
+        collectVariablesUsedInsideExpression(statement.asInstanceOf[ReturnStatement].getExpression())
+          .iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
+      } //variable declaration statement
+      else if (statement.isInstanceOf[VariableDeclarationStatement]) {
+        statement.asInstanceOf[VariableDeclarationStatement].getFragments()
+          .iterate(() => new BasicEList[String], (variableDeclaration, instancesSet: EList[String]) =>
+            instancesSet.union(collectVariablesUsedInsideExpression(variableDeclaration.getInitializer())))
+          .iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
+      } //prefix and postfix Expression
+      else if (statement.isInstanceOf[ExpressionStatement] &&
+        (statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PostfixExpression] || statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[PrefixExpression])) {
+        collectVariablesUsedInsideExpression(statement.asInstanceOf[ExpressionStatement].getExpression())
+          .iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
+      } //assignment Expression         
+      else if (statement.isInstanceOf[ExpressionStatement] &&
         statement.asInstanceOf[ExpressionStatement].getExpression().isInstanceOf[Assignment]) {
-        var assignmnet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement].getExpression().asInstanceOf[Assignment])
+        //val assignmnet = statementAsSet.collect((expr) => expr.asInstanceOf[ExpressionStatement].getExpression().asInstanceOf[Assignment])
+
+        //equivalent to ocl shorthand: assignmentElement->...do something with statement in a set
+        val assignmentAsSet = new BasicEList[Assignment];
+        assignmentAsSet.add(statement.asInstanceOf[ExpressionStatement].getExpression().asInstanceOf[Assignment]);
 
         //left hand side always should be a var or val
-        if (!assignmnet.isEmpty()) {
-          tempSet = assignmnet.collect((assignmentExpression) => assignmentExpression.getLeftHandSide())
+        if (!assignmentAsSet.isEmpty()) {
+          val LHS = assignmentAsSet.collect((assignmentExpression) => assignmentExpression.getLeftHandSide())
             .select((operand) => operand.isInstanceOf[SingleVariableAccess])
-            .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-            .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName())
+            .collect((operand) => operand.asInstanceOf[SingleVariableAccess]);
+          if (LHS.size() == 1) {
+            myList.add(LHS.first().getVariable().getName())
+          }
 
           //right hand side either can be an expression, literal or variable. We are only interessted in expressions and variables
           //variable
-          tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+          val RHSVariable = assignmentAsSet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
             .select((operand) => operand.isInstanceOf[SingleVariableAccess])
             .collect((operand) => operand.asInstanceOf[SingleVariableAccess])
-            .collect((singleVariableAccess) => singleVariableAccess.getVariable().getName()))
+          if (RHSVariable.size() == 1) {
+            myList.add(RHSVariable.first().getVariable().getName())
+          }
 
           //expression
-          tempSet = tempSet.union(assignmnet.collect((assignmentExpression) => assignmentExpression.getRightHandSide())
+          collectVariablesUsedInsideExpression(assignmentAsSet.collect((assignmentExpression) =>
+            assignmentExpression.getRightHandSide())
             .select((operand) => operand.isInstanceOf[Expression])
             .collect((operand) => operand.asInstanceOf[Expression])
-            .iterate(() => new BasicEList[String], (expression, instancesSet: EList[String]) => instancesSet.union(collectVariablesUsedInsideExpression(expression))))
-
+            .first()).iterate(() => myList, (statement, myList2: EList[String]) => {
+            myList2.add(statement)
+            myList2
+          });
         }
       }
-
-      var iter = tempSet.iterator();
-      while (iter.hasNext()) {
-        myList.add(iter.next())
-      }
-      myList.asSet;
+      myList;
     }) //iterate to collect used variables
 
-    usedInstanceVariables = methodVariablesSet.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
-
-    usedInstanceVariables;
+    methodVariablesSet.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
   }
 
   /**
