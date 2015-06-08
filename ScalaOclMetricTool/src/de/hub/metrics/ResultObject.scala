@@ -8,6 +8,13 @@ class ResultObject {
   private var values:ListBuffer[Double] = new ListBuffer[Double];
   private var coupledUnits:EList[String] = new BasicEList[String];
   private var fileName:String = "";
+  
+  def this(values: ListBuffer[Double], coupledUnits: EList[String], fileName:String){
+    this();
+    this.values = values;
+    this.coupledUnits  = coupledUnits;
+    this.fileName  = fileName;
+  }
   	  
   override def toString():String = {	    
     var string = "";	    
