@@ -9,6 +9,12 @@ class ResultObject {
   private var coupledUnits:EList[String] = new BasicEList[String];
   private var fileName:String = "";
   
+  def this(values: ListBuffer[Double], fileName:String){
+    this();
+    this.values = values;   
+    this.fileName  = fileName;
+  }
+  
   def this(values: ListBuffer[Double], coupledUnits: EList[String], fileName:String){
     this();
     this.values = values;

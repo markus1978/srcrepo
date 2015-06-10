@@ -47,64 +47,63 @@ class McCabeMetric {
    * @return The McCabe-Metric value for the whole expression.
    */
   def analyzeInfixExpression(expression: InfixExpression, nestedTerm: Boolean): Double = {
-    
+
     val expressionAsSet = new BasicEList[InfixExpression]();
     expressionAsSet.add(expression);
-        
+
     //elemental infix expression with logical operator e.g. "if( a < b )"
     if (checkOperator(expression) && isElementalInfixExpression(expression)) {
       1.0
     } //if(a < b && b > 100) [s. McCabe: if(c1 AND c2) == if(c1) then if(c2) => count the conditions, and not the AND-Operator itself]
     else if (checkOperator(expression) && !isElementalInfixExpression(expression)) {
-      
+
       val list1 = expressionAsSet.select((expression) => expression.getLeftOperand().isInstanceOf[ParenthesizedExpression])
-      .iterate(() => new BasicEList[Double], (expr, list : EList[Double]) => {        
-        list.add(analyzeExpression((expr.getLeftOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true))
-        list;
-      })
-      
+        .iterate(() => new BasicEList[Double], (expr, list: EList[Double]) => {
+          list.add(analyzeExpression((expr.getLeftOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true))
+          list;
+        })
+
       val list2 = expressionAsSet.select((expression) => expression.getLeftOperand().isInstanceOf[InfixExpression])
-      .iterate(() => list1, (expr, list : EList[Double]) => {        
-        list.add(analyzeInfixExpression(expr.getLeftOperand().asInstanceOf[InfixExpression], true))
-        list;
-      })
-      
+        .iterate(() => list1, (expr, list: EList[Double]) => {
+          list.add(analyzeInfixExpression(expr.getLeftOperand().asInstanceOf[InfixExpression], true))
+          list;
+        })
+
       val list3 = expressionAsSet.select((expression) => expression.getRightOperand().isInstanceOf[ParenthesizedExpression])
-      .iterate(() => list2, (expr, list : EList[Double]) => {
-        list.add(analyzeExpression((expr.getRightOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true))
-        list;
-      })
-      
+        .iterate(() => list2, (expr, list: EList[Double]) => {
+          list.add(analyzeExpression((expr.getRightOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true))
+          list;
+        })
+
       val list4 = expressionAsSet.select((expression) => expression.getRightOperand().isInstanceOf[InfixExpression])
-      .iterate(() => list3, (expr, list : EList[Double]) => {
-        list.add( analyzeInfixExpression(expr.getRightOperand().asInstanceOf[InfixExpression], true))
-        list;
-      })      
-      
+        .iterate(() => list3, (expr, list: EList[Double]) => {
+          list.add(analyzeInfixExpression(expr.getRightOperand().asInstanceOf[InfixExpression], true))
+          list;
+        })
+
       summe(list4);
     } //this line is used in the case of nested Terms within a branchcondition, e.g. (a < (3+6)), the right hand side doesn't cause
     //a branch on its own and therefore would return 0. However, the LESS has to be counted. 
     else if (nestedTerm) {
       1.0;
-    } else 
+    } else
       0.0;
   }
-  
-/**
- * Calculates the sum over all list items. Just needed because of the Typerestrictions for 'Double' in OclList.
- * @param list - the list over which items the sum shall be calculated
- * @return the sum
- */
-def summe(list:EList[Double]): Double = {
+
+  /**
+   * Calculates the sum over all list items. Just needed because of the Typerestrictions for 'Double' in OclList.
+   * @param list - the list over which items the sum shall be calculated
+   * @return the sum
+   */
+  def summe(list: EList[Double]): Double = {
     var result = 0.0;
-    if(list.size() > 0){
-	    for(index <- 0 to list.size()-1) {
-	      result = result + list.get(index);
-	    }
+    if (list.size() > 0) {
+      for (index <- 0 to list.size() - 1) {
+        result = result + list.get(index);
+      }
     }
     result;
   }
-
 
   /**
    * @param expr: the Infix Expression to analyze
@@ -209,47 +208,26 @@ def summe(list:EList[Double]): Double = {
   //see: e.g. https://bugs.eclipse.org/bugs/show_bug.cgi?id=370305, https://bugs.eclipse.org/bugs/show_bug.cgi?id=325829
   //muss noch genauer analysiert werden ob/wo ein problem besteht
   def mcCabeMetric(model: Model): List[_] = {
-    var result: ListBuffer[ResultObject] = new ListBuffer[ResultObject];
-    var resultObject: ResultObject = null;
-    var lastCompilationUnit = "";
-    var firstRun: Boolean = true;
-
+    val compilationUnit = model.getCompilationUnits().collect((unit) => unit);
     val abstractMethodDeclarations = model.eContents().closure((e) => e.eContents())
       .select((e) => e.isInstanceOf[AbstractMethodDeclaration])
       .collect((e) => e.asInstanceOf[AbstractMethodDeclaration]);
 
-    val iter = abstractMethodDeclarations.iterator();
+    compilationUnit.iterate(() => new BasicEList[ResultObject], (unit, outerList: EList[ResultObject]) => {
+      val methods = abstractMethodDeclarations.select((method) => method.getOriginalCompilationUnit() != null)
+        .select((method) => method.getOriginalCompilationUnit().equals(unit))
 
-    while (iter.hasNext) {
-      val abstractMethodDeclaration = iter.next();
-      val methodBody = abstractMethodDeclaration.getBody();
-      if (methodBody != null) {
-        val metric = mcCabeMetric(methodBody);
-        //if units differ
-        if (!(lastCompilationUnit.equals(abstractMethodDeclaration.getOriginalCompilationUnit().toString()))) {
-          //it is either a new file
-          if (!firstRun) {
-            //save the current resultObject according to the previous file
-            result.append(resultObject);
-            //create a new resultObject for the current File
-            resultObject = new ResultObject();
-            resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
-          } //or the first run
-          else {
-            //create a new resultObject for the current File
-            resultObject = new ResultObject();
-            resultObject.setFileName(abstractMethodDeclaration.getOriginalCompilationUnit().getName());
-            firstRun = false;
-          }
-        }
-        //add last metric to the resultObject of the current File. Either it is a new File or a new Body within the previous
-        resultObject.getValues().append(metric);
-        lastCompilationUnit = abstractMethodDeclaration.getOriginalCompilationUnit().toString();
+      // methods can be empty, because we look from the perspective of CompilationUnits  including e. g. Interfaces. Therefore when we iterate over the methods
+      // comparing with for example an interface we will get an empty set.
+      if (!methods.isEmpty()) {
+        //calculate metric for each method contained inside the current Unit
+        val metricsForUnit = methods.iterate(() => new ListBuffer[Double], (currentMethod, innerList: ListBuffer[Double]) => {
+          innerList.append(mcCabeMetric(currentMethod.getBody()));
+          innerList;
+        })
+        outerList.add(new ResultObject(metricsForUnit, unit.getName()));
       }
-    } //while
-    result.append(resultObject);
-
-    //see: http://stackoverflow.com/questions/2429944/how-to-convert-a-scala-list-to-a-java-util-list
-    return result.asJava
+      outerList;
+    });
   }
 }
