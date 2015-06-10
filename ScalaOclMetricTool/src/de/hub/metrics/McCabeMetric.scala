@@ -47,34 +47,64 @@ class McCabeMetric {
    * @return The McCabe-Metric value for the whole expression.
    */
   def analyzeInfixExpression(expression: InfixExpression, nestedTerm: Boolean): Double = {
-    val elist = new BasicEList[InfixExpression]();
-    var result = 0.0;
-    elist.add(expression)
-
+    
+    val expressionAsSet = new BasicEList[InfixExpression]();
+    expressionAsSet.add(expression);
+        
     //elemental infix expression with logical operator e.g. "if( a < b )"
     if (checkOperator(expression) && isElementalInfixExpression(expression)) {
-      result = result + 1.0
+      1.0
     } //if(a < b && b > 100) [s. McCabe: if(c1 AND c2) == if(c1) then if(c2) => count the conditions, and not the AND-Operator itself]
     else if (checkOperator(expression) && !isElementalInfixExpression(expression)) {
-
-      if (expression.getLeftOperand().isInstanceOf[InfixExpression]) {
-        result = result + analyzeInfixExpression(expression.getLeftOperand().asInstanceOf[InfixExpression], true);
-      } else if (expression.getLeftOperand().isInstanceOf[ParenthesizedExpression]) {
-        result = result + analyzeExpression((expression.getLeftOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true)
-      }
-
-      if (expression.getRightOperand().isInstanceOf[InfixExpression]) {
-        result = result + analyzeInfixExpression(expression.getRightOperand().asInstanceOf[InfixExpression], true);
-      } else if (expression.getRightOperand().isInstanceOf[ParenthesizedExpression]) {
-        result = result + analyzeExpression((expression.getRightOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true)
-      }
+      
+      val list1 = expressionAsSet.select((expression) => expression.getLeftOperand().isInstanceOf[ParenthesizedExpression])
+      .iterate(() => new BasicEList[Double], (expr, list : EList[Double]) => {        
+        list.add(analyzeExpression((expr.getLeftOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true))
+        list;
+      })
+      
+      val list2 = expressionAsSet.select((expression) => expression.getLeftOperand().isInstanceOf[InfixExpression])
+      .iterate(() => list1, (expr, list : EList[Double]) => {        
+        list.add(analyzeInfixExpression(expr.getLeftOperand().asInstanceOf[InfixExpression], true))
+        list;
+      })
+      
+      val list3 = expressionAsSet.select((expression) => expression.getRightOperand().isInstanceOf[ParenthesizedExpression])
+      .iterate(() => list2, (expr, list : EList[Double]) => {
+        list.add(analyzeExpression((expr.getRightOperand().asInstanceOf[ParenthesizedExpression]).getExpression(), true))
+        list;
+      })
+      
+      val list4 = expressionAsSet.select((expression) => expression.getRightOperand().isInstanceOf[InfixExpression])
+      .iterate(() => list3, (expr, list : EList[Double]) => {
+        list.add( analyzeInfixExpression(expr.getRightOperand().asInstanceOf[InfixExpression], true))
+        list;
+      })      
+      
+      summe(list4);
     } //this line is used in the case of nested Terms within a branchcondition, e.g. (a < (3+6)), the right hand side doesn't cause
     //a branch on its own and therefore would return 0. However, the LESS has to be counted. 
     else if (nestedTerm) {
-      result = result + 1.0;
+      1.0;
+    } else 
+      0.0;
+  }
+  
+/**
+ * Calculates the sum over all list items. Just needed because of the Typerestrictions for 'Double' in OclList.
+ * @param list - the list over which items the sum shall be calculated
+ * @return the sum
+ */
+def summe(list:EList[Double]): Double = {
+    var result = 0.0;
+    if(list.size() > 0){
+	    for(index <- 0 to list.size()-1) {
+	      result = result + list.get(index);
+	    }
     }
     result;
   }
+
 
   /**
    * @param expr: the Infix Expression to analyze
