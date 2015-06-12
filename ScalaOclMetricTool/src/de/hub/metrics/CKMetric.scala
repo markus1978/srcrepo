@@ -71,8 +71,7 @@ class CKMetric {
 
   /**
    * Calculates the Weighted Method Complexity (WMC) for a CompilationUnit. <br />
-   * Basically it is expected that all methods will have the same Complexity.
-   * i.e. a Class has the normal structure of methods like in testclasses/CkWmcTest.java<br />
+   * Basically it is expected that all methods will have the same Complexity. 
    * To use different weights, a concept has to be defined how this weights are tracked inside the MoDisco model.
    *
    * @param unit: the compilation unit to analyze
@@ -106,7 +105,9 @@ class CKMetric {
   }
 
   /**
-   * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.
+   * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model. 
+   * ATTENTION: If the compilationUnit contains NESTED/INNER classes, which inherit in any way, the DITfor the current CU will be increased as well!
+   * 
    * @param currentUnit : the Unit to calculate
    * @return a ResultObject containing the deepest inheritance value and the name of
    * the corresponding CompilationUnit.
@@ -116,6 +117,8 @@ class CKMetric {
       .getTypes()
       .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
       .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+      .closure((classDeclaration) => classDeclaration.getBodyDeclarations().select((body) => body.isInstanceOf[ClassDeclarationImpl])
+      .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl]))
       .sum((currentClass) =>
         //no superclass yields a DIT of 0
         if (currentClass.getSuperClass() == null)
@@ -149,6 +152,9 @@ class CKMetric {
    * besser als alles zu zählen, da es für einzelne commits korrekt ist, aber es spiegelt dennoch nicht den Zeitverlauf, sondern nur den letzten Stand wieder.
    * Um die Entwicklung über den Zeitverlauf zu betrachten, müsste das Model pro commit analysiert werden.
    *
+   * 
+   * //Update - Prüfen: ob das wirklich nen Problem ist, derzeit siehts so aus als obs fuktioniert
+   * 
    * Ausserdem wäre es toll zu wissen wie man aus dem Modell den AKTUELLEN bezeichner einer Unit erhält, denn die Liste der Interfaces
    * arbeitet auf ggf. umbenannten Units, aber die gelieferte Liste der Compilation Units auf den Namen der  ursprünglich angelegten Unit.
    * M.a.W. Eine umbenannte Unit taucht unter ihrem NEUEN Namen nicht in der erstellten .gitmodel File auf, wohl aber in der Liste der implementierten Interfaces
@@ -174,6 +180,8 @@ class CKMetric {
         otherUnit.getTypes()
           .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
           .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+          .closure((classDeclaration) => classDeclaration.getBodyDeclarations().select((body) => body.isInstanceOf[ClassDeclarationImpl])
+          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl]))
           .select((node) =>
             //select all classes having the current class as superClass and return the total number
             if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
@@ -186,9 +194,9 @@ class CKMetric {
 
         //union Interfaces
         .union(units.collectAll((otherUnit) => {
-          otherUnit.getTypes()
-            .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-            .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+          otherUnit.getTypes().closure((currentType) => currentType.getBodyDeclarations()
+		      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[ClassDeclaration])
+		      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[ClassDeclaration]))
             .select((node) =>
               if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType())
                 .collect((currentType) => currentType.getName())
