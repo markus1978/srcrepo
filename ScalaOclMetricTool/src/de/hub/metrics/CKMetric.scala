@@ -112,10 +112,7 @@ class CKMetric {
    * the corresponding CompilationUnit.
    */
   def DitMetricForUnit(currentUnit: CompilationUnit): ResultObject = {
-    val resultObject: ResultObject = new ResultObject();
-    resultObject.setFileName(currentUnit.getName())
-
-    val ditValue = currentUnit
+    val depthOfInheritance = currentUnit
       .getTypes()
       .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
       .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
@@ -126,8 +123,10 @@ class CKMetric {
         else
           //In Java multiple inheritance is not allowed, but in general the longest path must be returned
           1 + DitMetricForUnit(currentClass.getSuperClass().getType().getOriginalCompilationUnit()).getValues.max)
-    resultObject.getValues().append(ditValue)
-    return resultObject;
+
+    val depthOfInheritanceValueAsSet: ListBuffer[Double] = new ListBuffer();
+    depthOfInheritanceValueAsSet.append(depthOfInheritance)
+    return new ResultObject(depthOfInheritanceValueAsSet, currentUnit.getName());
   }
 
   /**
@@ -205,8 +204,9 @@ class CKMetric {
         //NOC = size of union 	
         .size();
 
-    resultObject.getValues().append(numberOfChildren);
-    return resultObject;
+    val numberOfChildrenValueAsSet: ListBuffer[Double] = new ListBuffer();
+    numberOfChildrenValueAsSet.append(numberOfChildren)
+    return new ResultObject(numberOfChildrenValueAsSet, currentUnit.getName());
   }
 
   /**
@@ -215,8 +215,6 @@ class CKMetric {
    * @return a List of ResultObjects containing the coupling value for each compilationUnit
    */
   def CboMetric(model: Model): List[ResultObject] = {
-    val cboResultList: EList[ResultObject] = new BasicEList[ResultObject];
-    val cboResultList2: EList[ResultObject] = new BasicEList[ResultObject];
 
     //as part of an Type for 'VariableDeclaration'
     val list1 = model.eContents().closure((e) => e.eContents())
@@ -242,15 +240,15 @@ class CKMetric {
           val dependingUnit = cboList.select((e) => e.getFileName.equalsIgnoreCase(stripCompilationUnitName(statementContainingUnit)));
           //current unit has already couplings if its contained inside the select-result
           if (dependingUnit.size() == 1) {
-            val isCoupled = dependingUnit.get(0).getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(stripCompilationUnitName(vdStatement.getType().getType().getName())))
+            val isCoupled = dependingUnit.first().getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(stripCompilationUnitName(vdStatement.getType().getType().getName())))
             //the coupled class is not part of the list yet, otherwise it's nothing to do, because classes get count only once
             if (isCoupled.size() == 0) {
-              dependingUnit.get(0).getCoupledUnits.add(stripCompilationUnitName(vdStatement.getType().getType().getName()));
-              dependingUnit.get(0).getValues()(0) = dependingUnit.get(0).getValues()(0) + 1;
+              dependingUnit.first.getCoupledUnits.add(stripCompilationUnitName(vdStatement.getType().getType().getName()));
+              dependingUnit.first.getValues()(0) = dependingUnit.first().getValues()(0) + 1;
             }
           } else {
             //the current unit has no couplings until now	
-            //it seems impossible to create a 'special' kind of List, and initialize it with values at the same time		      
+            //it seems impossible to create a 'special' kind of List, and initialize it with values at the same time, like possible in Ocl when creating a new tuple		      
             val valueBuffer = new ListBuffer[Double];
             valueBuffer.append(1.0);
             val couplings = new BasicEList[String];
@@ -355,6 +353,7 @@ class CKMetric {
     val methInvocations = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
+    /** this select decides if library methods are count or not, because those will not have an accessable compilationUnit */
     //.select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
 
     model.getCompilationUnits().collect((unit) =>
@@ -367,12 +366,9 @@ class CKMetric {
    * @param methodInvocations: the set of existing MethodInvocations
    * @return a ResultObject containing the RFC-Value
    */
-  def RfcMetricForUnit(unit: CompilationUnit, methodInvocations: EList[MethodInvocation]): ResultObject = {
-    val resultObject: ResultObject = new ResultObject();
-    resultObject.setFileName(unit.getName());
-
+  def RfcMetricForUnit(currentUnit: CompilationUnit, methodInvocations: EList[MethodInvocation]): ResultObject = {
     //This would be the {M} - Set according to C. & K.
-    val methodsInsideClass = unit.getTypes
+    val methodsInsideClass = currentUnit.getTypes
       // get the 'Body Declarations' containment reference list for all Types
       .collectAll((currentType) => currentType.getBodyDeclarations())
       //select only the MethodDeclarationImpl from the Body Declarations
@@ -381,14 +377,15 @@ class CKMetric {
 
     //the whole set is the {R}-Set as union of all method calls for this Unit according to C. & K.
     val calledMethods = methodInvocations.select((method) =>
-      method.getOriginalCompilationUnit().equals(unit))
+      method.getOriginalCompilationUnit().equals(currentUnit))
 
     //The RFC-Value is the size of the union of {M} & {R} 
-    val rfc = methodsInsideClass.union(calledMethods.asInstanceOf[EList[ASTNode]]);
+    val responseForClass = methodsInsideClass.union(calledMethods.asInstanceOf[EList[ASTNode]]);
 
-    resultObject.getValues().append(rfc.size());
+    val responseForClassValueAsSet: ListBuffer[Double] = new ListBuffer();
+    responseForClassValueAsSet.append(responseForClass.size())
+    return new ResultObject(responseForClassValueAsSet, currentUnit.getName());
 
-    return resultObject;
   }
 
   /**
@@ -408,12 +405,10 @@ class CKMetric {
    * @param unit: the compilation unit to analyze
    * @return a ResultObject containing the LCOM-Value
    */
-  def LcomMetricForUnit(unit: CompilationUnit): ResultObject = {
-    val resultObject: ResultObject = new ResultObject();
-    resultObject.setFileName(unit.getName());
-    try {
+  def LcomMetricForUnit(currentUnit: CompilationUnit): ResultObject = {
+    
       //get the 'Types' reference list for the current Unit
-      val methodsInsideUnit = unit.getTypes
+      val methodsInsideUnit = currentUnit.getTypes
         // get the 'Body Declarations' containment reference list for all Types
         //filter all empty classes
         .select((currentType) => !(currentType.getBodyDeclarations().isEmpty()))
@@ -424,13 +419,13 @@ class CKMetric {
         //e. g. implicit declared construtor methods have an empty body
         .select((method) => method.getBody() != null && method.getBody().getStatements() != null)
 
-      val instanceVariablesInsideUnit = unit.getTypes
+      val instanceVariablesInsideUnit = currentUnit.getTypes
         // get the 'Body Declarations' containment reference list for all Types
         .collectAll((currentType) => currentType.getBodyDeclarations())
         //select only the FieldDeclaration representing class instance variables from the Body Declarations
         .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
         .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
-        .collect((fieldDeclaration) => fieldDeclaration.getFragments().get(0).getName())
+        .collect((fieldDeclaration) => fieldDeclaration.getFragments().first().getName())
 
       ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
       val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
@@ -460,16 +455,15 @@ class CKMetric {
       })
 
       //LCOM = number of nullintersections - number of nonempty intersections if P > Q, else 0
-      if (P.size() > Q.size())
-        resultObject.getValues().append((P.size() - Q.size()) / 2) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value 
-      else
-        resultObject.getValues().append(0)
-
-    } catch {
-      case ioe: Exception => ioe.printStackTrace()
-    }
-
-    resultObject;
+      if (P.size() > Q.size()){
+        val LackOfCohesionValueAsSet: ListBuffer[Double] = new ListBuffer();
+	    LackOfCohesionValueAsSet.append((P.size() - Q.size()) / 2.0) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value     
+	    return new ResultObject(LackOfCohesionValueAsSet, currentUnit.getName());
+      } else {
+        val LackOfCohesionValueAsSet: ListBuffer[Double] = new ListBuffer();
+	    LackOfCohesionValueAsSet.append(0.0)      
+	    return new ResultObject(LackOfCohesionValueAsSet, currentUnit.getName());
+      }
   }
 
   //########################################
@@ -496,9 +490,9 @@ class CKMetric {
       //if Statement
       /**
        * the extended version as proof of concept, the following ones are shortend with addToIteratorAccu.
-       * 
-       * Note: Even if it looks quite similar, resultList.union(...) is not a good way, because it always returns a new List, which is basically possible 
-       * to handle, but more complicated, if you only use 'val' and no 'var' declarations.  
+       *
+       * Note: Even if it looks quite similar, resultList.union(...) is not a good way, because it always returns a new List, which is basically possible
+       * to handle, but more complicated, if you only use 'val' and no 'var' declarations.
        * Also a straight return statement like 'return resultList.union(...)' does not work, because it not only returns the current iteration, but
        * the whole methodcall => the whole iterate gets canceled before all statements were analyzed.
        */
@@ -565,15 +559,15 @@ class CKMetric {
 
     methodVariablesSet.intersectForString(instanceVariablesInsideUnit).select((set) => !set.isEmpty());
   }
-  
+
   /**
    * Helpermethod: If inside an Iterate method a new Collection is built, which items has to be added to the resultSet of the iterate, the accu and the new collection can be passed to
    * copy all items from the new collection to the resultSet.
- * @param itemsToAdd - the new collection
- * @param accu - the accu of the iterate method
- * @return the accu extended by the new items.
- */
-def addToIteratorAccu(itemsToAdd: EList[String], accu: EList[String]): EList[String] = {
+   * @param itemsToAdd - the new collection
+   * @param accu - the accu of the iterate method
+   * @return the accu extended by the new items.
+   */
+  def addToIteratorAccu(itemsToAdd: EList[String], accu: EList[String]): EList[String] = {
     itemsToAdd.iterate(() => accu, (statement, resultList2: EList[String]) => {
       resultList2.add(statement)
       resultList2
@@ -591,18 +585,22 @@ def addToIteratorAccu(itemsToAdd: EList[String], accu: EList[String]): EList[Str
     val tempList: EList[String] = new BasicEList[String];
 
     if (expression.isInstanceOf[PostfixExpression]) {
-      tempList.add(expression.asInstanceOf[PostfixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
-      tempList;
+      val list: EList[String] = new BasicEList[String];
+      list.add(expression.asInstanceOf[PostfixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+      list;
     } else if (expression.isInstanceOf[PrefixExpression]) {
-      tempList.add(expression.asInstanceOf[PrefixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
-      tempList;
+      val list: EList[String] = new BasicEList[String];
+      list.add(expression.asInstanceOf[PrefixExpression].getOperand().asInstanceOf[SingleVariableAccess].getVariable().getName())
+      list;
     } //expression is leaf of AST and the leaf is a VariableAccess
     else if (expression.isInstanceOf[SingleVariableAccess]) {
-      tempList.add(expression.asInstanceOf[SingleVariableAccess].getVariable().getName())
-      tempList;
+      val list: EList[String] = new BasicEList[String];
+      list.add(expression.asInstanceOf[SingleVariableAccess].getVariable().getName())
+      list;
     } //expression is somewhere inside the AST and looks like (any_expression)
     else if (expression.isInstanceOf[ParenthesizedExpression]) {
-      tempList.union(collectVariablesUsedInsideExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression()));
+      val list: EList[String] = new BasicEList[String];
+      list.union(collectVariablesUsedInsideExpression(expression.asInstanceOf[ParenthesizedExpression].getExpression()));
     } //expression is somewhere inside the AST and looks like any_expression    
     else if (expression.isInstanceOf[InfixExpression]) {
 
@@ -666,21 +664,19 @@ def addToIteratorAccu(itemsToAdd: EList[String], accu: EList[String]): EList[Str
     val dependingUnit = resultList.select((e) => e.getFileName.equalsIgnoreCase(currentUnit));
     //current unit has already couplings if its contained inside the select-result
     if (dependingUnit.size() == 1) {
-      val isCoupled = dependingUnit.get(0).getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(coupledUnit))
+      val isCoupled = dependingUnit.first().getCoupledUnits.select((allreadyDetectedCouple) => allreadyDetectedCouple.equalsIgnoreCase(coupledUnit))
       //the coupled class is not part of the list yet, otherwise it's nothing to do, because classes get count only once
       if (isCoupled.size() == 0) {
-        dependingUnit.get(0).getCoupledUnits.add(coupledUnit);
-        dependingUnit.get(0).getValues()(0) = dependingUnit.get(0).getValues()(0) + 1;
+        dependingUnit.first().getCoupledUnits.add(coupledUnit);
+        dependingUnit.first().getValues()(0) = dependingUnit.first().getValues()(0) + 1;
       }
     } else {
-      //the current unit has no couplings until now
-      val resultObject = new ResultObject();
+      //the current unit has no couplings until now      
       val values = new ListBuffer[Double];
+      val coupledUnits = new BasicEList[String];
       values.append(1.0);
-      resultObject.setValues(values);
-      resultObject.setFileName(currentUnit);
-      resultObject.getCoupledUnits.add(coupledUnit);
-      resultList.add(resultObject);
+      coupledUnits.add(coupledUnit);
+      resultList.add(new ResultObject(values, coupledUnits, currentUnit));      
     }
     resultList;
   }
