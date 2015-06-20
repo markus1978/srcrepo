@@ -46,6 +46,7 @@ import org.eclipse.gmt.modisco.java.WhileStatement
 import org.eclipse.gmt.modisco.java.DoStatement
 import org.eclipse.gmt.modisco.java.Assignment
 import org.eclipse.gmt.modisco.java.PrefixExpression
+import org.hamcrest.core.IsInstanceOf
 
 /**
  * @author Frederik Marticke
@@ -71,7 +72,7 @@ class CKMetric {
 
   /**
    * Calculates the Weighted Method Complexity (WMC) for a CompilationUnit. <br />
-   * Basically it is expected that all methods will have the same Complexity. 
+   * Basically it is expected that all methods will have the same Complexity.
    * To use different weights, a concept has to be defined how this weights are tracked inside the MoDisco model.
    *
    * @param unit: the compilation unit to analyze
@@ -105,9 +106,9 @@ class CKMetric {
   }
 
   /**
-   * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model. 
+   * Calculates the Depth Inheritance Tree (DIT) for a compilationUnit inside a MoDisco Model.
    * ATTENTION: If the compilationUnit contains NESTED/INNER classes, which inherit in any way, the DITfor the current CU will be increased as well!
-   * 
+   *
    * @param currentUnit : the Unit to calculate
    * @return a ResultObject containing the deepest inheritance value and the name of
    * the corresponding CompilationUnit.
@@ -118,7 +119,7 @@ class CKMetric {
       .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
       .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
       .closure((classDeclaration) => classDeclaration.getBodyDeclarations().select((body) => body.isInstanceOf[ClassDeclarationImpl])
-      .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl]))
+        .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl]))
       .sum((currentClass) =>
         //no superclass yields a DIT of 0
         if (currentClass.getSuperClass() == null)
@@ -152,9 +153,9 @@ class CKMetric {
    * besser als alles zu zählen, da es für einzelne commits korrekt ist, aber es spiegelt dennoch nicht den Zeitverlauf, sondern nur den letzten Stand wieder.
    * Um die Entwicklung über den Zeitverlauf zu betrachten, müsste das Model pro commit analysiert werden.
    *
-   * 
+   *
    * //Update - Prüfen: ob das wirklich nen Problem ist, derzeit siehts so aus als obs fuktioniert
-   * 
+   *
    * Ausserdem wäre es toll zu wissen wie man aus dem Modell den AKTUELLEN bezeichner einer Unit erhält, denn die Liste der Interfaces
    * arbeitet auf ggf. umbenannten Units, aber die gelieferte Liste der Compilation Units auf den Namen der  ursprünglich angelegten Unit.
    * M.a.W. Eine umbenannte Unit taucht unter ihrem NEUEN Namen nicht in der erstellten .gitmodel File auf, wohl aber in der Liste der implementierten Interfaces
@@ -181,7 +182,7 @@ class CKMetric {
           .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
           .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
           .closure((classDeclaration) => classDeclaration.getBodyDeclarations().select((body) => body.isInstanceOf[ClassDeclarationImpl])
-          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl]))
+            .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl]))
           .select((node) =>
             //select all classes having the current class as superClass and return the total number
             if (node.getSuperClass() != null && node.getSuperClass().getType().getOriginalCompilationUnit().getName().equals(currentUnit.getName())) {
@@ -195,8 +196,8 @@ class CKMetric {
         //union Interfaces
         .union(units.collectAll((otherUnit) => {
           otherUnit.getTypes().closure((currentType) => currentType.getBodyDeclarations()
-		      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[ClassDeclaration])
-		      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[ClassDeclaration]))
+            .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[ClassDeclaration])
+            .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[ClassDeclaration]))
             .select((node) =>
               if (!(node.getSuperInterfaces().isEmpty()) && (node.getSuperInterfaces().collect((interface) => interface.getType())
                 .collect((currentType) => currentType.getName())
@@ -330,26 +331,74 @@ class CKMetric {
         cboList;
       });
 
-    //Interface Implementation
-    val list5 = model.getCompilationUnits()
-      .collectAll((unit) =>
-        unit.getTypes()
-          .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
-          .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
-          .select((classDeclarationWithInterface) => !classDeclarationWithInterface.getSuperInterfaces().isEmpty()))
+    //as part of an 'MethodReturnType'
+    val list5 = model.eContents().closure((e) => e.eContents())
+      .select((content) => content.isInstanceOf[MethodDeclaration])
+      .collect((content) => content.asInstanceOf[MethodDeclaration])
+      .select((methodDeclaration) => methodDeclaration.getReturnType != null)
+      .iterate(() => list4, (method, cboList: EList[ResultObject]) => {
+        if (method.getReturnType().getType().isInstanceOf[ClassDeclaration]
+          && method.getReturnType().getType().asInstanceOf[ClassDeclaration].getName() != "String"
+          && method.getReturnType().getType().asInstanceOf[ClassDeclaration].getName() != "Object") {
+          printCboCoupling("non primitive Returntyppe",
+            stripCompilationUnitName(method.getReturnType().getType().asInstanceOf[ClassDeclaration].getName()),
+            stripCompilationUnitName(method.getName()),
+            stripCompilationUnitName(method.getReturnType().getType().asInstanceOf[ClassDeclaration].getName()))
 
-      .iterate(() => list4, (classDec, cboList: EList[ResultObject]) => {
-        classDec.getSuperInterfaces().iterate(() => cboList, (interface, resList: EList[ResultObject]) => {
-          printCboCoupling("Interface-Implementation",
-            stripCompilationUnitName(interface.getType().getName()),
-            stripCompilationUnitName(classDec.getName()),
-            stripCompilationUnitName(interface.getType().getName()))
+          addToCboList(stripCompilationUnitName(method.getOriginalCompilationUnit().getName()), stripCompilationUnitName(method.getReturnType().getType().asInstanceOf[ClassDeclaration].getName()), cboList)
+        }
+        cboList;
+      });
 
-          addToCboList(stripCompilationUnitName(classDec.getName()), stripCompilationUnitName(interface.getType().getName()), resList)
+    //as part of an 'Method Parameter'
+    val list6 = model.eContents().closure((e) => e.eContents())
+      .select((content) => content.isInstanceOf[MethodDeclaration])
+      .collect((content) => content.asInstanceOf[MethodDeclaration])
+      .select((methodDeclaration) => methodDeclaration.getParameters() != null)
+      .iterate(() => list5, (method, cboList: EList[ResultObject]) => {
+        val parameter = method.getParameters();
+        parameter.iterate(() => cboList, (param, innerList: EList[ResultObject]) => {
+          if (param.getType().getType().isInstanceOf[ClassDeclaration]
+            && param.getType().getType().asInstanceOf[ClassDeclaration].getName() != "String"
+            && param.getType().getType().asInstanceOf[ClassDeclaration].getName() != "Object") {
+            printCboCoupling("non primitive parameter",
+              stripCompilationUnitName(param.getType().getType().asInstanceOf[ClassDeclaration].getName()),
+              stripCompilationUnitName(method.getName()),
+              stripCompilationUnitName(param.getType().getType().asInstanceOf[ClassDeclaration].getName()))
+
+            addToCboList(stripCompilationUnitName(method.getOriginalCompilationUnit().getName()), stripCompilationUnitName(param.getType().getType().asInstanceOf[ClassDeclaration].getName()), cboList)
+          }
+          innerList;
         })
-      })
 
-    return list5;
+        cboList;
+      });
+
+    /**
+     * This was initially part of the calculation, but in fact it is not part of the CBO definition and already covered by the DIT and NOC values.
+     * Furthermore, to be consequent you would have to count inheritance as well and would have to decide for how many levels those couplings
+     * should be considered.
+     *
+     * //Interface Implementation
+     * val list5 = model.getCompilationUnits()
+     * .collectAll((unit) =>
+     * unit.getTypes()
+     * .select((currentType) => currentType.isInstanceOf[ClassDeclarationImpl])
+     * .collect((classDeclarationImpl) => classDeclarationImpl.asInstanceOf[ClassDeclarationImpl])
+     * .select((classDeclarationWithInterface) => !classDeclarationWithInterface.getSuperInterfaces().isEmpty()))
+     *
+     * .iterate(() => list4, (classDec, cboList: EList[ResultObject]) => {
+     * classDec.getSuperInterfaces().iterate(() => cboList, (interface, resList: EList[ResultObject]) => {
+     * printCboCoupling("Interface-Implementation",
+     * stripCompilationUnitName(interface.getType().getName()),
+     * stripCompilationUnitName(classDec.getName()),
+     * stripCompilationUnitName(interface.getType().getName()))
+     *
+     * addToCboList(stripCompilationUnitName(classDec.getName()), stripCompilationUnitName(interface.getType().getName()), resList)
+     * })
+     * })
+     */
+    return list6;
   }
 
   /**
@@ -361,8 +410,8 @@ class CKMetric {
     val methInvocations = model.eContents().closure((e) => e.eContents())
       .select((content) => content.isInstanceOf[MethodInvocation])
       .collect((methodInvocation) => methodInvocation.asInstanceOf[MethodInvocation])
-    /** this select decides if library methods are count or not, because those will not have an accessable compilationUnit */
-    //.select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
+      /** this select decides if library methods are count or not, because those will not have an accessable compilationUnit */
+      .select((methodInvocation) => methodInvocation.getMethod().getOriginalCompilationUnit() != null)
 
     model.getCompilationUnits().collect((unit) =>
       RfcMetricForUnit(unit, methInvocations))
@@ -414,64 +463,64 @@ class CKMetric {
    * @return a ResultObject containing the LCOM-Value
    */
   def LcomMetricForUnit(currentUnit: CompilationUnit): ResultObject = {
-    
-      //get the 'Types' reference list for the current Unit
-      val methodsInsideUnit = currentUnit.getTypes
-        // get the 'Body Declarations' containment reference list for all Types
-        //filter all empty classes
-        .select((currentType) => !(currentType.getBodyDeclarations().isEmpty()))
-        .collectAll((currentType) => currentType.getBodyDeclarations())
-        //select only the AbstractMethodDeclarations from the Body Declarations
-        .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
-        .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[AbstractMethodDeclaration])
-        //e. g. implicit declared construtor methods have an empty body
-        .select((method) => method.getBody() != null && method.getBody().getStatements() != null)
 
-      val instanceVariablesInsideUnit = currentUnit.getTypes
-        // get the 'Body Declarations' containment reference list for all Types
-        .collectAll((currentType) => currentType.getBodyDeclarations())
-        //select only the FieldDeclaration representing class instance variables from the Body Declarations
-        .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
-        .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
-        .collect((fieldDeclaration) => fieldDeclaration.getFragments().first().getName())
+    //get the 'Types' reference list for the current Unit
+    val methodsInsideUnit = currentUnit.getTypes
+      // get the 'Body Declarations' containment reference list for all Types
+      //filter all empty classes
+      .select((currentType) => !(currentType.getBodyDeclarations().isEmpty()))
+      .collectAll((currentType) => currentType.getBodyDeclarations())
+      //select only the AbstractMethodDeclarations from the Body Declarations
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
+      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[AbstractMethodDeclaration])
+      //e. g. implicit declared construtor methods have an empty body
+      .select((method) => method.getBody() != null && method.getBody().getStatements() != null)
 
-      ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
-      val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
-        variablesSet.add(analyseMethodForLcom(method, instanceVariablesInsideUnit))
-        variablesSet;
+    val instanceVariablesInsideUnit = currentUnit.getTypes
+      // get the 'Body Declarations' containment reference list for all Types
+      .collectAll((currentType) => currentType.getBodyDeclarations())
+      //select only the FieldDeclaration representing class instance variables from the Body Declarations
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[FieldDeclaration])
+      .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[FieldDeclaration])
+      .collect((fieldDeclaration) => fieldDeclaration.getFragments().first().getName())
+
+    ////This would be the {{I1}, ... ,{In}} - Set according to C. & K. (with 1 <= i <= n if there are n Methods in this class)
+    val SetOfUsedInstanceVariablesSets = methodsInsideUnit.iterate(() => new BasicEList[EList[String]], (method, variablesSet: BasicEList[EList[String]]) => {
+      variablesSet.add(analyseMethodForLcom(method, instanceVariablesInsideUnit))
+      variablesSet;
+    })
+
+    //the set of null intersections
+    val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: EList[BinaryTupleType]) => {
+      SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: EList[BinaryTupleType]) => {
+        //avoid tuple with empty/null items and avoid reflexive tuple, i.e. don't calculate intersection(setI, setI)
+        if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && (setI.intersectForString(otherSetI).isEmpty()))
+          otherListP.add(new BinaryTupleType(setI, otherSetI))
+        otherListP;
       })
+      listP;
+    })
 
-      //the set of null intersections
-      val P = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listP: EList[BinaryTupleType]) => {
-        SetOfUsedInstanceVariablesSets.iterate(() => listP, (otherSetI, otherListP: EList[BinaryTupleType]) => {
-          //avoid tuple with empty/null items and avoid reflexive tuple, i.e. don't calculate intersection(setI, setI)
-          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && (setI.intersectForString(otherSetI).isEmpty()))
-            otherListP.add(new BinaryTupleType(setI, otherSetI))
-          otherListP;
-        })
-        listP;
+    //the set of nonempty intersections
+    val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: EList[BinaryTupleType]) => {
+      SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: EList[BinaryTupleType]) => {
+        if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && !(setI.intersectForString(otherSetI).isEmpty()))
+          otherListQ.add(new BinaryTupleType(setI, otherSetI))
+        otherListQ;
       })
+      listQ;
+    })
 
-      //the set of nonempty intersections
-      val Q = SetOfUsedInstanceVariablesSets.iterate(() => new BasicEList[BinaryTupleType], (setI, listQ: EList[BinaryTupleType]) => {
-        SetOfUsedInstanceVariablesSets.iterate(() => listQ, (otherSetI, otherListQ: EList[BinaryTupleType]) => {
-          if ((!otherSetI.isEmpty()) && (!setI.isEmpty()) && (otherSetI ne setI) && !(setI.intersectForString(otherSetI).isEmpty()))
-            otherListQ.add(new BinaryTupleType(setI, otherSetI))
-          otherListQ;
-        })
-        listQ;
-      })
-
-      //LCOM = number of nullintersections - number of nonempty intersections if P > Q, else 0
-      if (P.size() > Q.size()){
-        val LackOfCohesionValueAsSet: ListBuffer[Double] = new ListBuffer();
-	    LackOfCohesionValueAsSet.append((P.size() - Q.size()) / 2.0) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value     
-	    return new ResultObject(LackOfCohesionValueAsSet, currentUnit.getName());
-      } else {
-        val LackOfCohesionValueAsSet: ListBuffer[Double] = new ListBuffer();
-	    LackOfCohesionValueAsSet.append(0.0)      
-	    return new ResultObject(LackOfCohesionValueAsSet, currentUnit.getName());
-      }
+    //LCOM = number of nullintersections - number of nonempty intersections if P > Q, else 0
+    if (P.size() > Q.size()) {
+      val LackOfCohesionValueAsSet: ListBuffer[Double] = new ListBuffer();
+      LackOfCohesionValueAsSet.append((P.size() - Q.size()) / 2.0) //The Sets intersection(Mi, C) include for each pair (i,j) the symmetric pair (j,i). For LCOM one Pair is enough, so the metric is the half of the calculated value     
+      return new ResultObject(LackOfCohesionValueAsSet, currentUnit.getName());
+    } else {
+      val LackOfCohesionValueAsSet: ListBuffer[Double] = new ListBuffer();
+      LackOfCohesionValueAsSet.append(0.0)
+      return new ResultObject(LackOfCohesionValueAsSet, currentUnit.getName());
+    }
   }
 
   //########################################
@@ -684,7 +733,7 @@ class CKMetric {
       val coupledUnits = new BasicEList[String];
       values.append(1.0);
       coupledUnits.add(coupledUnit);
-      resultList.add(new ResultObject(values, coupledUnits, currentUnit));      
+      resultList.add(new ResultObject(values, coupledUnits, currentUnit));
     }
     resultList;
   }
