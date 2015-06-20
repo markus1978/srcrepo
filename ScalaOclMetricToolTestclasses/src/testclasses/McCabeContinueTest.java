@@ -1,9 +1,14 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for the handling of continue when calculating McCabe Metric.
+ *
+ */
 public class McCabeContinueTest {
 	
 	/**
-	 * Should give a McCabe value of 6 = 3 binary branches + 1 break + 1 continue + 1
+	 * Should give a McCabe value of 4 = 3 binary branches + 1
 	 * @param pA
 	 * @param pB
 	 */

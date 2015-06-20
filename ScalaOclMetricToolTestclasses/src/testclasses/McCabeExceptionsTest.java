@@ -1,9 +1,13 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for calculating McCabe Metric of Exceptions.
+ */
 public class McCabeExceptionsTest {
 	
 	/**
-	 * Should give McCabe value = 3: 1 inner return + 1 catch + 1
+	 * Should give McCabe value = 2 : 1 catch-clause + 1
 	 * @return
 	 */
 	public String tryCatchTest(){
@@ -18,7 +22,7 @@ public class McCabeExceptionsTest {
 	}
 	
 	/**
-	 * Should give McCabe value = 3: 1 inner return + 1 catch + 1
+	 * Should give McCabe value = 3: 2 catch-clauses + 1
 	 * @return
 	 */
 	public String tryCatchSideEffectTest(){
@@ -38,7 +42,7 @@ public class McCabeExceptionsTest {
 	}
 	
 	/**
-	 * Should give McCabe value = 4 : 1 inner return + 1 catch + 1 throw + 1
+	 * Should give McCabe value = 2 : 1 catch-clause + 1
 	 * @return
 	 * @throws Exception
 	 */

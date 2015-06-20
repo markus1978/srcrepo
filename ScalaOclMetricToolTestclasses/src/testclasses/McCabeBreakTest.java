@@ -1,9 +1,13 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for the handling of break when calculating McCabe Metric.
+ */
 public class McCabeBreakTest {
 	
 	/**
-	 * Should give a McCabe value of 4 = 2 binary branches + 1 break + 1
+	 * Should give a McCabe value of 3 = 2 binary branches + 1
 	 * @param pA
 	 * @param pB
 	 */

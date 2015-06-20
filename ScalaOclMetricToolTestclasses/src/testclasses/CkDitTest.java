@@ -17,11 +17,11 @@ package testclasses;
  * 	|		|										|
  * 	|		-----------------------------------------
  * 	|		|
- *  |	CkDitLevelTwoWithTwoParents			CkDitInterfaceLevelTwoWithNoParents
- * 	|		^										^
- * 	|		|										|
- * 	|		|										|
- * 	-----CkDitTest -----------------------------------
+ *  |	CkDitLevelTwoWithTwoParents			CkDitInterfaceLevelTwoWithNoParents		CkNocInterfaceTest
+ * 	|		^										^										^
+ * 	|		|										|										|
+ * 	|		|										|										|
+ * 	-----CkDitTest --------------------------------------------------------------------------
  * 
  * Therefore the result should be DIT(CkDitTest) = 3, because 
  * CkDitLevelTwoWithTwoParents -> CkDitLevelOneWithParent -> CkDitLevelZeroWithNoParent

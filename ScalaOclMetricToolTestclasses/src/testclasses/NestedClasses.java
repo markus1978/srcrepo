@@ -1,5 +1,9 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for diffrent metrics. In general its used to ensure, that nested classes inside a compilation unit were analyzed as well.
+ */
 public class NestedClasses {
 
 	public class nested1 extends CkNocTest implements

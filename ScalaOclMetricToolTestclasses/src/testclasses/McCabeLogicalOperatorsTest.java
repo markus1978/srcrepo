@@ -1,5 +1,9 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for calculating McCabe Metric of complex logical operators.
+ */
 public class McCabeLogicalOperatorsTest {
 	
 	/**

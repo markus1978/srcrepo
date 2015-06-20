@@ -1,5 +1,9 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for calculating McCabe Metric of do while loops.
+ */
 public class McCabeDoWhileTest {
 	
 	/**

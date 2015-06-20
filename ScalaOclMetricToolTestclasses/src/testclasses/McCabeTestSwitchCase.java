@@ -1,7 +1,16 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for calculating McCabe Metric of switch-case.
+ */
 public class McCabeTestSwitchCase {
 	
+	/**
+	 * Should give a McCabe value of 6.
+	 * @param nummer
+	 * @return
+	 */
 	static String wochentagsName(int nummer) {
 		switch(nummer) {
 		    case 1: return "Montag";
@@ -13,6 +22,11 @@ public class McCabeTestSwitchCase {
 		return "unknown";
 	}	
 	
+	/**
+	 * Should give a McCabe value of 8.
+	 * @param nummer
+	 * @return
+	 */
 	static String wochentagsName2(int nummer) {
 		switch(nummer) {
 		    case 1: return "Montag2";

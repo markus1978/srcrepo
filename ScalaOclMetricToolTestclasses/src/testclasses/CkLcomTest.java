@@ -1,6 +1,9 @@
 package testclasses;
 
 /**
+ * @author Frederik Marticke
+ * Testclass for calculatiung the LCOM Metric value from the CK Metric Suite.
+ * 
  * ClassVariables = {instanceVar1, instanceVar2, instanceVar3}
  * 
  * MethodsInsideClass = {fooPostfixPrefix, ifFoo, ifFooNestedOperators, whileFoo, whileFooNestedOperators, barAssignment, bar2ComplexReturn, fooBar}
@@ -42,9 +45,8 @@ package testclasses;
  * |Q| = 13
  * 
  * Because of|P| = 23 > 13 = |Q| 
- * => LCOM = |P| - |Q| = 23 - 13 = 10
+ * => LCOM = |P| - |Q| = 23 - 13 = 10 
  * 
- * @author Frederik Marticke
  */
 public class CkLcomTest {
 	int instanceVar1 = 0;
@@ -59,14 +61,14 @@ public class CkLcomTest {
 		instanceVar1 = ++instanceVar1 + 3;
 	}
 	
-	//McCabe = 3
+	//McCabe = 2
 	public int ifFoo(){
 		if(instanceVar1 > 0)
 			return 0;					
 		return instanceVar1 + 3;
 	}
 	
-	//McCabe = 4
+	//McCabe = 3
 	public int ifFooNestedOperators(){
 		if((instanceVar3 > 0) || (3 < ((instanceVar4 + instanceVar3))))
 			return 0;					

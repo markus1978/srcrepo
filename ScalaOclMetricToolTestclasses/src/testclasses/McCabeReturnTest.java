@@ -1,9 +1,13 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for calculating McCabe Metric with inner return statements.
+ */
 public class McCabeReturnTest {
 	
 	/**
-	 * Should give a McCabe value of 3 = 1 binary branch + 1 return (not the last statement) + 1
+	 * Should give a McCabe value of 2 = 1 binary branch + 1
 	 * @param pA
 	 * @param pB
 	 */
@@ -16,7 +20,7 @@ public class McCabeReturnTest {
 	}
 	
 	/**
-	 * Should give a McCabe value of 1, because the return is the last statement it does not increase complexity.
+	 * Should give a McCabe value of 1.
 	 * @return
 	 */
 	public int returnIsLastStatementTest(){
@@ -24,7 +28,7 @@ public class McCabeReturnTest {
 	}
 	
 	/**
-	 * Should give a McCabe value of 3 = 1 binary branch, 1 return which is not the last statement + 1
+	 * Should give a McCabe value of 2 = 1 binary branch + 1
 	 * @return
 	 */
 	public int returnIsNotLastStatementTest(){

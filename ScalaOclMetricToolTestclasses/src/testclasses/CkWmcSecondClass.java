@@ -1,5 +1,10 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Initially a Testclass for WMC. Now also used for CBO by using Methods from CkWmcTest which in turn access' the
+ * static variable WmcVariableAccess.
+ */
 public class CkWmcSecondClass {
 	
 	public static int WmcVariableAccess = 1;

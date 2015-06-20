@@ -1,5 +1,9 @@
 package testclasses;
 
+/**
+ * @author Frederik Marticke
+ * Testclass for calculating McCabe Metric of switch-case and containing outcommented lines at the end which has to be ignored.
+ */
 public class McCabeTestSwitchCase2 {
 	
 	/**
