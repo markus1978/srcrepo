@@ -8,10 +8,17 @@ class ResultObject {
   private var values:ListBuffer[Double] = new ListBuffer[Double];
   private var coupledUnits:EList[String] = new BasicEList[String];
   private var fileName:String = "";
-  
+  private var valuesString:ListBuffer[String] = new ListBuffer[String];
+    
   def this(values: ListBuffer[Double], fileName:String){
     this();
     this.values = values;   
+    this.fileName  = fileName;
+  }
+  
+  def this(values: ListBuffer[String], fileName:String, dummy:String){
+    this();
+    this.valuesString = values;   
     this.fileName  = fileName;
   }
   
@@ -23,11 +30,19 @@ class ResultObject {
   }
   	  
   override def toString():String = {	    
-    var string = "";	    
-    for (iter <- values.toList.iterator) {	    
-		string = string.concat(iter.toString).concat(" - ");			
-	}
-    return string.substring(0, string.length()-3);
+    var string = "";
+    if(values.length > 0){
+	    for (iter <- values.toList.iterator) {	    
+			string = string.concat(iter.toString).concat(" - ");			
+		}
+	    return string.substring(0, string.length()-3);
+	    }
+    else
+      for (iter <- valuesString.toList.iterator) {	    
+			string = string.concat(iter.toString).concat(" - ");			
+		}
+	    return string.substring(0, string.length()-3);
+	    
   }
   
   def toStringOnlyGreaterZero():String = {	    

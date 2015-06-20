@@ -190,16 +190,8 @@ class McCabeMetric {
         } else if (s.isInstanceOf[ForStatement]) {
           analyzeExpressionFromRoot(s.asInstanceOf[ForStatement].getExpression());
         } else if (s.isInstanceOf[ReturnStatement]) {
-          if ((s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[Block]
-            && s.asInstanceOf[ReturnStatement].eContainer().asInstanceOf[Block].eContainer().isInstanceOf[MethodDeclaration])
-            || s.asInstanceOf[ReturnStatement].eContainer().isInstanceOf[SwitchStatement]) //avoid counting switch-statements two times (s.a.)
-            0 //return statements, which are the last statement in a MethodDeclaration doesnt increase complexity
-          else
-            1 + analyzeExpressionFromRoot(s.asInstanceOf[ReturnStatement].getExpression())
+          analyzeExpressionFromRoot(s.asInstanceOf[ReturnStatement].getExpression());
         } else if (s.isInstanceOf[CatchClause]) 1
-        else if (s.isInstanceOf[ThrowStatement]) 1
-        else if (s.isInstanceOf[BreakStatement]) 1
-        else if (s.isInstanceOf[ContinueStatement]) 1
         else 0) +
       1.0 //each not empty Method has at least complexity 1
   }
@@ -220,12 +212,22 @@ class McCabeMetric {
       // methods can be empty, because we look from the perspective of CompilationUnits  including e. g. Interfaces. Therefore when we iterate over the methods
       // comparing with for example an interface we will get an empty set.
       if (!methods.isEmpty()) {
-        //calculate metric for each method contained inside the current Unit
-        val metricsForUnit = methods.iterate(() => new ListBuffer[Double], (currentMethod, innerList: ListBuffer[Double]) => {
-          innerList.append(mcCabeMetric(currentMethod.getBody()));
+        //calculate metric for each method contained inside the current Unit        
+        val metricsForUnit = methods.iterate(() => new ListBuffer[String], (currentMethod, innerList: ListBuffer[String]) => {
+          innerList.append(currentMethod.getName() + "#" + mcCabeMetric(currentMethod.getBody()).toString);
           innerList;
         })
-        outerList.add(new ResultObject(metricsForUnit, unit.getName()));
+        /**
+         * This way one would get the result as an List of Double, but without the concrete Methodname. But it seems so far, that the methods get
+         * collected top down through the class, so if the 3rd value is too high, probably the 3rd method inside unit is the problem.
+         *
+         * val metricsForUnit = methods.iterate(() => new ListBuffer[Double], (currentMethod, innerList: ListBuffer[Double]) => {
+         * innerList.append(mcCabeMetric(currentMethod.getBody()));
+         * innerList;
+         * })
+         * outerList.add(new ResultObject(metricsForUnit, unit.getName()));
+         */
+        outerList.add(new ResultObject(metricsForUnit, unit.getName(), ""));
       }
       outerList;
     });
