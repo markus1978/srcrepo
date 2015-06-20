@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java" xmlns:repositorymodel="http://hub.sam.repositorymodel/1.0">
-  <repositorymodel:RepositoryModel javaModel="/1" rootRev="/0/@allRevs.10">
-    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
-    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
+  <repositorymodel:RepositoryModel javaModel="/1" rootRev="/0/@allRevs.12">
     <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/heads/master"/>
-    <allRevs author="smoovie" name="2591ae16353a052b039bbdeaaf810f243dcfa0dc" time="2015-04-03T17:22:40.000+0200" message="updated Model.&#xA;">
-      <parentRelations parent="/0/@allRevs.33">
-        <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
+    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" name="refs/remotes/origin/master"/>
+    <allRefs referencedCommit="/0/@allRevs.0" isPeeled="true" isSymbolic="true" name="HEAD"/>
+    <allRevs author="smoovie" name="cc8e360e091601f94ac21f45d6005c8cdde2e5b5" time="2015-06-20T15:27:27.000+0200" message="[CKMetric_CBO] new testclass for testing binding as part of return type or arguments.&#xA;">
+      <parentRelations parent="/0/@allRevs.45">
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CboTypeCouplingTest.java" type="ADD" oldPath="/dev/null">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.62"/>
+        </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="13d729abf3144c35114c110b8f7603c9b359e7ce" time="2014-12-28T16:09:10.000+0100" message="add a second compilationUnit for McCabeTest" childRelations="/0/@allRevs.5/@parentRelations.0">
+    <allRevs author="smoovie" name="13d729abf3144c35114c110b8f7603c9b359e7ce" time="2014-12-28T16:09:10.000+0100" message="add a second compilationUnit for McCabeTest" childRelations="/0/@allRevs.7/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.2">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java" type="ADD" oldPath="/dev/null">
@@ -18,14 +20,14 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="6407efdcf15b19184a868dd8e8321d65e1fa2979" time="2014-12-27T15:29:31.000+0100" message="added a seconds switch construct for testing" childRelations="/0/@allRevs.1/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.13">
+      <parentRelations parent="/0/@allRevs.15">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.6"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="f9da4e9f33fa6bc4d88595ea27a4277e6c6e4d57" time="2015-03-16T13:55:54.000+0100" message="[CKMetric_LCOM] added a FieldDeclaration with usage of an instance Variable to the testclass&#xA;" childRelations="/0/@allRevs.8/@parentRelations.0">
+    <allRevs author="smoovie" name="f9da4e9f33fa6bc4d88595ea27a4277e6c6e4d57" time="2015-03-16T13:55:54.000+0100" message="[CKMetric_LCOM] added a FieldDeclaration with usage of an instance Variable to the testclass&#xA;" childRelations="/0/@allRevs.10/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.4">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.46"/>
@@ -33,13 +35,26 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="1801ddc5a2e95eec4e9b8f9e8d4e20d2ca7a33c0" time="2015-03-09T12:25:50.000+0100" message="[CKMetric_LCOM] correction of testdescription to have valid testvalues&#xA;" childRelations="/0/@allRevs.3/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.25">
+      <parentRelations parent="/0/@allRevs.29">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.45"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="f260554ceeb335c2eeb3e8453e1269e98dc0f145" time="2014-12-28T16:12:29.000+0100" message="modified seconds cUnit and added commented blocks for testiing excludes" childRelations="/0/@allRevs.26/@parentRelations.0">
+    <allRevs author="smoovie" name="7a81988423f87a2706fb4f6d2b9f2bb5e0657683" time="2015-06-02T20:42:31.000+0200" message="added a class with a nested class to see how the model looks like and how the metrics handle this.&#xA;" childRelations="/0/@allRevs.44/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.6">
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/NestedClasses.java" type="ADD" oldPath="/dev/null">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.58"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="Frederik Marticke" name="e5a254727e592cb4adfbe97eccb5e662da2a8bcc" time="2015-05-26T18:59:34.000+0200" message="[CKJM] kleine skriptoptimierungen und ergebnis auf win7&#xA;" childRelations="/0/@allRevs.5/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.20">
+        <diffs newPath="ScalaOclMetricToolTestclasses/ckjm.ps1" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ckjm.ps1"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/ckjm2.txt" type="ADD" oldPath="/dev/null"/>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="f260554ceeb335c2eeb3e8453e1269e98dc0f145" time="2014-12-28T16:12:29.000+0100" message="modified seconds cUnit and added commented blocks for testiing excludes" childRelations="/0/@allRevs.30/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.1">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java">
@@ -47,35 +62,35 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="710ba023b3fea1bc1ed3d89b0cd98b040037a22c" time="2015-03-08T16:08:06.000+0100" message="[CKMetric_LCOM] added some further methods and instance variables to check more complex structures&#xA;" childRelations="/0/@allRevs.25/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.7">
+    <allRevs author="smoovie" name="710ba023b3fea1bc1ed3d89b0cd98b040037a22c" time="2015-03-08T16:08:06.000+0100" message="[CKMetric_LCOM] added some further methods and instance variables to check more complex structures&#xA;" childRelations="/0/@allRevs.29/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.9">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.43"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="97a4975239bba4a2a19a0eece024658e41cc1214" time="2015-03-02T16:21:55.000+0100" message="[CKMetric_LCOM] added testclass for LCOMmetric&#xA;" childRelations="/0/@allRevs.6/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.15">
+    <allRevs author="smoovie" name="97a4975239bba4a2a19a0eece024658e41cc1214" time="2015-03-02T16:21:55.000+0100" message="[CKMetric_LCOM] added testclass for LCOMmetric&#xA;" childRelations="/0/@allRevs.8/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.17">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="ADD" oldPath="/dev/null">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.42"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="59aed20b345be528539bf1d9b511d947923cbdc7" time="2015-03-16T14:30:04.000+0100" message="[CKMetric_LCOM] adjusted expected result in comment.&#xA;" childRelations="/0/@allRevs.30/@parentRelations.0">
+    <allRevs author="smoovie" name="59aed20b345be528539bf1d9b511d947923cbdc7" time="2015-03-16T14:30:04.000+0100" message="[CKMetric_LCOM] adjusted expected result in comment.&#xA;" childRelations="/0/@allRevs.34/@parentRelations.0">
       <parentRelations parent="/0/@allRevs.3">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.47"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="d60859dc1e4dd78eed1260334079834da3f4f551" time="2014-12-27T02:14:06.000+0100" message="test..." childRelations="/0/@allRevs.38/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.10">
+    <allRevs author="smoovie" name="d60859dc1e4dd78eed1260334079834da3f4f551" time="2014-12-27T02:14:06.000+0100" message="test..." childRelations="/0/@allRevs.42/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.12">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.1"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="b5180262aab6bd5ddeebd73a676b690444cdbee1" time="2014-12-27T02:12:28.000+0100" message="init" childRelations="/0/@allRevs.9/@parentRelations.0">
+    <allRevs author="smoovie" name="b5180262aab6bd5ddeebd73a676b690444cdbee1" time="2014-12-27T02:12:28.000+0100" message="init" childRelations="/0/@allRevs.11/@parentRelations.0">
       <parentRelations>
         <diffs newPath="ScalaOclMetricToolTestclasses/.classpath" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="ADD" oldPath="/dev/null"/>
@@ -86,15 +101,15 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="aed85e1aaf2c7e7ae849cc0aec5889e96f14eea9" time="2015-02-08T14:12:21.000+0100" message="added a second class coupling&#xA;" childRelations="/0/@allRevs.15/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.12">
+    <allRevs author="smoovie" name="aed85e1aaf2c7e7ae849cc0aec5889e96f14eea9" time="2015-02-08T14:12:21.000+0100" message="added a second class coupling&#xA;" childRelations="/0/@allRevs.17/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.14">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkWmcSecondClass.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkWmcSecondClass.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.40"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="c968fd12aa679aaacf98a94249d1735955848b79" time="2015-02-01T21:45:46.000+0100" message="[CKMetric_CBO]added new class for test&#xA;" childRelations="/0/@allRevs.11/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.35">
+    <allRevs author="smoovie" name="c968fd12aa679aaacf98a94249d1735955848b79" time="2015-02-01T21:45:46.000+0100" message="[CKMetric_CBO]added new class for test&#xA;" childRelations="/0/@allRevs.13/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.39">
         <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkWmcSecondClass.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkWmcTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkWmcTest.class"/>
@@ -107,37 +122,37 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="7d8ebd362209ab4a1870f0546d75cf7fa2c94f67" time="2014-12-27T14:36:31.000+0100" message="expanded switch" childRelations="/0/@allRevs.2/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.14">
+      <parentRelations parent="/0/@allRevs.16">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.5"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="8f84531dba0a4edd163650946cbd6e1a4de99bba" time="2014-12-27T02:30:20.000+0100" message="just try" childRelations="/0/@allRevs.13/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.29">
+    <allRevs author="smoovie" name="8f84531dba0a4edd163650946cbd6e1a4de99bba" time="2014-12-27T02:30:20.000+0100" message="just try" childRelations="/0/@allRevs.15/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.33">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.4"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="5eafd73353fc51f4d967b0f382e663b7dabc94f9" time="2015-02-27T13:39:37.000+0100" message="[CKMetric_CBO] added second interface implementation for further testing&#xA;" childRelations="/0/@allRevs.7/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.11">
+    <allRevs author="smoovie" name="5eafd73353fc51f4d967b0f382e663b7dabc94f9" time="2015-02-27T13:39:37.000+0100" message="[CKMetric_CBO] added second interface implementation for further testing&#xA;" childRelations="/0/@allRevs.9/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.13">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.41"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="8e89b380ec4f09861968f0ae7b3620ac4e9ddba8" time="2015-03-27T14:48:34.000+0100" message="[McCabe_Metric] added Testclass for ternary &quot;?:&quot; operator&#xA;" childRelations="/0/@allRevs.27/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.17">
+    <allRevs author="smoovie" name="8e89b380ec4f09861968f0ae7b3620ac4e9ddba8" time="2015-03-27T14:48:34.000+0100" message="[McCabe_Metric] added Testclass for ternary &quot;?:&quot; operator&#xA;" childRelations="/0/@allRevs.31/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.19">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTernaryOperatorTest.java" type="ADD" oldPath="/dev/null">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.50"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="ee1c821cb26e8307fad81d496cc8923d2acb5d5d" time="2015-03-22T16:51:55.000+0100" message="[CKMetric_NOC] added a further interface to test, if the not counted interface was caused by renaming.&#xA;" childRelations="/0/@allRevs.16/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.30">
+    <allRevs author="smoovie" name="ee1c821cb26e8307fad81d496cc8923d2acb5d5d" time="2015-03-22T16:51:55.000+0100" message="[CKMetric_NOC] added a further interface to test, if the not counted interface was caused by renaming.&#xA;" childRelations="/0/@allRevs.18/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.34">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.48"/>
         </diffs>
@@ -146,45 +161,68 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="marticke" name="a6f3bac29f381924fc775aa0eedaf199472b9d2c" time="2014-12-29T13:49:29.000+0100" message="try to analyze strange behaviour on linux" childRelations="/0/@allRevs.36/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.19">
+    <allRevs author="smoovie" name="b4491b1e35c264f201fee784257557419606cefc" time="2015-05-26T17:57:50.000+0200" message="[CKJM] testclasses.jar und ps1 Skript&#xA;" childRelations="/0/@allRevs.6/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.21">
+        <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkLcomTest.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkNocInterfaceTest.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkWmcSecondClass.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkWmcSecondClass.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeExceptionsTest.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTernaryOperatorTest.class" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/ckjm.ps1" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/ckjm.txt" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/testclasses.jar" type="ADD" oldPath="/dev/null"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/tests.jar" type="ADD" oldPath="/dev/null"/>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="2591ae16353a052b039bbdeaaf810f243dcfa0dc" time="2015-04-03T17:22:40.000+0200" message="updated Model.&#xA;" childRelations="/0/@allRevs.20/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.38">
+        <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="marticke" name="a6f3bac29f381924fc775aa0eedaf199472b9d2c" time="2014-12-29T13:49:29.000+0100" message="try to analyze strange behaviour on linux" childRelations="/0/@allRevs.40/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.23">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.11"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="f60155f274815ea12abf0e66fe23070098f2b5e9" time="2014-12-28T17:21:53.000+0100" message="added new testcase for if-Else" childRelations="/0/@allRevs.18/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.26">
+    <allRevs author="smoovie" name="f60155f274815ea12abf0e66fe23070098f2b5e9" time="2014-12-28T17:21:53.000+0100" message="added new testcase for if-Else" childRelations="/0/@allRevs.22/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.30">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestIfElse.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestIfElse.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.10"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="bd630d5e5418c6ec491effa8b15f3897e77bb07f" time="2015-01-11T19:05:03.000+0100" message="added methods for while, dowhile, for with logicalOperators" childRelations="/0/@allRevs.34/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.21">
+    <allRevs author="smoovie" name="bd630d5e5418c6ec491effa8b15f3897e77bb07f" time="2015-01-11T19:05:03.000+0100" message="added methods for while, dowhile, for with logicalOperators" childRelations="/0/@allRevs.37/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.25">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.22"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="1601baa07cce740c96e085257d23ceeaec44bfc3" time="2015-01-11T19:04:58.000+0100" message="added testclass for logical operators" childRelations="/0/@allRevs.20/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.24">
+    <allRevs author="smoovie" name="1601baa07cce740c96e085257d23ceeaec44bfc3" time="2015-01-11T19:04:58.000+0100" message="added testclass for logical operators" childRelations="/0/@allRevs.24/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.28">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="ADD" oldPath="/dev/null">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.21"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="5fdf40b57ba35d393e3cc77752560354b7c362ab" time="2015-01-25T14:51:24.000+0100" message="disabled eclipse metricsTool&#xA;" childRelations="/0/@allRevs.37/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.23">
+    <allRevs author="smoovie" name="5fdf40b57ba35d393e3cc77752560354b7c362ab" time="2015-01-25T14:51:24.000+0100" message="disabled eclipse metricsTool&#xA;" childRelations="/0/@allRevs.41/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.27">
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/.project"/>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="e1ad16e670b35d0320715e720d048a3d53adceb1" time="2015-01-25T14:18:02.000+0100" message="Testclasses for the CK-Metrics {WMC, DIT, NOC}&#xA;" childRelations="/0/@allRevs.22/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.34">
+    <allRevs author="smoovie" name="e1ad16e670b35d0320715e720d048a3d53adceb1" time="2015-01-25T14:18:02.000+0100" message="Testclasses for the CK-Metrics {WMC, DIT, NOC}&#xA;" childRelations="/0/@allRevs.26/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.37">
         <diffs newPath="ScalaOclMetricToolTestclasses/.project" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/.project"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitInterfaceLevelOneWithNoParent.class" type="ADD" oldPath="/dev/null"/>
@@ -233,8 +271,8 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="dfa968419428a7a98831e2f2c9b216ba0ac0619c" time="2015-01-11T19:04:54.000+0100" message="modified some testclasses (->Discussion)" childRelations="/0/@allRevs.21/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.31">
+    <allRevs author="smoovie" name="dfa968419428a7a98831e2f2c9b216ba0ac0619c" time="2015-01-11T19:04:54.000+0100" message="modified some testclasses (->Discussion)" childRelations="/0/@allRevs.25/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.35">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class"/>
@@ -250,14 +288,14 @@
       </parentRelations>
     </allRevs>
     <allRevs author="smoovie" name="fc4fd51772909e4252f1b804b4e1e51dbfed29db" time="2015-03-08T16:10:49.000+0100" message="[CKMetric_LCOM] removed assignments from returnstatements&#xA;" childRelations="/0/@allRevs.4/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.6">
+      <parentRelations parent="/0/@allRevs.8">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.44"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="6edcb133e4b4504949dfd07ab8c03667d79f25ff" time="2014-12-28T16:31:21.000+0100" message="each testcase gets his own file to avoid massive testcommits" childRelations="/0/@allRevs.19/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.5">
+    <allRevs author="smoovie" name="6edcb133e4b4504949dfd07ab8c03667d79f25ff" time="2014-12-28T16:31:21.000+0100" message="each testcase gets his own file to avoid massive testcommits" childRelations="/0/@allRevs.23/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.7">
         <diffs newPath="/dev/null" type="DELETE" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest2.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestIfElse.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTestSwitchCase.class" type="RENAME" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
@@ -269,15 +307,15 @@
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTestSwitchCase2.java" type="RENAME" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest2.java"/>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="1b4a92c27b38256a397a328326e388ef5ec58d95" time="2015-04-03T15:26:15.000+0200" message="[McCabe_Metric] added specific testcases for return statement is/isNot last statement of a method declaration.&#xA;" childRelations="/0/@allRevs.28/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.16">
+    <allRevs author="smoovie" name="1b4a92c27b38256a397a328326e388ef5ec58d95" time="2015-04-03T15:26:15.000+0200" message="[McCabe_Metric] added specific testcases for return statement is/isNot last statement of a method declaration.&#xA;" childRelations="/0/@allRevs.32/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.18">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.51"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="9b7a0445ac53b44b4c37192ed7685ffea0e01cc5" time="2015-04-03T16:12:11.000+0200" message="[McCabe_Metric] Updated expected Values.&#xA;" childRelations="/0/@allRevs.32/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.27">
+    <allRevs author="smoovie" name="9b7a0445ac53b44b4c37192ed7685ffea0e01cc5" time="2015-04-03T16:12:11.000+0200" message="[McCabe_Metric] Updated expected Values.&#xA;" childRelations="/0/@allRevs.36/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.31">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkLcomTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.53"/>
         </diffs>
@@ -286,36 +324,44 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="eaf5356fb4929491da43a1ee91015eb9bfc0025a" time="2014-12-27T02:28:41.000+0100" message="senseless" childRelations="/0/@allRevs.14/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.38">
+    <allRevs author="smoovie" name="eaf5356fb4929491da43a1ee91015eb9bfc0025a" time="2014-12-27T02:28:41.000+0100" message="senseless" childRelations="/0/@allRevs.16/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.42">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.3"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="6b96fdbf3db0fde4d1a69f6668bf7429cdbccefe" time="2015-03-16T14:30:34.000+0100" message="updated MoDisco discovery model&#xA;" childRelations="/0/@allRevs.17/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.8">
+    <allRevs author="smoovie" name="6b96fdbf3db0fde4d1a69f6668bf7429cdbccefe" time="2015-03-16T14:30:34.000+0100" message="updated MoDisco discovery model&#xA;" childRelations="/0/@allRevs.19/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.10">
         <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="8d61a7a1c66cae860872266eea59e65330d43c8a" time="2015-01-11T19:04:49.000+0100" message="[wip] Testcases for return. What about last statement restriction?" childRelations="/0/@allRevs.24/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.36">
+    <allRevs author="smoovie" name="8d61a7a1c66cae860872266eea59e65330d43c8a" time="2015-01-11T19:04:49.000+0100" message="[wip] Testcases for return. What about last statement restriction?" childRelations="/0/@allRevs.28/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.40">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeReturnTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeReturnTest.java" type="ADD" oldPath="/dev/null">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.17"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="571ff896ead1277eb32e5ff186143cbef4b3766e" time="2015-04-03T16:29:10.000+0200" message="[McCabe_Metric] Added Testclass for Exceptions.&#xA;" childRelations="/0/@allRevs.33/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.28">
+    <allRevs author="smoovie" name="571ff896ead1277eb32e5ff186143cbef4b3766e" time="2015-04-03T16:29:10.000+0200" message="[McCabe_Metric] Added Testclass for Exceptions.&#xA;" childRelations="/0/@allRevs.38/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.32">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeExceptionsTest.java" type="ADD" oldPath="/dev/null">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.54"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="868a4beb09e8c739e9053ca8b1170b063e0a9bee" time="2015-04-03T16:54:42.000+0200" message="[McCabe_Metric] Updated expected values because of adding support for return, break and continue.&#xA;" childRelations="/0/@allRevs.0/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.32">
+    <allRevs author="smoovie" name="cf0a017f66d82bc090b790d029b95fae2b6d09dd" time="2015-01-11T19:05:08.000+0100" message="added testmethod with multiple logical operators" childRelations="/0/@allRevs.27/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.24">
+        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.23"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="868a4beb09e8c739e9053ca8b1170b063e0a9bee" time="2015-04-03T16:54:42.000+0200" message="[McCabe_Metric] Updated expected values because of adding support for return, break and continue.&#xA;" childRelations="/0/@allRevs.21/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.36">
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeBreakTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeBreakTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.56"/>
         </diffs>
@@ -327,16 +373,8 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="cf0a017f66d82bc090b790d029b95fae2b6d09dd" time="2015-01-11T19:05:08.000+0100" message="added testmethod with multiple logical operators" childRelations="/0/@allRevs.23/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.20">
-        <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeLogicalOperatorsTest.class"/>
-        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeLogicalOperatorsTest.java">
-          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.23"/>
-        </diffs>
-      </parentRelations>
-    </allRevs>
-    <allRevs author="smoovie" name="bfb274c3c6eff4a7021c19f051ffb1816c6febb2" time="2015-02-01T14:36:42.000+0100" message="small restructioring&#xA;" childRelations="/0/@allRevs.12/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.37">
+    <allRevs author="smoovie" name="bfb274c3c6eff4a7021c19f051ffb1816c6febb2" time="2015-02-01T14:36:42.000+0100" message="small restructioring&#xA;" childRelations="/0/@allRevs.14/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.41">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitInterfaceLevelTwoWithNoParents.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitLevelOneWithParent.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitLevelOneWithParent.class"/>
         <diffs newPath="/dev/null" type="DELETE" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/CkDitLevelTwoWithNoParent.class"/>
@@ -350,8 +388,8 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="7c312339811b51501fc54d3c4330d36f672a5ca0" time="2015-01-11T19:04:45.000+0100" message="added testcases for break, while, doWhile, continue, for" childRelations="/0/@allRevs.31/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.18">
+    <allRevs author="smoovie" name="7c312339811b51501fc54d3c4330d36f672a5ca0" time="2015-01-11T19:04:45.000+0100" message="added testcases for break, while, doWhile, continue, for" childRelations="/0/@allRevs.35/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.22">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeBreakTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeContinueTest.class" type="ADD" oldPath="/dev/null"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeDoWhileTest.class" type="ADD" oldPath="/dev/null"/>
@@ -374,19 +412,40 @@
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="778abd261c691136e231fa1ac14792778ec9601a" time="2015-01-31T22:34:57.000+0100" message="Tests for CkMetric-DIT&#xA;" childRelations="/0/@allRevs.35/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.22">
+    <allRevs author="smoovie" name="778abd261c691136e231fa1ac14792778ec9601a" time="2015-01-31T22:34:57.000+0100" message="Tests for CkMetric-DIT&#xA;" childRelations="/0/@allRevs.39/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.26">
         <diffs newPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/ScalaOclMetricToolTestclasses_java.xmi"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/CkDitTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.35"/>
         </diffs>
       </parentRelations>
     </allRevs>
-    <allRevs author="smoovie" name="343ee224646b2c2f02d1ed4d125ccdacfc8bc28e" time="2014-12-27T02:25:30.000+0100" message="tae" childRelations="/0/@allRevs.29/@parentRelations.0">
-      <parentRelations parent="/0/@allRevs.9">
+    <allRevs author="smoovie" name="343ee224646b2c2f02d1ed4d125ccdacfc8bc28e" time="2014-12-27T02:25:30.000+0100" message="tae" childRelations="/0/@allRevs.33/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.11">
         <diffs newPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/bin/testclasses/McCabeTest.class"/>
         <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeTest.java">
           <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.2"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="a95939d54c76c828488ca1b06a3757d93aed43f0" time="2015-06-03T12:26:47.000+0200" message="added a nested2 class inside nested1 class to check if the metric goes deep enough.&#xA;" childRelations="/0/@allRevs.45/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.44">
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/NestedClasses.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/NestedClasses.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.60"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="746515b475d0d7252b56f559259d09505f5ca6d2" time="2015-06-02T20:58:58.000+0200" message="added extends and implements for the nested1 class.&#xA;" childRelations="/0/@allRevs.43/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.5">
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/NestedClasses.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/NestedClasses.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.59"/>
+        </diffs>
+      </parentRelations>
+    </allRevs>
+    <allRevs author="smoovie" name="1532d84a16f6b9eb0dc732af6ca7f70bf3e841ff" time="2015-06-19T14:16:18.000+0200" message="[McCabe] added method with two catch clauses.&#xA;" childRelations="/0/@allRevs.0/@parentRelations.0">
+      <parentRelations parent="/0/@allRevs.43">
+        <diffs newPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeExceptionsTest.java" type="MODIFY" oldPath="ScalaOclMetricToolTestclasses/src/testclasses/McCabeExceptionsTest.java">
+          <file xsi:type="repositorymodel:JavaCompilationUnitRef" compilationUnit="/1/@compilationUnits.61"/>
         </diffs>
       </parentRelations>
     </allRevs>
@@ -2450,7 +2509,7 @@
         <modifier visibility="public"/>
         <superClass type="/1/@ownedElements.0/@ownedElements.34"/>
       </ownedElements>
-      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.30" name="CkNocTest" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.31/@superClass /1/@ownedElements.0/@ownedElements.27/@superClass">
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.30" name="CkNocTest" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.31/@superClass /1/@ownedElements.0/@ownedElements.27/@superClass /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@superClass /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@superClass">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.30" content="/** &#xA; * @author Frederik MartickeThis is testclass for the Number of children (NOC) metric from the CK metricssuite. The simulated structure looks as follows: CkNocTest ^ | | ------------------------- |&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| CkNocChildOne&#x9;&#x9;&#x9;CkNocChildTwo ^ | CkNocChildOneChildOne Therefore the result should be NOC(CkNOCTest) = 2, because  The NOC Value only calculates direct Subtypes. Therefore CkNocChildOneChildOne gets not  included inside the result.&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.30" tagName="@author">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.30" text=" Frederik Marticke"/>
@@ -2593,7 +2652,7 @@
           <returnType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.7"/>
         </bodyDeclarations>
       </ownedElements>
-      <ownedElements xsi:type="java:InterfaceDeclaration" originalCompilationUnit="/1/@compilationUnits.33" name="CkDitInterfaceLevelOneWithNoParent" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.26/@superInterfaces.0 /1/@ownedElements.0/@ownedElements.37/@superInterfaces.0 /1/@ownedElements.0/@ownedElements.42/@superInterfaces.1 /1/@ownedElements.0/@ownedElements.49/@superInterfaces.1">
+      <ownedElements xsi:type="java:InterfaceDeclaration" originalCompilationUnit="/1/@compilationUnits.33" name="CkDitInterfaceLevelOneWithNoParent" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.26/@superInterfaces.0 /1/@ownedElements.0/@ownedElements.37/@superInterfaces.0 /1/@ownedElements.0/@ownedElements.42/@superInterfaces.1 /1/@ownedElements.0/@ownedElements.49/@superInterfaces.1 /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@superInterfaces.0 /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@superInterfaces.0">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.33" content="/** &#xA; * @author Frederik MartickePart of the structure used for the CkDitTest&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.33" tagName="@author">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.33" text=" Frederik Marticke"/>
@@ -4407,7 +4466,7 @@
           <returnType type="/1/@orphanTypes.0"/>
         </bodyDeclarations>
       </ownedElements>
-      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.48" name="CkDitTest">
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.48" name="CkDitTest" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.0/@body/@statements.0/@expression/@type /1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.1/@body/@statements.0/@expression/@type">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.48" content="/** &#xA; * @author Frederik MartickeThis is a testclass for the Depth inheritance tree (DIT) metric from the CK metricssuite. The simulated structure looks as follows: CkDitLevelZeroWithNoParent ^ | | CkDitInterfaceLevelOneWithNoParent &lt;------ CkDitLevelOneWithParent&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; ^&#x9;&#x9;^&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;^ |&#x9;&#x9;|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| |&#x9;&#x9;|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| |&#x9;&#x9;----------------------------------------- |&#x9;&#x9;| |&#x9;CkDitLevelTwoWithTwoParents&#x9;&#x9;&#x9;CkDitInterfaceLevelTwoWithNoParents |&#x9;&#x9;^&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;^ |&#x9;&#x9;|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| |&#x9;&#x9;|&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;| -----CkDitTest ----------------------------------- Therefore the result should be DIT(CkDitTest) = 3, because  CkDitLevelTwoWithTwoParents -> CkDitLevelOneWithParent -> CkDitLevelZeroWithNoParent is the longest Path inside the inheritance tree.&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.48" tagName="@author">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.48" text=" Frederik Marticke"/>
@@ -4435,6 +4494,7 @@
         </comments>
         <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.48" content="//nothing to do here." enclosedByParent="true"/>
         <modifier visibility="public"/>
+        <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="CkDitTest" proxy="true" usages="/1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.1/@body/@statements.0/@expression"/>
         <superInterfaces type="/1/@ownedElements.0/@ownedElements.38"/>
         <superInterfaces type="/1/@ownedElements.0/@ownedElements.33"/>
         <superInterfaces type="/1/@ownedElements.0/@ownedElements.50"/>
@@ -4748,7 +4808,7 @@
           <returnType type="/1/@orphanTypes.4"/>
         </bodyDeclarations>
       </ownedElements>
-      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.53" name="CkLcomTest">
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.53" name="CkLcomTest" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.63/@bodyDeclarations.1/@parameters.0/@type">
         <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.53" content="/** &#xA; * ClassVariables = {instanceVar1, instanceVar2, instanceVar3} MethodsInsideClass = {fooPostfixPrefix, ifFoo, ifFooNestedOperators, whileFoo, whileFooNestedOperators, barAssignment, bar2ComplexReturn, fooBar} MfooPostfixPrefix = {instanceVar1}   MifFoo = {instanceVar1}  MifFooNestedOperators = {instanceVar1, instanceVar3, instanceVar4}  MwhileFoo = {instanceVar3, instanceVar5}  MWhileFooNestedOperators = {instanceVar4, instanceVar5}  MbarAssignment = {instanceVar3}  Mbar2ComplexReturn = {instanceVar5}  MfooBar = {instanceVar2} MfooBarField = {instanceVar3} //intersection is empty P = { (MfooPostfixPrefix, MwhileFoo),  (MfooPostfixPrefix, MWhileFooNestedOperators), (MfooPostfixPrefix, MbarAssignment),(fooPostfixPrefix, bar2ComplexReturn), (MfooPostfixPrefix, MfooBar), (MfooPostfixPrefixMfooBarField) (MifFoo, MwhileFoo), (MifFoo, MWhileFooNestedOperators), (MifFoo, MbarAssignment),(ifFoo, bar2ComplexReturn), (MifFoo, MfooBar), (MifFoo, MfooBarField) (MifFooNestedOperators, MfooBar), (ifFooNestedOperators, bar2ComplexReturn) (MwhileFoo, MfooBar) (MWhileFooNestedOperators,MbarAssignment),(MWhileFooNestedOperators,MfooBar), (MWhileFooNestedOperators,MfooBarField) (MbarAssignment, Mbar2ComplexReturn), (MbarAssignment, MfooBar)&#x9; (Mbar2ComplexReturn, MfooBar), (Mbar2ComplexReturn, MfooBarField) (MfooBar, MfooBarField) }  //intersection is not empty Q = {(MfooPostfixPrefix, MifFoo),(MfooPostfixPrefix, MifFooNestedOperators) (MifFoo, MifFooNestedOperators) (MifFooNestedOperators, MwhileFoo),(MifFooNestedOperators, MWhileFooNestedOperators),(MifFooNestedOperators, MbarAssignment), (MifFooNestedOperators, MfooBarField)  (MwhileFoo, MWhileFooNestedOperators), (MwhileFoo, MbarAssignment), (MwhileFoo, Mbar2ComplexReturn), (MwhileFoo, MfooBarField) (MbarAssignment, MfooBarField) (MWhileFooNestedOperators,Mbar2ComplexReturn)  &#x9;&#x9; }  |P| = 23 |Q| = 13 Because of|P| = 23 > 13 = |Q|  => LCOM = |P| - |Q| = 23 - 13 = 10&#xA; * @author Frederik Marticke&#xA; */&#xA;" prefixOfParent="true">
           <tags originalCompilationUnit="/1/@compilationUnits.53">
             <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.53" text="ClassVariables = {instanceVar1, instanceVar2, instanceVar3}"/>
@@ -5413,11 +5473,414 @@
           <returnType type="/1/@orphanTypes.5"/>
         </bodyDeclarations>
       </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.58" name="NestedClasses">
+        <modifier visibility="public"/>
+        <bodyDeclarations xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.58" name="nested1" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer/@type">
+          <modifier visibility="public"/>
+          <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="/1/@compilationUnits.58">
+            <modifier/>
+            <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+            <fragments originalCompilationUnit="/1/@compilationUnits.58" name="s1">
+              <initializer xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.58" escapedValue="&quot;string1&quot;"/>
+            </fragments>
+          </bodyDeclarations>
+          <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.58" name="nestedMethod1" usages="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@body/@statements.1/@expression">
+            <modifier visibility="private"/>
+            <body originalCompilationUnit="/1/@compilationUnits.58">
+              <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.58">
+                <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.58" method="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0">
+                  <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.58" escapedValue="&quot;method1&quot;"/>
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@fragments.0">
+                    <qualifier xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4"/>
+                  </expression>
+                </expression>
+              </statements>
+            </body>
+            <returnType type="/1/@orphanTypes.5"/>
+          </bodyDeclarations>
+          <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="nested1" proxy="true" usages="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer"/>
+        </bodyDeclarations>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.58" name="outerMethod1">
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.58">
+            <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.58">
+              <type type="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0"/>
+              <fragments originalCompilationUnit="/1/@compilationUnits.58" name="n1" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@body/@statements.1/@expression/@expression">
+                <initializer xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.58" method="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.2">
+                  <type type="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0"/>
+                </initializer>
+              </fragments>
+              <modifier/>
+            </statements>
+            <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.58">
+              <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.58" method="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.1">
+                <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@body/@statements.0/@fragments.0"/>
+              </expression>
+            </statements>
+          </body>
+          <returnType type="/1/@orphanTypes.5"/>
+        </bodyDeclarations>
+      </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.59" name="NestedClasses">
+        <modifier visibility="public"/>
+        <bodyDeclarations xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.59" name="nested1" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer/@type">
+          <modifier visibility="public"/>
+          <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="/1/@compilationUnits.59">
+            <modifier/>
+            <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+            <fragments originalCompilationUnit="/1/@compilationUnits.59" name="s1">
+              <initializer xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.59" escapedValue="&quot;string1&quot;"/>
+            </fragments>
+          </bodyDeclarations>
+          <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.59" name="nestedMethod1" usages="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@body/@statements.1/@expression">
+            <modifier visibility="private"/>
+            <body originalCompilationUnit="/1/@compilationUnits.59">
+              <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.59">
+                <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.59" method="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0">
+                  <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.59" escapedValue="&quot;method1&quot;"/>
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@fragments.0">
+                    <qualifier xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4"/>
+                  </expression>
+                </expression>
+              </statements>
+            </body>
+            <returnType type="/1/@orphanTypes.5"/>
+          </bodyDeclarations>
+          <superInterfaces type="/1/@ownedElements.0/@ownedElements.33"/>
+          <superClass type="/1/@ownedElements.0/@ownedElements.30"/>
+        </bodyDeclarations>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.59" name="outerMethod1">
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.59">
+            <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.59">
+              <type type="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0"/>
+              <fragments originalCompilationUnit="/1/@compilationUnits.59" name="n1" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@body/@statements.1/@expression/@expression">
+                <initializer xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.59" method="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.2">
+                  <type type="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0"/>
+                </initializer>
+              </fragments>
+              <modifier/>
+            </statements>
+            <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.59">
+              <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.59" method="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@bodyDeclarations.1">
+                <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@body/@statements.0/@fragments.0"/>
+              </expression>
+            </statements>
+          </body>
+          <returnType type="/1/@orphanTypes.5"/>
+        </bodyDeclarations>
+      </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.60" name="NestedClasses">
+        <modifier visibility="public"/>
+        <bodyDeclarations xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.60" name="nested1" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer/@type">
+          <modifier visibility="public"/>
+          <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="/1/@compilationUnits.60">
+            <modifier/>
+            <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+            <fragments originalCompilationUnit="/1/@compilationUnits.60" name="s1">
+              <initializer xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.60" escapedValue="&quot;string1&quot;"/>
+            </fragments>
+          </bodyDeclarations>
+          <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="/1/@compilationUnits.60">
+            <modifier/>
+            <type type="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.3"/>
+            <fragments originalCompilationUnit="/1/@compilationUnits.60" name="n2" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2/@body/@statements.1/@expression/@expression">
+              <initializer xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.60" method="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.3/@bodyDeclarations.1">
+                <type type="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.3"/>
+              </initializer>
+            </fragments>
+          </bodyDeclarations>
+          <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.60" name="nestedMethod1" usages="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@body/@statements.1/@expression">
+            <modifier visibility="private"/>
+            <body originalCompilationUnit="/1/@compilationUnits.60">
+              <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.60">
+                <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.60" method="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0">
+                  <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.60" escapedValue="&quot;method1&quot;"/>
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@fragments.0">
+                    <qualifier xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4"/>
+                  </expression>
+                </expression>
+              </statements>
+              <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.60">
+                <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.60" method="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.3/@bodyDeclarations.0">
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.1/@fragments.0"/>
+                </expression>
+              </statements>
+            </body>
+            <returnType type="/1/@orphanTypes.5"/>
+          </bodyDeclarations>
+          <bodyDeclarations xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.60" name="nested2" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.1/@type /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.1/@fragments.0/@initializer/@type">
+            <modifier visibility="private"/>
+            <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.60" name="nestedMethod2" usages="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2/@body/@statements.1/@expression">
+              <modifier visibility="private"/>
+              <body originalCompilationUnit="/1/@compilationUnits.60">
+                <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.60" content="// foo" enclosedByParent="true"/>
+              </body>
+              <returnType type="/1/@orphanTypes.5"/>
+            </bodyDeclarations>
+            <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="nested2" proxy="true" usages="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.1/@fragments.0/@initializer"/>
+          </bodyDeclarations>
+          <superInterfaces type="/1/@ownedElements.0/@ownedElements.33"/>
+          <superClass type="/1/@ownedElements.0/@ownedElements.30"/>
+        </bodyDeclarations>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.60" name="outerMethod1">
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.60">
+            <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.60">
+              <type type="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0"/>
+              <fragments originalCompilationUnit="/1/@compilationUnits.60" name="n1" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@body/@statements.1/@expression/@expression">
+                <initializer xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.60" method="/1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.2">
+                  <type type="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0"/>
+                </initializer>
+              </fragments>
+              <modifier/>
+            </statements>
+            <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.60">
+              <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.60" method="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2">
+                <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@body/@statements.0/@fragments.0"/>
+              </expression>
+            </statements>
+          </body>
+          <returnType type="/1/@orphanTypes.5"/>
+        </bodyDeclarations>
+      </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.61" name="McCabeExceptionsTest">
+        <modifier visibility="public"/>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.61" name="tryCatchTest">
+          <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.61" content="/** &#xA; * Should give McCabe value = 3: 1 inner return + 1 catch + 1&#xA; * @return&#xA; */&#xA;" prefixOfParent="true">
+            <tags originalCompilationUnit="/1/@compilationUnits.61">
+              <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.61" text="Should give McCabe value = 3: 1 inner return + 1 catch + 1"/>
+            </tags>
+            <tags originalCompilationUnit="/1/@compilationUnits.61" tagName="@return"/>
+          </comments>
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.61">
+            <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <type type="/1/@orphanTypes.12"/>
+              <fragments originalCompilationUnit="/1/@compilationUnits.61" name="test" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@body/@statements.0/@fragments.0/@initializer/@array">
+                <initializer xsi:type="java:ArrayCreation" originalCompilationUnit="/1/@compilationUnits.61">
+                  <dimensions xsi:type="java:NumberLiteral" originalCompilationUnit="/1/@compilationUnits.61" tokenValue="2"/>
+                  <type type="/1/@orphanTypes.12"/>
+                </initializer>
+              </fragments>
+              <modifier/>
+            </statements>
+            <statements xsi:type="java:TryStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <body originalCompilationUnit="/1/@compilationUnits.61">
+                <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+                  <fragments originalCompilationUnit="/1/@compilationUnits.61" name="foo" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@body/@statements.1/@expression">
+                    <initializer xsi:type="java:ArrayAccess" originalCompilationUnit="/1/@compilationUnits.61">
+                      <array xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.0/@fragments.0"/>
+                      <index xsi:type="java:PrefixExpression" originalCompilationUnit="/1/@compilationUnits.61" operator="-">
+                        <operand xsi:type="java:NumberLiteral" originalCompilationUnit="/1/@compilationUnits.61" tokenValue="1"/>
+                      </index>
+                    </initializer>
+                  </fragments>
+                  <modifier/>
+                </statements>
+                <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@body/@statements.0/@fragments.0"/>
+                </statements>
+              </body>
+              <catchClauses originalCompilationUnit="/1/@compilationUnits.61">
+                <exception originalCompilationUnit="/1/@compilationUnits.61" name="e">
+                  <modifier/>
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.8"/>
+                </exception>
+                <body originalCompilationUnit="/1/@compilationUnits.61">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.61" method="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;Exception&quot;"/>
+                      <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@fragments.0">
+                        <qualifier xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+              </catchClauses>
+            </statements>
+            <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <expression xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;bar&quot;"/>
+            </statements>
+          </body>
+          <returnType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+        </bodyDeclarations>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.61" name="tryCatchSideEffectTest">
+          <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.61" content="/** &#xA; * Should give McCabe value = 3: 1 inner return + 1 catch + 1&#xA; * @return&#xA; */&#xA;" prefixOfParent="true">
+            <tags originalCompilationUnit="/1/@compilationUnits.61">
+              <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.61" text="Should give McCabe value = 3: 1 inner return + 1 catch + 1"/>
+            </tags>
+            <tags originalCompilationUnit="/1/@compilationUnits.61" tagName="@return"/>
+          </comments>
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.61">
+            <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <type type="/1/@orphanTypes.12"/>
+              <fragments originalCompilationUnit="/1/@compilationUnits.61" name="test" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@body/@statements.0/@fragments.0/@initializer/@array">
+                <initializer xsi:type="java:ArrayCreation" originalCompilationUnit="/1/@compilationUnits.61">
+                  <dimensions xsi:type="java:NumberLiteral" originalCompilationUnit="/1/@compilationUnits.61" tokenValue="2"/>
+                  <type type="/1/@orphanTypes.12"/>
+                </initializer>
+              </fragments>
+              <modifier/>
+            </statements>
+            <statements xsi:type="java:TryStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <body originalCompilationUnit="/1/@compilationUnits.61">
+                <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+                  <fragments originalCompilationUnit="/1/@compilationUnits.61" name="foo" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@body/@statements.1/@expression">
+                    <initializer xsi:type="java:ArrayAccess" originalCompilationUnit="/1/@compilationUnits.61">
+                      <array xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.0/@fragments.0"/>
+                      <index xsi:type="java:PrefixExpression" originalCompilationUnit="/1/@compilationUnits.61" operator="-">
+                        <operand xsi:type="java:NumberLiteral" originalCompilationUnit="/1/@compilationUnits.61" tokenValue="1"/>
+                      </index>
+                    </initializer>
+                  </fragments>
+                  <modifier/>
+                </statements>
+                <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@body/@statements.0/@fragments.0"/>
+                </statements>
+              </body>
+              <catchClauses originalCompilationUnit="/1/@compilationUnits.61">
+                <exception originalCompilationUnit="/1/@compilationUnits.61" name="e">
+                  <modifier/>
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.8"/>
+                </exception>
+                <body originalCompilationUnit="/1/@compilationUnits.61">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.61" method="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;Exception&quot;"/>
+                      <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@fragments.0">
+                        <qualifier xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                  <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                    <expression xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;failed&quot;"/>
+                  </statements>
+                </body>
+              </catchClauses>
+              <catchClauses originalCompilationUnit="/1/@compilationUnits.61">
+                <exception originalCompilationUnit="/1/@compilationUnits.61" name="e">
+                  <modifier/>
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.10"/>
+                </exception>
+                <body originalCompilationUnit="/1/@compilationUnits.61">
+                  <statements xsi:type="java:ExpressionStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                    <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.61" content="//maybe sideeffects..."/>
+                    <expression xsi:type="java:MethodInvocation" originalCompilationUnit="/1/@compilationUnits.61" method="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;Exception&quot;"/>
+                      <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4/@bodyDeclarations.0/@fragments.0">
+                        <qualifier xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.4"/>
+                      </expression>
+                    </expression>
+                  </statements>
+                </body>
+              </catchClauses>
+            </statements>
+            <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <comments xsi:type="java:LineComment" originalCompilationUnit="/1/@compilationUnits.61" content="//maybe do some stuff after catch" prefixOfParent="true"/>
+              <expression xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;bar&quot;"/>
+            </statements>
+          </body>
+          <returnType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+        </bodyDeclarations>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.61" name="throwsTest">
+          <comments xsi:type="java:Javadoc" originalCompilationUnit="/1/@compilationUnits.61" content="/** &#xA; * Should give McCabe value = 4 : 1 inner return + 1 catch + 1 throw + 1&#xA; * @return&#xA; * @throws Exception&#xA; */&#xA;" prefixOfParent="true">
+            <tags originalCompilationUnit="/1/@compilationUnits.61">
+              <fragments xsi:type="java:TextElement" originalCompilationUnit="/1/@compilationUnits.61" text="Should give McCabe value = 4 : 1 inner return + 1 catch + 1 throw + 1"/>
+            </tags>
+            <tags originalCompilationUnit="/1/@compilationUnits.61" tagName="@return"/>
+            <tags originalCompilationUnit="/1/@compilationUnits.61" tagName="@throws">
+              <fragments xsi:type="java:TypeAccess" type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.10"/>
+            </tags>
+          </comments>
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.61">
+            <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <type type="/1/@orphanTypes.12"/>
+              <fragments originalCompilationUnit="/1/@compilationUnits.61" name="test" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@body/@statements.0/@fragments.0/@initializer/@array">
+                <initializer xsi:type="java:ArrayCreation" originalCompilationUnit="/1/@compilationUnits.61">
+                  <dimensions xsi:type="java:NumberLiteral" originalCompilationUnit="/1/@compilationUnits.61" tokenValue="2"/>
+                  <type type="/1/@orphanTypes.12"/>
+                </initializer>
+              </fragments>
+              <modifier/>
+            </statements>
+            <statements xsi:type="java:TryStatement" originalCompilationUnit="/1/@compilationUnits.61">
+              <body originalCompilationUnit="/1/@compilationUnits.61">
+                <statements xsi:type="java:VariableDeclarationStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+                  <fragments originalCompilationUnit="/1/@compilationUnits.61" name="foo" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@body/@statements.1/@expression">
+                    <initializer xsi:type="java:ArrayAccess" originalCompilationUnit="/1/@compilationUnits.61">
+                      <array xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.0/@fragments.0"/>
+                      <index xsi:type="java:PrefixExpression" originalCompilationUnit="/1/@compilationUnits.61" operator="-">
+                        <operand xsi:type="java:NumberLiteral" originalCompilationUnit="/1/@compilationUnits.61" tokenValue="1"/>
+                      </index>
+                    </initializer>
+                  </fragments>
+                  <modifier/>
+                </statements>
+                <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                  <expression xsi:type="java:SingleVariableAccess" variable="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@body/@statements.0/@fragments.0"/>
+                </statements>
+              </body>
+              <catchClauses originalCompilationUnit="/1/@compilationUnits.61">
+                <exception originalCompilationUnit="/1/@compilationUnits.61" name="e">
+                  <modifier/>
+                  <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.8"/>
+                </exception>
+                <body originalCompilationUnit="/1/@compilationUnits.61">
+                  <statements xsi:type="java:ThrowStatement" originalCompilationUnit="/1/@compilationUnits.61">
+                    <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.61" method="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.10/@bodyDeclarations.0">
+                      <arguments xsi:type="java:StringLiteral" originalCompilationUnit="/1/@compilationUnits.61" escapedValue="&quot;Error found&quot;"/>
+                      <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.10"/>
+                    </expression>
+                  </statements>
+                </body>
+              </catchClauses>
+            </statements>
+          </body>
+          <thrownExceptions type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.10"/>
+          <returnType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+        </bodyDeclarations>
+      </ownedElements>
+      <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="/1/@compilationUnits.62" name="CboTypeCouplingTest">
+        <modifier visibility="public"/>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.62" name="returnNonPrimitive">
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.62">
+            <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.62">
+              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.62" method="/1/@ownedElements.0/@ownedElements.49/@bodyDeclarations.0">
+                <type type="/1/@ownedElements.0/@ownedElements.49"/>
+              </expression>
+            </statements>
+          </body>
+          <returnType type="/1/@ownedElements.0/@ownedElements.49"/>
+        </bodyDeclarations>
+        <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="/1/@compilationUnits.62" name="returnNonPrimitiveWithArgs">
+          <modifier visibility="public"/>
+          <body originalCompilationUnit="/1/@compilationUnits.62">
+            <statements xsi:type="java:ReturnStatement" originalCompilationUnit="/1/@compilationUnits.62">
+              <expression xsi:type="java:ClassInstanceCreation" originalCompilationUnit="/1/@compilationUnits.62" method="/1/@ownedElements.0/@ownedElements.49/@bodyDeclarations.0">
+                <type type="/1/@ownedElements.0/@ownedElements.49"/>
+              </expression>
+            </statements>
+          </body>
+          <parameters originalCompilationUnit="/1/@compilationUnits.62" name="parameter">
+            <modifier/>
+            <type type="/1/@ownedElements.0/@ownedElements.54"/>
+          </parameters>
+          <returnType type="/1/@ownedElements.0/@ownedElements.49"/>
+        </bodyDeclarations>
+      </ownedElements>
     </ownedElements>
     <ownedElements name="java" proxy="true">
       <ownedPackages name="lang" proxy="true">
         <ownedElements xsi:type="java:AnnotationTypeDeclaration" name="SuppressWarnings" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.0/@annotations.0/@type"/>
-        <ownedElements xsi:type="java:ClassDeclaration" name="String" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.0/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.1/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.5/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.6/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.6/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.7/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.8/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.8/@bodyDeclarations.1/@returnType /1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0/@parameters.0/@type /1/@ownedElements.0/@ownedElements.11/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.11/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@parameters.1/@type /1/@orphanTypes.9/@elementType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@parameters.1/@type /1/@orphanTypes.10/@elementType /1/@ownedElements.0/@ownedElements.43/@bodyDeclarations.1/@type /1/@ownedElements.0/@ownedElements.43/@bodyDeclarations.4/@returnType /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@returnType /1/@orphanTypes.11/@elementType /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@body/@statements.0/@type /1/@ownedElements.1/@ownedPackages.0/@ownedElements.10/@bodyDeclarations.0/@parameters.0/@type">
+        <ownedElements xsi:type="java:ClassDeclaration" name="String" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.0/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.1/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.5/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.6/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.6/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.7/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.8/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.8/@bodyDeclarations.1/@returnType /1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@bodyDeclarations.0/@parameters.0/@type /1/@ownedElements.0/@ownedElements.11/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.11/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@parameters.1/@type /1/@orphanTypes.9/@elementType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@parameters.1/@type /1/@orphanTypes.10/@elementType /1/@ownedElements.0/@ownedElements.43/@bodyDeclarations.1/@type /1/@ownedElements.0/@ownedElements.43/@bodyDeclarations.4/@returnType /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.4/@type /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.12/@returnType /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@returnType /1/@orphanTypes.11/@elementType /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@body/@statements.0/@type /1/@ownedElements.1/@ownedPackages.0/@ownedElements.10/@bodyDeclarations.0/@parameters.0/@type /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.0/@type /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@bodyDeclarations.0/@type /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.0/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@returnType /1/@orphanTypes.12/@elementType /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@body/@statements.0/@type">
           <superInterfaces type="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.0"/>
           <superInterfaces type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.2"/>
           <superInterfaces type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.3"/>
@@ -5426,22 +5889,22 @@
           <typeParameters name="T" proxy="true"/>
         </ownedElements>
         <ownedElements xsi:type="java:InterfaceDeclaration" name="CharSequence" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1/@superInterfaces.2"/>
-        <ownedElements xsi:type="java:ClassDeclaration" name="System" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@body/@statements.3/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier">
+        <ownedElements xsi:type="java:ClassDeclaration" name="System" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@body/@statements.3/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@body/@statements.2/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression/@qualifier /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.1/@body/@statements.0/@expression/@expression/@qualifier">
           <bodyDeclarations xsi:type="java:FieldDeclaration" proxy="true">
-            <fragments name="out" proxy="true" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@body/@statements.3/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression"/>
+            <fragments name="out" proxy="true" usageInVariableAccess="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@body/@statements.3/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.3/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.4/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.5/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@body/@statements.2/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@body/@statements.0/@body/@expression/@expression /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@bodyDeclarations.1/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.1/@body/@statements.0/@expression/@expression"/>
           </bodyDeclarations>
         </ownedElements>
         <ownedElements xsi:type="java:InterfaceDeclaration" name="AutoCloseable" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.4/@superInterfaces.0"/>
         <ownedElements xsi:type="java:InterfaceDeclaration" name="Appendable" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.1/@ownedElements.1/@superInterfaces.0"/>
         <ownedElements xsi:type="java:ClassDeclaration" name="Object" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.8/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.8/@parameters.0/@type /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.8/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.8/@parameters.0/@type"/>
-        <ownedElements xsi:type="java:ClassDeclaration" name="IndexOutOfBoundsException" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@exception/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@exception/@type">
+        <ownedElements xsi:type="java:ClassDeclaration" name="IndexOutOfBoundsException" proxy="true" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@exception/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@exception/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@exception/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@exception/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@catchClauses.0/@exception/@type">
           <superClass type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.9"/>
         </ownedElements>
         <ownedElements xsi:type="java:ClassDeclaration" name="RuntimeException" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.8/@superClass">
           <superClass type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.10"/>
         </ownedElements>
-        <ownedElements xsi:type="java:ClassDeclaration" name="Exception" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.9/@superClass /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@comments.0/@tags.2/@fragments.0 /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@thrownExceptions.0 /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@type">
-          <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="Exception" proxy="true" usages="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression">
+        <ownedElements xsi:type="java:ClassDeclaration" name="Exception" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.9/@superClass /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@comments.0/@tags.2/@fragments.0 /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@thrownExceptions.0 /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.1/@exception/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@comments.0/@tags.2/@fragments.0 /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@thrownExceptions.0 /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression/@type">
+          <bodyDeclarations xsi:type="java:ConstructorDeclaration" name="Exception" proxy="true" usages="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression">
             <parameters name="arg0" proxy="true">
               <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
             </parameters>
@@ -5455,7 +5918,7 @@
       <ownedPackages name="io" proxy="true">
         <ownedElements xsi:type="java:InterfaceDeclaration" name="Serializable" proxy="true" usagesInTypeAccess="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1/@superInterfaces.0 /1/@ownedElements.1/@ownedPackages.0/@ownedElements.11/@superInterfaces.0"/>
         <ownedElements xsi:type="java:ClassDeclaration" name="PrintStream" proxy="true">
-          <bodyDeclarations xsi:type="java:MethodDeclaration" name="println" proxy="true" usages="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@body/@statements.3/@body/@expression /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.3/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.3/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression">
+          <bodyDeclarations xsi:type="java:MethodDeclaration" name="println" proxy="true" usages="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@body/@statements.2/@elseStatement/@expression /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@body/@statements.3/@body/@expression /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.3/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.2/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.3/@thenStatement/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.3/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.4/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@body/@statements.5/@body/@expression /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@body/@statements.2/@body/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@body/@statements.0/@body/@expression /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@body/@statements.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.1/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@bodyDeclarations.1/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.0/@body/@statements.0/@expression /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.1/@body/@statements.0/@expression">
             <parameters name="arg0" proxy="true">
               <type type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
             </parameters>
@@ -5482,7 +5945,7 @@
     <orphanTypes xsi:type="java:PrimitiveTypeFloat" name="float"/>
     <orphanTypes xsi:type="java:PrimitiveTypeDouble" name="double"/>
     <orphanTypes xsi:type="java:PrimitiveTypeBoolean" name="boolean" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.51/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.53/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.56/@bodyDeclarations.1/@returnType"/>
-    <orphanTypes xsi:type="java:PrimitiveTypeVoid" name="void" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.2/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.3/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.4/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.3/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.4/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@returnType /1/@ownedElements.0/@ownedElements.39/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.3/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.4/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@returnType /1/@ownedElements.0/@ownedElements.41/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.43/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@returnType"/>
+    <orphanTypes xsi:type="java:PrimitiveTypeVoid" name="void" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.2/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.3/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.4/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.3/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.4/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@returnType /1/@ownedElements.0/@ownedElements.39/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.3/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.4/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@returnType /1/@ownedElements.0/@ownedElements.41/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.43/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.44/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.45/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.46/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.47/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.48/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.5/@returnType /1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.0/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.59/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.0/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.60/@bodyDeclarations.1/@returnType /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.2/@returnType /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.3/@bodyDeclarations.0/@returnType /1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.1/@returnType"/>
     <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
     <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
     <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
@@ -5495,63 +5958,71 @@
     <orphanTypes xsi:type="java:ArrayType" name="java.lang.String[]" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@body/@statements.0/@fragments.0/@initializer/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer/@type" dimensions="1">
       <elementType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
     </orphanTypes>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.0"/>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.1"/>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.2"/>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.3"/>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.4"/>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.5"/>
-    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.6"/>
-    <compilationUnits name="McCabeTest2.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest2.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.7"/>
-    <compilationUnits name="McCabeTest2.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest2.java" commentList="/1/@ownedElements.0/@ownedElements.8/@comments.0 /1/@ownedElements.0/@ownedElements.8/@comments.1 /1/@ownedElements.0/@ownedElements.8/@comments.2 /1/@ownedElements.0/@ownedElements.8/@comments.3 /1/@ownedElements.0/@ownedElements.8/@comments.4 /1/@ownedElements.0/@ownedElements.8/@comments.5 /1/@ownedElements.0/@ownedElements.8/@comments.6 /1/@ownedElements.0/@ownedElements.8/@comments.7" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.8"/>
-    <compilationUnits name="McCabeTestIfElse.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestIfElse.java" commentList="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.9"/>
-    <compilationUnits name="McCabeTestIfElse.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestIfElse.java" commentList="/1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.10"/>
-    <compilationUnits name="McCabeTestSwitchCase.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestSwitchCase.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.11"/>
-    <compilationUnits name="McCabeBreakTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeBreakTest.java" commentList="/1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.12"/>
-    <compilationUnits name="McCabeWhileTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeWhileTest.java" commentList="/1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.13"/>
-    <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="/1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.14"/>
-    <compilationUnits name="McCabeForTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeForTest.java" commentList="/1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.15"/>
-    <compilationUnits name="McCabeDoWhileTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeDoWhileTest.java" commentList="/1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.16"/>
-    <compilationUnits name="McCabeReturnTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeReturnTest.java" commentList="/1/@ownedElements.0/@ownedElements.17/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.17"/>
-    <compilationUnits name="McCabeBreakTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeBreakTest.java" commentList="/1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.18"/>
-    <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="/1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.19"/>
-    <compilationUnits name="McCabeReturnTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeReturnTest.java" commentList="/1/@ownedElements.0/@ownedElements.20/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.20"/>
-    <compilationUnits name="McCabeLogicalOperatorsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeLogicalOperatorsTest.java" commentList="/1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.21"/>
-    <compilationUnits name="McCabeLogicalOperatorsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeLogicalOperatorsTest.java" commentList="/1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.22"/>
-    <compilationUnits name="McCabeLogicalOperatorsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeLogicalOperatorsTest.java" commentList="/1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@comments.0 /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.23"/>
-    <compilationUnits name="CkNocChildOneChildOne.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocChildOneChildOne.java" commentList="/1/@ownedElements.0/@ownedElements.24/@comments.0 /1/@ownedElements.0/@ownedElements.24/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.24"/>
-    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.25/@comments.0 /1/@ownedElements.0/@ownedElements.25/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.25"/>
-    <compilationUnits name="CkDitLevelTwoWithTwoParents.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelTwoWithTwoParents.java" commentList="/1/@ownedElements.0/@ownedElements.26/@comments.0 /1/@ownedElements.0/@ownedElements.26/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.26"/>
-    <compilationUnits name="CkNocChildOne.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocChildOne.java" commentList="/1/@ownedElements.0/@ownedElements.27/@comments.0 /1/@ownedElements.0/@ownedElements.27/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.27"/>
-    <compilationUnits name="CkDitLevelTwoWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelTwoWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.28/@comments.0 /1/@ownedElements.0/@ownedElements.28/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.28"/>
-    <compilationUnits name="CkDitLevelOneWithParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelOneWithParent.java" commentList="/1/@ownedElements.0/@ownedElements.29/@comments.0 /1/@ownedElements.0/@ownedElements.29/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.29"/>
-    <compilationUnits name="CkNocTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocTest.java" commentList="/1/@ownedElements.0/@ownedElements.30/@comments.0 /1/@ownedElements.0/@ownedElements.30/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.30"/>
-    <compilationUnits name="CkNocChildTwo.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocChildTwo.java" commentList="/1/@ownedElements.0/@ownedElements.31/@comments.0 /1/@ownedElements.0/@ownedElements.31/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.31"/>
-    <compilationUnits name="CkWmcTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcTest.java" commentList="/1/@ownedElements.0/@ownedElements.32/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.0/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.1/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.3/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.3/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.4/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@body/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.32"/>
-    <compilationUnits name="CkDitInterfaceLevelOneWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitInterfaceLevelOneWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.33/@comments.0 /1/@ownedElements.0/@ownedElements.33/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.33"/>
-    <compilationUnits name="CkDitLevelZeroWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelZeroWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.34/@comments.0 /1/@ownedElements.0/@ownedElements.34/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.34"/>
-    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.35/@comments.0 /1/@ownedElements.0/@ownedElements.35/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.35"/>
-    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.36/@comments.0 /1/@ownedElements.0/@ownedElements.36/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.36"/>
-    <compilationUnits name="CkDitLevelOneWithParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelOneWithParent.java" commentList="/1/@ownedElements.0/@ownedElements.37/@comments.0 /1/@ownedElements.0/@ownedElements.37/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.37"/>
-    <compilationUnits name="CkWmcSecondClass.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcSecondClass.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.39"/>
-    <compilationUnits name="CkWmcTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcTest.java" commentList="/1/@ownedElements.0/@ownedElements.40/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.0/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.1/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.3/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.3/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.4/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@body/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.40"/>
-    <compilationUnits name="CkWmcSecondClass.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcSecondClass.java" commentList="/1/@ownedElements.0/@ownedElements.41/@bodyDeclarations.1/@body/@statements.0/@comments.0 /1/@ownedElements.0/@ownedElements.41/@bodyDeclarations.1/@body/@statements.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.41"/>
-    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.42/@comments.0 /1/@ownedElements.0/@ownedElements.42/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.42"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.43/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.43"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.44/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.44"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.45/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.45"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.46/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.46"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.47/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.47"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.48/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.48"/>
-    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.49/@comments.0 /1/@ownedElements.0/@ownedElements.49/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.49"/>
-    <compilationUnits name="CkNocInterfaceTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocInterfaceTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.50"/>
-    <compilationUnits name="McCabeTernaryOperatorTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTernaryOperatorTest.java" commentList="/1/@ownedElements.0/@ownedElements.51/@comments.0 /1/@ownedElements.0/@ownedElements.51/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.51/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.51"/>
-    <compilationUnits name="McCabeReturnTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeReturnTest.java" commentList="/1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.1/@comments.0 /1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.2/@comments.0 /1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.2/@body/@statements.2/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.52"/>
-    <compilationUnits name="McCabeTernaryOperatorTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTernaryOperatorTest.java" commentList="/1/@ownedElements.0/@ownedElements.53/@comments.0 /1/@ownedElements.0/@ownedElements.53/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.53/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.53"/>
-    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.54/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.5/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.6/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.7/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.10/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.11/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.12/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.13/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.54"/>
-    <compilationUnits name="McCabeExceptionsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeExceptionsTest.java" commentList="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.55"/>
-    <compilationUnits name="McCabeTernaryOperatorTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTernaryOperatorTest.java" commentList="/1/@ownedElements.0/@ownedElements.56/@comments.0 /1/@ownedElements.0/@ownedElements.56/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.56/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.56"/>
-    <compilationUnits name="McCabeBreakTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeBreakTest.java" commentList="/1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.57"/>
-    <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\mcCabeMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="/1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.58"/>
+    <orphanTypes xsi:type="java:ArrayType" name="java.lang.String[]" usagesInTypeAccess="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@body/@statements.0/@fragments.0/@initializer/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.0/@fragments.0/@initializer/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.0/@type /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@body/@statements.0/@fragments.0/@initializer/@type" dimensions="1">
+      <elementType type="/1/@ownedElements.1/@ownedPackages.0/@ownedElements.1"/>
+    </orphanTypes>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.0"/>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.1"/>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.2"/>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.3"/>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.4"/>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.5"/>
+    <compilationUnits name="McCabeTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.6"/>
+    <compilationUnits name="McCabeTest2.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest2.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.7"/>
+    <compilationUnits name="McCabeTest2.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTest2.java" commentList="/1/@ownedElements.0/@ownedElements.8/@comments.0 /1/@ownedElements.0/@ownedElements.8/@comments.1 /1/@ownedElements.0/@ownedElements.8/@comments.2 /1/@ownedElements.0/@ownedElements.8/@comments.3 /1/@ownedElements.0/@ownedElements.8/@comments.4 /1/@ownedElements.0/@ownedElements.8/@comments.5 /1/@ownedElements.0/@ownedElements.8/@comments.6 /1/@ownedElements.0/@ownedElements.8/@comments.7" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.8"/>
+    <compilationUnits name="McCabeTestIfElse.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestIfElse.java" commentList="/1/@ownedElements.0/@ownedElements.9/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.9"/>
+    <compilationUnits name="McCabeTestIfElse.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestIfElse.java" commentList="/1/@ownedElements.0/@ownedElements.10/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.10"/>
+    <compilationUnits name="McCabeTestSwitchCase.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTestSwitchCase.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.11"/>
+    <compilationUnits name="McCabeBreakTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeBreakTest.java" commentList="/1/@ownedElements.0/@ownedElements.12/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.12"/>
+    <compilationUnits name="McCabeWhileTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeWhileTest.java" commentList="/1/@ownedElements.0/@ownedElements.13/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.13"/>
+    <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="/1/@ownedElements.0/@ownedElements.14/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.14"/>
+    <compilationUnits name="McCabeForTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeForTest.java" commentList="/1/@ownedElements.0/@ownedElements.15/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.15"/>
+    <compilationUnits name="McCabeDoWhileTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeDoWhileTest.java" commentList="/1/@ownedElements.0/@ownedElements.16/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.16"/>
+    <compilationUnits name="McCabeReturnTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeReturnTest.java" commentList="/1/@ownedElements.0/@ownedElements.17/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.17"/>
+    <compilationUnits name="McCabeBreakTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeBreakTest.java" commentList="/1/@ownedElements.0/@ownedElements.18/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.18"/>
+    <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="/1/@ownedElements.0/@ownedElements.19/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.19"/>
+    <compilationUnits name="McCabeReturnTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeReturnTest.java" commentList="/1/@ownedElements.0/@ownedElements.20/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.20"/>
+    <compilationUnits name="McCabeLogicalOperatorsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeLogicalOperatorsTest.java" commentList="/1/@ownedElements.0/@ownedElements.21/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.21"/>
+    <compilationUnits name="McCabeLogicalOperatorsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeLogicalOperatorsTest.java" commentList="/1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.22/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.22"/>
+    <compilationUnits name="McCabeLogicalOperatorsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeLogicalOperatorsTest.java" commentList="/1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.1/@comments.0 /1/@ownedElements.0/@ownedElements.23/@bodyDeclarations.2/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.23"/>
+    <compilationUnits name="CkNocChildOneChildOne.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocChildOneChildOne.java" commentList="/1/@ownedElements.0/@ownedElements.24/@comments.0 /1/@ownedElements.0/@ownedElements.24/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.24"/>
+    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.25/@comments.0 /1/@ownedElements.0/@ownedElements.25/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.25"/>
+    <compilationUnits name="CkDitLevelTwoWithTwoParents.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelTwoWithTwoParents.java" commentList="/1/@ownedElements.0/@ownedElements.26/@comments.0 /1/@ownedElements.0/@ownedElements.26/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.26"/>
+    <compilationUnits name="CkNocChildOne.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocChildOne.java" commentList="/1/@ownedElements.0/@ownedElements.27/@comments.0 /1/@ownedElements.0/@ownedElements.27/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.27"/>
+    <compilationUnits name="CkDitLevelTwoWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelTwoWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.28/@comments.0 /1/@ownedElements.0/@ownedElements.28/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.28"/>
+    <compilationUnits name="CkDitLevelOneWithParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelOneWithParent.java" commentList="/1/@ownedElements.0/@ownedElements.29/@comments.0 /1/@ownedElements.0/@ownedElements.29/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.29"/>
+    <compilationUnits name="CkNocTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocTest.java" commentList="/1/@ownedElements.0/@ownedElements.30/@comments.0 /1/@ownedElements.0/@ownedElements.30/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.30"/>
+    <compilationUnits name="CkNocChildTwo.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocChildTwo.java" commentList="/1/@ownedElements.0/@ownedElements.31/@comments.0 /1/@ownedElements.0/@ownedElements.31/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.31"/>
+    <compilationUnits name="CkWmcTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcTest.java" commentList="/1/@ownedElements.0/@ownedElements.32/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.0/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.1/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.3/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.3/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.4/@body/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@comments.0 /1/@ownedElements.0/@ownedElements.32/@bodyDeclarations.6/@body/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.32"/>
+    <compilationUnits name="CkDitInterfaceLevelOneWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitInterfaceLevelOneWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.33/@comments.0 /1/@ownedElements.0/@ownedElements.33/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.33"/>
+    <compilationUnits name="CkDitLevelZeroWithNoParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelZeroWithNoParent.java" commentList="/1/@ownedElements.0/@ownedElements.34/@comments.0 /1/@ownedElements.0/@ownedElements.34/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.34"/>
+    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.35/@comments.0 /1/@ownedElements.0/@ownedElements.35/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.35"/>
+    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.36/@comments.0 /1/@ownedElements.0/@ownedElements.36/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.36"/>
+    <compilationUnits name="CkDitLevelOneWithParent.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitLevelOneWithParent.java" commentList="/1/@ownedElements.0/@ownedElements.37/@comments.0 /1/@ownedElements.0/@ownedElements.37/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.37"/>
+    <compilationUnits name="CkWmcSecondClass.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcSecondClass.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.39"/>
+    <compilationUnits name="CkWmcTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcTest.java" commentList="/1/@ownedElements.0/@ownedElements.40/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.0/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.1/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.3/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.3/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.4/@body/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@comments.0 /1/@ownedElements.0/@ownedElements.40/@bodyDeclarations.6/@body/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.40"/>
+    <compilationUnits name="CkWmcSecondClass.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkWmcSecondClass.java" commentList="/1/@ownedElements.0/@ownedElements.41/@bodyDeclarations.1/@body/@statements.0/@comments.0 /1/@ownedElements.0/@ownedElements.41/@bodyDeclarations.1/@body/@statements.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.41"/>
+    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.42/@comments.0 /1/@ownedElements.0/@ownedElements.42/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.42"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.43/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.43"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.44/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.44"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.45/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.45"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.46/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.46"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.47/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.47"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.48/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.48"/>
+    <compilationUnits name="CkDitTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkDitTest.java" commentList="/1/@ownedElements.0/@ownedElements.49/@comments.0 /1/@ownedElements.0/@ownedElements.49/@comments.1" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.49"/>
+    <compilationUnits name="CkNocInterfaceTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkNocInterfaceTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.50"/>
+    <compilationUnits name="McCabeTernaryOperatorTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTernaryOperatorTest.java" commentList="/1/@ownedElements.0/@ownedElements.51/@comments.0 /1/@ownedElements.0/@ownedElements.51/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.51/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.51"/>
+    <compilationUnits name="McCabeReturnTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeReturnTest.java" commentList="/1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.1/@comments.0 /1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.2/@comments.0 /1/@ownedElements.0/@ownedElements.52/@bodyDeclarations.2/@body/@statements.2/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.52"/>
+    <compilationUnits name="McCabeTernaryOperatorTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTernaryOperatorTest.java" commentList="/1/@ownedElements.0/@ownedElements.53/@comments.0 /1/@ownedElements.0/@ownedElements.53/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.53/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.53"/>
+    <compilationUnits name="CkLcomTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CkLcomTest.java" commentList="/1/@ownedElements.0/@ownedElements.54/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.5/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.6/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.7/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.8/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.9/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.10/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.11/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.12/@comments.0 /1/@ownedElements.0/@ownedElements.54/@bodyDeclarations.13/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.54"/>
+    <compilationUnits name="McCabeExceptionsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeExceptionsTest.java" commentList="/1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.55/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.55"/>
+    <compilationUnits name="McCabeTernaryOperatorTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeTernaryOperatorTest.java" commentList="/1/@ownedElements.0/@ownedElements.56/@comments.0 /1/@ownedElements.0/@ownedElements.56/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.56/@bodyDeclarations.1/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.56"/>
+    <compilationUnits name="McCabeBreakTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeBreakTest.java" commentList="/1/@ownedElements.0/@ownedElements.57/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.57"/>
+    <compilationUnits name="McCabeContinueTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeContinueTest.java" commentList="/1/@ownedElements.0/@ownedElements.58/@bodyDeclarations.0/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.58"/>
+    <compilationUnits name="NestedClasses.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\NestedClasses.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.59"/>
+    <compilationUnits name="NestedClasses.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\NestedClasses.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.60"/>
+    <compilationUnits name="NestedClasses.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\NestedClasses.java" commentList="/1/@ownedElements.0/@ownedElements.61/@bodyDeclarations.0/@bodyDeclarations.3/@bodyDeclarations.0/@body/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.61"/>
+    <compilationUnits name="McCabeExceptionsTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\McCabeExceptionsTest.java" commentList="/1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.0/@comments.0 /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@comments.0 /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.1/@catchClauses.1/@body/@statements.0/@comments.0 /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.1/@body/@statements.2/@comments.0 /1/@ownedElements.0/@ownedElements.62/@bodyDeclarations.2/@comments.0" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.62"/>
+    <compilationUnits name="CboTypeCouplingTest.java" originalFilePath="C:\Users\Worm\Git_Workspace\Studienarbeit\testGitRepoCheckoutDir\clones\CkMetricTest.git\ScalaOclMetricToolTestclasses\src\testclasses\CboTypeCouplingTest.java" package="/1/@ownedElements.0" types="/1/@ownedElements.0/@ownedElements.63"/>
   </java:Model>
 </xmi:XMI>
