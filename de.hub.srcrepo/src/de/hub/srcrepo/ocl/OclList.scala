@@ -78,4 +78,7 @@ class OclList[E >: Null <: AnyRef](val l: EList[E]) {
 		return result
 	}
 
+  def asSet(): EList[E] = { null /* TODO */ }
+  
+  def intersectForString(p: EList[String]): EList[E] = { null /* TODO */ }
 }
