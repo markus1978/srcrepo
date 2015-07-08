@@ -1,3 +1,6 @@
+*._trace
+*.xtendbin
+.cache-main
 *.class
 *.swp
 target/
