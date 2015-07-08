@@ -57,6 +57,16 @@ class CKMetric {
   implicit def elistToOclList[E >: Null <: AnyRef](l: EList[E]): OclList[E] = new OclList[E](l)
 
   /**
+   * @return the weighted method count (WMC) of the given class (without its subclasses) 
+   * with a constant weight of 1.
+   */
+  def weightedMethodCalls(typeDclr: AbstractTypeDeclaration): Int = {
+    return typeDclr.getBodyDeclarations
+      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
+      .size();
+  }
+
+  /**
    * Calculates the Weighted Method Complexity (WMC) for each CompilationUnit inside a MoDisco Model.
    * Basically it is expected that all methods will have the same Complexity.<br />
    * To use different weights, a concept has to be defined how this weights are tracked inside the
@@ -86,9 +96,7 @@ class CKMetric {
     val methodCount = unit.getTypes().closure((currentType) => currentType.getBodyDeclarations()
       .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[ClassDeclaration])
       .collect((bodyDeclaration) => bodyDeclaration.asInstanceOf[ClassDeclaration])) //closure to get all classDeclaration ends
-      .collectAll((classDeclaration) => classDeclaration.getBodyDeclarations())
-      .select((bodyDeclaration) => bodyDeclaration.isInstanceOf[AbstractMethodDeclaration])
-      .size();
+      .sum((typeDeclaration) => weightedMethodCalls(typeDeclaration))
 
     resultObject.getValues().append(methodCount)
 
