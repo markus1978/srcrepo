@@ -2,25 +2,27 @@ package de.hub.srcrepo.metrics
 
 import java.util.HashMap
 import java.util.HashSet
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
+import org.eclipse.gmt.modisco.java.AnonymousClassDeclaration
 import org.eclipse.gmt.modisco.java.ClassDeclaration
-import org.eclipse.gmt.modisco.java.FieldAccess
 import org.eclipse.gmt.modisco.java.MethodInvocation
+import org.eclipse.gmt.modisco.java.SingleVariableAccess
 import org.eclipse.gmt.modisco.java.VariableDeclaration
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
-import org.eclipse.gmt.modisco.java.AnonymousClassDeclaration
-import org.eclipse.emf.ecore.EObject
 
 class ModiscoMetrics {
 
+	@Metric(name="wmc")
 	static def weightedMethodsPerClass(AbstractTypeDeclaration type) {
 		type.bodyDeclarations.select[it instanceof AbstractMethodDeclaration].sum[1]
 	}
 
-	static def int depthOfInheritence(AbstractTypeDeclaration type) {
+	@Metric(name="dit")
+	static def int depthOfInheritenceTree(AbstractTypeDeclaration type) {
 		val superTypes = if (type instanceof ClassDeclaration && ((type as ClassDeclaration).superClass != null)) {
 				#{#{(type as ClassDeclaration).superClass}, type.superInterfaces}.flatten
 			} else {
@@ -32,7 +34,7 @@ class ModiscoMetrics {
 		} else {
 			return superTypes.max [
 				if (it.type instanceof AbstractTypeDeclaration) {
-					return (it.type as AbstractTypeDeclaration).depthOfInheritence
+					return (it.type as AbstractTypeDeclaration).depthOfInheritenceTree
 				} else {
 					return 0
 				}
@@ -40,6 +42,7 @@ class ModiscoMetrics {
 		}
 	}
 
+	@Metric(name="noc")
 	static def int numberOfChildren(AbstractTypeDeclaration type) {
 		if (type.usagesInTypeAccess.empty) {
 			return 0
@@ -67,21 +70,22 @@ class ModiscoMetrics {
 	}
 	
 	private static def eAllContentsWithoutAnonymousClasses(EObject container) {
-		container.eAllContentsAsIterable[!(it instanceof AnonymousClassDeclaration)]
+		container.eAllContentsAsIterable[it instanceof AnonymousClassDeclaration]
 	}
 
 	/**
 	 * Counts accesses in all contents (also inner and anonymous classes). Count accesses of member and static members.
 	 * @Returns sum of count of all accesses to different classes via fields and methods in all contents of given type.
 	 */
+	@Metric(name="cbo")
 	static def int couplingBetweenObjects(AbstractTypeDeclaration type) {
 		if (type instanceof ClassDeclaration) {
 			val clazz = type as ClassDeclaration
 			val allContentsWithOutAnonymousClasses = clazz.bodyDeclarations
 				.typeSelect((typeof(AbstractMethodDeclaration)))
 				.collectAll[it.eAllContentsWithoutAnonymousClasses]
-			val l1 = allContentsWithOutAnonymousClasses.typeSelect(typeof(FieldAccess)).collect [
-					it.field.variable.eTypeSelectContainer(typeof(AbstractTypeDeclaration))
+			val l1 = allContentsWithOutAnonymousClasses.typeSelect(typeof(SingleVariableAccess)).collect [
+					it.variable.eTypeSelectContainer(typeof(AbstractTypeDeclaration))
 				]
 			val l2 = allContentsWithOutAnonymousClasses.typeSelect(typeof(MethodInvocation)).collect [
 				it.method.eTypeSelectContainer(typeof(AbstractTypeDeclaration))
@@ -95,6 +99,7 @@ class ModiscoMetrics {
 	/**
 	 * @Returns the sum of all methods in all super types that are member methods and do not override an existing method.
 	 */
+	@Metric(name="rfc") 
 	static def int responseForClass(AbstractTypeDeclaration type) {
 		// TODO The check for if a method is a non overriding method is very ugly and should be changed.
 		return type.allSuperTypes.collectAll [
@@ -131,15 +136,18 @@ class ModiscoMetrics {
 	/**
 	 * @Returns the difference of number of member method pairs that use and use not at least one common field of the type.
 	 */
+	 @Metric(name="lcom") 
 	static def int lackOfCohesionInMethods(AbstractTypeDeclaration type) {
 		val methods = type.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration))
+		println("methods " + methods.sum[1])
 		val methodToFieldsMap = methods.fold(new HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>)[result, method |
 			val accessedFieldsOfType = method
 				.eAllContentsWithoutAnonymousClasses
-				.typeSelect(typeof(FieldAccess))
-				.collect[it.field.variable]
+				.typeSelect(typeof(SingleVariableAccess))
+				.collect[it.variable]
 				.select[it.eTypeSelectContainer(typeof(AbstractTypeDeclaration)) == type]
 			result.put(method, accessedFieldsOfType)
+			println(method.name + "->" + accessedFieldsOfType.sum[1])
 			return result
 		]
 		val pairsWithAccessesOfCommonFields = new HashSet<UnorderedPair<AbstractMethodDeclaration>>
@@ -155,6 +163,8 @@ class ModiscoMetrics {
 		]]
 		
 		val result = pairsWithOutAccessesOfCommonFields.size - pairsWithAccessesOfCommonFields.size
+		println("pwcf " + pairsWithAccessesOfCommonFields.sum[1])
+		println("pwocf " + pairsWithOutAccessesOfCommonFields.sum[1])
 		return if (result >= 0) result else 0
 	}
 }

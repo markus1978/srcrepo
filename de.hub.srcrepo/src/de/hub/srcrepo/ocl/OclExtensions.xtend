@@ -139,7 +139,7 @@ class OclExtensions {
 					override protected computeNext() {
 						while (iterator.hasNext) {
 							val next = iterator.next
-							if (filter.apply(next)) {
+							if (!filter.apply(next)) {
 								return next
 							} else {
 								iterator.prune

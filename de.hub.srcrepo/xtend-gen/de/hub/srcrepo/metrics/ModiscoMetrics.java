@@ -2,11 +2,13 @@ package de.hub.srcrepo.metrics;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
+import de.hub.srcrepo.metrics.Metric;
 import de.hub.srcrepo.ocl.OclExtensions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -17,7 +19,6 @@ import org.eclipse.gmt.modisco.java.Annotation;
 import org.eclipse.gmt.modisco.java.AnonymousClassDeclaration;
 import org.eclipse.gmt.modisco.java.BodyDeclaration;
 import org.eclipse.gmt.modisco.java.ClassDeclaration;
-import org.eclipse.gmt.modisco.java.FieldAccess;
 import org.eclipse.gmt.modisco.java.MethodInvocation;
 import org.eclipse.gmt.modisco.java.Modifier;
 import org.eclipse.gmt.modisco.java.SingleVariableAccess;
@@ -28,8 +29,8 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 @SuppressWarnings("all")
 public class ModiscoMetrics {
@@ -89,6 +90,7 @@ public class ModiscoMetrics {
     }
   }
   
+  @Metric(name = "wmc")
   public static Integer weightedMethodsPerClass(final AbstractTypeDeclaration type) {
     EList<BodyDeclaration> _bodyDeclarations = type.getBodyDeclarations();
     final Function1<BodyDeclaration, Boolean> _function = new Function1<BodyDeclaration, Boolean>() {
@@ -107,7 +109,8 @@ public class ModiscoMetrics {
     return OclExtensions.<BodyDeclaration>sum(_select, _function_1);
   }
   
-  public static int depthOfInheritence(final AbstractTypeDeclaration type) {
+  @Metric(name = "dit")
+  public static int depthOfInheritenceTree(final AbstractTypeDeclaration type) {
     Iterable<TypeAccess> _xifexpression = null;
     boolean _and = false;
     if (!(type instanceof ClassDeclaration)) {
@@ -136,7 +139,7 @@ public class ModiscoMetrics {
           Type _type = it.getType();
           if ((_type instanceof AbstractTypeDeclaration)) {
             Type _type_1 = it.getType();
-            return Integer.valueOf(ModiscoMetrics.depthOfInheritence(((AbstractTypeDeclaration) _type_1)));
+            return Integer.valueOf(ModiscoMetrics.depthOfInheritenceTree(((AbstractTypeDeclaration) _type_1)));
           } else {
             return Integer.valueOf(0);
           }
@@ -147,6 +150,7 @@ public class ModiscoMetrics {
     return _xifexpression_1;
   }
   
+  @Metric(name = "noc")
   public static int numberOfChildren(final AbstractTypeDeclaration type) {
     Integer _xifexpression = null;
     EList<TypeAccess> _usagesInTypeAccess = type.getUsagesInTypeAccess();
@@ -219,7 +223,7 @@ public class ModiscoMetrics {
     final Function1<EObject, Boolean> _function = new Function1<EObject, Boolean>() {
       @Override
       public Boolean apply(final EObject it) {
-        return Boolean.valueOf((!(it instanceof AnonymousClassDeclaration)));
+        return Boolean.valueOf((it instanceof AnonymousClassDeclaration));
       }
     };
     return OclExtensions.eAllContentsAsIterable(container, _function);
@@ -229,6 +233,7 @@ public class ModiscoMetrics {
    * Counts accesses in all contents (also inner and anonymous classes). Count accesses of member and static members.
    * @Returns sum of count of all accesses to different classes via fields and methods in all contents of given type.
    */
+  @Metric(name = "cbo")
   public static int couplingBetweenObjects(final AbstractTypeDeclaration type) {
     if ((type instanceof ClassDeclaration)) {
       final ClassDeclaration clazz = ((ClassDeclaration) type);
@@ -241,16 +246,15 @@ public class ModiscoMetrics {
         }
       };
       final Iterable<EObject> allContentsWithOutAnonymousClasses = OclExtensions.<AbstractMethodDeclaration, EObject>collectAll(_typeSelect, _function);
-      Iterable<FieldAccess> _typeSelect_1 = OclExtensions.<EObject, FieldAccess>typeSelect(allContentsWithOutAnonymousClasses, FieldAccess.class);
-      final Function1<FieldAccess, AbstractTypeDeclaration> _function_1 = new Function1<FieldAccess, AbstractTypeDeclaration>() {
+      Iterable<SingleVariableAccess> _typeSelect_1 = OclExtensions.<EObject, SingleVariableAccess>typeSelect(allContentsWithOutAnonymousClasses, SingleVariableAccess.class);
+      final Function1<SingleVariableAccess, AbstractTypeDeclaration> _function_1 = new Function1<SingleVariableAccess, AbstractTypeDeclaration>() {
         @Override
-        public AbstractTypeDeclaration apply(final FieldAccess it) {
-          SingleVariableAccess _field = it.getField();
-          VariableDeclaration _variable = _field.getVariable();
+        public AbstractTypeDeclaration apply(final SingleVariableAccess it) {
+          VariableDeclaration _variable = it.getVariable();
           return OclExtensions.<AbstractTypeDeclaration>eTypeSelectContainer(_variable, AbstractTypeDeclaration.class);
         }
       };
-      final Iterable<AbstractTypeDeclaration> l1 = OclExtensions.<FieldAccess, AbstractTypeDeclaration>collect(_typeSelect_1, _function_1);
+      final Iterable<AbstractTypeDeclaration> l1 = OclExtensions.<SingleVariableAccess, AbstractTypeDeclaration>collect(_typeSelect_1, _function_1);
       Iterable<MethodInvocation> _typeSelect_2 = OclExtensions.<EObject, MethodInvocation>typeSelect(allContentsWithOutAnonymousClasses, MethodInvocation.class);
       final Function1<MethodInvocation, AbstractTypeDeclaration> _function_2 = new Function1<MethodInvocation, AbstractTypeDeclaration>() {
         @Override
@@ -283,6 +287,7 @@ public class ModiscoMetrics {
   /**
    * @Returns the sum of all methods in all super types that are member methods and do not override an existing method.
    */
+  @Metric(name = "rfc")
   public static int responseForClass(final AbstractTypeDeclaration type) {
     Iterable<AbstractTypeDeclaration> _allSuperTypes = ModiscoMetrics.allSuperTypes(type);
     final Function1<AbstractTypeDeclaration, Iterable<AbstractMethodDeclaration>> _function = new Function1<AbstractTypeDeclaration, Iterable<AbstractMethodDeclaration>>() {
@@ -333,23 +338,32 @@ public class ModiscoMetrics {
   /**
    * @Returns the difference of number of member method pairs that use and use not at least one common field of the type.
    */
+  @Metric(name = "lcom")
   public static int lackOfCohesionInMethods(final AbstractTypeDeclaration type) {
     EList<BodyDeclaration> _bodyDeclarations = type.getBodyDeclarations();
     final Iterable<AbstractMethodDeclaration> methods = OclExtensions.<BodyDeclaration, AbstractMethodDeclaration>typeSelect(_bodyDeclarations, AbstractMethodDeclaration.class);
+    final Function1<AbstractMethodDeclaration, Integer> _function = new Function1<AbstractMethodDeclaration, Integer>() {
+      @Override
+      public Integer apply(final AbstractMethodDeclaration it) {
+        return Integer.valueOf(1);
+      }
+    };
+    Integer _sum = OclExtensions.<AbstractMethodDeclaration>sum(methods, _function);
+    String _plus = ("methods " + _sum);
+    InputOutput.<String>println(_plus);
     HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>> _hashMap = new HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>();
-    final Function2<HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>, AbstractMethodDeclaration, HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>> _function = new Function2<HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>, AbstractMethodDeclaration, HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>>() {
+    final Function2<HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>, AbstractMethodDeclaration, HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>> _function_1 = new Function2<HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>, AbstractMethodDeclaration, HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>>() {
       @Override
       public HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>> apply(final HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>> result, final AbstractMethodDeclaration method) {
         Iterable<EObject> _eAllContentsWithoutAnonymousClasses = ModiscoMetrics.eAllContentsWithoutAnonymousClasses(method);
-        Iterable<FieldAccess> _typeSelect = OclExtensions.<EObject, FieldAccess>typeSelect(_eAllContentsWithoutAnonymousClasses, FieldAccess.class);
-        final Function1<FieldAccess, VariableDeclaration> _function = new Function1<FieldAccess, VariableDeclaration>() {
+        Iterable<SingleVariableAccess> _typeSelect = OclExtensions.<EObject, SingleVariableAccess>typeSelect(_eAllContentsWithoutAnonymousClasses, SingleVariableAccess.class);
+        final Function1<SingleVariableAccess, VariableDeclaration> _function = new Function1<SingleVariableAccess, VariableDeclaration>() {
           @Override
-          public VariableDeclaration apply(final FieldAccess it) {
-            SingleVariableAccess _field = it.getField();
-            return _field.getVariable();
+          public VariableDeclaration apply(final SingleVariableAccess it) {
+            return it.getVariable();
           }
         };
-        Iterable<VariableDeclaration> _collect = OclExtensions.<FieldAccess, VariableDeclaration>collect(_typeSelect, _function);
+        Iterable<VariableDeclaration> _collect = OclExtensions.<SingleVariableAccess, VariableDeclaration>collect(_typeSelect, _function);
         final Function1<VariableDeclaration, Boolean> _function_1 = new Function1<VariableDeclaration, Boolean>() {
           @Override
           public Boolean apply(final VariableDeclaration it) {
@@ -359,18 +373,29 @@ public class ModiscoMetrics {
         };
         final Iterable<VariableDeclaration> accessedFieldsOfType = OclExtensions.<VariableDeclaration>select(_collect, _function_1);
         result.put(method, accessedFieldsOfType);
+        String _name = method.getName();
+        String _plus = (_name + "->");
+        final Function1<VariableDeclaration, Integer> _function_2 = new Function1<VariableDeclaration, Integer>() {
+          @Override
+          public Integer apply(final VariableDeclaration it) {
+            return Integer.valueOf(1);
+          }
+        };
+        Integer _sum = OclExtensions.<VariableDeclaration>sum(accessedFieldsOfType, _function_2);
+        String _plus_1 = (_plus + _sum);
+        InputOutput.<String>println(_plus_1);
         return result;
       }
     };
-    final HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>> methodToFieldsMap = IterableExtensions.<AbstractMethodDeclaration, HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>>fold(methods, _hashMap, _function);
+    final HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>> methodToFieldsMap = IterableExtensions.<AbstractMethodDeclaration, HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>>fold(methods, _hashMap, _function_1);
     final HashSet<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>> pairsWithAccessesOfCommonFields = new HashSet<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>>();
     final HashSet<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>> pairsWithOutAccessesOfCommonFields = new HashSet<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>>();
-    final Procedure1<AbstractMethodDeclaration> _function_1 = new Procedure1<AbstractMethodDeclaration>() {
+    final Consumer<AbstractMethodDeclaration> _function_2 = new Consumer<AbstractMethodDeclaration>() {
       @Override
-      public void apply(final AbstractMethodDeclaration m1) {
-        final Procedure1<AbstractMethodDeclaration> _function = new Procedure1<AbstractMethodDeclaration>() {
+      public void accept(final AbstractMethodDeclaration m1) {
+        final Consumer<AbstractMethodDeclaration> _function = new Consumer<AbstractMethodDeclaration>() {
           @Override
-          public void apply(final AbstractMethodDeclaration m2) {
+          public void accept(final AbstractMethodDeclaration m2) {
             boolean _notEquals = (!Objects.equal(m1, m2));
             if (_notEquals) {
               Iterable<VariableDeclaration> _get = methodToFieldsMap.get(m1);
@@ -398,13 +423,31 @@ public class ModiscoMetrics {
             }
           }
         };
-        IterableExtensions.<AbstractMethodDeclaration>forEach(methods, _function);
+        methods.forEach(_function);
       }
     };
-    IterableExtensions.<AbstractMethodDeclaration>forEach(methods, _function_1);
+    methods.forEach(_function_2);
     int _size = pairsWithOutAccessesOfCommonFields.size();
     int _size_1 = pairsWithAccessesOfCommonFields.size();
     final int result = (_size - _size_1);
+    final Function1<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>, Integer> _function_3 = new Function1<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>, Integer>() {
+      @Override
+      public Integer apply(final ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration> it) {
+        return Integer.valueOf(1);
+      }
+    };
+    Integer _sum_1 = OclExtensions.<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>>sum(pairsWithAccessesOfCommonFields, _function_3);
+    String _plus_1 = ("pwcf " + _sum_1);
+    InputOutput.<String>println(_plus_1);
+    final Function1<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>, Integer> _function_4 = new Function1<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>, Integer>() {
+      @Override
+      public Integer apply(final ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration> it) {
+        return Integer.valueOf(1);
+      }
+    };
+    Integer _sum_2 = OclExtensions.<ModiscoMetrics.UnorderedPair<AbstractMethodDeclaration>>sum(pairsWithOutAccessesOfCommonFields, _function_4);
+    String _plus_2 = ("pwocf " + _sum_2);
+    InputOutput.<String>println(_plus_2);
     int _xifexpression = (int) 0;
     if ((result >= 0)) {
       _xifexpression = result;

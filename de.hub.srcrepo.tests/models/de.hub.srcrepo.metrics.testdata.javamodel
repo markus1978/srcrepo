@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ASCII"?>
+<java:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://www.eclipse.org/MoDisco/Java/0.2.incubation/java" name="de.hub.srcrepo.metrics.testdata">
+  <ownedElements name="de">
+    <ownedPackages name="hub">
+      <ownedPackages name="srcrepo">
+        <ownedPackages name="metrics">
+          <ownedElements xsi:type="java:AnnotationTypeDeclaration" name="Metric" proxy="true" usagesInImports="//@compilationUnits.0/@imports.0" usagesInTypeAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.0/@type //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.1/@type //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.2/@type">
+            <bodyDeclarations xsi:type="java:AnnotationTypeMemberDeclaration" name="name" proxy="true" usages="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.0/@values.0 //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.1/@values.0 //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.2/@values.0"/>
+            <bodyDeclarations xsi:type="java:AnnotationTypeMemberDeclaration" name="value" proxy="true" usages="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.0/@values.1 //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.1/@values.1 //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@annotations.2/@values.1"/>
+          </ownedElements>
+          <ownedPackages name="testdata">
+            <ownedElements xsi:type="java:ClassDeclaration" originalCompilationUnit="//@compilationUnits.0" name="Class1">
+              <annotations originalCompilationUnit="//@compilationUnits.0">
+                <type type="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+                <values originalCompilationUnit="//@compilationUnits.0" name="name" member="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0">
+                  <value xsi:type="java:StringLiteral" originalCompilationUnit="//@compilationUnits.0" escapedValue="&quot;dit&quot;"/>
+                </values>
+                <values originalCompilationUnit="//@compilationUnits.0" name="value" member="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1">
+                  <value xsi:type="java:NumberLiteral" originalCompilationUnit="//@compilationUnits.0" tokenValue="1"/>
+                </values>
+              </annotations>
+              <annotations originalCompilationUnit="//@compilationUnits.0">
+                <type type="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+                <values originalCompilationUnit="//@compilationUnits.0" name="name" member="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0">
+                  <value xsi:type="java:StringLiteral" originalCompilationUnit="//@compilationUnits.0" escapedValue="&quot;wmc&quot;"/>
+                </values>
+                <values originalCompilationUnit="//@compilationUnits.0" name="value" member="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1">
+                  <value xsi:type="java:NumberLiteral" originalCompilationUnit="//@compilationUnits.0" tokenValue="3"/>
+                </values>
+              </annotations>
+              <annotations originalCompilationUnit="//@compilationUnits.0">
+                <type type="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+                <values originalCompilationUnit="//@compilationUnits.0" name="name" member="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0">
+                  <value xsi:type="java:StringLiteral" originalCompilationUnit="//@compilationUnits.0" escapedValue="&quot;lcom&quot;"/>
+                </values>
+                <values originalCompilationUnit="//@compilationUnits.0" name="value" member="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1">
+                  <value xsi:type="java:NumberLiteral" originalCompilationUnit="//@compilationUnits.0" tokenValue="1"/>
+                </values>
+              </annotations>
+              <modifier visibility="public"/>
+              <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="//@compilationUnits.0">
+                <modifier/>
+                <type type="//@orphanTypes.0"/>
+                <fragments originalCompilationUnit="//@compilationUnits.0" name="f1" usageInVariableAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.3/@body/@statements.0/@expression //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.4/@body/@statements.0/@expression/@leftOperand/@field">
+                  <initializer xsi:type="java:NumberLiteral" originalCompilationUnit="//@compilationUnits.0" tokenValue="0"/>
+                </fragments>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="//@compilationUnits.0">
+                <modifier/>
+                <type type="//@orphanTypes.0"/>
+                <fragments originalCompilationUnit="//@compilationUnits.0" name="f2" usageInVariableAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.4/@body/@statements.0/@expression/@rightOperand">
+                  <initializer xsi:type="java:NumberLiteral" originalCompilationUnit="//@compilationUnits.0" tokenValue="1"/>
+                </fragments>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:FieldDeclaration" originalCompilationUnit="//@compilationUnits.0">
+                <modifier/>
+                <type type="//@orphanTypes.0"/>
+                <fragments originalCompilationUnit="//@compilationUnits.0" name="f3" usageInVariableAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.5/@body/@statements.0/@expression">
+                  <initializer xsi:type="java:NumberLiteral" originalCompilationUnit="//@compilationUnits.0" tokenValue="2"/>
+                </fragments>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.0" name="m1">
+                <modifier visibility="public"/>
+                <body originalCompilationUnit="//@compilationUnits.0">
+                  <statements xsi:type="java:ReturnStatement" originalCompilationUnit="//@compilationUnits.0">
+                    <expression xsi:type="java:SingleVariableAccess" variable="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@fragments.0"/>
+                  </statements>
+                </body>
+                <returnType type="//@orphanTypes.0"/>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.0" name="m2">
+                <modifier visibility="public"/>
+                <body originalCompilationUnit="//@compilationUnits.0">
+                  <statements xsi:type="java:ReturnStatement" originalCompilationUnit="//@compilationUnits.0">
+                    <expression xsi:type="java:InfixExpression" originalCompilationUnit="//@compilationUnits.0" operator="+">
+                      <rightOperand xsi:type="java:SingleVariableAccess" variable="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@fragments.0"/>
+                      <leftOperand xsi:type="java:FieldAccess" originalCompilationUnit="//@compilationUnits.0">
+                        <field variable="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@fragments.0"/>
+                        <expression xsi:type="java:ThisExpression" originalCompilationUnit="//@compilationUnits.0"/>
+                      </leftOperand>
+                    </expression>
+                  </statements>
+                </body>
+                <returnType type="//@orphanTypes.0"/>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.0" name="m3">
+                <modifier visibility="public"/>
+                <body originalCompilationUnit="//@compilationUnits.0">
+                  <statements xsi:type="java:ReturnStatement" originalCompilationUnit="//@compilationUnits.0">
+                    <expression xsi:type="java:SingleVariableAccess" variable="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.2/@fragments.0"/>
+                  </statements>
+                </body>
+                <returnType type="//@orphanTypes.0"/>
+              </bodyDeclarations>
+              <bodyDeclarations xsi:type="java:ClassDeclaration" originalCompilationUnit="//@compilationUnits.0" name="Inner">
+                <modifier visibility="public" static="true"/>
+                <bodyDeclarations xsi:type="java:MethodDeclaration" originalCompilationUnit="//@compilationUnits.0" name="noInfluence">
+                  <modifier visibility="public"/>
+                  <body originalCompilationUnit="//@compilationUnits.0"/>
+                  <returnType type="//@orphanTypes.5"/>
+                </bodyDeclarations>
+              </bodyDeclarations>
+            </ownedElements>
+          </ownedPackages>
+        </ownedPackages>
+      </ownedPackages>
+    </ownedPackages>
+  </ownedElements>
+  <orphanTypes xsi:type="java:PrimitiveTypeInt" name="int" usagesInTypeAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.0/@type //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.1/@type //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.2/@type //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.3/@returnType //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.4/@returnType //@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.5/@returnType"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeLong" name="long"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeFloat" name="float"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeDouble" name="double"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeBoolean" name="boolean"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeVoid" name="void" usagesInTypeAccess="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0/@bodyDeclarations.6/@bodyDeclarations.0/@returnType"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeChar" name="char"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeShort" name="short"/>
+  <orphanTypes xsi:type="java:PrimitiveTypeByte" name="byte"/>
+  <compilationUnits name="Class1.java" originalFilePath="/Users/markus/Documents/Projects/VisualEMF/03-git/srcrepo/de.hub.srcrepo.metrics.testdata/src/de/hub/srcrepo/metrics/testdata/Class1.java" package="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0" types="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0">
+    <imports originalCompilationUnit="//@compilationUnits.0" importedElement="//@ownedElements.0/@ownedPackages.0/@ownedPackages.0/@ownedPackages.0/@ownedElements.0"/>
+  </compilationUnits>
+</java:Model>

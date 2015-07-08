@@ -229,7 +229,8 @@ public class OclExtensions {
               {
                 final EObject next = iterator.next();
                 Boolean _apply = filter.apply(next);
-                if ((_apply).booleanValue()) {
+                boolean _not = (!(_apply).booleanValue());
+                if (_not) {
                   return next;
                 } else {
                   iterator.prune();

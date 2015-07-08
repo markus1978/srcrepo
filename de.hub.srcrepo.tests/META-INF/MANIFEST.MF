@@ -8,5 +8,10 @@ Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.ui.ide;bundle-version="3.7.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.7.0",
  org.junit,
- org.scala-lang.scala-library;bundle-version="2.11.7"
+ org.scala-lang.scala-library;bundle-version="2.11.7",
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro
 Export-Package: de.hub.srcrepo
+
