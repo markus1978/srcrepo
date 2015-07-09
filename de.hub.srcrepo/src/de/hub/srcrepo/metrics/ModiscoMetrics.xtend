@@ -1,24 +1,32 @@
 package de.hub.srcrepo.metrics
 
+import java.lang.reflect.Method
 import java.util.HashMap
 import java.util.HashSet
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
 import org.eclipse.gmt.modisco.java.AnonymousClassDeclaration
+import org.eclipse.gmt.modisco.java.Block
+import org.eclipse.gmt.modisco.java.CatchClause
 import org.eclipse.gmt.modisco.java.ClassDeclaration
+import org.eclipse.gmt.modisco.java.DoStatement
 import org.eclipse.gmt.modisco.java.FieldDeclaration
+import org.eclipse.gmt.modisco.java.ForStatement
+import org.eclipse.gmt.modisco.java.IfStatement
 import org.eclipse.gmt.modisco.java.MethodInvocation
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.SingleVariableAccess
+import org.eclipse.gmt.modisco.java.SwitchStatement
 import org.eclipse.gmt.modisco.java.Type
 import org.eclipse.gmt.modisco.java.VariableDeclaration
 import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.VisibilityKind
+import org.eclipse.gmt.modisco.java.WhileStatement
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
-import java.lang.reflect.Method
+import org.eclipse.gmt.modisco.java.ReturnStatement
 
 class ModiscoMetrics {
 
@@ -30,6 +38,16 @@ class ModiscoMetrics {
 	@Metric(name="wmc")
 	static def weightedMethodsPerClass(AbstractTypeDeclaration type) {
 		type.bodyDeclarations.select[it instanceof AbstractMethodDeclaration].sum[1]
+	}
+	
+	static def weightedMethodsPerClass(AbstractTypeDeclaration type, Functions.Function1<Block, Integer> weight) {
+		type.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration)).sum[
+			if (it.body != null) {
+				weight.apply(it.body)
+			} else {
+				1
+			}
+		]
 	}
 
 	/** 
@@ -216,6 +234,44 @@ class ModiscoMetrics {
 		return if (result >= 0) result else 0
 	}
 	
+	private static class Holder<T> {
+		var T value
+		new(T value) {
+			this.value = value
+		}
+	}
+	
+	/**
+	 * Calculates the cyclomatic complexity. If/for/while etc expressions are not analysed, they all count as 1.
+	 * @param The block to compute the cyclomatic complexity for.
+	 * @returns the cyclomatic complexity of the given block
+	 */
+	@Metric(name="cc")
+	static def int cyclomaticComplexity(Block block) {
+		val hasReturn = new Holder(false)
+		block.eAllContentsAsIterable.sum[
+			if (it instanceof IfStatement) {
+				1
+			} else if (it instanceof SwitchStatement) {
+				(it as SwitchStatement).statements.size
+			} else if (it instanceof ForStatement) {
+				1
+			} else if (it instanceof WhileStatement) {
+				1
+			} else if (it instanceof CatchClause) {
+				1
+			} else if (it instanceof DoStatement) {
+				1
+			} else if (it instanceof MethodInvocation) {
+				1
+			} else if (it instanceof ReturnStatement) {
+				hasReturn.value = true
+				1
+			} else {
+				0
+			}
+		] + if (hasReturn.value) 0 else 1
+	}
 	
 	public static def getMetricName(Method method) {
 		(method.annotations.findFirst[it instanceof Metric] as Metric).name

@@ -21,19 +21,28 @@ import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration;
 import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration;
 import org.eclipse.gmt.modisco.java.AbstractVariablesContainer;
 import org.eclipse.gmt.modisco.java.AnonymousClassDeclaration;
+import org.eclipse.gmt.modisco.java.Block;
 import org.eclipse.gmt.modisco.java.BodyDeclaration;
+import org.eclipse.gmt.modisco.java.CatchClause;
 import org.eclipse.gmt.modisco.java.ClassDeclaration;
+import org.eclipse.gmt.modisco.java.DoStatement;
 import org.eclipse.gmt.modisco.java.FieldDeclaration;
+import org.eclipse.gmt.modisco.java.ForStatement;
+import org.eclipse.gmt.modisco.java.IfStatement;
 import org.eclipse.gmt.modisco.java.MethodInvocation;
 import org.eclipse.gmt.modisco.java.Modifier;
 import org.eclipse.gmt.modisco.java.NamedElement;
+import org.eclipse.gmt.modisco.java.ReturnStatement;
 import org.eclipse.gmt.modisco.java.SingleVariableAccess;
 import org.eclipse.gmt.modisco.java.SingleVariableDeclaration;
+import org.eclipse.gmt.modisco.java.Statement;
+import org.eclipse.gmt.modisco.java.SwitchStatement;
 import org.eclipse.gmt.modisco.java.Type;
 import org.eclipse.gmt.modisco.java.TypeAccess;
 import org.eclipse.gmt.modisco.java.VariableDeclaration;
 import org.eclipse.gmt.modisco.java.VariableDeclarationFragment;
 import org.eclipse.gmt.modisco.java.VisibilityKind;
+import org.eclipse.gmt.modisco.java.WhileStatement;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
@@ -101,6 +110,14 @@ public class ModiscoMetrics {
     }
   }
   
+  private static class Holder<T extends Object> {
+    private T value;
+    
+    public Holder(final T value) {
+      this.value = value;
+    }
+  }
+  
   /**
    * Calculates the Weighted number of Methods per Class (WMC) with a constant weight of 1.
    * @param type Is the type that constitutes the "Class" that this metric is applied to.
@@ -117,6 +134,24 @@ public class ModiscoMetrics {
       return Integer.valueOf(1);
     };
     return OclExtensions.<BodyDeclaration>sum(_select, _function_1);
+  }
+  
+  public static Integer weightedMethodsPerClass(final AbstractTypeDeclaration type, final Function1<Block, Integer> weight) {
+    EList<BodyDeclaration> _bodyDeclarations = type.getBodyDeclarations();
+    Iterable<AbstractMethodDeclaration> _typeSelect = OclExtensions.<BodyDeclaration, AbstractMethodDeclaration>typeSelect(_bodyDeclarations, AbstractMethodDeclaration.class);
+    final Function1<AbstractMethodDeclaration, Integer> _function = (AbstractMethodDeclaration it) -> {
+      Integer _xifexpression = null;
+      Block _body = it.getBody();
+      boolean _notEquals = (!Objects.equal(_body, null));
+      if (_notEquals) {
+        Block _body_1 = it.getBody();
+        _xifexpression = weight.apply(_body_1);
+      } else {
+        _xifexpression = Integer.valueOf(1);
+      }
+      return _xifexpression;
+    };
+    return OclExtensions.<AbstractMethodDeclaration>sum(_typeSelect, _function);
   }
   
   /**
@@ -475,6 +510,86 @@ public class ModiscoMetrics {
       _xifexpression = 0;
     }
     return _xifexpression;
+  }
+  
+  /**
+   * Calculates the cyclomatic complexity. If/for/while etc expressions are not analysed, they all count as 1.
+   * @param The block to compute the cyclomatic complexity for.
+   * @returns the cyclomatic complexity of the given block
+   */
+  @Metric(name = "cc")
+  public static int cyclomaticComplexity(final Block block) {
+    int _xblockexpression = (int) 0;
+    {
+      final ModiscoMetrics.Holder<Boolean> hasReturn = new ModiscoMetrics.Holder<Boolean>(Boolean.valueOf(false));
+      Iterable<EObject> _eAllContentsAsIterable = OclExtensions.eAllContentsAsIterable(block);
+      final Function1<EObject, Integer> _function = (EObject it) -> {
+        int _xifexpression = (int) 0;
+        if ((it instanceof IfStatement)) {
+          _xifexpression = 1;
+        } else {
+          int _xifexpression_1 = (int) 0;
+          if ((it instanceof SwitchStatement)) {
+            EList<Statement> _statements = ((SwitchStatement) it).getStatements();
+            _xifexpression_1 = _statements.size();
+          } else {
+            int _xifexpression_2 = (int) 0;
+            if ((it instanceof ForStatement)) {
+              _xifexpression_2 = 1;
+            } else {
+              int _xifexpression_3 = (int) 0;
+              if ((it instanceof WhileStatement)) {
+                _xifexpression_3 = 1;
+              } else {
+                int _xifexpression_4 = (int) 0;
+                if ((it instanceof CatchClause)) {
+                  _xifexpression_4 = 1;
+                } else {
+                  int _xifexpression_5 = (int) 0;
+                  if ((it instanceof DoStatement)) {
+                    _xifexpression_5 = 1;
+                  } else {
+                    int _xifexpression_6 = (int) 0;
+                    if ((it instanceof MethodInvocation)) {
+                      _xifexpression_6 = 1;
+                    } else {
+                      int _xifexpression_7 = (int) 0;
+                      if ((it instanceof ReturnStatement)) {
+                        int _xblockexpression_1 = (int) 0;
+                        {
+                          hasReturn.value = Boolean.valueOf(true);
+                          _xblockexpression_1 = 1;
+                        }
+                        _xifexpression_7 = _xblockexpression_1;
+                      } else {
+                        _xifexpression_7 = 0;
+                      }
+                      _xifexpression_6 = _xifexpression_7;
+                    }
+                    _xifexpression_5 = _xifexpression_6;
+                  }
+                  _xifexpression_4 = _xifexpression_5;
+                }
+                _xifexpression_3 = _xifexpression_4;
+              }
+              _xifexpression_2 = _xifexpression_3;
+            }
+            _xifexpression_1 = _xifexpression_2;
+          }
+          _xifexpression = _xifexpression_1;
+        }
+        return Integer.valueOf(_xifexpression);
+      };
+      Integer _sum = OclExtensions.<EObject>sum(_eAllContentsAsIterable, _function);
+      int _xifexpression = (int) 0;
+      if ((hasReturn.value).booleanValue()) {
+        _xifexpression = 0;
+      } else {
+        _xifexpression = 1;
+      }
+      _xblockexpression = ((_sum).intValue() + _xifexpression);
+    }
+    return _xblockexpression;
   }
   
   public static String getMetricName(final Method method) {

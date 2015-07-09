@@ -7,6 +7,7 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -266,5 +267,17 @@ public class OclExtensions {
       return Boolean.valueOf(true);
     };
     return OclExtensions.eAllContainer(eObject, _function);
+  }
+  
+  public static <E extends Object> void eTraverse(final EObject eObject, final E start, final Function2<EObject, E, E> function) {
+    final E result = function.apply(eObject, start);
+    boolean _notEquals = (!Objects.equal(result, null));
+    if (_notEquals) {
+      EList<EObject> _eContents = eObject.eContents();
+      final Consumer<EObject> _function = (EObject it) -> {
+        OclExtensions.<E>eTraverse(it, result, function);
+      };
+      _eContents.forEach(_function);
+    }
   }
 }

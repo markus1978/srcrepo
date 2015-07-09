@@ -13,5 +13,6 @@ log.*
 *.DS_Store
 apidocs/
 xtend-src/
+xtend-gen/
 gen-src/
 src-gen/

@@ -182,4 +182,11 @@ class OclExtensions {
 	static def Iterable<EObject> eAllContainer(EObject eObject) {
 		return eObject.eAllContainer[true]	
 	}
+	
+	static def <E> void eTraverse(EObject eObject, E start, Functions.Function2<EObject, E, E> function) {
+		val result = function.apply(eObject, start)
+		if (result != null) {
+			eObject.eContents.forEach[eTraverse(result, function)]
+		}
+	}
 }
