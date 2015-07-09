@@ -2,20 +2,14 @@ package de.hub.srcrepo.metrics;
 
 import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.metrics.AbstractMetricsTests;
-import de.hub.srcrepo.metrics.Metric;
 import de.hub.srcrepo.metrics.ModiscoMetrics;
 import java.io.File;
 import java.io.PrintWriter;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import org.eclipse.gmt.modisco.java.BodyDeclaration;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
@@ -23,24 +17,6 @@ public class GenerateModiscoMetricsTests extends AbstractMetricsTests {
   private final String srcFolder = "src-gen";
   
   private final String modelFileName = "models/de.hub.srcrepo.metrics.testdata.javamodel";
-  
-  private String metricName(final Method method) {
-    Annotation[] _annotations = method.getAnnotations();
-    final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
-      @Override
-      public Boolean apply(final Annotation it) {
-        return Boolean.valueOf((it instanceof Metric));
-      }
-    };
-    Annotation _findFirst = IterableExtensions.<Annotation>findFirst(((Iterable<Annotation>)Conversions.doWrapArray(_annotations)), _function);
-    return ((Metric) _findFirst).name();
-  }
-  
-  private Class<?> metricSourceType(final Method method) {
-    Parameter[] _parameters = method.getParameters();
-    Parameter _get = _parameters[0];
-    return _get.getType();
-  }
   
   @Override
   protected String getModelFileName() {
@@ -75,21 +51,7 @@ public class GenerateModiscoMetricsTests extends AbstractMetricsTests {
   }
   
   public String genetate(final Model model, final Class<?> metricsClass) {
-    Method[] _methods = metricsClass.getMethods();
-    final Function1<Method, Boolean> _function = new Function1<Method, Boolean>() {
-      @Override
-      public Boolean apply(final Method it) {
-        Annotation[] _annotations = it.getAnnotations();
-        final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
-          @Override
-          public Boolean apply(final Annotation it) {
-            return Boolean.valueOf((it instanceof Metric));
-          }
-        };
-        return Boolean.valueOf(IterableExtensions.<Annotation>exists(((Iterable<Annotation>)Conversions.doWrapArray(_annotations)), _function));
-      }
-    };
-    final Iterable<Method> metrics = IterableExtensions.<Method>filter(((Iterable<Method>)Conversions.doWrapArray(_methods)), _function);
+    final Iterable<Method> metrics = ModiscoMetrics.getMetrics();
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     Package _package = metricsClass.getPackage();
@@ -129,63 +91,49 @@ public class GenerateModiscoMetricsTests extends AbstractMetricsTests {
     _builder.newLine();
     {
       for(final Method metric : metrics) {
-        _builder.append("\t");
-        _builder.append("@Test");
-        _builder.newLine();
-        _builder.append("\t");
-        _builder.append("public void test");
-        String _name_1 = metric.getName();
-        String _firstUpper = StringExtensions.toFirstUpper(_name_1);
-        _builder.append(_firstUpper, "\t");
-        _builder.append("() {");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("\t");
-        _builder.append("int tests = 0;");
-        _builder.newLine();
-        _builder.append("\t");
-        _builder.append("\t");
-        _builder.append("for (MetricsTest<");
-        Class<?> _metricSourceType = this.metricSourceType(metric);
-        String _simpleName_1 = _metricSourceType.getSimpleName();
-        _builder.append(_simpleName_1, "\t\t");
-        _builder.append("> test: modelElementsWithMetric(\"");
-        String _metricName = this.metricName(metric);
-        _builder.append(_metricName, "\t\t");
-        _builder.append("\", ");
-        Class<?> _metricSourceType_1 = this.metricSourceType(metric);
-        String _simpleName_2 = _metricSourceType_1.getSimpleName();
-        _builder.append(_simpleName_2, "\t\t");
-        _builder.append(".class)) {");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("\t\t");
-        _builder.append("Assert.assertSame(\"Failed for \" + test.element.toString() + \".\", test.expectedValue, ModiscoMetrics.");
-        String _name_2 = metric.getName();
-        _builder.append(_name_2, "\t\t\t");
-        _builder.append("(test.element));");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("\t\t");
-        _builder.append("tests++;");
-        _builder.newLine();
-        _builder.append("\t");
-        _builder.append("\t");
-        _builder.append("}");
-        _builder.newLine();
-        _builder.append("\t");
-        _builder.append("\t");
-        _builder.append("Assert.assertSame(");
-        String _metricName_1 = this.metricName(metric);
-        Class<?> _metricSourceType_2 = this.metricSourceType(metric);
-        Iterable<AbstractMetricsTests.MetricsTest<BodyDeclaration>> _modelElementsWithMetric = this.<BodyDeclaration>modelElementsWithMetric(_metricName_1, ((Class<BodyDeclaration>) _metricSourceType_2));
-        int _size = IterableExtensions.size(_modelElementsWithMetric);
-        _builder.append(_size, "\t\t");
-        _builder.append(", tests);");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("}");
-        _builder.newLine();
+        {
+          String _metricName = ModiscoMetrics.getMetricName(metric);
+          Class<?> _metricSourceType = ModiscoMetrics.getMetricSourceType(metric);
+          Iterable<AbstractMetricsTests.MetricsTest<BodyDeclaration>> _modelElementsWithMetric = this.<BodyDeclaration>modelElementsWithMetric(_metricName, ((Class<BodyDeclaration>) _metricSourceType));
+          for(final AbstractMetricsTests.MetricsTest<BodyDeclaration> test : _modelElementsWithMetric) {
+            _builder.append("\t");
+            _builder.append("@Test");
+            _builder.newLine();
+            _builder.append("\t");
+            _builder.append("public void test");
+            String _firstUpper = StringExtensions.toFirstUpper(test.metric);
+            _builder.append(_firstUpper, "\t");
+            _builder.append("For");
+            String _name_1 = test.element.getName();
+            String _firstUpper_1 = StringExtensions.toFirstUpper(_name_1);
+            _builder.append(_firstUpper_1, "\t");
+            _builder.append("() {");
+            _builder.newLineIfNotEmpty();
+            _builder.append("\t");
+            _builder.append("\t");
+            _builder.append("int result = ModiscoMetrics.");
+            String _name_2 = metric.getName();
+            _builder.append(_name_2, "\t\t");
+            _builder.append("((");
+            Class<?> _metricSourceType_1 = ModiscoMetrics.getMetricSourceType(metric);
+            String _simpleName_1 = _metricSourceType_1.getSimpleName();
+            _builder.append(_simpleName_1, "\t\t");
+            _builder.append(")toElement(\"");
+            String _qualifiedName = ModiscoMetrics.qualifiedName(test.element);
+            _builder.append(_qualifiedName, "\t\t");
+            _builder.append("\"));");
+            _builder.newLineIfNotEmpty();
+            _builder.append("\t");
+            _builder.append("\t");
+            _builder.append("Assert.assertSame(");
+            _builder.append(test.expectedValue, "\t\t");
+            _builder.append(", result);");
+            _builder.newLineIfNotEmpty();
+            _builder.append("\t");
+            _builder.append("}");
+            _builder.newLine();
+          }
+        }
       }
     }
     _builder.append("}");

@@ -19,6 +19,7 @@ import org.eclipse.gmt.modisco.java.Block;
 import org.eclipse.gmt.modisco.java.BodyDeclaration;
 import org.eclipse.gmt.modisco.java.Expression;
 import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.NumberLiteral;
 import org.eclipse.gmt.modisco.java.StringLiteral;
 import org.eclipse.gmt.modisco.java.Type;
@@ -74,42 +75,36 @@ public abstract class AbstractMetricsTests {
   
   private int metricValue(final BodyDeclaration bodyDeclaration, final String metric) {
     EList<Annotation> _annotations = bodyDeclaration.getAnnotations();
-    final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
-      @Override
-      public Boolean apply(final Annotation it) {
-        boolean _and = false;
-        TypeAccess _type = it.getType();
-        Type _type_1 = _type.getType();
-        String _name = _type_1.getName();
-        String _simpleName = Metric.class.getSimpleName();
-        boolean _equals = _name.equals(_simpleName);
-        if (!_equals) {
-          _and = false;
-        } else {
-          EList<AnnotationMemberValuePair> _values = it.getValues();
-          final Function1<AnnotationMemberValuePair, Boolean> _function = new Function1<AnnotationMemberValuePair, Boolean>() {
-            @Override
-            public Boolean apply(final AnnotationMemberValuePair it) {
-              boolean _and = false;
-              String _name = it.getName();
-              boolean _equals = _name.equals("name");
-              if (!_equals) {
-                _and = false;
-              } else {
-                Expression _value = it.getValue();
-                String _escapedValue = ((StringLiteral) _value).getEscapedValue();
-                String _replace = _escapedValue.replace("\"", "");
-                boolean _equals_1 = _replace.equals(metric);
-                _and = _equals_1;
-              }
-              return Boolean.valueOf(_and);
-            }
-          };
-          boolean _exists = IterableExtensions.<AnnotationMemberValuePair>exists(_values, _function);
-          _and = _exists;
-        }
-        return Boolean.valueOf(_and);
+    final Function1<Annotation, Boolean> _function = (Annotation it) -> {
+      boolean _and = false;
+      TypeAccess _type = it.getType();
+      Type _type_1 = _type.getType();
+      String _name = _type_1.getName();
+      String _simpleName = Metric.class.getSimpleName();
+      boolean _equals = _name.equals(_simpleName);
+      if (!_equals) {
+        _and = false;
+      } else {
+        EList<AnnotationMemberValuePair> _values = it.getValues();
+        final Function1<AnnotationMemberValuePair, Boolean> _function_1 = (AnnotationMemberValuePair it_1) -> {
+          boolean _and_1 = false;
+          String _name_1 = it_1.getName();
+          boolean _equals_1 = _name_1.equals("name");
+          if (!_equals_1) {
+            _and_1 = false;
+          } else {
+            Expression _value = it_1.getValue();
+            String _escapedValue = ((StringLiteral) _value).getEscapedValue();
+            String _replace = _escapedValue.replace("\"", "");
+            boolean _equals_2 = _replace.equals(metric);
+            _and_1 = _equals_2;
+          }
+          return Boolean.valueOf(_and_1);
+        };
+        boolean _exists = IterableExtensions.<AnnotationMemberValuePair>exists(_values, _function_1);
+        _and = _exists;
       }
+      return Boolean.valueOf(_and);
     };
     final Annotation annotation = IterableExtensions.<Annotation>findFirst(_annotations, _function);
     int _xifexpression = (int) 0;
@@ -118,12 +113,9 @@ public abstract class AbstractMetricsTests {
       int _xblockexpression = (int) 0;
       {
         EList<AnnotationMemberValuePair> _values = annotation.getValues();
-        final Function1<AnnotationMemberValuePair, Boolean> _function_1 = new Function1<AnnotationMemberValuePair, Boolean>() {
-          @Override
-          public Boolean apply(final AnnotationMemberValuePair it) {
-            String _name = it.getName();
-            return Boolean.valueOf(_name.equals("value"));
-          }
+        final Function1<AnnotationMemberValuePair, Boolean> _function_1 = (AnnotationMemberValuePair it) -> {
+          String _name = it.getName();
+          return Boolean.valueOf(_name.equals("value"));
         };
         AnnotationMemberValuePair _findFirst = IterableExtensions.<AnnotationMemberValuePair>findFirst(_values, _function_1);
         Expression _value = _findFirst.getValue();
@@ -138,29 +130,52 @@ public abstract class AbstractMetricsTests {
     return _xifexpression;
   }
   
-  protected <T extends BodyDeclaration> Iterable<AbstractMetricsTests.MetricsTest<T>> modelElementsWithMetric(final String metric, final Class<T> elementClass) {
-    final Function1<EObject, Boolean> _function = new Function1<EObject, Boolean>() {
-      @Override
-      public Boolean apply(final EObject it) {
-        return Boolean.valueOf((it instanceof Block));
+  protected BodyDeclaration toElement(final String qualifiedName) {
+    final String[] names = qualifiedName.split("/");
+    EObject current = this.model;
+    for (final String name : names) {
+      {
+        EList<EObject> _eContents = current.eContents();
+        final Function1<EObject, Boolean> _function = (EObject it) -> {
+          boolean _and = false;
+          if (!(it instanceof NamedElement)) {
+            _and = false;
+          } else {
+            String _name = ((NamedElement) it).getName();
+            boolean _equals = _name.equals(name);
+            _and = _equals;
+          }
+          return Boolean.valueOf(_and);
+        };
+        final EObject next = IterableExtensions.<EObject>findFirst(_eContents, _function);
+        EObject _xifexpression = null;
+        boolean _equals = Objects.equal(next, null);
+        if (_equals) {
+          EList<EObject> _eContents_1 = current.eContents();
+          _xifexpression = _eContents_1.get(0);
+        } else {
+          _xifexpression = next;
+        }
+        current = _xifexpression;
       }
+    }
+    return ((BodyDeclaration) current);
+  }
+  
+  protected <T extends BodyDeclaration> Iterable<AbstractMetricsTests.MetricsTest<T>> modelElementsWithMetric(final String metric, final Class<T> elementClass) {
+    final Function1<EObject, Boolean> _function = (EObject it) -> {
+      return Boolean.valueOf((!(it instanceof Block)));
     };
     Iterable<EObject> _eAllContentsAsIterable = OclExtensions.eAllContentsAsIterable(this.model, _function);
     Iterable<T> _typeSelect = OclExtensions.<EObject, T>typeSelect(_eAllContentsAsIterable, elementClass);
-    final Function1<T, Boolean> _function_1 = new Function1<T, Boolean>() {
-      @Override
-      public Boolean apply(final T it) {
-        int _metricValue = AbstractMetricsTests.this.metricValue(it, metric);
-        return Boolean.valueOf((_metricValue >= 0));
-      }
+    final Function1<T, Boolean> _function_1 = (T it) -> {
+      int _metricValue = this.metricValue(it, metric);
+      return Boolean.valueOf((_metricValue >= 0));
     };
     Iterable<T> _select = OclExtensions.<T>select(_typeSelect, _function_1);
-    final Function1<T, AbstractMetricsTests.MetricsTest<T>> _function_2 = new Function1<T, AbstractMetricsTests.MetricsTest<T>>() {
-      @Override
-      public AbstractMetricsTests.MetricsTest<T> apply(final T it) {
-        int _metricValue = AbstractMetricsTests.this.metricValue(it, metric);
-        return new AbstractMetricsTests.MetricsTest<T>(it, metric, _metricValue);
-      }
+    final Function1<T, AbstractMetricsTests.MetricsTest<T>> _function_2 = (T it) -> {
+      int _metricValue = this.metricValue(it, metric);
+      return new AbstractMetricsTests.MetricsTest<T>(it, metric, _metricValue);
     };
     return OclExtensions.<T, AbstractMetricsTests.MetricsTest<T>>collect(_select, _function_2);
   }

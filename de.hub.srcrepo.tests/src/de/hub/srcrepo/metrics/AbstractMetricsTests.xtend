@@ -1,6 +1,7 @@
 package de.hub.srcrepo.metrics
 
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EcorePackage
 import org.eclipse.emf.ecore.resource.Resource
@@ -10,6 +11,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.gmt.modisco.java.Block
 import org.eclipse.gmt.modisco.java.BodyDeclaration
 import org.eclipse.gmt.modisco.java.Model
+import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.NumberLiteral
 import org.eclipse.gmt.modisco.java.StringLiteral
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
@@ -53,7 +55,7 @@ abstract class AbstractMetricsTests {
 		} else {
 			-1
 		}
-	}
+	}	
 	
 	public static class MetricsTest<T extends BodyDeclaration> {
 		public val T element
@@ -66,8 +68,18 @@ abstract class AbstractMetricsTests {
 		}
 	}
 	
+	protected def BodyDeclaration toElement(String qualifiedName) {
+		val names = qualifiedName.split("/")
+		var EObject current = model
+		for(name: names) {
+			val next = current.eContents.findFirst[it instanceof NamedElement && (it as NamedElement).name.equals(name)]
+			current = if (next == null) current.eContents.get(0) else next
+		}
+		return current as BodyDeclaration
+	}
+	
 	protected def <T extends BodyDeclaration> modelElementsWithMetric(String metric, Class<T> elementClass) {
-		model.eAllContentsAsIterable[it instanceof Block]
+		model.eAllContentsAsIterable[!(it instanceof Block)]
 			.typeSelect(elementClass)
 			.select[it.metricValue(metric) >= 0]
 			.collect[new MetricsTest(it, metric, it.metricValue(metric))]			

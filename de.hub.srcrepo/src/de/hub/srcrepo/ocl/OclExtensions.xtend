@@ -6,6 +6,7 @@ import de.hub.srcrepo.ocl.OclExtensions.Result
 import java.util.ArrayList
 import java.util.Iterator
 import org.eclipse.emf.ecore.EObject
+import java.util.function.Function
 
 class OclExtensions {
 	
@@ -139,7 +140,7 @@ class OclExtensions {
 					override protected computeNext() {
 						while (iterator.hasNext) {
 							val next = iterator.next
-							if (!filter.apply(next)) {
+							if (filter.apply(next)) {
 								return next
 							} else {
 								iterator.prune
@@ -164,5 +165,21 @@ class OclExtensions {
 	
 	static def <T> eTypeSelectContainer(EObject eObject, Class<T> type) {
 		return eObject.eSelectContainer[type.isAssignableFrom(it.class)] as T	
+	}
+	
+	static def Iterable<EObject> eAllContainer(EObject eObject, Functions.Function1<EObject,Boolean> filter) {
+		val result = new ArrayList<EObject>
+		var current = eObject
+		while (current != null) {
+			if (filter.apply(current)) {
+				result.add(current)
+			}
+			current = current.eContainer
+		}
+		return result
+	}
+	
+	static def Iterable<EObject> eAllContainer(EObject eObject) {
+		return eObject.eAllContainer[true]	
 	}
 }

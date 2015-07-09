@@ -1,29 +1,18 @@
 package de.hub.srcrepo.metrics
 
-import org.eclipse.gmt.modisco.java.Model
-import static extension java.lang.reflect.Modifier.isStatic
-import java.lang.reflect.Method
-import java.io.PrintWriter
-import java.io.File
 import de.hub.srcrepo.SrcRepoActivator
-import de.hub.srcrepo.metrics.AbstractMetricsTests.MetricsTest
-import org.junit.Test
-import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
-import org.junit.Assert
+import java.io.File
+import java.io.PrintWriter
+import java.lang.reflect.Method
 import org.eclipse.gmt.modisco.java.BodyDeclaration
+import org.eclipse.gmt.modisco.java.Model
+
+import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
 
 class GenerateModiscoMetricsTests extends AbstractMetricsTests {
 	
 	val srcFolder = "src-gen"
 	val modelFileName = "models/de.hub.srcrepo.metrics.testdata.javamodel"
-	
-	private def metricName(Method method) {
-		(method.annotations.findFirst[it instanceof Metric] as Metric).name
-	}
-	
-	private def metricSourceType(Method method) {
-		method.parameters.get(0).type
-	}
 	
 	override protected getModelFileName() {
 		return modelFileName
@@ -40,11 +29,7 @@ class GenerateModiscoMetricsTests extends AbstractMetricsTests {
 	}
 	
 	def genetate(Model model, Class<?> metricsClass) {
-		val metrics = metricsClass.methods.filter[
-			it.annotations.exists[
-				it instanceof Metric
-			]
-		]
+		val metrics = ModiscoMetrics::metrics
 		
 		return '''
 			package «metricsClass.package.name»;
@@ -61,15 +46,13 @@ class GenerateModiscoMetricsTests extends AbstractMetricsTests {
 				}
 			
 				«FOR metric: metrics»
-					@Test
-					public void test«metric.name.toFirstUpper»() {
-						int tests = 0;
-						for (MetricsTest<«metric.metricSourceType.simpleName»> test: modelElementsWithMetric("«metric.metricName»", «metric.metricSourceType.simpleName».class)) {
-							Assert.assertSame("Failed for " + test.element.toString() + ".", test.expectedValue, ModiscoMetrics.«metric.name»(test.element));
-							tests++;
+					«FOR test: modelElementsWithMetric(metric.metricName, metric.metricSourceType as Class<BodyDeclaration>)»
+						@Test
+						public void test«test.metric.toFirstUpper»For«test.element.name.toFirstUpper»() {
+							int result = ModiscoMetrics.«metric.name»((«metric.metricSourceType.simpleName»)toElement("«test.element.qualifiedName»"));
+							Assert.assertSame(«test.expectedValue», result);
 						}
-						Assert.assertSame(«modelElementsWithMetric(metric.metricName, metric.metricSourceType as Class<BodyDeclaration>).size», tests);
-					}
+					«ENDFOR»
 				«ENDFOR»
 			}
 		'''

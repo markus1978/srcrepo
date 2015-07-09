@@ -2,10 +2,10 @@ package de.hub.srcrepo.metrics.testdata;
 
 import de.hub.srcrepo.metrics.Metric;
 
-@Metric(name="dit",value=1)
+@Metric(name="dit",value=0)
 @Metric(name="wmc",value=3)
 @Metric(name="lcom", value=1)
-public class Class1 {
+public class Methods {
 	
 	int f1 = 0;
 	int f2 = 1;

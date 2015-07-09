@@ -104,53 +104,41 @@ public class OclExtensions {
   }
   
   public static <E extends Object, T extends Object> Iterable<T> collect(final Iterable<E> source, final Function1<E, T> function) {
-    final Function2<E, OclExtensions.Result<T>, Void> _function = new Function2<E, OclExtensions.Result<T>, Void>() {
-      @Override
-      public Void apply(final E element, final OclExtensions.Result<T> result) {
-        T _apply = function.apply(element);
-        result.add(_apply);
-        return null;
-      }
+    final Function2<E, OclExtensions.Result<T>, Void> _function = (E element, OclExtensions.Result<T> result) -> {
+      T _apply = function.apply(element);
+      result.add(_apply);
+      return null;
     };
     return OclExtensions.<E, T>iterate(source, _function);
   }
   
   public static <E extends Object, T extends Object> Iterable<T> collectAll(final Iterable<E> source, final Function1<E, Iterable<T>> function) {
-    final Function2<E, OclExtensions.Result<T>, Void> _function = new Function2<E, OclExtensions.Result<T>, Void>() {
-      @Override
-      public Void apply(final E element, final OclExtensions.Result<T> result) {
-        Iterable<T> _apply = function.apply(element);
-        result.addAll(_apply);
-        return null;
-      }
+    final Function2<E, OclExtensions.Result<T>, Void> _function = (E element, OclExtensions.Result<T> result) -> {
+      Iterable<T> _apply = function.apply(element);
+      result.addAll(_apply);
+      return null;
     };
     return OclExtensions.<E, T>iterate(source, _function);
   }
   
   public static <E extends Object> Iterable<E> select(final Iterable<E> source, final Function1<E, Boolean> function) {
-    final Function2<E, OclExtensions.Result<E>, Void> _function = new Function2<E, OclExtensions.Result<E>, Void>() {
-      @Override
-      public Void apply(final E element, final OclExtensions.Result<E> result) {
-        Boolean _apply = function.apply(element);
-        if ((_apply).booleanValue()) {
-          result.add(element);
-        }
-        return null;
+    final Function2<E, OclExtensions.Result<E>, Void> _function = (E element, OclExtensions.Result<E> result) -> {
+      Boolean _apply = function.apply(element);
+      if ((_apply).booleanValue()) {
+        result.add(element);
       }
+      return null;
     };
     return OclExtensions.<E, E>iterate(source, _function);
   }
   
   public static <E extends Object> Iterable<E> closure(final Iterable<E> source, final Function1<E, Iterable<E>> function) {
-    final Function2<E, OclExtensions.Result<E>, Void> _function = new Function2<E, OclExtensions.Result<E>, Void>() {
-      @Override
-      public Void apply(final E element, final OclExtensions.Result<E> result) {
-        result.add(element);
-        Iterable<E> _apply = function.apply(element);
-        Iterable<E> _closure = OclExtensions.<E>closure(_apply, function);
-        result.addAll(_closure);
-        return null;
-      }
+    final Function2<E, OclExtensions.Result<E>, Void> _function = (E element, OclExtensions.Result<E> result) -> {
+      result.add(element);
+      Iterable<E> _apply = function.apply(element);
+      Iterable<E> _closure = OclExtensions.<E>closure(_apply, function);
+      result.addAll(_closure);
+      return null;
     };
     return OclExtensions.<E, E>iterate(source, _function);
   }
@@ -160,59 +148,44 @@ public class OclExtensions {
   }
   
   public static <E extends Object> Integer sum(final Iterable<E> source, final Function1<E, Integer> function) {
-    final Function2<Integer, E, Integer> _function = new Function2<Integer, E, Integer>() {
-      @Override
-      public Integer apply(final Integer sum, final E element) {
-        Integer _apply = function.apply(element);
-        return Integer.valueOf(((sum).intValue() + (_apply).intValue()));
-      }
+    final Function2<Integer, E, Integer> _function = (Integer sum, E element) -> {
+      Integer _apply = function.apply(element);
+      return Integer.valueOf(((sum).intValue() + (_apply).intValue()));
     };
     return IterableExtensions.<E, Integer>fold(source, Integer.valueOf(0), _function);
   }
   
   public static <E extends Object> Integer max(final Iterable<E> source, final Function1<E, Integer> function) {
-    final Function2<Integer, E, Integer> _function = new Function2<Integer, E, Integer>() {
-      @Override
-      public Integer apply(final Integer max, final E element) {
-        final Integer value = function.apply(element);
-        Integer _xifexpression = null;
-        boolean _greaterThan = (value.compareTo(max) > 0);
-        if (_greaterThan) {
-          _xifexpression = value;
-        } else {
-          _xifexpression = max;
-        }
-        return _xifexpression;
+    final Function2<Integer, E, Integer> _function = (Integer max, E element) -> {
+      final Integer value = function.apply(element);
+      Integer _xifexpression = null;
+      boolean _greaterThan = (value.compareTo(max) > 0);
+      if (_greaterThan) {
+        _xifexpression = value;
+      } else {
+        _xifexpression = max;
       }
+      return _xifexpression;
     };
     return IterableExtensions.<E, Integer>fold(source, Integer.valueOf(Integer.MIN_VALUE), _function);
   }
   
   public static <E extends Object, T extends E> Iterable<T> typeSelect(final Iterable<E> source, final Class<T> type) {
-    final Function1<E, Boolean> _function = new Function1<E, Boolean>() {
-      @Override
-      public Boolean apply(final E it) {
-        Class<?> _class = it.getClass();
-        return Boolean.valueOf(type.isAssignableFrom(_class));
-      }
+    final Function1<E, Boolean> _function = (E it) -> {
+      Class<?> _class = it.getClass();
+      return Boolean.valueOf(type.isAssignableFrom(_class));
     };
     Iterable<E> _select = OclExtensions.<E>select(source, _function);
-    final Function1<E, T> _function_1 = new Function1<E, T>() {
-      @Override
-      public T apply(final E it) {
-        return ((T) it);
-      }
+    final Function1<E, T> _function_1 = (E it) -> {
+      return ((T) it);
     };
     return OclExtensions.<E, T>collect(_select, _function_1);
   }
   
   public static Iterable<EObject> eAllContentsAsIterable(final EObject eObject) {
     EList<EObject> _eContents = eObject.eContents();
-    final Function1<EObject, Iterable<EObject>> _function = new Function1<EObject, Iterable<EObject>>() {
-      @Override
-      public Iterable<EObject> apply(final EObject it) {
-        return it.eContents();
-      }
+    final Function1<EObject, Iterable<EObject>> _function = (EObject it) -> {
+      return it.eContents();
     };
     return OclExtensions.<EObject>closure(_eContents, _function);
   }
@@ -229,8 +202,7 @@ public class OclExtensions {
               {
                 final EObject next = iterator.next();
                 Boolean _apply = filter.apply(next);
-                boolean _not = (!(_apply).booleanValue());
-                if (_not) {
+                if ((_apply).booleanValue()) {
                   return next;
                 } else {
                   iterator.prune();
@@ -265,14 +237,34 @@ public class OclExtensions {
   }
   
   public static <T extends Object> T eTypeSelectContainer(final EObject eObject, final Class<T> type) {
-    final Function1<EObject, Boolean> _function = new Function1<EObject, Boolean>() {
-      @Override
-      public Boolean apply(final EObject it) {
-        Class<? extends EObject> _class = it.getClass();
-        return Boolean.valueOf(type.isAssignableFrom(_class));
-      }
+    final Function1<EObject, Boolean> _function = (EObject it) -> {
+      Class<? extends EObject> _class = it.getClass();
+      return Boolean.valueOf(type.isAssignableFrom(_class));
     };
     EObject _eSelectContainer = OclExtensions.eSelectContainer(eObject, _function);
     return ((T) _eSelectContainer);
+  }
+  
+  public static Iterable<EObject> eAllContainer(final EObject eObject, final Function1<EObject, Boolean> filter) {
+    final ArrayList<EObject> result = new ArrayList<EObject>();
+    EObject current = eObject;
+    while ((!Objects.equal(current, null))) {
+      {
+        Boolean _apply = filter.apply(current);
+        if ((_apply).booleanValue()) {
+          result.add(current);
+        }
+        EObject _eContainer = current.eContainer();
+        current = _eContainer;
+      }
+    }
+    return result;
+  }
+  
+  public static Iterable<EObject> eAllContainer(final EObject eObject) {
+    final Function1<EObject, Boolean> _function = (EObject it) -> {
+      return Boolean.valueOf(true);
+    };
+    return OclExtensions.eAllContainer(eObject, _function);
   }
 }

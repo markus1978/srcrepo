@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Srcrepo with emffrag
 Bundle-SymbolicName: de.hub.srcrepo.emffrag;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
  de.hub.emffrag;bundle-version="1.0.0";visibility:=reexport,
  de.hub.emffrag.mongodb;bundle-version="1.0.0",
