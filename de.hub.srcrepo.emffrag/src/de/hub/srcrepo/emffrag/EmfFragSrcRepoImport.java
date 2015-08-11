@@ -1,6 +1,7 @@
 package de.hub.srcrepo.emffrag;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -11,25 +12,22 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.EmfFragActivator;
-import de.hub.emffrag.fragmentation.FGlobalEventListener;
-import de.hub.emffrag.fragmentation.FObjectImpl;
-import de.hub.emffrag.fragmentation.FragmentedModel;
-import de.hub.emffrag.fragmentation.IndexBasedIdSemantics.IdBehaviour;
-import de.hub.emffrag.fragmentation.NoReferencesIdSemantics;
+import de.hub.emffrag.datastore.DataStoreImpl;
+import de.hub.emffrag.datastore.IBaseDataStore;
+import de.hub.emffrag.datastore.IDataStore;
+import de.hub.emffrag.fragmentation.Fragmentation;
 import de.hub.emffrag.hbase.EmfFragHBaseActivator;
 import de.hub.emffrag.hbase.HBaseUtil;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
-import de.hub.emffrag.mongodb.MongoDBUtil;
+import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.IRepositoryModelVisitor;
 import de.hub.srcrepo.ISourceControlSystem;
@@ -54,8 +52,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private final URI modelURI;
 		
 		private String repositoryURL = null; 
-		private boolean withBinaryResources = true; 
-		private boolean withDisabledIndexes = false; 
 		private boolean withDisabledUsages = false;
 		private int bulkInsertSize = 1000;
 		private int fragmentCacheSize = 1000;
@@ -77,16 +73,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 
 		public Configuration repositoryURL(String repositoryURL) {
 			this.repositoryURL = repositoryURL;
-			return this;
-		}
-
-		public Configuration withBinaryResources(boolean withBinaryResources) {
-			this.withBinaryResources = withBinaryResources;
-			return this;
-		}
-
-		public Configuration withDisabledIndexes(boolean withDisabledIndexes) {
-			this.withDisabledIndexes = withDisabledIndexes;
 			return this;
 		}
 
@@ -159,12 +145,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 				withDescription("Number of bulk inserted key-value pairs. Default is 1000.").
 				hasArg().withArgName("size").create());
 		options.addOption(OptionBuilder.
-				withLongOpt("disable-indexes").
-				withDescription("Disables the use of indexes, turns all indexed value sets in the model as normal emf value sets.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("xmi-fragments").
-				withDescription("Use XMI fragments instead of binary fragments.").create());
-		options.addOption(OptionBuilder.
 				withLongOpt("disable-usages").
 				withDescription("Disables the tracking of usagesXXX opposites.").create());
 		options.addOption(OptionBuilder.
@@ -200,22 +180,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 	}
 	
 
-	public static JavaPackage createJavaPackage(boolean disabledIndexes, boolean disabledUsages) {	
+	public static JavaPackage createJavaPackage(boolean disabledUsages) {	
 		JavaPackage javaPackage = JavaPackage.eINSTANCE;
-		
-		if (disabledIndexes) {
-			TreeIterator<EObject> eAllContents = javaPackage.eAllContents();
-			while (eAllContents.hasNext()) {
-				EObject next = eAllContents.next();
-				if (next instanceof EAnnotation) {
-					EAnnotation eAnnotation = (EAnnotation)next;
-					String value = eAnnotation.getDetails().get("indexes");
-					if (value != null && value.equals("true")) {
-						eAnnotation.getDetails().put("indexes", "false");
-					}
-				}
-			}
-		}
 		
 		if (disabledUsages) {
 			TreeIterator<EObject> eAllContents = javaPackage.eAllContents();
@@ -284,9 +250,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (commandLine.hasOption("abort-after")) {
 			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
 		}
-		config.withDisabledIndexes(commandLine.hasOption("disable-indexes"));
 		config.withDisabledUsages(commandLine.hasOption("disable-usages"));
-		config.withBinaryResources(!commandLine.hasOption("xmi-fragments"));
 		config.resume(commandLine.hasOption("resume"));
 		if (commandLine.hasOption("checkout-without-import")) {
 			config.checkOutWithoutImport();
@@ -304,18 +268,13 @@ public class EmfFragSrcRepoImport implements IApplication {
 		boolean stop = config.stopAfterNumberOfRevs > 0;
 		
 		// configuring		
-		EmfFragActivator.instance.collectStatistics = true;
-		EmfFragActivator.instance.globalEventListener = FGlobalEventListener.emptyInstance;
-		EmfFragActivator.instance.useBinaryFragments = config.withBinaryResources;
-		EmfFragActivator.instance.idSemantics = new NoReferencesIdSemantics(IdBehaviour.defaultModel);
-		EmfFragActivator.instance.cacheSize = config.fragmentCacheSize;
-		EmfFragActivator.instance.bulkInsertSize = config.bulkInsertSize;
+		EmfFragActivator.instance.logInStandAlone = true;
 				
 		// init database
 		if ("mongodb".equals(config.modelURI.scheme())) {
 			EmfFragMongoDBActivator.class.getName();
 			if (!config.resume) {
-				MongoDBUtil.dropCollection(config.modelURI);
+				MongoDBDataStore.dropCollection(config.modelURI);
 			}
 		} else if ("hbase".equals(config.modelURI.scheme())) {
 			EmfFragHBaseActivator.class.getName();
@@ -326,12 +285,20 @@ public class EmfFragSrcRepoImport implements IApplication {
 
 		
 		// create fragmentation
-		Resource resource = new ResourceSetImpl().createResource(config.modelURI);
-		EmfFragActivator.instance.defaultModel = (FragmentedModel)resource;		
+		IBaseDataStore baseDataStore = null;
+		if ("mongodb".equals(config.modelURI.scheme())) {
+			baseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), true);	
+			
+		} else if ("hbase".equals(config.modelURI.scheme())) {
+			throw new IllegalArgumentException("Not implemented.");
+		}
+		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
+		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
+		Resource resource = fragmentation.getRootFragment();
 				
 		// create necessary models
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
-		JavaPackage javaModelPackage = createJavaPackage(config.withDisabledIndexes, config.withDisabledUsages);
+		JavaPackage javaModelPackage = createJavaPackage(config.withDisabledUsages);
 		RepositoryModel repositoryModel = null;
 		
 		if (!config.resume) {
@@ -405,7 +372,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
 		config.scs.close();
 		sourceImportVisitor.close();
-		((FObjectImpl)repositoryModel).fFragmentation().save(null);
+		try {
+			fragmentation.save(null);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		fragmentation.close();
 		SrcRepoActivator.INSTANCE.info("Import done.");
 		
 		return repositoryModel;

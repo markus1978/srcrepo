@@ -16,6 +16,7 @@ import org.eclipse.gmt.modisco.java.ForStatement
 import org.eclipse.gmt.modisco.java.IfStatement
 import org.eclipse.gmt.modisco.java.MethodInvocation
 import org.eclipse.gmt.modisco.java.NamedElement
+import org.eclipse.gmt.modisco.java.ReturnStatement
 import org.eclipse.gmt.modisco.java.SingleVariableAccess
 import org.eclipse.gmt.modisco.java.SwitchStatement
 import org.eclipse.gmt.modisco.java.Type
@@ -26,7 +27,6 @@ import org.eclipse.gmt.modisco.java.WhileStatement
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
-import org.eclipse.gmt.modisco.java.ReturnStatement
 
 class ModiscoMetrics {
 
@@ -37,10 +37,10 @@ class ModiscoMetrics {
 	 */
 	@Metric(name="wmc")
 	static def weightedMethodsPerClass(AbstractTypeDeclaration type) {
-		type.bodyDeclarations.select[it instanceof AbstractMethodDeclaration].sum[1]
+		type.weightedMethodsPerClass[1]
 	}
 	
-	static def weightedMethodsPerClass(AbstractTypeDeclaration type, Functions.Function1<Block, Integer> weight) {
+	static def weightedMethodsPerClass(AbstractTypeDeclaration type, (Block)=>Integer weight) {
 		type.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration)).sum[
 			if (it.body != null) {
 				weight.apply(it.body)
@@ -234,7 +234,7 @@ class ModiscoMetrics {
 		return if (result >= 0) result else 0
 	}
 	
-	private static class Holder<T> {
+	private static class Value<T> {
 		var T value
 		new(T value) {
 			this.value = value
@@ -248,29 +248,28 @@ class ModiscoMetrics {
 	 */
 	@Metric(name="cc")
 	static def int cyclomaticComplexity(Block block) {
-		val hasReturn = new Holder(false)
+		val blockHasReturnStatement = new Value(false)
 		block.eAllContentsAsIterable.sum[
-			if (it instanceof IfStatement) {
-				1
-			} else if (it instanceof SwitchStatement) {
-				(it as SwitchStatement).statements.size
-			} else if (it instanceof ForStatement) {
-				1
-			} else if (it instanceof WhileStatement) {
-				1
-			} else if (it instanceof CatchClause) {
-				1
-			} else if (it instanceof DoStatement) {
-				1
-			} else if (it instanceof MethodInvocation) {
-				1
-			} else if (it instanceof ReturnStatement) {
-				hasReturn.value = true
-				1
-			} else {
-				0
-			}
-		] + if (hasReturn.value) 0 else 1
+			return switch it {
+				IfStatement : 1
+				SwitchStatement: it.statements.size
+				ForStatement: 1
+				WhileStatement: 1
+				CatchClause: 1
+				DoStatement: 1
+				MethodInvocation: 1
+				ReturnStatement: {
+					blockHasReturnStatement.value = true
+					1
+				}
+				default: 0
+			}			
+		] + if (blockHasReturnStatement.value) 0 else 1
+	}
+	
+	@Metric(name="wmc_cc")
+	static def int weightedMethodPerClassWithCCWeight(AbstractTypeDeclaration type) {
+		return type.weightedMethodsPerClass[it.cyclomaticComplexity]
 	}
 	
 	public static def getMetricName(Method method) {
