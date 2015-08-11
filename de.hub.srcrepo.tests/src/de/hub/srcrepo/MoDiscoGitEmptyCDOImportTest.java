@@ -6,7 +6,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 
 public class MoDiscoGitEmptyCDOImportTest extends MoDiscoGitImportTest {
 
-	public final static File workingCopy = new File("c:/tmp/srcrepo/clones/org.eclipse.emf.git");
+	public final static File workingCopy = new File(SrcRepoTestSuite.workingCopiesPrefix + "org.eclipse.emf.git");
 	
 	@Override
 	protected File getWorkingCopy() {

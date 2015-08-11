@@ -10,5 +10,7 @@ import org.junit.runners.Suite;
 	MoDiscoGitEmptyCDOImportTest.class
 })
 public class SrcRepoTestSuite {
+	
+	public static final String workingCopiesPrefix = "/Users/markus/Documents/Projects/srcrepo/06-working-copies/";
 
 }

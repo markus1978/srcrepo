@@ -263,6 +263,28 @@ public class EmfFragSrcRepoImport implements IApplication {
 		return IApplication.EXIT_OK;
 	}
 	
+	public static Fragmentation openFragmentation(Configuration config) {
+		IBaseDataStore baseDataStore = null;
+		if ("mongodb".equals(config.modelURI.scheme())) {
+			baseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), false);	
+			
+		} else if ("hbase".equals(config.modelURI.scheme())) {
+			throw new IllegalArgumentException("Not implemented.");
+		}
+		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
+		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
+		return fragmentation;
+	}
+	
+	public static void closeFragmentation(Configuration config, Fragmentation fragmentation) {
+		try {
+			fragmentation.save(null);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		fragmentation.close();
+	}
+	
 	public static RepositoryModel importRepository(Configuration config) {
 		
 		boolean stop = config.stopAfterNumberOfRevs > 0;
@@ -282,18 +304,9 @@ public class EmfFragSrcRepoImport implements IApplication {
 				HBaseUtil.dropTable(config.modelURI.segment(0));
 			}
 		}
-
 		
 		// create fragmentation
-		IBaseDataStore baseDataStore = null;
-		if ("mongodb".equals(config.modelURI.scheme())) {
-			baseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), true);	
-			
-		} else if ("hbase".equals(config.modelURI.scheme())) {
-			throw new IllegalArgumentException("Not implemented.");
-		}
-		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
-		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
+		Fragmentation fragmentation = openFragmentation(config);
 		Resource resource = fragmentation.getRootFragment();
 				
 		// create necessary models
@@ -377,7 +390,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		fragmentation.close();
 		SrcRepoActivator.INSTANCE.info("Import done.");
 		
 		return repositoryModel;

@@ -9,7 +9,6 @@ import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.EmfFragActivator;
-import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.srcrepo.MoDiscoRevVisitor;
 import de.hub.srcrepo.RepositoryModelTraversal;
 import de.hub.srcrepo.SrcRepoActivator;
@@ -21,10 +20,7 @@ public class AnalyzeImportedRepositories {
 
 	public static void main(String[] args) {
 		EmfFragActivator.standalone(EcorePackage.eINSTANCE, RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE);
-		EmfFragMongoDBActivator.standalone();
 		SrcRepoActivator.standalone();
-		
-		EmfFragActivator.instance.useBinaryFragments = true;
 		
 		URI repositoryURI = URI.createURI("mongodb://jupiter.informatik.hu-berlin.de/org.eclipse.emf.java.bin");
 		ResourceSet rs = new ResourceSetImpl();

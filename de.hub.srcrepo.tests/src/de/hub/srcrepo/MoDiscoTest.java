@@ -3,8 +3,6 @@ package de.hub.srcrepo;
 import java.io.IOException;
 import java.util.HashMap;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
@@ -33,6 +31,7 @@ import org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromClassFile;
 import org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromJavaProject;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.kdm.source.extension.discovery.AbstractRegionDiscoverer2;
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.hub.srcrepo.ocl.OclUtil;

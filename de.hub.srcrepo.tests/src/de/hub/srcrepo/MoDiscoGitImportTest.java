@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -34,6 +32,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +48,7 @@ import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
 public class MoDiscoGitImportTest {
 	
 	public final static URI testModelURI = URI.createURI("test-models/example.java.xmi");
-	public final static File workingCopy = new File("c:/tmp/srcrepo/clones/srcrepo.example.git");
+	public final static File workingCopy = new File(SrcRepoTestSuite.workingCopiesPrefix + "srcrepo.example.git");
 	
 	protected URI getTestModelURI() {
 		return testModelURI;
@@ -86,6 +85,23 @@ public class MoDiscoGitImportTest {
 		}
 	}
 	
+	protected RepositoryModel openRepositoryModel() {
+		ResourceSet rs = new ResourceSetImpl();
+		final Resource resource = rs.createResource(getTestModelURI());
+		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
+		resource.getContents().add(repositoryModel);
+		return repositoryModel;
+	}
+	
+	protected void closeRepositoryModel(RepositoryModel model) {
+		try {
+			model.eResource().save(null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+	}
+	
 	protected void runImport() {
 		GitSourceControlSystem scs = new GitSourceControlSystem();
 		try {			
@@ -95,10 +111,7 @@ public class MoDiscoGitImportTest {
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
-		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(getTestModelURI());
-		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
-		resource.getContents().add(repositoryModel);
+		RepositoryModel repositoryModel = openRepositoryModel();
 		
 		try {
 			scs.importRevisions(repositoryModel);
@@ -110,12 +123,7 @@ public class MoDiscoGitImportTest {
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
-		try {
-			resource.save(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-		}
+		closeRepositoryModel(repositoryModel);
 	}
 	
 	@Test
@@ -124,9 +132,7 @@ public class MoDiscoGitImportTest {
 		runImport();
 		
 		// assert results
-		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.getResource(getTestModelURI(), true);
-		RepositoryModel repositoryModel = (RepositoryModel)resource.getContents().get(0);
+		RepositoryModel repositoryModel = openRepositoryModel();
 				
 		Collection<String> revNames = assertRepositoryModel(repositoryModel);
 		
@@ -184,6 +190,7 @@ public class MoDiscoGitImportTest {
 		
 		Assert.assertEquals("Branches and merges do not match.", stats.mergeCounter + stats.openBranchCounter, stats.branchCounter);
 		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), visitedRevNames.size());
+		closeRepositoryModel(repositoryModel);
 	}
 
 	protected Collection<String> assertRepositoryModel(RepositoryModel repositoryModel) {

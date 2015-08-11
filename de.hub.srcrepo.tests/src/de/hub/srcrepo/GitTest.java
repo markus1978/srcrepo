@@ -45,7 +45,7 @@ public class GitTest {
 			throws IOException, AmbiguousObjectException,
 			IncorrectObjectTypeException {
 		String repositoryURL = "bare-repositories/file-contents-changed-to-same-on-merged-branches-dummy.git";
-		File workingCopy = new File("C:/tmp/srcrepo/clones/test.git");
+		File workingCopy = new File(SrcRepoTestSuite.workingCopiesPrefix + "test.git");
 		
 		if (!workingCopy.exists()) {
 			try {
