@@ -22,6 +22,7 @@ import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.datastore.DataStoreImpl;
 import de.hub.emffrag.datastore.IBaseDataStore;
 import de.hub.emffrag.datastore.IDataStore;
+import de.hub.emffrag.datastore.WriteCachingDataStore;
 import de.hub.emffrag.fragmentation.Fragmentation;
 import de.hub.emffrag.hbase.EmfFragHBaseActivator;
 import de.hub.emffrag.hbase.HBaseDataStore;
@@ -261,23 +262,25 @@ public class EmfFragSrcRepoImport implements IApplication {
 		return IApplication.EXIT_OK;
 	}
 	
-	public static Fragmentation openFragmentation(Configuration config) {
+	public static Fragmentation openFragmentation(Configuration config, boolean dropIfExists) {
 		IBaseDataStore baseDataStore = null;
 		if ("mongodb".equals(config.modelURI.scheme())) {
-			baseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), false);	
+			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), dropIfExists && !config.resume);
+			baseDataStore = mongoDbBaseDataStore;
 			
 		} else if ("hbase".equals(config.modelURI.scheme())) {
-			throw new IllegalArgumentException("Not implemented.");
+			HBaseDataStore hbaseBaseDataStore = new HBaseDataStore(config.modelURI.path().substring(1), dropIfExists && !config.resume);
+			baseDataStore = new WriteCachingDataStore(hbaseBaseDataStore, hbaseBaseDataStore, config.bulkInsertSize);
 		}
-		// TODO config.bulkInsertSize
+		
 		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
 		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
 		return fragmentation;
 	}
 	
 	public static void closeFragmentation(Configuration config, Fragmentation fragmentation) {
-		// TODO close datastore
 		fragmentation.close();
+		fragmentation.getDataStore().close();
 	}
 	
 	public static RepositoryModel importRepository(Configuration config) {
@@ -285,7 +288,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		boolean stop = config.stopAfterNumberOfRevs > 0;
 
 		// create fragmentation
-		Fragmentation fragmentation = openFragmentation(config);
+		Fragmentation fragmentation = openFragmentation(config, true);
 		Resource resource = fragmentation.getRootFragment();
 				
 		// create necessary models

@@ -58,7 +58,7 @@ public class MoDiscoGitImportTest {
 	}
 	
 	protected boolean onlyCloneIfNecessary() {
-		return false;
+		return true;
 	}
 	
 	protected String getCloneURL() {
@@ -143,7 +143,7 @@ public class MoDiscoGitImportTest {
 		// assert results
 		RepositoryModel repositoryModel = openRepositoryModel(false);
 				
-		Collection<String> revNames = assertRepositoryModel(repositoryModel);
+		Collection<String> revNames = assertRepositoryModel(repositoryModel, 0);
 		
 		System.out.println("Java diffs: " + OclUtil.coutJavaDiffs(repositoryModel));
 		
@@ -201,7 +201,9 @@ public class MoDiscoGitImportTest {
 		closeRepositoryModel(repositoryModel);
 	}
 
-	protected Collection<String> assertRepositoryModel(RepositoryModel repositoryModel) {
+	protected Collection<String> assertRepositoryModel(RepositoryModel repositoryModel, int minimumNumberOfRevs) {
+		Assert.assertNotNull(repositoryModel);
+		
 		// revs are unique
 		Collection<String> revNames = new HashSet<String>();
 		Collection<Rev> revs = new HashSet<Rev>();
@@ -215,6 +217,8 @@ public class MoDiscoGitImportTest {
 			Assert.assertTrue(revNames.contains(ref.getReferencedCommit().getName()));
 			Assert.assertTrue(revs.contains(ref.getReferencedCommit()));
 		}
+		
+		Assert.assertTrue(repositoryModel.getAllRevs().size() >= minimumNumberOfRevs);
 		
 		return revNames;
 	}
