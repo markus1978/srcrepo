@@ -43,11 +43,10 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
 
 public class MoDiscoGitImportTest {
 	
-	public final static URI testModelURI = URI.createURI("test-models/example.java.xmi");
+	public final static URI testModelURI = URI.createURI("testdata/models/example.java.xmi");
 	public final static File workingCopy = new File(SrcRepoTestSuite.workingCopiesPrefix + "srcrepo.example.git");
 	
 	protected URI getTestModelURI() {
@@ -85,12 +84,22 @@ public class MoDiscoGitImportTest {
 		}
 	}
 	
-	protected RepositoryModel openRepositoryModel() {
+	protected RepositoryModel openRepositoryModel(boolean dropExisting) {
 		ResourceSet rs = new ResourceSetImpl();
-		final Resource resource = rs.createResource(getTestModelURI());
-		RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
-		resource.getContents().add(repositoryModel);
-		return repositoryModel;
+		Resource resource = null;
+		if (new File(getTestModelURI().toFileString()).exists()) {
+			resource = rs.getResource(getTestModelURI(), true);
+			if (dropExisting) {
+				resource.getContents().clear();
+				RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
+				resource.getContents().add(repositoryModel);
+			}
+		} else {
+			resource = rs.createResource(getTestModelURI());
+			RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
+			resource.getContents().add(repositoryModel);
+		}
+		return (RepositoryModel)resource.getContents().get(0);
 	}
 	
 	protected void closeRepositoryModel(RepositoryModel model) {
@@ -111,7 +120,7 @@ public class MoDiscoGitImportTest {
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
-		RepositoryModel repositoryModel = openRepositoryModel();
+		RepositoryModel repositoryModel = openRepositoryModel(true);
 		
 		try {
 			scs.importRevisions(repositoryModel);
@@ -132,12 +141,11 @@ public class MoDiscoGitImportTest {
 		runImport();
 		
 		// assert results
-		RepositoryModel repositoryModel = openRepositoryModel();
+		RepositoryModel repositoryModel = openRepositoryModel(false);
 				
 		Collection<String> revNames = assertRepositoryModel(repositoryModel);
 		
-		final OclUtil scalaTest = new OclUtil();
-		System.out.println("Java diffs: " + scalaTest.coutJavaDiffs(repositoryModel));
+		System.out.println("Java diffs: " + OclUtil.coutJavaDiffs(repositoryModel));
 		
 		for(Rev root: repositoryModel.getRootRevs()) {
 			Assert.assertTrue("Root revision isn't root.", RepositoryModelUtil.isRoot(root));
@@ -166,12 +174,12 @@ public class MoDiscoGitImportTest {
 						}
 					}
 													
-					out.println("Primitives: " + scalaTest.countPrimitives(model));
-					out.println("Top level classes: " + scalaTest.countTopLevelClasses(model));
-					out.println("Methods: " + scalaTest.countMethodDeclarations(model));
-					out.println("Type usages: " + scalaTest.countTypeUsages(model));
-					out.println("Methods wo body: " + scalaTest.nullMethod(model));
-					out.println("McCabe: " + scalaTest.mcCabeMetric(model));
+					out.println("Primitives: " + OclUtil.countPrimitives(model));
+					out.println("Top level classes: " + OclUtil.countTopLevelClasses(model));
+					out.println("Methods: " + OclUtil.countMethodDeclarations(model));
+					out.println("Type usages: " + OclUtil.countTypeUsages(model));
+					out.println("Methods wo body: " + OclUtil.nullMethod(model));
+					out.println("McCabe: " + OclUtil.mcCabeMetric(model));
 				} catch (Exception e) {
 					Assert.fail(e.getMessage());
 				}
@@ -273,5 +281,7 @@ public class MoDiscoGitImportTest {
 				}
 			}
 		}
+		df.close();
+		rw.close();
 	}
 }

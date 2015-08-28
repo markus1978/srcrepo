@@ -14,7 +14,6 @@ import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.TraversalState;
-import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
 import etm.contrib.console.HttpConsoleServer;
 import etm.core.configuration.BasicEtmConfigurator;
 import etm.core.configuration.EtmManager;

@@ -6,7 +6,6 @@ import de.hub.srcrepo.ocl.OclExtensions.Result
 import java.util.ArrayList
 import java.util.Iterator
 import org.eclipse.emf.ecore.EObject
-import java.util.function.Function
 
 class OclExtensions {
 	
@@ -85,7 +84,7 @@ class OclExtensions {
 		]
 	}
 	
-	static def <E, T> collectAll(Iterable<E> source, Functions.Function1<E,Iterable<T>> function) {
+	static def <E, T> collectAll(Iterable<E> source, Functions.Function1<E, ? extends Iterable<T>> function) {
 		return source.iterate[element, result |
 			result.addAll(function.apply(element))
 			return null
@@ -111,6 +110,26 @@ class OclExtensions {
 	
 	static def <E> Iterable<E> closure(E source, Functions.Function1<E, Iterable<E>> function) {
 		return #{source}.closure(function)	
+	}
+	
+	static def <E> Iterable<E> union(Iterable<? extends E> one, Iterable<? extends E> two) {
+		val oneIterator = one.iterator
+		val twoIterator = two.iterator
+		return new FluentIterable<E>() {			
+			override iterator() {
+				return new AbstractIterator<E> {					
+					override protected computeNext() {
+						if (oneIterator.hasNext) {
+							return oneIterator.next
+						} else if (twoIterator.hasNext) {
+							return twoIterator.next
+						} else {
+							return endOfData
+						}
+					}					
+				}
+			}			
+		}
 	}
 	
 	static def <E> sum(Iterable<E> source, Functions.Function1<E,Integer> function) {

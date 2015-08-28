@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
@@ -327,12 +328,14 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				Model javaModel = javaFactory.createModel();
 				SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
 				try {
-					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());					
+					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());		
 				} catch (Exception e) {
 					if (e.getClass().getName().endsWith("AbortCompilation")) {
 						reportImportError(currentRev, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
+						EcoreUtil.delete(javaModel);
 						continue;
 					} else {
+						EcoreUtil.delete(javaModel);
 						throw new RuntimeException(e);
 					}
 				}							

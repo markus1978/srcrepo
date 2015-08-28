@@ -28,8 +28,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.egit.core.Activator;
-import org.eclipse.egit.core.internal.CoreText;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.util.FS;
@@ -39,6 +37,9 @@ import org.eclipse.osgi.util.NLS;
 public class ProjectUtil {
 
 	public static final String METADATA_FOLDER = ".metadata"; //$NON-NLS-1$
+	private static final String ProjectUtil_refreshingProjects = "refreshing projects";
+	private static final String ProjectUtil_refreshing = "refreshing";
+	private static final String ProjectUtil_taskCheckingDirectory = "checking directory";
 
 	public static IProject[] getValidOpenProjects(final File parentFile)
 			throws CoreException {
@@ -71,8 +72,7 @@ public class ProjectUtil {
 	public static void refreshValidProjects(IProject[] projects,
 			boolean delete, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask(CoreText.ProjectUtil_refreshingProjects,
-					projects.length);
+			monitor.beginTask(ProjectUtil_refreshingProjects, projects.length);
 			for (IProject p : projects) {
 				if (monitor.isCanceled())
 					break;
@@ -139,8 +139,7 @@ public class ProjectUtil {
 	public static void refreshResources(IResource[] resources,
 			IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask(CoreText.ProjectUtil_refreshing,
-					resources.length);
+			monitor.beginTask(ProjectUtil_refreshing, resources.length);
 			for (IResource resource : resources) {
 				if (monitor.isCanceled())
 					break;
@@ -170,7 +169,7 @@ public class ProjectUtil {
 		else if (pm.isCanceled())
 			return false;
 
-		pm.subTask(NLS.bind(CoreText.ProjectUtil_taskCheckingDirectory,
+		pm.subTask(NLS.bind(ProjectUtil_taskCheckingDirectory,
 				directory.getPath()));
 
 		final File[] contents = directory.listFiles();
@@ -184,7 +183,7 @@ public class ProjectUtil {
 			try {
 				directoriesVisited.add(directory.getCanonicalPath());
 			} catch (IOException exception) {
-				Activator.logError(exception.getLocalizedMessage(), exception);
+				SrcRepoActivator.INSTANCE.error(exception.getLocalizedMessage(), exception);
 			}
 		} else
 			directoriesVisited = visistedDirs;
@@ -215,7 +214,7 @@ public class ProjectUtil {
 					continue;
 				}
 			} catch (IOException exception) {
-				Activator.logError(exception.getLocalizedMessage(), exception);
+				SrcRepoActivator.INSTANCE.error(exception.getLocalizedMessage(), exception);
 
 			}
 			findProjectFiles(files, contents[i], directoriesVisited, pm);

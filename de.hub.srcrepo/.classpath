@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="xtend-gen"/>
+	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="libs/jetm-1.2.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/jetm-optional-1.2.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.jgit-3.3.1.201403241930-r.jar" sourcepath="libs/org.eclipse.jgit-3.3.1.201403241930-r-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsch-0.1.49.jar"/>
-	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.jgit-3.3.1.201403241930-r.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetm-optional-1.2.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>

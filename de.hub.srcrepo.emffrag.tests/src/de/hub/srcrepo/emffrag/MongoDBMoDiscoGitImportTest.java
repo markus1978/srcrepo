@@ -79,18 +79,18 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 	}
 
 	@Override
-	protected RepositoryModel openRepositoryModel() {
+	protected RepositoryModel openRepositoryModel(boolean dropExisting) {
 		return (RepositoryModel) EmfFragSrcRepoImport.openFragmentation(prepareConfiguration()).getRootFragment().getContents().get(0);
 	}
 
 	@Override
 	protected void closeRepositoryModel(RepositoryModel model) {
-		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), ((Fragment)model.eResource()).getFragmentation());
+		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), ((Fragment)model.eResource()).fFragmentation());
 	}
 
 	@Test // can only run after import test
 	final public void testImportedModel() {
-		RepositoryModel repositoryModel = openRepositoryModel();
+		RepositoryModel repositoryModel = openRepositoryModel(false);
 		
 		final OclUtil scalaTest = new OclUtil();
 		System.out.println("Java diffs: " + scalaTest.coutJavaDiffs(repositoryModel));		

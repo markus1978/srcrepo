@@ -3,7 +3,6 @@ package de.hub.srcrepo.metrics
 import de.hub.srcrepo.SrcRepoActivator
 import java.io.File
 import java.io.PrintWriter
-import java.lang.reflect.Method
 import org.eclipse.gmt.modisco.java.BodyDeclaration
 import org.eclipse.gmt.modisco.java.Model
 

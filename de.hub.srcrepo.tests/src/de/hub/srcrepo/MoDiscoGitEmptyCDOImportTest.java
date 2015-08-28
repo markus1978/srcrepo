@@ -25,8 +25,7 @@ public class MoDiscoGitEmptyCDOImportTest extends MoDiscoGitImportTest {
 	}
 
 	@Override
-	protected IRepositoryModelVisitor createVisitor(
-			GitSourceControlSystem scs, RepositoryModel repositoryModel) {
+	protected IRepositoryModelVisitor createVisitor(GitSourceControlSystem scs, RepositoryModel repositoryModel) {
 		return new EmptyRepositoryModelVisitor();
 	}
 

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.hub.srcrepo/src"
-    modelPluginID="de.hub.srcrepo" modelName="RepositoryModel" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="6.0" copyrightFields="false" usedGenPackages="platform:/plugin/org.eclipse.gmt.modisco.java/model/java.genmodel#//java">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.hub.srcrepo/src-gen" modelPluginID="de.hub.srcrepo"
+    modelName="RepositoryModel" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
+    copyrightFields="false" usedGenPackages="platform:/plugin/org.eclipse.gmt.modisco.java/model/java.genmodel#//java">
   <foreignModel>RepositoryModel.ecore</foreignModel>
   <genPackages prefix="RepositoryModel" basePackage="de.hub.srcrepo" disposableProviderFactory="true"
       ecorePackage="RepositoryModel.ecore#/">
@@ -11,15 +10,8 @@
     <genClasses ecoreClass="RepositoryModel.ecore#//RepositoryModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//RepositoryModel/allRefs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//RepositoryModel/allRevs"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//RepositoryModel/javaModel"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//RepositoryModel/rootRev"/>
-      <genOperations ecoreOperation="RepositoryModel.ecore#//RepositoryModel/getRev">
-        <genParameters ecoreParameter="RepositoryModel.ecore#//RepositoryModel/getRev/name"/>
-      </genOperations>
-      <genOperations ecoreOperation="RepositoryModel.ecore#//RepositoryModel/putRev">
-        <genParameters ecoreParameter="RepositoryModel.ecore#//RepositoryModel/putRev/name"/>
-        <genParameters ecoreParameter="RepositoryModel.ecore#//RepositoryModel/putRev/commit"/>
-      </genOperations>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//RepositoryModel/rootRevs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//RepositoryModel/traversals"/>
     </genClasses>
     <genClasses ecoreClass="RepositoryModel.ecore#//Rev">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//Rev/author"/>
@@ -47,9 +39,33 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//ParentRelation/parent"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RepositoryModel.ecore#//ParentRelation/child"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RepositoryModel.ecore#//AbstractFileRef"/>
+    <genClasses image="false" ecoreClass="RepositoryModel.ecore#//AbstractFileRef">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//AbstractFileRef/path"/>
+    </genClasses>
     <genClasses ecoreClass="RepositoryModel.ecore#//JavaCompilationUnitRef">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//JavaCompilationUnitRef/compilationUnit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//JavaCompilationUnitRef/compilationUnitModel"/>
+    </genClasses>
+    <genClasses ecoreClass="RepositoryModel.ecore#//TraversalState">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//TraversalState/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//TraversalState/merges"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//TraversalState/openBranches"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//TraversalState/completedBranches"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//TraversalState/numberOfImportedRevs"/>
+    </genClasses>
+    <genClasses ecoreClass="RepositoryModel.ecore#//PendingElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//PendingElement/clientNode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//PendingElement/binding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//PendingElement/linkName"/>
+    </genClasses>
+    <genClasses ecoreClass="RepositoryModel.ecore#//Target">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RepositoryModel.ecore#//Target/id"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//Target/target"/>
+    </genClasses>
+    <genClasses ecoreClass="RepositoryModel.ecore#//CompilationUnitModel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//CompilationUnitModel/compilationUnit"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//CompilationUnitModel/javaModel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//CompilationUnitModel/pendings"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RepositoryModel.ecore#//CompilationUnitModel/targets"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

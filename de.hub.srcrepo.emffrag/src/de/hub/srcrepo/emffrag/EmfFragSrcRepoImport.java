@@ -1,7 +1,6 @@
 package de.hub.srcrepo.emffrag;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -25,7 +24,7 @@ import de.hub.emffrag.datastore.IBaseDataStore;
 import de.hub.emffrag.datastore.IDataStore;
 import de.hub.emffrag.fragmentation.Fragmentation;
 import de.hub.emffrag.hbase.EmfFragHBaseActivator;
-import de.hub.emffrag.hbase.HBaseUtil;
+import de.hub.emffrag.hbase.HBaseDataStore;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.GitSourceControlSystem;
@@ -179,8 +178,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		new HelpFormatter().printHelp("eclipse ... [options] working-copy-path data-base-uri", createOptions());
 	}
 	
-
-	public static JavaPackage createJavaPackage(boolean disabledUsages) {	
+	public static JavaPackage configureJavaPackage(boolean disabledUsages) {	
 		JavaPackage javaPackage = JavaPackage.eINSTANCE;
 		
 		if (disabledUsages) {
@@ -271,52 +269,34 @@ public class EmfFragSrcRepoImport implements IApplication {
 		} else if ("hbase".equals(config.modelURI.scheme())) {
 			throw new IllegalArgumentException("Not implemented.");
 		}
+		// TODO config.bulkInsertSize
 		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
 		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
 		return fragmentation;
 	}
 	
 	public static void closeFragmentation(Configuration config, Fragmentation fragmentation) {
-		try {
-			fragmentation.save(null);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		// TODO close datastore
 		fragmentation.close();
 	}
 	
 	public static RepositoryModel importRepository(Configuration config) {
 		
 		boolean stop = config.stopAfterNumberOfRevs > 0;
-		
-		// configuring		
-		EmfFragActivator.instance.logInStandAlone = true;
-				
-		// init database
-		if ("mongodb".equals(config.modelURI.scheme())) {
-			EmfFragMongoDBActivator.class.getName();
-			if (!config.resume) {
-				MongoDBDataStore.dropCollection(config.modelURI);
-			}
-		} else if ("hbase".equals(config.modelURI.scheme())) {
-			EmfFragHBaseActivator.class.getName();
-			if (!config.resume) {
-				HBaseUtil.dropTable(config.modelURI.segment(0));
-			}
-		}
-		
+
 		// create fragmentation
 		Fragmentation fragmentation = openFragmentation(config);
 		Resource resource = fragmentation.getRootFragment();
 				
 		// create necessary models
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
-		JavaPackage javaModelPackage = createJavaPackage(config.withDisabledUsages);
+		JavaPackage javaModelPackage = configureJavaPackage(config.withDisabledUsages);
 		RepositoryModel repositoryModel = null;
 		
 		if (!config.resume) {
 			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();		
 			resource.getContents().add(repositoryModel);
+			repositoryModel = (RepositoryModel) resource.getContents().get(0);
 		} else {
 			if (resource.getContents().isEmpty()) {
 				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
@@ -385,11 +365,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
 		config.scs.close();
 		sourceImportVisitor.close();
-		try {
-			fragmentation.save(null);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		closeFragmentation(config, fragmentation);
 		SrcRepoActivator.INSTANCE.info("Import done.");
 		
 		return repositoryModel;

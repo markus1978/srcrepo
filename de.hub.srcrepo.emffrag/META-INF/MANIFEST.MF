@@ -4,10 +4,10 @@ Bundle-Name: Srcrepo with emffrag
 Bundle-SymbolicName: de.hub.srcrepo.emffrag;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
- de.hub.emffrag;bundle-version="1.0.0";visibility:=reexport,
+Require-Bundle: de.hub.emffrag;bundle-version="1.0.0";visibility:=reexport,
  de.hub.emffrag.mongodb;bundle-version="1.0.0",
- de.hub.emffrag.hbase;bundle-version="1.0.0"
+ de.hub.emffrag.hbase;bundle-version="1.0.0",
+ de.hub.srcrepo;bundle-version="1.0.0"
 Export-Package: de.hub.srcrepo.emffrag,
  de.hub.srcrepo.repositorymodel.emffrag.impl,
  de.hub.srcrepo.repositorymodel.emffrag.metadata,
@@ -17,3 +17,4 @@ Export-Package: de.hub.srcrepo.emffrag,
  org.eclipse.gmt.modisco.java.emffrag.util
 Bundle-ClassPath: .,
  libs/commons-cli-1.2.jar
+Import-Package: de.hub.srcrepo
