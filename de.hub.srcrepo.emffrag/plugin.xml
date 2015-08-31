@@ -10,11 +10,6 @@
 		        class="de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage"
 		        genModel="models/RepositoryModel.genmodel"
 		        uri="http://hub.sam.repositorymodel/1.0/emffrag"/>
-		<package
-		        class="de.hub.srcrepo.emffrag.extensions.ExtensionsPackage"
-		        genModel="models/Extensions.genmodel"
-		        uri="http://srcrepo/extensions/1.0">
-		</package>
     </extension>
 	
     <extension

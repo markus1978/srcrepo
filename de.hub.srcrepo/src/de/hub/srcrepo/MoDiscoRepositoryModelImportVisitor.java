@@ -47,6 +47,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 
+@SuppressWarnings("restriction")
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {
 
 	protected final ISourceControlSystem sourceControlSystem;

@@ -9,17 +9,13 @@ import org.osgi.framework.BundleContext;
 import de.hub.jstattrack.JStatTrackActivator;
 
 public class SrcRepoActivator extends Plugin {
-	
-	public static void main(String[] args) {
-		System.out.println("Hello World!");
-	}
 
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
 	private boolean logInStandAlone = true;
 	
 	private void init() {
-		JStatTrackActivator.instance.withWebServer = true;
+		JStatTrackActivator.instance.enableWebServer();
 	}
 	
 	@Override
