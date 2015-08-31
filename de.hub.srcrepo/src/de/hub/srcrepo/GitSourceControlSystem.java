@@ -32,19 +32,23 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
+import de.hub.jstattrack.Statistic;
+import de.hub.jstattrack.Statistic.Timer;
+import de.hub.jstattrack.StatisticBuilder;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
-import etm.core.configuration.EtmManager;
-import etm.core.monitor.EtmMonitor;
-import etm.core.monitor.EtmPoint;
 
 public class GitSourceControlSystem implements ISourceControlSystem {
 	
 	private final boolean isTryHard = false;
 	private Git git = null;
+	
+	private final Statistic gitCleanStat = StatisticBuilder.createWithSummary().register(GitSourceControlSystem.class, "gitClean");
+	private final Statistic gitResetStat = StatisticBuilder.createWithSummary().register(GitSourceControlSystem.class, "gitReset");
+	private final Statistic gitCheckoutStat = StatisticBuilder.createWithSummary().register(GitSourceControlSystem.class, "gitCheckout");
 
 	@Override
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {
@@ -204,6 +208,9 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 			}
 		}
 		
+		df.close();
+		
+		walk.close();
 		walk.dispose();
 	}
 	
@@ -241,23 +248,22 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 
 	@Override
 	public void checkoutRevision(String name) throws SourceControlException {
-		EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
 		try {
 			// remove a possible lock files from prior errors or crashes
 			removeLock(".git/index.lock");
 			removeLock(".git/HEAD.lock");
 			// clean the working tree from ignored or other untracked files
-			EtmPoint cleanPoint = etmMonitor.createPoint("GIT:clean");
+			Timer cleanTimer = gitCleanStat.timer();			
 			clean();
-			cleanPoint.collect();
+			cleanTimer.track();
 			// reset possible changes
-			EtmPoint resetPoint = etmMonitor.createPoint("GIT:reset");
+			Timer resetTimer = gitResetStat.timer();
 			git.reset().setMode(ResetType.HARD).call();
-			resetPoint.collect();
+			resetTimer.track();
 			// checkout the new revision
-			EtmPoint checkoutPoint = etmMonitor.createPoint("GIT:checkout");
+			Timer checkoutTimer = gitCheckoutStat.timer();
 			git.checkout().setForce(true).setName(name).call();
-			checkoutPoint.collect();
+			checkoutTimer.track();
 		} catch (JGitInternalException e) {
 			if (e.getCause() instanceof LockFailedException) {
 				throw new SourceControlException("Could not lock the repository.", e);

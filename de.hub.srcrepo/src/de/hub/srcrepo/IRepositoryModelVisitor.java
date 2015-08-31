@@ -2,13 +2,8 @@ package de.hub.srcrepo;
 
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.Rev;
-import etm.core.monitor.EtmMonitor;
 
 public interface IRepositoryModelVisitor {
-	
-	public interface ETMExtension {
-		public void setETMMonitor(EtmMonitor monitor);
-	}
 
 	/**
 	 * Is called when the currently visited branch ends or is merged into an

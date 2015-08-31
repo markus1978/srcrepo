@@ -1,27 +1,27 @@
 package de.hub.srcrepo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Stack;
 
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
-import de.hub.srcrepo.IRepositoryModelVisitor.ETMExtension;
+import de.hub.jstattrack.Statistic;
+import de.hub.jstattrack.Statistic.Timer;
+import de.hub.jstattrack.StatisticBuilder;
+import de.hub.jstattrack.Statistics;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.TraversalState;
-import etm.contrib.console.HttpConsoleServer;
-import etm.core.configuration.BasicEtmConfigurator;
-import etm.core.configuration.EtmManager;
-import etm.core.monitor.EtmMonitor;
-import etm.core.monitor.EtmPoint;
-import etm.core.renderer.SimpleTextRenderer;
 
 public class RepositoryModelTraversal {
+	
+	private final static Statistic visitAllStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitAll");
+	private final static Statistic visitStartStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitStart");
+	private final static Statistic visitDiffStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitDiff");
+	private final static Statistic visitCompleteStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitComplete");
 	
 	private final RepositoryModel repositoryModel;
 	private final IRepositoryModelVisitor visitor;
@@ -30,18 +30,12 @@ public class RepositoryModelTraversal {
 	private Collection<Rev> completedBranches = new HashSet<Rev>();
 	private Collection<Rev> merges = new HashSet<Rev>();
 	private Rev lastImportedRev = null;
-	private final EtmMonitor etmMonitor;
 	
 	public RepositoryModelTraversal(RepositoryModel repositoryModel,
 			IRepositoryModelVisitor visitor) {
 		super();
 		this.repositoryModel = repositoryModel;
 		this.visitor = visitor;
-		BasicEtmConfigurator.configure();
-		this.etmMonitor = EtmManager.getEtmMonitor();
-		if (visitor instanceof ETMExtension) {
-			((ETMExtension)visitor).setETMMonitor(etmMonitor);
-		}
 	}
 	
 	private Stats stats = new Stats();
@@ -60,12 +54,7 @@ public class RepositoryModelTraversal {
 		}
 	}
 
-	public Stats run(boolean resume, boolean save, TraversalState state, int numberOfRevsToImport) {	
-		etmMonitor.start();
-		HttpConsoleServer etmServer = new HttpConsoleServer(etmMonitor);
-		etmServer.setListenPort(45000);
-		etmServer.start();
-		
+	public Stats run(boolean resume, boolean save, TraversalState state, int numberOfRevsToImport) {			
 		openBranches.clear();
 		completedBranches.clear();
 		merges.clear();
@@ -105,10 +94,8 @@ public class RepositoryModelTraversal {
 				count++;
 				
 				// print performance data
-				if (count % 100 == 0 && count != 0) {
-					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-					etmMonitor.render(new SimpleTextRenderer(new OutputStreamWriter(byteArrayOutputStream)));
-					SrcRepoActivator.INSTANCE.info(byteArrayOutputStream.toString());
+				if (count % 100 == 0 && count != 0) {					
+					SrcRepoActivator.INSTANCE.info(Statistics.reportToString());
 				}
 				
 				// is branch or branch complete: determine next rev
@@ -143,24 +130,20 @@ public class RepositoryModelTraversal {
 					break branchLoop;
 				}
 			}						
-		}
-		
-		etmMonitor.stop();
-		etmServer.stop();
-		
+		}	
 		return stats;
 	}
 	
 	private void visitRev(Rev rev, int number) {
-		EtmPoint visitPoint = etmMonitor.createPoint("Rev:whole_visit");
+		Timer visitAllTimer = visitAllStat.timer();
 		
-		EtmPoint startPoint = etmMonitor.createPoint("Rev:start");
+		Timer visitStartTimer = visitStartStat.timer();
 		visitor.onStartRev(rev, number);
-		startPoint.collect();
+		visitStartTimer.track();
 		
 		for (ParentRelation parentRelation: rev.getParentRelations()) {
 			for (Diff diff : parentRelation.getDiffs()) {
-				EtmPoint diffPoint = etmMonitor.createPoint("Rev:diff");
+				Timer visitDiffTimer = visitDiffStat.timer();
 				if (diff.getType() == ChangeType.ADD) {
 					visitor.onAddedFile(diff);
 				} else if (diff.getType() == ChangeType.COPY) {
@@ -172,15 +155,14 @@ public class RepositoryModelTraversal {
 				} else if (diff.getType() == ChangeType.RENAME) {
 					visitor.onRenamedFile(diff);
 				}
-				diffPoint.collect();
+				visitDiffTimer.track();
 			}
 		}
-		EtmPoint completePoint = etmMonitor.createPoint("Rev:complete");
+		Timer visitCompleteTimer = visitCompleteStat.timer();
 		visitor.onCompleteRev(rev);
-		completePoint.collect();
-		lastImportedRev = rev;
-		visitPoint.collect();
-	}
+		visitCompleteTimer.track();
+		visitAllTimer.track();
+	}	
 	
 	/**
 	 * @return the revision that import of current branch should be continued with

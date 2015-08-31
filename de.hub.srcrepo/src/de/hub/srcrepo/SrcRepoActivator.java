@@ -6,16 +6,27 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
+import de.hub.jstattrack.JStatTrackActivator;
+
 public class SrcRepoActivator extends Plugin {
+	
+	public static void main(String[] args) {
+		System.out.println("Hello World!");
+	}
 
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
 	private boolean logInStandAlone = true;
 	
+	private void init() {
+		JStatTrackActivator.instance.withWebServer = true;
+	}
+	
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
+		INSTANCE.init();
 	}
 
 	public void debug(String msg) {
@@ -45,6 +56,8 @@ public class SrcRepoActivator extends Plugin {
 	public static void standalone() {
 		INSTANCE = new SrcRepoActivator();
 		INSTANCE.isStandAlone = true;
+		JStatTrackActivator.standalone();
+		INSTANCE.init();
 	}
 	
 	private void log(int level, String msg, Exception e) {

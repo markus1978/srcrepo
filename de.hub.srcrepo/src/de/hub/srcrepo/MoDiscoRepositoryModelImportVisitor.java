@@ -33,6 +33,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
+import de.hub.jstattrack.Statistic;
+import de.hub.jstattrack.Statistic.Timer;
+import de.hub.jstattrack.StatisticBuilder;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
@@ -43,19 +46,15 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
-import etm.core.monitor.EtmMonitor;
-import etm.core.monitor.EtmPoint;
 
-public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor, IRepositoryModelVisitor.ETMExtension {
+public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {
 
 	protected final ISourceControlSystem sourceControlSystem;
 	protected final JavaFactory javaFactory;
 	protected final JavaPackage javaPackage;
 	protected final RepositoryModel repositoryModel;
 	protected final RepositoryModelFactory repositoryFactory;
-	
-	private EtmMonitor etmMonitor = null;
-	
+
 	// volatile
 	private IProject[] allProjects;
 	private Rev currentRev;
@@ -71,6 +70,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private IPath absoluteWorkingDirectoryPath;
 	private Collection<String> javaLikeExtensions = new HashSet<String>();
 	
+	private static final Statistic revCheckoutStat = StatisticBuilder.createWithSummary().register(MoDiscoRepositoryModelImportVisitor.class, "revCheckout");
+	private static final Statistic revRefreshStat = StatisticBuilder.createWithSummary().register(MoDiscoRepositoryModelImportVisitor.class, "revRefresh");
+	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
 		this.javaPackage = javaPackage;
 		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
@@ -84,13 +86,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		this.absoluteWorkingDirectoryPath = new Path(sourceControlSystem.getWorkingCopy().getAbsolutePath());
 		Collections.addAll(javaLikeExtensions, JavaCore.getJavaLikeExtensions());
 	}
-
-	@Override
-	public void setETMMonitor(EtmMonitor monitor) {
-		this.etmMonitor = monitor;
-	}
-
-
 
 	@Override
 	public void onMerge(Rev mergeRev, Rev branchRev) {
@@ -195,7 +190,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {		
 			// checkout
-			EtmPoint point = etmMonitor.createPoint("Rev:checkout");
+			Timer revCheckoutTimer = revCheckoutStat.timer();
 			try {				
 				sourceControlSystem.checkoutRevision(currentRev.getName());				
 			} catch (SourceControlException e) {							
@@ -203,9 +198,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			} catch (Exception e) {
 				reportImportError(currentRev, "Exception while checking out.", e, true);
 			} finally {
-				point.collect();
+				revCheckoutTimer.track();
 				
-				point = etmMonitor.createPoint("Rev:refresh");
+				Timer revRefreshTimer = revRefreshStat.timer();
 				// refresh and remove deleted projects from workspace implicetely
 				ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
 				
@@ -257,7 +252,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					allProjects = ProjectUtil.getValidOpenProjects(sourceControlSystem.getWorkingCopy());
 					knownProjects = allProjects.length;
 				}		
-				point.collect();
+				revRefreshTimer.track();
 			}
 			
 			return Status.OK_STATUS;
