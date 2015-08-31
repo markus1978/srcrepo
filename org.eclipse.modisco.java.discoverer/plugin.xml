@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?><!--
+    Copyright (c) 2011 Mia-Software.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        Nicolas Bros (Mia-Software) - Bug 335003 - [Discoverer] : Existing Discoverers Refactoring based on new framework
+        Gregoire Dupe (Mia-Software) - Bug 403912 - Java to KDM discoverer active on Resource
+ -->
+
+<plugin>
+
+   <extension point="org.eclipse.modisco.infra.discovery.core.discoverer">
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromJavaProject"
+            id="org.eclipse.modisco.java.discoverer.javaProject">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromProject"
+            id="org.eclipse.modisco.java.discoverer.project">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromClassFile"
+            id="org.eclipse.modisco.java.discoverer.class">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverJavaModelFromLibrary"
+            id="org.eclipse.modisco.java.discoverer.library">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverKDMModelFromJavaModel"
+            id="org.eclipse.modisco.java.discoverer.javaToKDM">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.internal.DiscoverKDMModelFromEMFResources"
+            id="org.eclipse.modisco.java.discoverer.javaResourceToKDM">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverKDMModelFromJavaProject"
+            id="org.eclipse.modisco.java.discoverer.javaProjectToKDM">
+      </discoverer>
+      <discoverer
+            class="org.eclipse.modisco.java.discoverer.DiscoverKDMModelFromProject"
+            id="org.eclipse.modisco.java.discoverer.projectToKDM">
+      </discoverer>
+   </extension>
+   
+   <extension point="org.eclipse.emf.facet.util.emf.core.serialization">
+      <serializer class="org.eclipse.modisco.java.discoverer.internal.serialization.ElementsToAnalyzeSerializer"/>
+      <serializer class="org.eclipse.modisco.java.discoverer.internal.serialization.JavaProjectSerializer"/>
+   </extension>
+   
+</plugin>

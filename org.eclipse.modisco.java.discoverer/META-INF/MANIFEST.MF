@@ -1,0 +1,238 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.eclipse.modisco.java.discoverer;singleton:=tr
+ ue
+Archiver-Version: Plexus Archiver
+Built-By: hudsonBuild
+Require-Bundle: org.eclipse.gmt.modisco.infra.common.core,org.eclipse.
+ jdt.core,org.eclipse.gmt.modisco.java,org.eclipse.m2m.atl.drivers.emf
+ 4atl;bundle-version="3.0.0",org.eclipse.m2m.atl.core.emf;bundle-versi
+ on="3.0.0",org.eclipse.modisco.kdm.source.extension;bundle-version="0
+ .9.0";visibility:="reexport",org.eclipse.modisco.infra.discovery;bund
+ le-version="0.9.0",org.eclipse.modisco.infra.discovery.core;bundle-ve
+ rsion="0.9.0",org.eclipse.emf.facet.util.emf.core;bundle-version="0.1
+ .0",org.eclipse.modisco.util.atl.core;bundle-version="0.9.0",org.ecli
+ pse.modisco.kdm.source.discoverer;bundle-version="0.9.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ManifestVersion: 2
+Bundle-Vendor: %Bundle-Vendor
+Export-Package: org.eclipse.modisco.java.discoverer,org.eclipse.modisc
+ o.java.discoverer.internal;x-friends:="org.eclipse.modisco.java.disco
+ verer.tests",org.eclipse.modisco.java.discoverer.internal.core;x-inte
+ rnal:=true,org.eclipse.modisco.java.discoverer.internal.io.java;x-fri
+ ends:="org.eclipse.modisco.java.discoverer.cdo",org.eclipse.modisco.j
+ ava.discoverer.internal.io.java.binding;x-friends:="org.eclipse.modis
+ co.java.discoverer.cdo"
+Bundle-Name: %Bundle-Name
+Bundle-Version: 0.13.0.201505191058
+Bundle-Activator: org.eclipse.modisco.java.discoverer.internal.JavaAct
+ ivator
+Created-By: Apache Maven
+Build-Jdk: 1.7.0_75
+
+Name: plugin.xml
+SHA-256-Digest: fp8SWeJy+VEZxq1qEj+bAu6Z/EiB4hpKFsLtHpJ36EA=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/LibraryR
+ eader.class
+SHA-256-Digest: pxpbEfbA08Mi31KfBTafmHGvc4t4xBpnpPj7S9ywqVs=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Met
+ hodBinding.class
+SHA-256-Digest: 2ysPx7eGj/G2hIhcZgbAjwifAJnLYzOIyJHLfYKLo6Y=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Bin
+ dingManager.class
+SHA-256-Digest: hCgENLTTUyO1m5Mvu4qpZIr0ZQRzhw1BBVQ4fyHz10Q=
+
+Name: org/eclipse/modisco/java/discoverer/internal/resources/transform
+ ations/javaToKdm.atl
+SHA-256-Digest: MmidvPcGQ5Z5m8I2oswybQiGx5nfjAb8s2NB9qMyEiQ=
+
+Name: META-INF/maven/org.eclipse.mdt/org.eclipse.modisco.java.discover
+ er/pom.xml
+SHA-256-Digest: QhXVv72ugKnSA++hpucY6FyVytAtaZpApo4A8jIYJ+g=
+
+Name: org/eclipse/modisco/java/discoverer/internal/serialization/Eleme
+ ntsToAnalyzeSerializer.class
+SHA-256-Digest: rcspImMloRLWUCUjom8bR9APHi+OIVT3qqDlh/NLXH0=
+
+Name: org/eclipse/modisco/java/discoverer/internal/core/JavaJdtBridge.
+ class
+SHA-256-Digest: mlO5aUa/9jxToFTDxuwNlEA3Ii2h8S31nMc5gMLPVYY=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Bin
+ ding.class
+SHA-256-Digest: kBfknyLxgYv/2WWt7PW66VDOuO+YDN35LL+ZQ6nMtZU=
+
+Name: org/eclipse/modisco/java/discoverer/internal/IModelReader.class
+SHA-256-Digest: yyP+m1fgNajMddI6ofyuYh1S4EgIoe8QAJNXosLDl1Y=
+
+Name: org/eclipse/modisco/java/discoverer/internal/resources/transform
+ ations/javaToKdm.asm
+SHA-256-Digest: eFaE56SXgfKhKj71D50tksGoyQNNIJh9DciTX27te6Q=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/JavaReader.
+ class
+SHA-256-Digest: qNhA5XGMJ/4DYbOr5MQfkdkMD3CxlFLtewhwbl+NHuQ=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/TypeFind
+ er.class
+SHA-256-Digest: AtuUXw62KzYDKZJKoz4ujmELj506ieP3Q5Eqx45Kas4=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/CommentsMan
+ ager$1.class
+SHA-256-Digest: N7kTtggrVlOynczT8sxK4+Q6TAsIAEbWfYPmPrDCzqY=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/MethodRedef
+ initionManager.class
+SHA-256-Digest: Q6aC3BsJG38xcQWaJfqGHYjTUDbhZjiDHK+MhKrAUys=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/LibraryR
+ eaderOptions.class
+SHA-256-Digest: j9htG8sy5i6mUueIWwYfSrvCM8kgYpnfsKAd+xgA7eA=
+
+Name: org/eclipse/modisco/java/discoverer/ElementsToAnalyze.class
+SHA-256-Digest: UfFadwkYgYZ3kMM8YbgDzwulwhC1TYlmLkuDj5R/+04=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverKDMModelFromProject.
+ class
+SHA-256-Digest: y6wlmw+JA+AEJIsJ2LX9J7u6E9PL1t+hhWdgoMdOkiQ=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverJavaModelFromClassFi
+ le.class
+SHA-256-Digest: J63eVsc8oQVOP8YCfinZQEq/XI5LXwdlSlp8pw0yic8=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Unr
+ esolvedBinding.class
+SHA-256-Digest: 6s3AeV3Ub9+S3i+zKBBJ+QkzWsaZgXmmiq6aJEi4IlE=
+
+Name: org/eclipse/modisco/java/discoverer/JavaDiscoveryConstants.class
+SHA-256-Digest: g1Z6LpHEMqLBFXqbfJZ+iv+oixcUCr+u0jg5uzsxIkQ=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverJavaModelFromProject
+ .class
+SHA-256-Digest: F2PpQy/QN3FT06LiMK9KrqfCjy7Ofoinno9pyrRW9cI=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverKDMModelFromJavaMode
+ l.class
+SHA-256-Digest: tg0+5s5TSMQlGD7tbKZxCDQjLPgd+VXDmaLl+6CWF7M=
+
+Name: OSGI-INF/l10n/bundle.properties
+SHA-256-Digest: y3FQUaT4z6fmGvjoo2mR0i0qxZ0d4y6Pry+qVFhvM14=
+
+Name: org/eclipse/modisco/java/discoverer/internal/JavaActivator.class
+SHA-256-Digest: PiYjKkH3OzjKvEJFcs2zl1xFXVeNNo4GV/O3yfvAk/U=
+
+Name: org/eclipse/modisco/java/discoverer/internal/TranslateJavaModelT
+ oKdm.class
+SHA-256-Digest: a+7yGXouQv1+0i1HiE+IGJ8K+iG2jfrnrYlC3H77QCM=
+
+Name: org/eclipse/modisco/java/discoverer/internal/Messages.class
+SHA-256-Digest: B3ePFiBwmbWPVuKw1cB4Fp58uUNYF9xLScDDeiyyvCg=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/CommentsMan
+ ager.class
+SHA-256-Digest: 49eTVOKAM0SLcDbEvSJBaksu6CSAQQ7X8ieJqnxj6Lo=
+
+Name: org/eclipse/modisco/java/discoverer/JavaModelUtils.class
+SHA-256-Digest: P5ku3XrcaS23UT7Tgv+MSKtTxhe+VhjEbTojcNbrelg=
+
+Name: org/eclipse/modisco/java/discoverer/AbstractDiscoverJavaModelFro
+ mProject.class
+SHA-256-Digest: KCIM49OlF4Te3t2ZkbLWmFyR2TEzHMOT1nZ2QLybgos=
+
+Name: org/eclipse/modisco/java/discoverer/internal/messages.properties
+SHA-256-Digest: mx/JR9R8xCQhb6u4zwI5qYh+P9YIF6lFv80y/Fti1XM=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/IBi
+ ndingFactory.class
+SHA-256-Digest: pM7xSv0ijujkQdF++N5rD9NhLVXsQycwBaVO+bpvaNk=
+
+Name: org/eclipse/modisco/java/discoverer/internal/serialization/JavaP
+ rojectSerializer.class
+SHA-256-Digest: qVPYvPffazi24r7sWsto6nLVxlWmeBRFA2vORWD0J7Y=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/JDTVisitor.
+ class
+SHA-256-Digest: xc5i9SnRCLx3TPfLZXm4m2NdZ+MZh528L2AAN5Uk8HE=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Bij
+ ectiveMap.class
+SHA-256-Digest: SRCxs60QgZPk5CbqFnDn2dAsMXdOqEAthTGRuMJ+VHk=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Cla
+ ssBinding.class
+SHA-256-Digest: 2T/vyXvicF8LuchMpy5evezDU/uDKrsKZEBIzzr44vc=
+
+Name: META-INF/maven/org.eclipse.mdt/org.eclipse.modisco.java.discover
+ er/pom.properties
+SHA-256-Digest: XPpdhhUBY/oKJYn+Ia+ZW/Qkv8ylNs3EOb2YFMy15MQ=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Par
+ ameterBinding.class
+SHA-256-Digest: Lzh2qTBxTq+1DM8NMaiMkR1jN6oVViLgnAx/bULruoI=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/binding/
+ JavaModelDelegateBindingFactory.class
+SHA-256-Digest: Ml3pKLSeP3njZZ2isoQ1uc93ar1ovQqWTk/Gsd/Ampw=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverJavaModelFromLibrary
+ .class
+SHA-256-Digest: RaoVRbDXnt/lm00soTwiTt1jmwaxJT+tJuifYyPIW98=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Pac
+ kageBinding.class
+SHA-256-Digest: U6bKUB+NgRvM6gvn0JluFFeirxZdF4yVFUhNpuaPYQI=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/ClassFil
+ eParserUtils.class
+SHA-256-Digest: 0hveBFG9pePvEfNrZ4zB+Sd4uSY40v3GuUIY+JzP1eo=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/Manifest
+ Reader.class
+SHA-256-Digest: CT5PwAbaQ0I52ncc7kLu+0V+6BC8TMcC+hfIkjTZUDs=
+
+Name: about.html
+SHA-256-Digest: zK6wuxiiaoUOatD8iNRBRhZ90HEwhSGYofIxaQV6ZD0=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/JDT
+ DelegateBindingFactory.class
+SHA-256-Digest: lbaC3Gg8ydBJCr/nyGL6uhtQ5ZeF1/TVBnLxwbyisiM=
+
+Name: org/eclipse/modisco/java/discoverer/internal/DiscoverKDMModelFro
+ mEMFResources.class
+SHA-256-Digest: xixCQoI7PhtgHsIFJes8ctsGlVR7Suk8l2hxRzkusCE=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Fea
+ tureBinding.class
+SHA-256-Digest: FR31dLuc4I7+0BZ632crpSYRK5oc7QiuXAttFwcmFGs=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Fie
+ ldBinding.class
+SHA-256-Digest: o+e6Myz6VMOgiX55TXPA663q9NPkcW6baZrlzhsw7jM=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Var
+ iableBinding.class
+SHA-256-Digest: jKvlBb8VfDvQmzJvqcVDNA3kDuPuLPckOdA6iWSHOOE=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverJavaModelFromJavaPro
+ ject.class
+SHA-256-Digest: t44AAJcWPD/I5I+/s4LO4ns7jTne80DcKVo7gZR2xvo=
+
+Name: org/eclipse/modisco/java/discoverer/DiscoverKDMModelFromJavaProj
+ ect.class
+SHA-256-Digest: ag7ToZniy1Q2qaHKpyYeQn7Jp3ae/8Mj88ZT31ptrSg=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/JDTVisitorU
+ tils.class
+SHA-256-Digest: OFjGtKhj87g6WvF39CpOR1GMbP4JvU4Yi1MnubEWPzQ=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/java/binding/Pen
+ dingElement.class
+SHA-256-Digest: vqNd271TsbI86O09Qj+H+ipijBzFlfmExkP/raV3WOs=
+
+Name: org/eclipse/modisco/java/discoverer/internal/io/library/ClassFil
+ eParser.class
+SHA-256-Digest: f0Q5WbWFDhV2tfPUNAfLnfDL0X8ZihZTfni6aXPXySU=
+
