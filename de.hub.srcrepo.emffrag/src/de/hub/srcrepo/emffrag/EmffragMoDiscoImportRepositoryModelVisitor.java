@@ -31,6 +31,5 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 	public void close() {
 		super.close();
 		((FObject)repositoryModel).fFragmentation().close();
-	}	
-		
+	}
 }
