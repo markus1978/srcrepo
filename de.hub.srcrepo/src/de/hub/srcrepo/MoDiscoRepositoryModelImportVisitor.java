@@ -374,6 +374,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					count++;
 					importedCompilationUnits++;
 				} else {
+					EcoreUtil.delete(javaModel);
 					reportImportError(currentRev, "Sucessfully imported a compilation unit, but no model was created: " + compilationUnit, null, true);
 				}
 			}										
