@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -35,6 +36,7 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 import de.hub.jstattrack.Statistic;
 import de.hub.jstattrack.Statistic.Timer;
 import de.hub.jstattrack.StatisticBuilder;
+import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -46,9 +48,9 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	private final boolean isTryHard = false;
 	private Git git = null;
 	
-	private final Statistic gitCleanStat = StatisticBuilder.createWithSummary().register(GitSourceControlSystem.class, "gitClean");
-	private final Statistic gitResetStat = StatisticBuilder.createWithSummary().register(GitSourceControlSystem.class, "gitReset");
-	private final Statistic gitCheckoutStat = StatisticBuilder.createWithSummary().register(GitSourceControlSystem.class, "gitCheckout");
+	private final Statistic gitCleanStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(GitSourceControlSystem.class, "gitCleanTime");
+	private final Statistic gitResetStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(GitSourceControlSystem.class, "gitResetTime");
+	private final Statistic gitCheckoutStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(GitSourceControlSystem.class, "gitCheckoutTime");
 
 	@Override
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {
