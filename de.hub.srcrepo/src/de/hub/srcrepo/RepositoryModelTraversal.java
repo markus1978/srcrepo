@@ -1,8 +1,10 @@
 package de.hub.srcrepo;
 
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
@@ -10,6 +12,7 @@ import de.hub.jstattrack.Statistic;
 import de.hub.jstattrack.Statistic.Timer;
 import de.hub.jstattrack.StatisticBuilder;
 import de.hub.jstattrack.Statistics;
+import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -18,10 +21,10 @@ import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public class RepositoryModelTraversal {
 	
-	private final static Statistic visitAllStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitAll");
-	private final static Statistic visitStartStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitStart");
-	private final static Statistic visitDiffStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitDiff");
-	private final static Statistic visitCompleteStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitComplete");
+	private final static Statistic visitAllStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(RepositoryModelTraversal.class, "visitAllTime");
+	private final static Statistic visitStartStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitStartTime");
+	private final static Statistic visitDiffStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitDiffTime");
+	private final static Statistic visitCompleteStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitCompleteTime");
 	
 	private final RepositoryModel repositoryModel;
 	private final IRepositoryModelVisitor visitor;
@@ -96,6 +99,17 @@ public class RepositoryModelTraversal {
 				// print performance data
 				if (count % 100 == 0 && count != 0) {					
 					SrcRepoActivator.INSTANCE.info(Statistics.reportToString());
+				}
+				
+				if (count % 1000 == 0 && count != 0) {
+					try {
+						String json = Statistics.reportToJSON().toString();
+						PrintWriter out = new PrintWriter("/tmp/srcrepo.json");
+						out.print(json);
+						out.close();
+					} catch (Exception e) {
+						SrcRepoActivator.INSTANCE.warning("Could not write json! " + e.getMessage(), e);
+					}					
 				}
 				
 				// is branch or branch complete: determine next rev

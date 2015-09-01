@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -36,6 +37,8 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingEleme
 import de.hub.jstattrack.Statistic;
 import de.hub.jstattrack.Statistic.Timer;
 import de.hub.jstattrack.StatisticBuilder;
+import de.hub.jstattrack.services.BatchedPlot;
+import de.hub.jstattrack.services.Histogram;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
@@ -71,8 +74,10 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private IPath absoluteWorkingDirectoryPath;
 	private Collection<String> javaLikeExtensions = new HashSet<String>();
 	
-	private static final Statistic revCheckoutStat = StatisticBuilder.createWithSummary().register(MoDiscoRepositoryModelImportVisitor.class, "revCheckout");
-	private static final Statistic revRefreshStat = StatisticBuilder.createWithSummary().register(MoDiscoRepositoryModelImportVisitor.class, "revRefresh");
+	private static final Statistic revCheckoutStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "revCheckoutTime");
+	private static final Statistic revRefreshStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "revRefreshTime");
+	private static final Statistic revImportTimeStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "revImportTime");
+	private static final Statistic revImportSizeStat = StatisticBuilder.createWithSummary().withService(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "revImportSize");
 	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
 		this.javaPackage = javaPackage;
@@ -312,7 +317,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {									
 			// import diffs
+			Timer importTimer = revImportTimeStat.timer();
 			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
+			revImportSizeStat.track(javaDiffs.size());
 			int count = 0;
 			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {
 				SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
@@ -332,7 +339,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						continue;
 					} else {
 						EcoreUtil.delete(javaModel);
-						throw new RuntimeException(e);
+						reportImportError(currentRev, "Could not compile a compilation unit (is ignored) for unknown reasons: " + e.getMessage(), e, true);
+						continue;
 					}
 				}							
 				
@@ -376,6 +384,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			}										
 				
 			SrcRepoActivator.INSTANCE.info("imported " + count + " compilation units");
+			importTimer.track();
 			return Status.OK_STATUS;
 		}		
 	}
