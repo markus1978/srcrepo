@@ -33,6 +33,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
@@ -42,12 +43,12 @@ import de.hub.jstattrack.ValueStatistic;
 import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.jstattrack.services.Histogram;
 import de.hub.jstattrack.services.Summary;
+import de.hub.jstattrack.services.WindowedPlot;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -65,8 +66,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	// volatile
 	private IProject[] allProjects;
 	private Rev currentRev;
-	private Map<ICompilationUnit, Diff> javaDiffsInCurrentRev = new HashMap<ICompilationUnit, Diff>();	
-	private boolean hasProjectFileDiffs = false;
+	private List<Diff> projectFileDiffs = new ArrayList<Diff>();	
+	private List<Diff> potentialJavaDiffs = new ArrayList<Diff>();
 	private boolean updateJavaProjectStructureForMerge = false;	
 	
 	// statistics
@@ -81,7 +82,14 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private static final TimeStatistic revCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision checkout time");
 	private static final TimeStatistic revRefreshStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time");
 	private static final TimeStatistic revImportTimeStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision import time");
-	private static final ValueStatistic revImportSizeStat = new ValueStatistic("#").with(Summary.class).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Imported Java diffs / revision");
+	private static final ValueStatistic revImportSizeStat = new ValueStatistic("#").with(Summary.class).with(Histogram.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Imported Java diffs / revision");
+	
+	private static final TimeStatistic revRefreshStructure = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (project structure)");
+	private static final TimeStatistic revGetCompilationUnits = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (gather CUs)");
+	private static final TimeStatistic revRefreshCompilationUnits = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (CUs)");
+	
+	private static final ValueStatistic revNumberOfRefreshedResourcesStat = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Refreshed resources per rev");
+	private static final ValueStatistic revNumberOfChangedProjectFiles = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision number of changed project files");
 	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
 		this.javaPackage = javaPackage;
@@ -102,7 +110,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		updateJavaProjectStructureForMerge = true;
 	}
 	
-	private void runJob(WorkspaceJob job) {
+	private boolean runJob(WorkspaceJob job) {
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.schedule();
 		try {
@@ -118,10 +126,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			if (result.matches(IStatus.ERROR)) {
 				Throwable e = result.getException();
 				reportImportError(currentRev, "Unexpected error during job execution [" + job.getName() + "]", e, false);
-			} else {
+			} else if (result.getCode() != IStatus.CANCEL) {
 				reportImportError(currentRev, "Job with unexpected status [" + job.getName() + "]", null, false);
 			}
-		}
+		} 
+		
+		return result.getCode() == IStatus.OK;
 	}
 
 	@Override
@@ -139,34 +149,65 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		currentRev = rev;	
 		
 		// clear the knowledge about project file diffs
-		hasProjectFileDiffs = false;
+		projectFileDiffs.clear();
 		
 		// clear the java diffs collected for the last ref
-		javaDiffsInCurrentRev.clear();
+		potentialJavaDiffs.clear();
 		
 		return true;
 	}
 
 	@Override
 	public void onCompleteRev(Rev rev) {
-		// checkout the new ref
-		if (javaDiffsInCurrentRev.size() > 0 || hasProjectFileDiffs) {
-			runJob(new CheckoutAndRefreshJob(hasProjectFileDiffs, javaDiffsInCurrentRev));
+		
+		revNumberOfChangedProjectFiles.track(projectFileDiffs.size());
+		
+		boolean checkoutSuccessful = true;
+		Timer checkoutTimer = revCheckoutStat.timer();
+		if (!potentialJavaDiffs.isEmpty() || !projectFileDiffs.isEmpty()) {
+			checkoutSuccessful = runJob(new CheckoutJob(rev.getName()));
+		}
+		checkoutTimer.track();
+				
+		if (checkoutSuccessful) {
+			Map<ICompilationUnit, Diff> javaDiffs = new HashMap<ICompilationUnit, Diff>();
+			
+			boolean refreshSuccessful = true;
+			Timer refreshTimer = revRefreshStat.timer();
+			if (!potentialJavaDiffs.isEmpty() || !projectFileDiffs.isEmpty()) {
+				// calls revNumberOfRefreshedResourcesStat.track(int); implicitly
+				refreshSuccessful = runJob(new RefreshJob(projectFileDiffs, potentialJavaDiffs, javaDiffs));
+			} else {
+				revNumberOfRefreshedResourcesStat.track(0);	
+			}
+			refreshTimer.track();
+			
+			Timer importTimer = revImportTimeStat.timer();
+			if (refreshSuccessful && javaDiffs.size() > 0) {
+				revImportSizeStat.track(javaDiffs.size());
+				runJob(new ImportJavaCompilationUnits(javaDiffs));
+			} else {
+				revImportSizeStat.track(0);
+			}
+			importTimer.track();	
+		} else {
+			revRefreshStat.timer().track();
+			revImportTimeStat.timer().track();
+			revImportSizeStat.track(0);
+			revNumberOfRefreshedResourcesStat.track(0);
 		}
 		
-		if (javaDiffsInCurrentRev.size() > 0) {
-			runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentRev));
-		}		
+		updateJavaProjectStructureForMerge = false;
 	}
 
 	@Override
 	public void onCopiedFile(Diff diff) {
-		onModifiedFile(diff);
+
 	}
 
 	@Override
 	public void onRenamedFile(Diff diff) {
-		onModifiedFile(diff);
+
 	}
 
 	@Override
@@ -175,14 +216,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public void onModifiedFile(final Diff diff) {
-		ICompilationUnit compilationUnit = getCompilationUnitForDiff(diff);
-		if (compilationUnit != null) {
-			javaDiffsInCurrentRev.put(compilationUnit, diff);			
-		}
-		
-		if (new Path(diff.getNewPath()).lastSegment().equals(".project")) {
-			hasProjectFileDiffs = true;
+	public void onModifiedFile(final Diff diff) {	
+		String fileExtension = new Path(diff.getNewPath()).getFileExtension();		
+		if (fileExtension != null && javaLikeExtensions.contains(fileExtension)) {
+			potentialJavaDiffs.add(diff);
+		} else if (new Path(diff.getNewPath()).lastSegment().equals(".project")) {
+			projectFileDiffs.add(diff);
 		}
 	}
 
@@ -191,88 +230,174 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		
 	}
 	
-	private class CheckoutAndRefreshJob extends WorkspaceJob {
+	private class CheckoutJob extends WorkspaceJob {
+		private final String revName;
 		
-		private final boolean hasProjectFileDiffs;
-		private final Map<ICompilationUnit, Diff> javaDiffs;	
-				
-		public CheckoutAndRefreshJob(boolean hasProjectFileDiffs, Map<ICompilationUnit, Diff> javaDiffs) {
-			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " git checkout.");
-			this.hasProjectFileDiffs = hasProjectFileDiffs;
-			this.javaDiffs = javaDiffs;
+		public CheckoutJob(String revName) {
+			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " checkout");
+			this.revName = revName;
 		}
 
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {		
-			// checkout
 			Timer revCheckoutTimer = revCheckoutStat.timer();
 			try {				
-				sourceControlSystem.checkoutRevision(currentRev.getName());				
+				sourceControlSystem.checkoutRevision(revName);				
 			} catch (SourceControlException e) {							
 				reportImportError(currentRev, "Error while checking out.", e, true);
+				return Status.CANCEL_STATUS;
 			} catch (Exception e) {
 				reportImportError(currentRev, "Exception while checking out.", e, true);
+				return Status.CANCEL_STATUS;
 			} finally {
 				revCheckoutTimer.track();
-				
-				Timer revRefreshTimer = revRefreshStat.timer();
-				
-				if (hasProjectFileDiffs || updateJavaProjectStructureForMerge) {
-					// refresh everything
-					
-					// refresh and remove deleted projects from workspace implicetely
-					ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
-					
-					Collection<File> actualProjectFiles = new HashSet<File>();
-					ProjectUtil.findProjectFiles(actualProjectFiles,sourceControlSystem.getWorkingCopy(), null, new NullProgressMonitor());
-					
-					Collection<File> workspaceProjectFiles = new HashSet<File>();				
-					for(IProject p: allProjects) {
-						IPath projectLocation = p.getLocation();
-						if (!p.isOpen() || projectLocation == null) {
-							continue;
-						}							
-						String projectFilePath = projectLocation.append(IProjectDescription.DESCRIPTION_FILE_NAME).toOSString();
-						File projectFile = new File(projectFilePath);
-						workspaceProjectFiles.add(projectFile);
-					}
-					
-					// create workspace projects for protentially new project files
-					for(File actualProjectFile: actualProjectFiles) {
-						if (!workspaceProjectFiles.contains(actualProjectFile)) {					
-							IPath projectDescriptionFile = new Path(actualProjectFile.getAbsolutePath());
-							IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(projectDescriptionFile); 
-						    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());	
-						    if (!project.exists()) {						  
-							    try {
-									project.create(description, null);
-									if (!project.isOpen()) {
-								    	project.open(null);
-								    }		
-									createdProjects++;
-									SrcRepoActivator.INSTANCE.info("Created project " + actualProjectFile);
-							    } catch (CoreException e) {
-							    	reportImportError(currentRev, "Could not create project for project file " + projectDescriptionFile, e, true);
-							    }
-						    }
-						}
-					}
-					
-					allProjects = ProjectUtil.getValidOpenProjects(sourceControlSystem.getWorkingCopy());
-					knownProjects = allProjects.length;
-				} else {
-					// refresh java files
-					IResource[] resources = new IResource[javaDiffs.size()];
-					int i = 0;
-					for (ICompilationUnit cu: javaDiffs.keySet()) {
-						resources[i++] = cu.getResource();
-					}
-					ProjectUtil.refreshResources(resources, null);
-				}
-				revRefreshTimer.track();
 			}
 			
 			return Status.OK_STATUS;
+		}
+	}
+	
+	private class RefreshJob extends WorkspaceJob {
+		
+		private final boolean hasProjectFileDiffs;
+		private final List<Diff> potentialJavaDiffs;	
+		private final Map<ICompilationUnit, Diff> javaDiffs;
+				
+		public RefreshJob(List<Diff> projectFileDiffs, List<Diff> potentialJavaDiffs, Map<ICompilationUnit, Diff> javaDiffs) {
+			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " refresh.");
+			this.hasProjectFileDiffs = !projectFileDiffs.isEmpty();
+			this.potentialJavaDiffs = potentialJavaDiffs;
+			this.javaDiffs = javaDiffs;
+		}
+
+		@Override
+		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {	
+			boolean hasErrors = false;
+			boolean refreshAll = hasProjectFileDiffs || updateJavaProjectStructureForMerge;
+			int refreshedResources = 0;
+			Timer refreshStructureTimer = revRefreshStructure.timer();
+			if (refreshAll) {
+				// refresh and remove deleted projects from workspace implicetely
+				refreshedResources += ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
+				
+				Collection<File> actualProjectFiles = new HashSet<File>();
+				ProjectUtil.findProjectFiles(actualProjectFiles,sourceControlSystem.getWorkingCopy(), null, new NullProgressMonitor());
+				
+				Collection<File> workspaceProjectFiles = new HashSet<File>();				
+				for(IProject p: allProjects) {
+					IPath projectLocation = p.getLocation();
+					if (!p.isOpen() || projectLocation == null) {
+						continue;
+					}							
+					String projectFilePath = projectLocation.append(IProjectDescription.DESCRIPTION_FILE_NAME).toOSString();
+					File projectFile = new File(projectFilePath);
+					workspaceProjectFiles.add(projectFile);
+				}
+				
+				// create workspace projects for protentially new project files
+				for(File actualProjectFile: actualProjectFiles) {
+					if (!workspaceProjectFiles.contains(actualProjectFile)) {					
+						IPath projectDescriptionFile = new Path(actualProjectFile.getAbsolutePath());
+						IProjectDescription description = ResourcesPlugin.getWorkspace().loadProjectDescription(projectDescriptionFile); 
+					    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());	
+					    if (!project.exists()) {						  
+						    try {
+								project.create(description, null);
+								if (!project.isOpen()) {
+							    	project.open(null);
+							    }		
+								createdProjects++;
+								SrcRepoActivator.INSTANCE.info("Created project " + actualProjectFile);
+						    } catch (CoreException e) {
+						    	reportImportError(currentRev, "Could not create project for project file " + projectDescriptionFile, e, true);
+						    	hasErrors = true;
+						    }
+					    }
+					}
+				}
+				
+				allProjects = ProjectUtil.getValidOpenProjects(sourceControlSystem.getWorkingCopy());
+				knownProjects = allProjects.length;
+			} 
+			refreshStructureTimer.track();
+			
+			// refresh java files
+			Timer gathrCUsTimer = revGetCompilationUnits.timer();
+			Collection<IJavaProject> refreshedProjects = new HashSet<IJavaProject>();
+			for (Diff diff: potentialJavaDiffs) {
+				IPath relativeToWorkingDirectoryPath = new Path(diff.getNewPath());		
+				String fileExtension = relativeToWorkingDirectoryPath.getFileExtension();		
+				if (fileExtension != null && javaLikeExtensions.contains(fileExtension)) {
+					// we only potentially have a compilation unit
+					boolean hasSomeClosedProjects = false;
+					for (IProject project: allProjects) {		
+						if (!project.isOpen()) {
+							hasSomeClosedProjects = true;
+						} else {
+							boolean hasJavaNature = false;
+							try {
+								hasJavaNature = project.isNatureEnabled(JavaCore.NATURE_ID);
+							} catch (CoreException e) {
+								reportImportError(currentRev, "Could not determine project nature. Assume non java project.", e, true);
+							}
+							if (hasJavaNature) {
+								try {
+									IPath projectPath = project.getLocation();
+									projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
+									
+									if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
+										relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
+										IJavaProject javaProject = JavaCore.create(project);
+										if (diff.getType() != ChangeType.MODIFY && !refreshAll && !refreshedProjects.contains(javaProject)) {
+											try {
+												ProjectUtil.refreshResources(new IResource[]{javaProject.getResource()}, new NullProgressMonitor());
+												refreshedResources++;
+											} catch (Exception e) {
+												SrcRepoActivator.INSTANCE.error("Could not refresh a java project.", e);	
+												hasErrors = true;
+											}
+
+											refreshedProjects.add(javaProject);
+										}
+										
+										IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
+										IJavaElement element = JavaCore.create(resource, javaProject);
+										if (element != null && element instanceof ICompilationUnit) {
+											javaDiffs.put((ICompilationUnit)element, diff);			
+										}
+									}
+								} catch (Exception e) {
+									reportImportError(currentRev, "Could not create a ICompilationUnit from a Java resource for some unforseen reasons.", e, true);
+								}
+							}
+						}
+					}
+					if (hasSomeClosedProjects) {
+						SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " could not be found, and some projects are closed.");
+					}						
+				}
+			}
+			gathrCUsTimer.track();
+			
+			Timer refreshCUsTimer = revRefreshCompilationUnits.timer();
+			if (!javaDiffs.isEmpty() && !refreshAll) {
+				IResource[] resources = new IResource[javaDiffs.size()];
+				int i = 0;
+				for (ICompilationUnit cu: javaDiffs.keySet()) {
+					resources[i++] = cu.getResource();
+				}
+				
+				try {
+					ProjectUtil.refreshResources(resources, new NullProgressMonitor());	
+					refreshedResources += resources.length;
+				} catch (Exception e) {
+					SrcRepoActivator.INSTANCE.error("Could not refresh all compilation units.", e);			
+					hasErrors = true;
+				}
+			}
+			refreshCUsTimer.track();
+			revNumberOfRefreshedResourcesStat.track(refreshedResources);
+			return hasErrors ? Status.CANCEL_STATUS : Status.OK_STATUS;
 		}		
 	}
 	
@@ -332,9 +457,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {									
 			// import diffs
-			Timer importTimer = revImportTimeStat.timer();
 			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
-			revImportSizeStat.track(javaDiffs.size());
 			int count = 0;
 			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {
 				SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
@@ -399,7 +522,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			}										
 				
 			SrcRepoActivator.INSTANCE.info("imported " + count + " compilation units");
-			importTimer.track();
 			return Status.OK_STATUS;
 		}		
 	}

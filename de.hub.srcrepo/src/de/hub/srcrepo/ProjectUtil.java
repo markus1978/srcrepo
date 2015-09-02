@@ -69,8 +69,8 @@ public class ProjectUtil {
 		refreshValidProjects(projects, true, monitor);
 	}
 
-	public static void refreshValidProjects(IProject[] projects,
-			boolean delete, IProgressMonitor monitor) throws CoreException {
+	public static int refreshValidProjects(IProject[] projects, boolean delete, IProgressMonitor monitor) throws CoreException {
+		int count = 0;
 		try {
 			monitor.beginTask(ProjectUtil_refreshingProjects, projects.length);
 			for (IProject p : projects) {
@@ -79,21 +79,23 @@ public class ProjectUtil {
 				IPath projectLocation = p.getLocation();
 				if (projectLocation == null)
 					continue;
-				String projectFilePath = projectLocation.append(
-						IProjectDescription.DESCRIPTION_FILE_NAME).toOSString();
+				String projectFilePath = projectLocation.append(IProjectDescription.DESCRIPTION_FILE_NAME).toOSString();
 				File projectFile = new File(projectFilePath);
-				if (projectFile.exists())
-					p.refreshLocal(IResource.DEPTH_INFINITE,
-							new SubProgressMonitor(monitor, 1));
-				else if (delete)
+				if (projectFile.exists()) {
+					p.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 1));
+					count++;
+				} else if (delete) {
 					p.delete(false, true, new SubProgressMonitor(monitor, 1));
-				else
+				} else {
 					closeMissingProject(p, projectFile, monitor);
+				}
 				monitor.worked(1);
 			}
 		} finally {
 			monitor.done();
 		}
+		
+		return count;
 	}
 
 	private static void closeMissingProject(IProject p, File projectFile,
