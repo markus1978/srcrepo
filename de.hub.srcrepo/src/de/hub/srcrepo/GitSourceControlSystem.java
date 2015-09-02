@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
@@ -49,10 +50,12 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	
 	private final boolean isTryHard = false;
 	private Git git = null;
+	private DefaultExecutor executor = null;
 	
 	private final TimeStatistic gitCleanStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT clean time");
 	private final TimeStatistic gitResetStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT reset time");
 	private final TimeStatistic gitCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT checkout time");
+	private final TimeStatistic gitCheckoutAllStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT checkout all (clean, reset, co) time");
 
 	@Override
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {
@@ -252,12 +255,17 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 
 	@Override
 	public void checkoutRevision(String name) throws SourceControlException {
+		Timer checkoutAllTimer = gitCheckoutAllStat.timer();
 		if (SrcRepoActivator.INSTANCE.useCGit) {
 			try {
-				DefaultExecutor executor = new DefaultExecutor();
-				executor.execute(CommandLine.parse("cd " + git.getRepository().getDirectory().getAbsolutePath()));
+				if (executor == null) {
+					executor = new DefaultExecutor();
+					executor.setWorkingDirectory(git.getRepository().getWorkTree());
+					executor.setStreamHandler(new PumpStreamHandler(null, null, null));
+				}
+
 				Timer cleanTimer = gitCleanStat.timer();			
-				executor.execute(CommandLine.parse("git clean"));
+				executor.execute(CommandLine.parse("git clean -f"));
 				cleanTimer.track();
 				
 				Timer resetTimer = gitResetStat.timer();
@@ -269,6 +277,8 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				checkoutTimer.track();
 			} catch (Exception e) {
 				throw new SourceControlException(e);
+			} finally {
+				checkoutAllTimer.track();
 			}
 		} else {
 			try {
@@ -297,6 +307,8 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				}			
 			} catch (GitAPIException e) {
 				throw new SourceControlException(e);
+			} finally {
+				checkoutAllTimer.track();
 			}
 		}
 	}
