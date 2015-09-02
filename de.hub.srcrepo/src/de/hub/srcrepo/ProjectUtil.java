@@ -136,15 +136,13 @@ public class ProjectUtil {
 			p.delete(false, true, new SubProgressMonitor(monitor, 1));
 	}
 
-	public static void refreshResources(IResource[] resources,
-			IProgressMonitor monitor) throws CoreException {
+	public static void refreshResources(IResource[] resources, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask(ProjectUtil_refreshing, resources.length);
 			for (IResource resource : resources) {
 				if (monitor.isCanceled())
 					break;
-				resource.refreshLocal(IResource.DEPTH_INFINITE,
-						new SubProgressMonitor(monitor, 1));
+				resource.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 1));
 				monitor.worked(1);
 			}
 		} finally {

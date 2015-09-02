@@ -28,6 +28,7 @@ import de.hub.emffrag.hbase.EmfFragHBaseActivator;
 import de.hub.emffrag.hbase.HBaseDataStore;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBDataStore;
+import de.hub.jstattrack.JStatTrackActivator;
 import de.hub.srcrepo.GitSourceControlSystem;
 import de.hub.srcrepo.IRepositoryModelVisitor;
 import de.hub.srcrepo.ISourceControlSystem;

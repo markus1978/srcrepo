@@ -36,10 +36,6 @@ public class RepositoryModelFlatTraversal {
 		
 		for(Rev rev: repositoryModel.getAllRevs()) {
 			visitRev(rev, count++);
-			
-			if (count % 100 == 0 && count != 0) {			
-				SrcRepoActivator.INSTANCE.info(Statistics.reportToString());
-			}
 		}
 	}
 	

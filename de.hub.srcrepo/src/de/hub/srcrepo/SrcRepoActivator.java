@@ -17,6 +17,7 @@ public class SrcRepoActivator extends Plugin {
 	
 	private void init() {
 		JStatTrackActivator.instance.enableWebServer();
+		JStatTrackActivator.instance.batchedDataPoints = 100;
 	}
 	
 	@Override

@@ -96,11 +96,7 @@ public class RepositoryModelTraversal {
 				visitRev(rev, ++stats.importedRevsCounter);
 				count++;
 				
-				// print performance data
-				if (count % 100 == 0 && count != 0) {					
-					SrcRepoActivator.INSTANCE.info(Statistics.reportToString());
-				}
-				
+				// print performance data				
 				if (count % 1000 == 0 && count != 0) {
 					try {
 						String json = Statistics.reportToJSON().toString();

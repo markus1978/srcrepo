@@ -1,10 +1,12 @@
 package de.hub.srcrepo;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -64,6 +66,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private IProject[] allProjects;
 	private Rev currentRev;
 	private Map<ICompilationUnit, Diff> javaDiffsInCurrentRev = new HashMap<ICompilationUnit, Diff>();	
+	private boolean hasProjectFileDiffs = false;
 	private boolean updateJavaProjectStructureForMerge = false;	
 	
 	// statistics
@@ -133,13 +136,10 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		SrcRepoActivator.INSTANCE.info("Info for visited ref; " + rev.getTime() +", " + author + ":\n" + message);
 		
 		// move current ref to the new ref
-		currentRev = rev;
+		currentRev = rev;	
 		
-		// checkout the new ref
-		runJob(new CheckoutAndRefreshJob());		
-
-		// check for new projects and refresh all java projects
-		//runJob(new JavaRefreshJob());
+		// clear the knowledge about project file diffs
+		hasProjectFileDiffs = false;
 		
 		// clear the java diffs collected for the last ref
 		javaDiffsInCurrentRev.clear();
@@ -149,21 +149,24 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void onCompleteRev(Rev rev) {
-		if (javaDiffsInCurrentRev.size() == 0) {
-			return;
+		// checkout the new ref
+		if (javaDiffsInCurrentRev.size() > 0 || hasProjectFileDiffs) {
+			runJob(new CheckoutAndRefreshJob(hasProjectFileDiffs, javaDiffsInCurrentRev));
 		}
 		
-		runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentRev));		
+		if (javaDiffsInCurrentRev.size() > 0) {
+			runJob(new ImportJavaCompilationUnits(javaDiffsInCurrentRev));
+		}		
 	}
 
 	@Override
 	public void onCopiedFile(Diff diff) {
-
+		onModifiedFile(diff);
 	}
 
 	@Override
 	public void onRenamedFile(Diff diff) {
-
+		onModifiedFile(diff);
 	}
 
 	@Override
@@ -176,7 +179,11 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		ICompilationUnit compilationUnit = getCompilationUnitForDiff(diff);
 		if (compilationUnit != null) {
 			javaDiffsInCurrentRev.put(compilationUnit, diff);			
-		}		
+		}
+		
+		if (new Path(diff.getNewPath()).lastSegment().equals(".project")) {
+			hasProjectFileDiffs = true;
+		}
 	}
 
 	@Override
@@ -184,15 +191,16 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		
 	}
 	
-	private boolean isNewOrModifiedProjectFileDiff(Diff diff) {
-		return (diff.getNewPath().endsWith(".project") && new Path(diff.getNewPath()).lastSegment().equals(".project"));
-	}
-	
 	private class CheckoutAndRefreshJob extends WorkspaceJob {
 		
-		public CheckoutAndRefreshJob() {
+		private final boolean hasProjectFileDiffs;
+		private final Map<ICompilationUnit, Diff> javaDiffs;	
+				
+		public CheckoutAndRefreshJob(boolean hasProjectFileDiffs, Map<ICompilationUnit, Diff> javaDiffs) {
 			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " git checkout.");
-		}		
+			this.hasProjectFileDiffs = hasProjectFileDiffs;
+			this.javaDiffs = javaDiffs;
+		}
 
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {		
@@ -208,19 +216,13 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				revCheckoutTimer.track();
 				
 				Timer revRefreshTimer = revRefreshStat.timer();
-				// refresh and remove deleted projects from workspace implicetely
-				ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
 				
-				boolean hasNewOrModifiedProjectFileDiff = false;
-				loop: for (ParentRelation parentRelation: currentRev.getParentRelations()) {			
-					for (Diff diff: parentRelation.getDiffs()) {
-						if (isNewOrModifiedProjectFileDiff(diff)) {
-							hasNewOrModifiedProjectFileDiff = true;
-							break loop;
-						}
-					}			
-				}	
-				if (hasNewOrModifiedProjectFileDiff || updateJavaProjectStructureForMerge) {		
+				if (hasProjectFileDiffs || updateJavaProjectStructureForMerge) {
+					// refresh everything
+					
+					// refresh and remove deleted projects from workspace implicetely
+					ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
+					
 					Collection<File> actualProjectFiles = new HashSet<File>();
 					ProjectUtil.findProjectFiles(actualProjectFiles,sourceControlSystem.getWorkingCopy(), null, new NullProgressMonitor());
 					
@@ -258,7 +260,15 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					
 					allProjects = ProjectUtil.getValidOpenProjects(sourceControlSystem.getWorkingCopy());
 					knownProjects = allProjects.length;
-				}		
+				} else {
+					// refresh java files
+					IResource[] resources = new IResource[javaDiffs.size()];
+					int i = 0;
+					for (ICompilationUnit cu: javaDiffs.keySet()) {
+						resources[i++] = cu.getResource();
+					}
+					ProjectUtil.refreshResources(resources, null);
+				}
 				revRefreshTimer.track();
 			}
 			
