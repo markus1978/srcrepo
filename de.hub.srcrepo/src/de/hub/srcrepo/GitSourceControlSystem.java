@@ -33,10 +33,10 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
-import de.hub.jstattrack.Statistic;
-import de.hub.jstattrack.Statistic.Timer;
-import de.hub.jstattrack.StatisticBuilder;
+import de.hub.jstattrack.TimeStatistic;
+import de.hub.jstattrack.TimeStatistic.Timer;
 import de.hub.jstattrack.services.BatchedPlot;
+import de.hub.jstattrack.services.Summary;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -48,9 +48,9 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	private final boolean isTryHard = false;
 	private Git git = null;
 	
-	private final Statistic gitCleanStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(GitSourceControlSystem.class, "gitCleanTime");
-	private final Statistic gitResetStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(GitSourceControlSystem.class, "gitResetTime");
-	private final Statistic gitCheckoutStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(GitSourceControlSystem.class, "gitCheckoutTime");
+	private final TimeStatistic gitCleanStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT clean time");
+	private final TimeStatistic gitResetStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT reset time");
+	private final TimeStatistic gitCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT checkout time");
 
 	@Override
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {

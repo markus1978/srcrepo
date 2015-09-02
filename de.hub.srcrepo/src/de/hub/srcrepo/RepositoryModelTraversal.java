@@ -8,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
-import de.hub.jstattrack.Statistic;
-import de.hub.jstattrack.Statistic.Timer;
-import de.hub.jstattrack.StatisticBuilder;
 import de.hub.jstattrack.Statistics;
+import de.hub.jstattrack.TimeStatistic;
+import de.hub.jstattrack.TimeStatistic.Timer;
 import de.hub.jstattrack.services.BatchedPlot;
+import de.hub.jstattrack.services.Summary;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -21,10 +21,10 @@ import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public class RepositoryModelTraversal {
 	
-	private final static Statistic visitAllStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(RepositoryModelTraversal.class, "visitAllTime");
-	private final static Statistic visitStartStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitStartTime");
-	private final static Statistic visitDiffStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitDiffTime");
-	private final static Statistic visitCompleteStat = StatisticBuilder.createWithSummary().register(RepositoryModelTraversal.class, "visitCompleteTime");
+	private final static TimeStatistic visitAllStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(RepositoryModelFlatTraversal.class, "Visit all time");
+	private final static TimeStatistic visitStartStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).register(RepositoryModelFlatTraversal.class, "Visit start time");
+	private final static TimeStatistic visitDiffStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).register(RepositoryModelFlatTraversal.class, "Visit diff time");
+	private final static TimeStatistic visitCompleteStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).register(RepositoryModelFlatTraversal.class, "Visit complete time");
 	
 	private final RepositoryModel repositoryModel;
 	private final IRepositoryModelVisitor visitor;

@@ -34,11 +34,12 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
-import de.hub.jstattrack.Statistic;
-import de.hub.jstattrack.Statistic.Timer;
-import de.hub.jstattrack.StatisticBuilder;
+import de.hub.jstattrack.TimeStatistic;
+import de.hub.jstattrack.TimeStatistic.Timer;
+import de.hub.jstattrack.ValueStatistic;
 import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.jstattrack.services.Histogram;
+import de.hub.jstattrack.services.Summary;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
@@ -74,10 +75,10 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private IPath absoluteWorkingDirectoryPath;
 	private Collection<String> javaLikeExtensions = new HashSet<String>();
 	
-	private static final Statistic revCheckoutStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "revCheckoutTime");
-	private static final Statistic revRefreshStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "revRefreshTime");
-	private static final Statistic revImportTimeStat = StatisticBuilder.createWithSummary().withTimeUnit(TimeUnit.MILLISECONDS).withService(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "revImportTime");
-	private static final Statistic revImportSizeStat = StatisticBuilder.createWithSummary().withService(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "revImportSize");
+	private static final TimeStatistic revCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision checkout time");
+	private static final TimeStatistic revRefreshStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time");
+	private static final TimeStatistic revImportTimeStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision import time");
+	private static final ValueStatistic revImportSizeStat = new ValueStatistic("#").with(Summary.class).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Imported Java diffs / revision");
 	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
 		this.javaPackage = javaPackage;
