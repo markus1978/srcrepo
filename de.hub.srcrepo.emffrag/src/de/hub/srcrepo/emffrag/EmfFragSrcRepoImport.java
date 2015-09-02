@@ -60,6 +60,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private boolean skipSourceCodeImport = false;
 		private boolean checkOutWithoutImport = false;
 		private boolean useFlatTraversal = false;
+		private boolean useCGit = false;
 		
 		private RepositoryModelVisitorFactory visitorFactory = null;
 		
@@ -116,6 +117,11 @@ public class EmfFragSrcRepoImport implements IApplication {
 			return this;
 		}
 		
+		public Configuration useCGit() {
+			this.useCGit = true;
+			return this;
+		}
+		
 		public Configuration withRepositoryModelVisitorFactory(RepositoryModelVisitorFactory visitorFactory) {
 			this.visitorFactory = visitorFactory;
 			return this;
@@ -160,6 +166,9 @@ public class EmfFragSrcRepoImport implements IApplication {
 		options.addOption(OptionBuilder.
 				withLongOpt("use-flat-traversal").
 				withDescription("Traverse the repository from refs to parents, not from root up.").create());
+		options.addOption(OptionBuilder.
+				withLongOpt("use-c-git").
+				withDescription("Use regular git shell commands and not jGit.").create());
 	
 		return options;
 	}
@@ -257,6 +266,9 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (commandLine.hasOption("use-flat-traversal")) {
 			config.useFlatTraversal();
 		}
+		if (commandLine.hasOption("use-c-git")) {
+			config.useCGit();
+		}
 		
 		importRepository(config);
 		return IApplication.EXIT_OK;
@@ -286,6 +298,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 	public static RepositoryModel importRepository(Configuration config) {
 		
 		boolean stop = config.stopAfterNumberOfRevs > 0;
+		
+		SrcRepoActivator.INSTANCE.useCGit = config.useCGit;
 
 		// create fragmentation
 		Fragmentation fragmentation = openFragmentation(config, true);

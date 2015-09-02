@@ -13,6 +13,7 @@ public class SrcRepoActivator extends Plugin {
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
 	private boolean logInStandAlone = true;
+	public boolean useCGit = false;
 	
 	private void init() {
 		JStatTrackActivator.instance.enableWebServer();

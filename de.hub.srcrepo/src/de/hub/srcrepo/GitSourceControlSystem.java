@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
@@ -250,32 +252,52 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 
 	@Override
 	public void checkoutRevision(String name) throws SourceControlException {
-		try {
-			// remove a possible lock files from prior errors or crashes
-			removeLock(".git/index.lock");
-			removeLock(".git/HEAD.lock");
-			// clean the working tree from ignored or other untracked files
-			Timer cleanTimer = gitCleanStat.timer();			
-			clean();
-			cleanTimer.track();
-			// reset possible changes
-			Timer resetTimer = gitResetStat.timer();
-			git.reset().setMode(ResetType.HARD).call();
-			resetTimer.track();
-			// checkout the new revision
-			Timer checkoutTimer = gitCheckoutStat.timer();
-			git.checkout().setForce(true).setName(name).call();
-			checkoutTimer.track();
-		} catch (JGitInternalException e) {
-			if (e.getCause() instanceof LockFailedException) {
-				throw new SourceControlException("Could not lock the repository.", e);
-			} if (e.getMessage().contains("conflict")) {
-				throw new SourceControlException("Conflicts during checkout.", e);
-			} else {				
+		if (SrcRepoActivator.INSTANCE.useCGit) {
+			try {
+				DefaultExecutor executor = new DefaultExecutor();
+				executor.execute(CommandLine.parse("cd " + git.getRepository().getDirectory().getAbsolutePath()));
+				Timer cleanTimer = gitCleanStat.timer();			
+				executor.execute(CommandLine.parse("git clean"));
+				cleanTimer.track();
+				
+				Timer resetTimer = gitResetStat.timer();
+				executor.execute(CommandLine.parse("git reset --hard"));
+				resetTimer.track();
+				
+				Timer checkoutTimer = gitCheckoutStat.timer();
+				executor.execute(CommandLine.parse("git checkout -f " + name));
+				checkoutTimer.track();
+			} catch (Exception e) {
 				throw new SourceControlException(e);
-			}			
-		} catch (GitAPIException e) {
-			throw new SourceControlException(e);
+			}
+		} else {
+			try {
+				// remove a possible lock files from prior errors or crashes
+				removeLock(".git/index.lock");
+				removeLock(".git/HEAD.lock");
+				// clean the working tree from ignored or other untracked files
+				Timer cleanTimer = gitCleanStat.timer();			
+				clean();
+				cleanTimer.track();
+				// reset possible changes
+				Timer resetTimer = gitResetStat.timer();
+				git.reset().setMode(ResetType.HARD).call();
+				resetTimer.track();
+				// checkout the new revision
+				Timer checkoutTimer = gitCheckoutStat.timer();
+				git.checkout().setForce(true).setName(name).call();
+				checkoutTimer.track();
+			} catch (JGitInternalException e) {
+				if (e.getCause() instanceof LockFailedException) {
+					throw new SourceControlException("Could not lock the repository.", e);
+				} if (e.getMessage().contains("conflict")) {
+					throw new SourceControlException("Conflicts during checkout.", e);
+				} else {				
+					throw new SourceControlException(e);
+				}			
+			} catch (GitAPIException e) {
+				throw new SourceControlException(e);
+			}
 		}
 	}
 
