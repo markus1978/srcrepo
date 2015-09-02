@@ -282,17 +282,21 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						reportImportError(currentRev, "Could not determine project nature. Assume non java project.", e, true);
 					}
 					if (hasJavaNature) {
-						IPath projectPath = project.getLocation();
-						projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
-						
-						if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
-							relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
-							IJavaProject javaProject = JavaCore.create(project);
-							IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
-							IJavaElement element = JavaCore.create(resource, javaProject);
-							if (element != null && element instanceof ICompilationUnit) {
-								return (ICompilationUnit)element;							
+						try {
+							IPath projectPath = project.getLocation();
+							projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
+							
+							if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
+								relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
+								IJavaProject javaProject = JavaCore.create(project);
+								IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
+								IJavaElement element = JavaCore.create(resource, javaProject);
+								if (element != null && element instanceof ICompilationUnit) {
+									return (ICompilationUnit)element;							
+								}
 							}
+						} catch (Exception e) {
+							reportImportError(currentRev, "Could not create a ICompilationUnit from a Java resource for some unforseen reasons.", e, true);
 						}
 					}
 				}
