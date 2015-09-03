@@ -1,6 +1,7 @@
 package de.hub.srcrepo;
 
 import java.io.PrintWriter;
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Stack;
@@ -10,6 +11,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.jstattrack.Statistics;
 import de.hub.jstattrack.TimeStatistic;
+import de.hub.jstattrack.ValueStatistic;
 import de.hub.jstattrack.TimeStatistic.Timer;
 import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.jstattrack.services.Histogram;
@@ -27,6 +29,8 @@ public class RepositoryModelTraversal {
 			new TimeStatistic(TimeUnit.MILLISECONDS)
 			.with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class)
 			.register(RepositoryModelFlatTraversal.class, "Visit time");
+	
+	private final static ValueStatistic usedMemoryStat = new ValueStatistic("b").with(BatchedPlot.class).register(RepositoryModelTraversal.class, "Used heap memory.");
 	
 	private final RepositoryModel repositoryModel;
 	private final IRepositoryModelVisitor visitor;
@@ -98,7 +102,22 @@ public class RepositoryModelTraversal {
 				visitRev(rev, ++stats.importedRevsCounter);
 				count++;
 				
-				// print performance data				
+				// print performance data	
+				if (count % 50 == 0 && count != 0) {
+					// run gc, after that measure memory
+					for (int i = 0; i < 2; i++) {
+						Object obj = new Object();
+						WeakReference<?> ref = new WeakReference<Object>(obj);
+						obj = null;
+						while (ref.get() != null) {
+							System.gc();
+						}
+						System.runFinalization();
+					}
+					long usedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+					usedMemoryStat.track(usedMemory);
+				}
+				
 				if (count % 1000 == 0 && count != 0) {
 					try {
 						String json = Statistics.reportToJSON().toString();

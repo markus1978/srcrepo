@@ -376,8 +376,14 @@ public final class CommentsManager {
 				}
 				String whitespaces = null;
 				if (commentPosition > startPosition) {
-					whitespaces = visitor.getJavaContent()
-							.substring(startPosition, commentPosition).trim();
+					try {
+						whitespaces = visitor.getJavaContent().substring(startPosition, commentPosition).trim();
+					} catch (Exception e) {
+						// markus, hub, sam, srcrepo
+						// this often throughs a sting out of bounds exception.
+						// will simply break the loop, and skip all further comments, when this happens.
+						break;
+					}
 				}
 				if ((whitespaces == null) || (whitespaces.length() == 0)) {
 					/*

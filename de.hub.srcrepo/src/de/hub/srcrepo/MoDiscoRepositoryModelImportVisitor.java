@@ -1,6 +1,7 @@
 package de.hub.srcrepo;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -168,7 +169,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			checkoutSuccessful = runJob(new CheckoutJob(rev.getName()));
 		}
 		checkoutTimer.track();
-				
+		
+		RefreshJob refreshJob = null;
+		
 		if (checkoutSuccessful) {
 			Map<ICompilationUnit, Diff> javaDiffs = new HashMap<ICompilationUnit, Diff>();
 			
@@ -176,7 +179,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			Timer refreshTimer = revRefreshStat.timer();
 			if (!potentialJavaDiffs.isEmpty() || !projectFileDiffs.isEmpty()) {
 				// calls revNumberOfRefreshedResourcesStat.track(int); implicitly
-				refreshSuccessful = runJob(new RefreshJob(projectFileDiffs, potentialJavaDiffs, javaDiffs));
+				refreshJob = new RefreshJob(projectFileDiffs, potentialJavaDiffs, javaDiffs);
+				refreshSuccessful = runJob(refreshJob);
 			} else {
 				revNumberOfRefreshedResourcesStat.track(0);	
 			}
@@ -262,6 +266,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		private final boolean hasProjectFileDiffs;
 		private final List<Diff> potentialJavaDiffs;	
 		private final Map<ICompilationUnit, Diff> javaDiffs;
+		private final Collection<IJavaProject> refreshedProjects = new HashSet<IJavaProject>();
 				
 		public RefreshJob(List<Diff> projectFileDiffs, List<Diff> potentialJavaDiffs, Map<ICompilationUnit, Diff> javaDiffs) {
 			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " refresh.");
@@ -323,7 +328,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			
 			// refresh java files
 			Timer gathrCUsTimer = revGetCompilationUnits.timer();
-			Collection<IJavaProject> refreshedProjects = new HashSet<IJavaProject>();
 			for (Diff diff: potentialJavaDiffs) {
 				IPath relativeToWorkingDirectoryPath = new Path(diff.getNewPath());		
 				String fileExtension = relativeToWorkingDirectoryPath.getFileExtension();		
@@ -360,10 +364,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 											refreshedProjects.add(javaProject);
 										}
 										
-										IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
-										IJavaElement element = JavaCore.create(resource, javaProject);
-										if (element != null && element instanceof ICompilationUnit) {
-											javaDiffs.put((ICompilationUnit)element, diff);			
+										if (diff.getType() != ChangeType.DELETE) {
+											IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
+											IJavaElement element = JavaCore.create(resource, javaProject);
+											if (element != null && element instanceof ICompilationUnit) {
+												javaDiffs.put((ICompilationUnit)element, diff);			
+											}
 										}
 									}
 								} catch (Exception e) {
@@ -469,7 +475,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				Model javaModel = javaFactory.createModel();
 				SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
 				try {
-					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());		
+					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());	
 				} catch (Exception e) {
 					if (e.getClass().getName().endsWith("AbortCompilation")) {
 						reportImportError(currentRev, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
