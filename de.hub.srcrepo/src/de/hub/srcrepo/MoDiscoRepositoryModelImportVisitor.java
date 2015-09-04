@@ -232,7 +232,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private void onDiff(Diff diff) {
 		boolean isJavaDiff = isSpecificDiff(diff, (Path path)-> {
 			String fileExtension = path.getFileExtension();
-			return fileExtension != null && javaLikeExtensions.contains(fileExtension);
+			return fileExtension != null && javaLikeExtensions.contains(fileExtension) && !path.lastSegment().equals("package-info.java");
 		});
 		if (isJavaDiff) {
 			potentialJavaDiffs.add(diff);
