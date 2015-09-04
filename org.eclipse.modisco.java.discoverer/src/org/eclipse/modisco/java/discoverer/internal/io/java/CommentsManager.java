@@ -290,8 +290,7 @@ public final class CommentsManager {
 			 * comments which ended before the extended end position of jdt
 			 * node.
 			 */
-			int endPosition = cuJdtNode.getExtendedStartPosition(jdtNode)
-					+ cuJdtNode.getExtendedLength(jdtNode);
+			int endPosition = cuJdtNode.getExtendedStartPosition(jdtNode) + cuJdtNode.getExtendedLength(jdtNode);
 			for (int i = index; i > -1; i--) {
 				org.eclipse.jdt.core.dom.ASTNode jdtComment = (org.eclipse.jdt.core.dom.ASTNode) cuJdtNode
 						.getCommentList().get(i);
@@ -303,8 +302,14 @@ public final class CommentsManager {
 				}
 				String whitespaces = null;
 				if (endPosition > commentEndPosition) {
-					whitespaces = visitor.getJavaContent()
-							.substring(commentEndPosition, endPosition).trim();
+					try {
+						whitespaces = visitor.getJavaContent().substring(commentEndPosition, endPosition).trim();
+					} catch (Exception e) {
+						// markus, hub, sam, srcrepo
+						// this often throughs a sting out of bounds exception.
+						// will simply break the loop, and skip all further comments, when this happens.
+						break;
+					}
 				}
 				if ((whitespaces == null) || (whitespaces.length() == 0)) {
 					// shift the end position to manage further comments

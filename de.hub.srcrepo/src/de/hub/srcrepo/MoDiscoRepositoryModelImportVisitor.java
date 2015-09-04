@@ -10,7 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -206,34 +208,64 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void onCopiedFile(Diff diff) {
-
+		onDiff(diff);
 	}
 
 	@Override
 	public void onRenamedFile(Diff diff) {
-
+		onDiff(diff);
 	}
 
 	@Override
 	public void onAddedFile(Diff diff) {
-		onModifiedFile(diff);
+		onDiff(diff);
 	}
 
 	@Override
 	public void onModifiedFile(final Diff diff) {	
-		String fileExtension = new Path(diff.getNewPath()).getFileExtension();		
-		if (fileExtension != null && javaLikeExtensions.contains(fileExtension)) {
-			potentialJavaDiffs.add(diff);
-		} else if (new Path(diff.getNewPath()).lastSegment().equals(".project")) {
-			projectFileDiffs.add(diff);
-		}
+		onDiff(diff);
 	}
 
 	@Override
 	public void onDeletedFile(Diff diff) {
-		
+		onDiff(diff);
 	}
 	
+	private void onDiff(Diff diff) {
+		boolean isJavaDiff = isSpecificDiff(diff, (Path path)-> {
+			String fileExtension = path.getFileExtension();
+			return fileExtension != null && javaLikeExtensions.contains(fileExtension);
+		});
+		if (isJavaDiff) {
+			potentialJavaDiffs.add(diff);
+		}
+		
+		boolean isProjectFileDiff = isSpecificDiff(diff, (Path path)-> {
+			return path.lastSegment().equals(".project");
+		});
+		if (isProjectFileDiff) {
+			projectFileDiffs.add(diff);
+		}		
+	}
+	
+	private boolean isSpecificDiff(final Diff diff, Predicate<Path> predicate) {
+		boolean result = false;
+		for (Path path: getPaths(diff)) {
+			result |= predicate.test(path);
+		}
+		return result;		
+	}
+	
+	private Path[] getPaths(final Diff diff) {
+		if (diff.getType() == ChangeType.DELETE) {
+			return new Path[] {new Path(diff.getOldPath())}; 
+		} else if (diff.getType() == ChangeType.RENAME) {
+			return new Path[] {new Path(diff.getOldPath()), new Path(diff.getNewPath())};
+		} else {
+			return new Path[] {new Path(diff.getNewPath())};
+		}
+	}
+
 	private class CheckoutJob extends WorkspaceJob {
 		private final String revName;
 		
@@ -282,6 +314,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			int refreshedResources = 0;
 			Timer refreshStructureTimer = revRefreshStructure.timer();
 			if (refreshAll) {
+				SrcRepoActivator.INSTANCE.debug("Refreshing whole workspace after checkout.");
 				// refresh and remove deleted projects from workspace implicetely
 				refreshedResources += ProjectUtil.refreshValidProjects(allProjects, true, new NullProgressMonitor());
 				
@@ -329,42 +362,42 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			// refresh java files
 			Timer gathrCUsTimer = revGetCompilationUnits.timer();
 			for (Diff diff: potentialJavaDiffs) {
-				IPath relativeToWorkingDirectoryPath = new Path(diff.getNewPath());		
-				String fileExtension = relativeToWorkingDirectoryPath.getFileExtension();		
-				if (fileExtension != null && javaLikeExtensions.contains(fileExtension)) {
-					// we only potentially have a compilation unit
-					boolean hasSomeClosedProjects = false;
-					for (IProject project: allProjects) {		
-						if (!project.isOpen()) {
-							hasSomeClosedProjects = true;
-						} else {
-							boolean hasJavaNature = false;
+				// we only potentially have a compilation unit
+				boolean hasSomeClosedProjects = false;
+				for (IProject project: allProjects) {		
+					if (!project.isOpen()) {
+						hasSomeClosedProjects = true;
+					} else {
+						boolean hasJavaNature = false;
+						try {
+							hasJavaNature = project.isNatureEnabled(JavaCore.NATURE_ID);
+						} catch (CoreException e) {
+							reportImportError(currentRev, "Could not determine project nature. Assume non java project.", e, true);
+						}
+						if (hasJavaNature) {
 							try {
-								hasJavaNature = project.isNatureEnabled(JavaCore.NATURE_ID);
-							} catch (CoreException e) {
-								reportImportError(currentRev, "Could not determine project nature. Assume non java project.", e, true);
-							}
-							if (hasJavaNature) {
-								try {
-									IPath projectPath = project.getLocation();
-									projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
-									
-									if (projectPath.isPrefixOf(relativeToWorkingDirectoryPath.makeAbsolute())) {
-										relativeToWorkingDirectoryPath = relativeToWorkingDirectoryPath.makeRelativeTo(projectPath);
+								IPath projectPath = project.getLocation();
+								projectPath = projectPath.makeRelativeTo(absoluteWorkingDirectoryPath);
+								
+								for (Path javaDiffPath: getPaths(diff)) {
+									if (projectPath.isPrefixOf(javaDiffPath.makeAbsolute())) {
+										IPath relativeToWorkingDirectoryPath = javaDiffPath.makeRelativeTo(projectPath);
 										IJavaProject javaProject = JavaCore.create(project);
 										if (diff.getType() != ChangeType.MODIFY && !refreshAll && !refreshedProjects.contains(javaProject)) {
 											try {
-												ProjectUtil.refreshResources(new IResource[]{javaProject.getResource()}, new NullProgressMonitor());
+												IResource resource = javaProject.getResource();
+												ProjectUtil.refreshResources(new IResource[]{resource}, new NullProgressMonitor());
+												SrcRepoActivator.INSTANCE.debug("Refreshing project after checkout: " + resource.getLocation());
 												refreshedResources++;
 											} catch (Exception e) {
 												SrcRepoActivator.INSTANCE.error("Could not refresh a java project.", e);	
 												hasErrors = true;
 											}
-
+	
 											refreshedProjects.add(javaProject);
 										}
 										
-										if (diff.getType() != ChangeType.DELETE) {
+										if (diff.getType() != ChangeType.DELETE && new Path(diff.getNewPath()).equals(javaDiffPath)) {
 											IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
 											IJavaElement element = JavaCore.create(resource, javaProject);
 											if (element != null && element instanceof ICompilationUnit) {
@@ -372,16 +405,16 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 											}
 										}
 									}
-								} catch (Exception e) {
-									reportImportError(currentRev, "Could not create a ICompilationUnit from a Java resource for some unforseen reasons.", e, true);
 								}
+							} catch (Exception e) {
+								reportImportError(currentRev, "Could not create a ICompilationUnit from a Java resource for some unforseen reasons.", e, true);
 							}
 						}
 					}
-					if (hasSomeClosedProjects) {
-						SrcRepoActivator.INSTANCE.warning("Resource " + relativeToWorkingDirectoryPath + " could not be found, and some projects are closed.");
-					}						
 				}
+				if (hasSomeClosedProjects) {
+					SrcRepoActivator.INSTANCE.warning("Resource some projects are closed.");
+				}				
 			}
 			gathrCUsTimer.track();
 			
@@ -390,11 +423,13 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				IResource[] resources = new IResource[javaDiffs.size()];
 				int i = 0;
 				for (ICompilationUnit cu: javaDiffs.keySet()) {
-					resources[i++] = cu.getResource();
+					IResource resource = cu.getResource();
+					resources[i++] = resource;
+					SrcRepoActivator.INSTANCE.debug("Refreshing java resource after checkout: " + resource.getLocation());
 				}
 				
 				try {
-					ProjectUtil.refreshResources(resources, new NullProgressMonitor());	
+					ProjectUtil.refreshResources(resources, new NullProgressMonitor());					
 					refreshedResources += resources.length;
 				} catch (Exception e) {
 					SrcRepoActivator.INSTANCE.error("Could not refresh all compilation units.", e);			

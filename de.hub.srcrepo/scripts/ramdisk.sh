@@ -27,6 +27,7 @@ then
   DISK_ID=$(hdiutil attach -nomount ram://$RAMDISK_SECTORS)
   echo "Disk ID is :" $DISK_ID
   diskutil erasevolume HFS+ "ramdisk" ${DISK_ID}
+  cp -r ../../../../06-testdata/workingcopies /Volumes/ramdisk/
 fi
 
 if [ "$1" = "delete" ]
