@@ -511,12 +511,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());	
 				} catch (Exception e) {
 					if (e.getClass().getName().endsWith("AbortCompilation")) {
-						reportImportError(currentRev, "Could not compile a compilation unit (is ignored): " + e.getMessage(), e, true);
+						reportImportError(currentRev, "Could not compile " + compilationUnit.getResource().getProjectRelativePath() + " (is ignored): " + e.getMessage(), e, true);
 						EcoreUtil.delete(javaModel);
 						continue;
 					} else {
 						EcoreUtil.delete(javaModel);
-						reportImportError(currentRev, "Could not compile a compilation unit (is ignored) for unknown reasons: " + e.getMessage(), e, true);
+						reportImportError(currentRev, "Could not compile " + compilationUnit.getResource().getProjectRelativePath() + " (is ignored) for unknown reasons: " + e.getMessage(), e, true);
 						continue;
 					}
 				}							
