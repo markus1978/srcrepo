@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -16,6 +12,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
@@ -42,7 +39,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 */
 	public static RepositoryModelFactory init() {
 		try {
-			RepositoryModelFactory theRepositoryModelFactory = (RepositoryModelFactory)EPackage.Registry.INSTANCE.getEFactory("http://hub.sam.repositorymodel/1.0/emffrag"); 
+			RepositoryModelFactory theRepositoryModelFactory = (RepositoryModelFactory)EPackage.Registry.INSTANCE.getEFactory(RepositoryModelPackage.eNS_URI);
 			if (theRepositoryModelFactory != null) {
 				return theRepositoryModelFactory;
 			}
@@ -81,6 +78,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.PENDING_ELEMENT: return createPendingElement();
 			case RepositoryModelPackage.TARGET: return createTarget();
 			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return createCompilationUnitModel();
+			case RepositoryModelPackage.IMPORT_ERROR: return createImportError();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -214,6 +212,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public CompilationUnitModel createCompilationUnitModel() {
 		CompilationUnitModelImpl compilationUnitModel = new CompilationUnitModelImpl();
 		return compilationUnitModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ImportError createImportError() {
+		ImportErrorImpl importError = new ImportErrorImpl();
+		return importError;
 	}
 
 	/**

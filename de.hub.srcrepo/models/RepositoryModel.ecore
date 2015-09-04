@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="repositorymodel"
-    nsURI="http://hub.sam.repositorymodel/1.0" nsPrefix="repositorymodel">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="repositorymodel" nsURI="http://hub.sam.repositorymodel/1.0"
+    nsPrefix="repositorymodel">
   <eClassifiers xsi:type="ecore:EClass" name="RepositoryModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="allRefs" upperBound="-1"
         eType="#//Ref" containment="true"/>
@@ -31,6 +30,8 @@
         eType="#//ParentRelation" containment="true" eOpposite="#//ParentRelation/child"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="childRelations" upperBound="-1"
         eType="#//ParentRelation" eOpposite="#//ParentRelation/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="importErrors" upperBound="-1"
+        eType="#//ImportError" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ref">
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedCommit" eType="#//Rev"/>
@@ -91,5 +92,10 @@
         eType="#//PendingElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
         eType="#//Target" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ImportError">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conrolled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exceptionClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

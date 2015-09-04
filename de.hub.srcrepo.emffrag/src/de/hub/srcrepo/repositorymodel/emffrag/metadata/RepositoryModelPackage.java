@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 
@@ -24,6 +20,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
  * @model kind="package"
+ *        annotation="http://www.eclipse.org/OCL/Import ecore='http://www.eclipse.org/emf/2002/Ecore' java='java.ecore#/'"
  * @generated
  */
 public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.RepositoryModelPackage {
@@ -188,13 +185,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REV__CHILD_RELATIONS = 6;
 
 	/**
+	 * The feature id for the '<em><b>Import Errors</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REV__IMPORT_ERRORS = 7;
+
+	/**
 	 * The number of structural features of the '<em>Rev</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REV_FEATURE_COUNT = 7;
+	int REV_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl <em>Ref</em>}' class.
@@ -620,6 +626,52 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
 
 	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportError()
+	 * @generated
+	 */
+	int IMPORT_ERROR = 11;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_ERROR__MESSAGE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Conrolled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_ERROR__CONROLLED = 1;
+
+	/**
+	 * The feature id for the '<em><b>Exception Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_ERROR__EXCEPTION_CLASS_NAME = 2;
+
+	/**
+	 * The number of structural features of the '<em>Import Error</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_ERROR_FEATURE_COUNT = 3;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -627,7 +679,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 11;
+	int CHANGE_TYPE = 12;
 
 
 	/**
@@ -770,6 +822,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EReference getRev_ChildRelations();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.Rev#getImportErrors <em>Import Errors</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Import Errors</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.Rev#getImportErrors()
+	 * @see #getRev()
+	 * @generated
+	 */
+	EReference getRev_ImportErrors();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Ref <em>Ref</em>}'.
@@ -1159,6 +1222,49 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getCompilationUnitModel_Targets();
 
 	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ImportError <em>Import Error</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Import Error</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportError
+	 * @generated
+	 */
+	EClass getImportError();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportError#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportError#getMessage()
+	 * @see #getImportError()
+	 * @generated
+	 */
+	EAttribute getImportError_Message();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportError#isConrolled <em>Conrolled</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Conrolled</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportError#isConrolled()
+	 * @see #getImportError()
+	 * @generated
+	 */
+	EAttribute getImportError_Conrolled();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportError#getExceptionClassName <em>Exception Class Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Exception Class Name</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportError#getExceptionClassName()
+	 * @see #getImportError()
+	 * @generated
+	 */
+	EAttribute getImportError_ExceptionClassName();
+
+	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1298,6 +1404,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference REV__CHILD_RELATIONS = eINSTANCE.getRev_ChildRelations();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Errors</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REV__IMPORT_ERRORS = eINSTANCE.getRev_ImportErrors();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl <em>Ref</em>}' class.
@@ -1604,6 +1718,40 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference COMPILATION_UNIT_MODEL__TARGETS = eINSTANCE.getCompilationUnitModel_Targets();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportError()
+		 * @generated
+		 */
+		EClass IMPORT_ERROR = eINSTANCE.getImportError();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_ERROR__MESSAGE = eINSTANCE.getImportError_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Conrolled</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_ERROR__CONROLLED = eINSTANCE.getImportError_Conrolled();
+
+		/**
+		 * The meta object literal for the '<em><b>Exception Class Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_ERROR__EXCEPTION_CLASS_NAME = eINSTANCE.getImportError_ExceptionClassName();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.

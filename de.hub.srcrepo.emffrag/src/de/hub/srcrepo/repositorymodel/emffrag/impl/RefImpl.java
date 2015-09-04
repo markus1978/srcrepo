@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -19,13 +15,13 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl#getReferencedCommit <em>Referenced Commit</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl#isIsPeeled <em>Is Peeled</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl#isIsSymbolic <em>Is Symbolic</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl#getName <em>Name</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

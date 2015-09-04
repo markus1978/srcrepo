@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -19,11 +15,11 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl#getId <em>Id</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl#getTarget <em>Target</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

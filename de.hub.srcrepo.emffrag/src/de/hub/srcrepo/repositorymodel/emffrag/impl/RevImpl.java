@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -12,6 +8,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -22,6 +19,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl#getAuthor <em>Author</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl#getCommiter <em>Commiter</em>}</li>
@@ -30,8 +28,8 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl#getMessage <em>Message</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl#getParentRelations <em>Parent Relations</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl#getChildRelations <em>Child Relations</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl#getImportErrors <em>Import Errors</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -173,6 +171,16 @@ public class RevImpl extends FObjectImpl implements Rev {
 	@SuppressWarnings("unchecked")
 	public EList<ParentRelation> getChildRelations() {
 		return (EList<ParentRelation>)eGet(RepositoryModelPackage.Literals.REV__CHILD_RELATIONS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public EList<ImportError> getImportErrors() {
+		return (EList<ImportError>)eGet(RepositoryModelPackage.Literals.REV__IMPORT_ERRORS, true);
 	}
 
 } //RevImpl

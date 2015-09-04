@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
@@ -49,6 +48,7 @@ import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
@@ -565,10 +565,17 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		}		
 	}
 	
-	protected void reportImportError(EObject owner, String message, Throwable e, boolean controlledFail) {
+	private void reportImportError(Rev rev, String message, Throwable e, boolean controlledFail) {
 		if (e != null) {
 			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "].";
 		}
+
+		ImportError importError = repositoryFactory.createImportError();
+		importError.setMessage(message);
+		importError.setConrolled(controlledFail);
+		importError.setExceptionClassName(e.getClass().getCanonicalName());
+		rev.getImportErrors().add(importError);
+		
 		if (controlledFail) {			
 			SrcRepoActivator.INSTANCE.warning(message, (Exception)e);
 		} else {

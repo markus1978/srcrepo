@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -18,6 +14,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
@@ -112,6 +109,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass compilationUnitModelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass importErrorEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -299,6 +303,15 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getRev_ChildRelations() {
 		return (EReference)revEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRev_ImportErrors() {
+		return (EReference)revEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -630,6 +643,42 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getImportError() {
+		return importErrorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportError_Message() {
+		return (EAttribute)importErrorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportError_Conrolled() {
+		return (EAttribute)importErrorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportError_ExceptionClassName() {
+		return (EAttribute)importErrorEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getChangeType() {
 		return changeTypeEDataType;
 	}
@@ -676,6 +725,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(revEClass, REV__MESSAGE);
 		createEReference(revEClass, REV__PARENT_RELATIONS);
 		createEReference(revEClass, REV__CHILD_RELATIONS);
+		createEReference(revEClass, REV__IMPORT_ERRORS);
 
 		refEClass = createEClass(REF);
 		createEReference(refEClass, REF__REFERENCED_COMMIT);
@@ -721,6 +771,11 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__JAVA_MODEL);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__PENDINGS);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__TARGETS);
+
+		importErrorEClass = createEClass(IMPORT_ERROR);
+		createEAttribute(importErrorEClass, IMPORT_ERROR__MESSAGE);
+		createEAttribute(importErrorEClass, IMPORT_ERROR__CONROLLED);
+		createEAttribute(importErrorEClass, IMPORT_ERROR__EXCEPTION_CLASS_NAME);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -774,6 +829,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getRev_Message(), ecorePackage.getEString(), "message", null, 0, 1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRev_ParentRelations(), this.getParentRelation(), this.getParentRelation_Child(), "parentRelations", null, 0, -1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRev_ChildRelations(), this.getParentRelation(), this.getParentRelation_Parent(), "childRelations", null, 0, -1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRev_ImportErrors(), this.getImportError(), null, "importErrors", null, 0, -1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(refEClass, Ref.class, "Ref", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRef_ReferencedCommit(), this.getRev(), null, "referencedCommit", null, 0, 1, Ref.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -820,6 +876,11 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getCompilationUnitModel_Pendings(), this.getPendingElement(), null, "pendings", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCompilationUnitModel_Targets(), this.getTarget(), null, "targets", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(importErrorEClass, ImportError.class, "ImportError", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getImportError_Message(), ecorePackage.getEString(), "message", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportError_Conrolled(), ecorePackage.getEBoolean(), "conrolled", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportError_ExceptionClassName(), ecorePackage.getEString(), "exceptionClassName", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
@@ -827,8 +888,27 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createResource(eNS_URI);
 
 		// Create annotations
+		// http://www.eclipse.org/OCL/Import
+		createImportAnnotations();
 		// de.hub.emffrag
 		createDeAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/OCL/Import</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createImportAnnotations() {
+		String source = "http://www.eclipse.org/OCL/Import";	
+		addAnnotation
+		  (this, 
+		   source, 
+		   new String[] {
+			 "ecore", "http://www.eclipse.org/emf/2002/Ecore",
+			 "java", "java.ecore#/"
+		   });
 	}
 
 	/**
@@ -838,19 +918,19 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	protected void createDeAnnotations() {
-		String source = "de.hub.emffrag";		
+		String source = "de.hub.emffrag";	
 		addAnnotation
 		  (getRepositoryModel_AllRevs(), 
 		   source, 
 		   new String[] {
 			 "fragments", "true"
-		   });		
+		   });	
 		addAnnotation
 		  (getRepositoryModel_Traversals(), 
 		   source, 
 		   new String[] {
 			 "Fragmentation", "true"
-		   });		
+		   });	
 		addAnnotation
 		  (getJavaCompilationUnitRef_CompilationUnitModel(), 
 		   source, 

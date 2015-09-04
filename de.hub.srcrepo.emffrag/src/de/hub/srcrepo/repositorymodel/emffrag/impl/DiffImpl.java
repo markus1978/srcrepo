@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -20,13 +16,13 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getNewPath <em>New Path</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getType <em>Type</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getOldPath <em>Old Path</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getFile <em>File</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

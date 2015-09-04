@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -19,12 +15,12 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl#getClientNode <em>Client Node</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl#getBinding <em>Binding</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl#getLinkName <em>Link Name</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

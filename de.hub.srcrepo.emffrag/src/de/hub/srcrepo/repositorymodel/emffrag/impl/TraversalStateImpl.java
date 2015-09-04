@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -20,6 +16,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getName <em>Name</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}</li>
@@ -27,7 +24,6 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getOpenBranches <em>Open Branches</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl#getCompletedBranches <em>Completed Branches</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

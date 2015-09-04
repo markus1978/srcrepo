@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
@@ -21,12 +17,12 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ParentRelationImpl#getDiffs <em>Diffs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ParentRelationImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ParentRelationImpl#getChild <em>Child</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

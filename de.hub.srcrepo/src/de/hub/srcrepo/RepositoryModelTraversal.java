@@ -11,8 +11,8 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.jstattrack.Statistics;
 import de.hub.jstattrack.TimeStatistic;
-import de.hub.jstattrack.ValueStatistic;
 import de.hub.jstattrack.TimeStatistic.Timer;
+import de.hub.jstattrack.ValueStatistic;
 import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.jstattrack.services.Histogram;
 import de.hub.jstattrack.services.Summary;
