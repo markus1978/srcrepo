@@ -573,7 +573,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		ImportError importError = repositoryFactory.createImportError();
 		importError.setMessage(message);
 		importError.setConrolled(controlledFail);
-		importError.setExceptionClassName(e.getClass().getCanonicalName());
+		if (e != null) {
+			importError.setExceptionClassName(e.getClass().getCanonicalName());
+		}
 		rev.getImportErrors().add(importError);
 		
 		if (controlledFail) {			
