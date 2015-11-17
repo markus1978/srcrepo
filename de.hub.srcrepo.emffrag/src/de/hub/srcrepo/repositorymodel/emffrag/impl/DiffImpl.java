@@ -2,10 +2,18 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
+import java.lang.ref.WeakReference;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.jstattrack.ValueStatistic;
+import de.hub.jstattrack.services.BatchedPlot;
+import de.hub.jstattrack.services.Summary;
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -27,13 +35,32 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * @generated
  */
 public class DiffImpl extends FObjectImpl implements Diff {
+	
+	private final static ValueStatistic diffCountStat = new ValueStatistic().with(Summary.class).with(BatchedPlot.class).register(Diff.class, "Diff count on heap");
+	private final static Cache<Diff, Long> testCache = CacheBuilder.newBuilder().weakKeys().build();
+	private static long counter = 0;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	protected DiffImpl() {
 		super();
+		testCache.put(this, counter++);
+		if (counter % 1000 == 0) {
+			// run gc, after that measure memory
+			for (int i = 0; i < 2; i++) {
+				Object obj = new Object();
+				WeakReference<?> ref = new WeakReference<Object>(obj);
+				obj = null;
+				while (ref.get() != null) {
+					System.gc();
+				}
+				System.runFinalization();
+			}
+			testCache.cleanUp();
+			diffCountStat.track(testCache.size());
+		}
 	}
 
 	/**
