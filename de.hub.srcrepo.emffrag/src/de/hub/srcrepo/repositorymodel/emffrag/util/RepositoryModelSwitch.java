@@ -2,6 +2,7 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -147,6 +148,12 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.IMPORT_ERROR: {
 				ImportError importError = (ImportError)theEObject;
 				T result = caseImportError(importError);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.REPOSITORY_META_DATA: {
+				RepositoryMetaData repositoryMetaData = (RepositoryMetaData)theEObject;
+				T result = caseRepositoryMetaData(repositoryMetaData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -331,6 +338,21 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseImportError(ImportError object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Repository Meta Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Repository Meta Data</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRepositoryMetaData(RepositoryMetaData object) {
 		return null;
 	}
 

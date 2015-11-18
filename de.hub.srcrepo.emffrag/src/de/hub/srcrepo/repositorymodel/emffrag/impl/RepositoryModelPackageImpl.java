@@ -8,7 +8,7 @@ import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
+import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
@@ -19,6 +19,7 @@ import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
@@ -116,6 +117,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass importErrorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass repositoryMetaDataEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -231,6 +239,15 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getRepositoryModel_Traversals() {
 		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRepositoryModel_MetaData() {
+		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -500,7 +517,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	public EAttribute getTraversalState_NumberOfImportedRevs() {
-		return (EAttribute)traversalStateEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)traversalStateEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -509,7 +526,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	public EReference getTraversalState_Merges() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(2);
+		return (EReference)traversalStateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -518,7 +535,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	public EReference getTraversalState_OpenBranches() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(3);
+		return (EReference)traversalStateEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -527,7 +544,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	public EReference getTraversalState_CompletedBranches() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(4);
+		return (EReference)traversalStateEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -679,6 +696,105 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getRepositoryMetaData() {
+		return repositoryMetaDataEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_Origin() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_OldestRev() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_RevCount() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_ImportStats() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_ImportStatsAsJSON() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_NewestRev() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_ImportDate() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_ObjectCount() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_RawByteSize() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRepositoryMetaData_CuCount() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getChangeType() {
 		return changeTypeEDataType;
 	}
@@ -716,6 +832,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REVS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ROOT_REVS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__TRAVERSALS);
+		createEReference(repositoryModelEClass, REPOSITORY_MODEL__META_DATA);
 
 		revEClass = createEClass(REV);
 		createEAttribute(revEClass, REV__AUTHOR);
@@ -752,10 +869,10 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		traversalStateEClass = createEClass(TRAVERSAL_STATE);
 		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NAME);
-		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__MERGES);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__OPEN_BRANCHES);
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__COMPLETED_BRANCHES);
+		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS);
 
 		pendingElementEClass = createEClass(PENDING_ELEMENT);
 		createEReference(pendingElementEClass, PENDING_ELEMENT__CLIENT_NODE);
@@ -776,6 +893,18 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(importErrorEClass, IMPORT_ERROR__MESSAGE);
 		createEAttribute(importErrorEClass, IMPORT_ERROR__CONROLLED);
 		createEAttribute(importErrorEClass, IMPORT_ERROR__EXCEPTION_CLASS_NAME);
+
+		repositoryMetaDataEClass = createEClass(REPOSITORY_META_DATA);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__ORIGIN);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__OLDEST_REV);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__REV_COUNT);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_STATS);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__NEWEST_REV);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_DATE);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__OBJECT_COUNT);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__RAW_BYTE_SIZE);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__CU_COUNT);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -814,12 +943,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		// Add supertypes to classes
 		javaCompilationUnitRefEClass.getESuperTypes().add(this.getAbstractFileRef());
 
-		// Initialize classes and features; add operations and parameters
+		// Initialize classes, features, and operations; add parameters
 		initEClass(repositoryModelEClass, RepositoryModel.class, "RepositoryModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRepositoryModel_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_AllRevs(), this.getRev(), null, "allRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_RootRevs(), this.getRev(), null, "rootRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_Traversals(), this.getTraversalState(), null, "traversals", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepositoryModel_MetaData(), this.getRepositoryMetaData(), null, "metaData", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(revEClass, Rev.class, "Rev", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getRev_Author(), ecorePackage.getEString(), "author", null, 0, 1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -856,10 +986,10 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		initEClass(traversalStateEClass, TraversalState.class, "TraversalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTraversalState_Name(), ecorePackage.getEString(), "name", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTraversalState_NumberOfImportedRevs(), ecorePackage.getEInt(), "numberOfImportedRevs", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_Merges(), this.getRev(), null, "merges", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_OpenBranches(), this.getRev(), null, "openBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTraversalState_CompletedBranches(), this.getRev(), null, "completedBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTraversalState_NumberOfImportedRevs(), ecorePackage.getEInt(), "numberOfImportedRevs", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pendingElementEClass, PendingElement.class, "PendingElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPendingElement_ClientNode(), theJavaPackage.getASTNode(), null, "clientNode", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -880,6 +1010,18 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getImportError_Message(), ecorePackage.getEString(), "message", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportError_Conrolled(), ecorePackage.getEBoolean(), "conrolled", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportError_ExceptionClassName(), ecorePackage.getEString(), "exceptionClassName", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(repositoryMetaDataEClass, RepositoryMetaData.class, "RepositoryMetaData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getRepositoryMetaData_Origin(), ecorePackage.getEString(), "origin", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_OldestRev(), ecorePackage.getEDate(), "oldestRev", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_RevCount(), ecorePackage.getEInt(), "revCount", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_ImportStats(), ecorePackage.getEString(), "importStats", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_ImportStatsAsJSON(), ecorePackage.getEString(), "importStatsAsJSON", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_NewestRev(), ecorePackage.getEDate(), "newestRev", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_ImportDate(), ecorePackage.getEDate(), "importDate", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_ObjectCount(), ecorePackage.getELong(), "objectCount", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_RawByteSize(), ecorePackage.getELong(), "rawByteSize", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_CuCount(), ecorePackage.getELong(), "cuCount", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -907,7 +1049,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		   source, 
 		   new String[] {
 			 "ecore", "http://www.eclipse.org/emf/2002/Ecore",
-			 "java", "java.ecore#/"
+			 "java", "../../../plugin/org.eclipse.gmt.modisco.java/model/java.ecore#/"
 		   });
 	}
 

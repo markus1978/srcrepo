@@ -9,9 +9,9 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 
 public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositoryModelImportVisitor {
-
+	
 	public EmffragMoDiscoImportRepositoryModelVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
-		super(sourceControlSystem, repositoryModel, javaPackage);		
+		super(sourceControlSystem, repositoryModel, javaPackage);
 	}
 
 	@Override

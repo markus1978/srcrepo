@@ -24,6 +24,7 @@ import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.LockFailedException;
 import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
@@ -100,6 +101,31 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		return git.getRepository().getWorkTree();
 	}
 	
+	@Override
+	public String getOrigin() {
+		String origin = null;
+		Config storedConfig = git.getRepository().getConfig();
+		Set<String> remotes = storedConfig.getSubsections("remote");
+		 
+		if (!remotes.isEmpty()) {
+			origin = storedConfig.getString("remote", remotes.iterator().next(), "url");
+		}
+		
+		for (String remoteName : remotes) {
+			if (remoteName.toLowerCase().equals("origin")) {
+				origin = storedConfig.getString("remote", remotes.iterator().next(), "url");
+			} 			
+		}
+		
+		if (origin == null) {
+			return "<unknown origin>";
+		} else {
+			return origin;
+		}
+	}
+
+
+
 	private int importedRevCount = 0;
 
 	private Rev createRevModel(RepositoryModel model, RepositoryModelFactory factory, RevCommit commit) throws Exception {

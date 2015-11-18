@@ -25,9 +25,9 @@ public interface ISourceControlSystem {
 		public SourceControlException(Throwable cause) {
 			super(cause);		
 		}
-		
 	}
 
+	public String getOrigin();
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException;
 	public void setWorkingCopy(File target) throws SourceControlException;
 	public File getWorkingCopy();

@@ -3,8 +3,14 @@ package de.hub.srcrepo.emffrag;
 import org.junit.Test;
 
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
 
-public class ResumeMongoDBMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTest {
+public class ResumeMongoDBMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTest {	
+	
+	@Override
+	protected void assertMetaData(RepositoryModel repositoryModel) {
+
+	}
 
 	@Override
 	protected void runImport() {
@@ -19,5 +25,4 @@ public class ResumeMongoDBMoDiscoGitImportTest extends MongoDBMoDiscoGitImportTe
 		configuration.resume(true);
 		assertRepositoryModel(EmfFragSrcRepoImport.importRepository(configuration), 14);
 	}
-
 }

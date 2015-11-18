@@ -9,6 +9,7 @@ import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
@@ -129,6 +130,15 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	ImportError createImportError();
+
+	/**
+	 * Returns a new object of class '<em>Repository Meta Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Repository Meta Data</em>'.
+	 * @generated
+	 */
+	RepositoryMetaData createRepositoryMetaData();
 
 	/**
 	 * Returns the package supported by this factory.

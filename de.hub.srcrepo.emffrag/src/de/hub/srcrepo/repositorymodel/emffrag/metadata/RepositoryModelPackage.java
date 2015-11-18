@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/OCL/Import ecore='http://www.eclipse.org/emf/2002/Ecore' java='java.ecore#/'"
+ *        annotation="http://www.eclipse.org/OCL/Import ecore='http://www.eclipse.org/emf/2002/Ecore' java='../../../plugin/org.eclipse.gmt.modisco.java/model/java.ecore#/'"
  * @generated
  */
 public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.RepositoryModelPackage {
@@ -103,13 +103,31 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_MODEL__TRAVERSALS = 3;
 
 	/**
+	 * The feature id for the '<em><b>Meta Data</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL__META_DATA = 4;
+
+	/**
 	 * The number of structural features of the '<em>Repository Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_FEATURE_COUNT = 4;
+	int REPOSITORY_MODEL_FEATURE_COUNT = 5;
+
+	/**
+	 * The number of operations of the '<em>Repository Model</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl <em>Rev</em>}' class.
@@ -203,6 +221,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REV_FEATURE_COUNT = 8;
 
 	/**
+	 * The number of operations of the '<em>Rev</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REV_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RefImpl <em>Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -256,6 +283,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @ordered
 	 */
 	int REF_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REF_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl <em>Diff</em>}' class.
@@ -313,6 +349,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int DIFF_FEATURE_COUNT = 4;
 
 	/**
+	 * The number of operations of the '<em>Diff</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ParentRelationImpl <em>Parent Relation</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -359,6 +404,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int PARENT_RELATION_FEATURE_COUNT = 3;
 
 	/**
+	 * The number of operations of the '<em>Parent Relation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARENT_RELATION_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.AbstractFileRefImpl <em>Abstract File Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -385,6 +439,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @ordered
 	 */
 	int ABSTRACT_FILE_REF_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Abstract File Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_FILE_REF_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl <em>Java Compilation Unit Ref</em>}' class.
@@ -424,6 +487,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
 
 	/**
+	 * The number of operations of the '<em>Java Compilation Unit Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF_OPERATION_COUNT = ABSTRACT_FILE_REF_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl <em>Traversal State</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -443,22 +515,13 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int TRAVERSAL_STATE__NAME = 0;
 
 	/**
-	 * The feature id for the '<em><b>Number Of Imported Revs</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS = 1;
-
-	/**
 	 * The feature id for the '<em><b>Merges</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE__MERGES = 2;
+	int TRAVERSAL_STATE__MERGES = 1;
 
 	/**
 	 * The feature id for the '<em><b>Open Branches</b></em>' reference list.
@@ -467,7 +530,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE__OPEN_BRANCHES = 3;
+	int TRAVERSAL_STATE__OPEN_BRANCHES = 2;
 
 	/**
 	 * The feature id for the '<em><b>Completed Branches</b></em>' reference list.
@@ -476,7 +539,16 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int TRAVERSAL_STATE__COMPLETED_BRANCHES = 4;
+	int TRAVERSAL_STATE__COMPLETED_BRANCHES = 3;
+
+	/**
+	 * The feature id for the '<em><b>Number Of Imported Revs</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS = 4;
 
 	/**
 	 * The number of structural features of the '<em>Traversal State</em>' class.
@@ -486,6 +558,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @ordered
 	 */
 	int TRAVERSAL_STATE_FEATURE_COUNT = 5;
+
+	/**
+	 * The number of operations of the '<em>Traversal State</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRAVERSAL_STATE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl <em>Pending Element</em>}' class.
@@ -534,6 +615,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int PENDING_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
+	 * The number of operations of the '<em>Pending Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PENDING_ELEMENT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl <em>Target</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -569,6 +659,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @ordered
 	 */
 	int TARGET_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TARGET_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl <em>Compilation Unit Model</em>}' class.
@@ -626,6 +725,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
 
 	/**
+	 * The number of operations of the '<em>Compilation Unit Model</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -672,6 +780,133 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int IMPORT_ERROR_FEATURE_COUNT = 3;
 
 	/**
+	 * The number of operations of the '<em>Import Error</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_ERROR_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl <em>Repository Meta Data</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryMetaData()
+	 * @generated
+	 */
+	int REPOSITORY_META_DATA = 12;
+
+	/**
+	 * The feature id for the '<em><b>Origin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__ORIGIN = 0;
+
+	/**
+	 * The feature id for the '<em><b>Oldest Rev</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__OLDEST_REV = 1;
+
+	/**
+	 * The feature id for the '<em><b>Rev Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__REV_COUNT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Import Stats</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__IMPORT_STATS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Import Stats As JSON</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON = 4;
+
+	/**
+	 * The feature id for the '<em><b>Newest Rev</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__NEWEST_REV = 5;
+
+	/**
+	 * The feature id for the '<em><b>Import Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__IMPORT_DATE = 6;
+
+	/**
+	 * The feature id for the '<em><b>Object Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__OBJECT_COUNT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Raw Byte Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__RAW_BYTE_SIZE = 8;
+
+	/**
+	 * The feature id for the '<em><b>Cu Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__CU_COUNT = 9;
+
+	/**
+	 * The number of structural features of the '<em>Repository Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA_FEATURE_COUNT = 10;
+
+	/**
+	 * The number of operations of the '<em>Repository Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -679,7 +914,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 12;
+	int CHANGE_TYPE = 13;
 
 
 	/**
@@ -735,6 +970,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EReference getRepositoryModel_Traversals();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getMetaData <em>Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModel#getMetaData()
+	 * @see #getRepositoryModel()
+	 * @generated
+	 */
+	EReference getRepositoryModel_MetaData();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Rev <em>Rev</em>}'.
@@ -1265,6 +1511,126 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getImportError_ExceptionClassName();
 
 	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData <em>Repository Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Repository Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData
+	 * @generated
+	 */
+	EClass getRepositoryMetaData();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getOrigin <em>Origin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Origin</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getOrigin()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_Origin();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getOldestRev <em>Oldest Rev</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Oldest Rev</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getOldestRev()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_OldestRev();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRevCount <em>Rev Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Rev Count</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRevCount()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_RevCount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStats <em>Import Stats</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Import Stats</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStats()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_ImportStats();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStatsAsJSON <em>Import Stats As JSON</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Import Stats As JSON</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStatsAsJSON()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_ImportStatsAsJSON();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getNewestRev <em>Newest Rev</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Newest Rev</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getNewestRev()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_NewestRev();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportDate <em>Import Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Import Date</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportDate()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_ImportDate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getObjectCount <em>Object Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Object Count</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getObjectCount()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_ObjectCount();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRawByteSize <em>Raw Byte Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Raw Byte Size</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRawByteSize()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_RawByteSize();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCuCount <em>Cu Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Cu Count</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCuCount()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_CuCount();
+
+	/**
 	 * Returns the meta object for data type '{@link org.eclipse.jgit.diff.DiffEntry.ChangeType <em>Change Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1338,6 +1704,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference REPOSITORY_MODEL__TRAVERSALS = eINSTANCE.getRepositoryModel_Traversals();
+
+		/**
+		 * The meta object literal for the '<em><b>Meta Data</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_MODEL__META_DATA = eINSTANCE.getRepositoryModel_MetaData();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl <em>Rev</em>}' class.
@@ -1752,6 +2126,96 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EAttribute IMPORT_ERROR__EXCEPTION_CLASS_NAME = eINSTANCE.getImportError_ExceptionClassName();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl <em>Repository Meta Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryMetaData()
+		 * @generated
+		 */
+		EClass REPOSITORY_META_DATA = eINSTANCE.getRepositoryMetaData();
+
+		/**
+		 * The meta object literal for the '<em><b>Origin</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__ORIGIN = eINSTANCE.getRepositoryMetaData_Origin();
+
+		/**
+		 * The meta object literal for the '<em><b>Oldest Rev</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__OLDEST_REV = eINSTANCE.getRepositoryMetaData_OldestRev();
+
+		/**
+		 * The meta object literal for the '<em><b>Rev Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__REV_COUNT = eINSTANCE.getRepositoryMetaData_RevCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Stats</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__IMPORT_STATS = eINSTANCE.getRepositoryMetaData_ImportStats();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Stats As JSON</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON = eINSTANCE.getRepositoryMetaData_ImportStatsAsJSON();
+
+		/**
+		 * The meta object literal for the '<em><b>Newest Rev</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__NEWEST_REV = eINSTANCE.getRepositoryMetaData_NewestRev();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__IMPORT_DATE = eINSTANCE.getRepositoryMetaData_ImportDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Object Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__OBJECT_COUNT = eINSTANCE.getRepositoryMetaData_ObjectCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Raw Byte Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__RAW_BYTE_SIZE = eINSTANCE.getRepositoryMetaData_RawByteSize();
+
+		/**
+		 * The meta object literal for the '<em><b>Cu Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__CU_COUNT = eINSTANCE.getRepositoryMetaData_CuCount();
 
 		/**
 		 * The meta object literal for the '<em>Change Type</em>' data type.

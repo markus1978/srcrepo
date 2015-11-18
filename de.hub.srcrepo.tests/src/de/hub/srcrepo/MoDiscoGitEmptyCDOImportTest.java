@@ -34,4 +34,8 @@ public class MoDiscoGitEmptyCDOImportTest extends MoDiscoGitImportTest {
 
 	}
 
+	@Override
+	protected void assertMetaData(RepositoryModel repositoryModel) {
+
+	}
 }

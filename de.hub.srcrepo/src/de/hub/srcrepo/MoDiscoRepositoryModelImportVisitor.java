@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
+import de.hub.jstattrack.Statistics;
 import de.hub.jstattrack.TimeStatistic;
 import de.hub.jstattrack.TimeStatistic.Timer;
 import de.hub.jstattrack.ValueStatistic;
@@ -50,6 +52,7 @@ import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -92,6 +95,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private static final ValueStatistic revNumberOfRefreshedResourcesStat = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Refreshed resources per rev");
 	private static final ValueStatistic revNumberOfChangedProjectFiles = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision number of changed project files");
 	
+	private final RepositoryMetaData repositoryMetaData;
+	private long cuCount = 0;
+	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
 		this.javaPackage = javaPackage;
 		this.javaFactory = (JavaFactory)javaPackage.getEFactoryInstance();
@@ -104,6 +110,17 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		this.allProjects = new IProject[0];
 		this.absoluteWorkingDirectoryPath = new Path(sourceControlSystem.getWorkingCopy().getAbsolutePath());
 		Collections.addAll(javaLikeExtensions, JavaCore.getJavaLikeExtensions());
+		
+		if (repositoryModel.getMetaData() == null) {
+			repositoryMetaData = repositoryFactory.createRepositoryMetaData();
+			repositoryModel.setMetaData(repositoryMetaData);
+		} else {
+			repositoryMetaData = repositoryModel.getMetaData();
+		}
+		
+		repositoryMetaData.setImportDate(new Date());
+		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
+		cuCount = repositoryMetaData.getCuCount();
 	}
 
 	@Override
@@ -189,6 +206,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			Timer importTimer = revImportTimeStat.timer();
 			if (refreshSuccessful && javaDiffs.size() > 0) {
 				revImportSizeStat.track(javaDiffs.size());
+				cuCount += javaDiffs.size();
 				runJob(new ImportJavaCompilationUnits(javaDiffs));
 			} else {
 				revImportSizeStat.track(0);
@@ -202,6 +220,15 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		}
 		
 		updateJavaProjectStructureForMerge = false;
+		
+		Date revTime = rev.getTime();
+		if (repositoryMetaData.getOldestRev() == null || repositoryMetaData.getOldestRev().getTime() > revTime.getTime()) {
+			repositoryMetaData.setOldestRev(revTime);
+		}
+		if (repositoryMetaData.getNewestRev() == null || repositoryMetaData.getNewestRev().getTime() < revTime.getTime()) {
+			repositoryMetaData.setNewestRev(revTime);
+		}
+		repositoryMetaData.setRevCount(repositoryMetaData.getRevCount()+1);
 	}
 
 	@Override
@@ -587,6 +614,10 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void close() {
-		
+		repositoryMetaData.setImportDate(new Date());
+		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
+		repositoryMetaData.setCuCount(cuCount);
+		repositoryMetaData.setImportStats(Statistics.reportToString());
+		repositoryMetaData.setImportStatsAsJSON(Statistics.reportToJSON().toString(1));
 	}
 }

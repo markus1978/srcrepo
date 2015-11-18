@@ -2,6 +2,7 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -79,6 +80,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.TARGET: return createTarget();
 			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return createCompilationUnitModel();
 			case RepositoryModelPackage.IMPORT_ERROR: return createImportError();
+			case RepositoryModelPackage.REPOSITORY_META_DATA: return createRepositoryMetaData();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -222,6 +224,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public ImportError createImportError() {
 		ImportErrorImpl importError = new ImportErrorImpl();
 		return importError;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RepositoryMetaData createRepositoryMetaData() {
+		RepositoryMetaDataImpl repositoryMetaData = new RepositoryMetaDataImpl();
+		return repositoryMetaData;
 	}
 
 	/**

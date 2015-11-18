@@ -39,6 +39,7 @@ import org.junit.Test;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.RepositoryModelTraversal.Stats;
 import de.hub.srcrepo.ocl.OclUtil;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
@@ -127,12 +128,25 @@ public class MoDiscoGitImportTest {
 			IRepositoryModelVisitor visitor = createVisitor(scs, repositoryModel);
 			RepositoryModelTraversal.traverse(repositoryModel, visitor);
 			scs.close();
+			visitor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 		}
 		
 		closeRepositoryModel(repositoryModel);
+	}
+	
+	protected void assertMetaData(RepositoryModel repositoryModel) {
+		RepositoryMetaData metaData = repositoryModel.getMetaData();
+		Assert.assertNotNull(metaData.getOrigin());
+		Assert.assertNotNull(metaData.getNewestRev());
+		Assert.assertNotNull(metaData.getOldestRev());
+		Assert.assertTrue(metaData.getNewestRev().getTime() > metaData.getOldestRev().getTime());
+		Assert.assertNotNull(metaData.getImportStatsAsJSON());
+		Assert.assertNotNull(metaData.getImportStats());
+		Assert.assertEquals(16, metaData.getRevCount());
+		Assert.assertEquals(19, metaData.getCuCount());		
 	}
 	
 	@Test
@@ -142,7 +156,8 @@ public class MoDiscoGitImportTest {
 		
 		// assert results
 		RepositoryModel repositoryModel = openRepositoryModel(false);
-				
+		assertMetaData(repositoryModel);
+		
 		Collection<String> revNames = assertRepositoryModel(repositoryModel, 0);
 		
 		System.out.println("Java diffs: " + OclUtil.coutJavaDiffs(repositoryModel));
