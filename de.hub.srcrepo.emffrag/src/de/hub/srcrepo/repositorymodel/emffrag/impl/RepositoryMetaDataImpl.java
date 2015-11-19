@@ -2,15 +2,14 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
-
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
 import java.util.Date;
 
 import org.eclipse.emf.ecore.EClass;
+
+import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -2,13 +2,11 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
-
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
-
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
 import org.eclipse.emf.ecore.EClass;
+
+import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,7 +21,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class DataStoreMetaDataImpl extends FObjectImpl implements DataStoreMetaData {
+public abstract class DataStoreMetaDataImpl extends FObjectImpl implements DataStoreMetaData {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -19,7 +19,6 @@ Bundle-ActivationPolicy: lazy
 Export-Package: de,
  de.hub,
  de.hub.srcrepo,
- de.hub.srcrepo.internal;x-internal:=true,
  de.hub.srcrepo.metrics,
  de.hub.srcrepo.ocl,
  de.hub.srcrepo.repositorymodel,

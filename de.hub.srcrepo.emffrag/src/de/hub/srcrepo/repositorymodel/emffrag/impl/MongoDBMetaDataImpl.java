@@ -2,11 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
-
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
 import org.eclipse.emf.ecore.EClass;
+
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
  * <!-- begin-user-doc -->

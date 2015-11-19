@@ -5,7 +5,6 @@ package de.hub.srcrepo.repositorymodel.emffrag.impl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -30,7 +29,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *
  * @generated
  */
-public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel {
+public class RepositoryModelImpl extends ModelImpl implements RepositoryModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -48,16 +47,6 @@ public class RepositoryModelImpl extends FObjectImpl implements RepositoryModel 
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.REPOSITORY_MODEL;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**

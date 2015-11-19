@@ -7,7 +7,6 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
 import de.hub.emffrag.datastore.IDataStore;
 import de.hub.emffrag.fragmentation.FObject;
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;

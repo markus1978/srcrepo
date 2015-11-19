@@ -2,20 +2,24 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
-import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.Model;
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
@@ -81,6 +85,7 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.REPOSITORY_MODEL: {
 				RepositoryModel repositoryModel = (RepositoryModel)theEObject;
 				T result = caseRepositoryModel(repositoryModel);
+				if (result == null) result = caseModel(repositoryModel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -160,6 +165,7 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: {
 				RepositoryModelDirectory repositoryModelDirectory = (RepositoryModelDirectory)theEObject;
 				T result = caseRepositoryModelDirectory(repositoryModelDirectory);
+				if (result == null) result = caseModel(repositoryModelDirectory);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -173,6 +179,12 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				MongoDBMetaData mongoDBMetaData = (MongoDBMetaData)theEObject;
 				T result = caseMongoDBMetaData(mongoDBMetaData);
 				if (result == null) result = caseDataStoreMetaData(mongoDBMetaData);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.MODEL: {
+				Model model = (Model)theEObject;
+				T result = caseModel(model);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -417,6 +429,21 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseMongoDBMetaData(MongoDBMetaData object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Model</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseModel(Model object) {
 		return null;
 	}
 

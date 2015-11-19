@@ -3,7 +3,6 @@
 package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
@@ -17,7 +16,6 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
-import org.eclipse.emf.ecore.EFactory;
 
 /**
  * <!-- begin-user-doc -->
@@ -152,15 +150,6 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	RepositoryModelDirectory createRepositoryModelDirectory();
-
-	/**
-	 * Returns a new object of class '<em>Data Store Meta Data</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Data Store Meta Data</em>'.
-	 * @generated
-	 */
-	DataStoreMetaData createDataStoreMetaData();
 
 	/**
 	 * Returns a new object of class '<em>Mongo DB Meta Data</em>'.

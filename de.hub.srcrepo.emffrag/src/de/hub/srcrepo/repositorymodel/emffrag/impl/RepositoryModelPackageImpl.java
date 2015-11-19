@@ -17,6 +17,7 @@ import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.Model;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
@@ -148,6 +149,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass mongoDBMetaDataEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass modelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -864,33 +872,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRepositoryModelDirectory_Name() {
-		return (EAttribute)repositoryModelDirectoryEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRepositoryModelDirectory_Description() {
-		return (EAttribute)repositoryModelDirectoryEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRepositoryModelDirectory_Url() {
-		return (EAttribute)repositoryModelDirectoryEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getDataStoreMetaData() {
 		return dataStoreMetaDataEClass;
 	}
@@ -947,6 +928,42 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EAttribute getMongoDBMetaData_Server() {
 		return (EAttribute)mongoDBMetaDataEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getModel() {
+		return modelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getModel_Name() {
+		return (EAttribute)modelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getModel_Description() {
+		return (EAttribute)modelEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getModel_Url() {
+		return (EAttribute)modelEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1080,9 +1097,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		repositoryModelDirectoryEClass = createEClass(REPOSITORY_MODEL_DIRECTORY);
 		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES);
 		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS);
-		createEAttribute(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__NAME);
-		createEAttribute(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__DESCRIPTION);
-		createEAttribute(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__URL);
 
 		dataStoreMetaDataEClass = createEClass(DATA_STORE_META_DATA);
 		createEAttribute(dataStoreMetaDataEClass, DATA_STORE_META_DATA__COUNT);
@@ -1092,6 +1106,11 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(mongoDBMetaDataEClass, MONGO_DB_META_DATA__AVG_OBJECT_SIZE);
 		createEAttribute(mongoDBMetaDataEClass, MONGO_DB_META_DATA__STORE_SIZE);
 		createEAttribute(mongoDBMetaDataEClass, MONGO_DB_META_DATA__SERVER);
+
+		modelEClass = createEClass(MODEL);
+		createEAttribute(modelEClass, MODEL__NAME);
+		createEAttribute(modelEClass, MODEL__DESCRIPTION);
+		createEAttribute(modelEClass, MODEL__URL);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -1128,7 +1147,9 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		repositoryModelEClass.getESuperTypes().add(this.getModel());
 		javaCompilationUnitRefEClass.getESuperTypes().add(this.getAbstractFileRef());
+		repositoryModelDirectoryEClass.getESuperTypes().add(this.getModel());
 		mongoDBMetaDataEClass.getESuperTypes().add(this.getDataStoreMetaData());
 
 		// Initialize classes, features, and operations; add parameters
@@ -1217,11 +1238,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEClass(repositoryModelDirectoryEClass, RepositoryModelDirectory.class, "RepositoryModelDirectory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRepositoryModelDirectory_SubDirectories(), this.getRepositoryModelDirectory(), null, "subDirectories", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModelDirectory_RepositoryModels(), this.getRepositoryModel(), null, "repositoryModels", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryModelDirectory_Name(), ecorePackage.getEString(), "name", null, 0, 1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryModelDirectory_Description(), ecorePackage.getEString(), "description", null, 0, 1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryModelDirectory_Url(), ecorePackage.getEString(), "url", null, 0, 1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(dataStoreMetaDataEClass, DataStoreMetaData.class, "DataStoreMetaData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(dataStoreMetaDataEClass, DataStoreMetaData.class, "DataStoreMetaData", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDataStoreMetaData_Count(), ecorePackage.getELong(), "count", null, 0, 1, DataStoreMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mongoDBMetaDataEClass, MongoDBMetaData.class, "MongoDBMetaData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1229,6 +1247,11 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getMongoDBMetaData_AvgObjectSize(), ecorePackage.getELong(), "avgObjectSize", null, 0, 1, MongoDBMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMongoDBMetaData_StoreSize(), ecorePackage.getELong(), "storeSize", null, 0, 1, MongoDBMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMongoDBMetaData_Server(), ecorePackage.getEString(), "server", null, 0, 1, MongoDBMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(modelEClass, Model.class, "Model", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModel_Description(), ecorePackage.getEString(), "description", null, 0, 1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModel_Url(), ecorePackage.getEString(), "url", null, 0, 1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -1285,6 +1308,12 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		   source, 
 		   new String[] {
 			 "fragments", "true"
+		   });	
+		addAnnotation
+		  (getRepositoryModelDirectory_RepositoryModels(), 
+		   source, 
+		   new String[] {
+			 "Fragmentation", "true"
 		   });
 	}
 
