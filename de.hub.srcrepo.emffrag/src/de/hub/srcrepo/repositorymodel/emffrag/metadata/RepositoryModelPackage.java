@@ -5,6 +5,7 @@ package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -20,6 +21,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
  * @model kind="package"
+ *        annotation="http://www.eclipse.org/OCL/Import ecore='http://www.eclipse.org/emf/2002/Ecore' java='../../../plugin/org.eclipse.gmt.modisco.java/model/java.ecore#/'"
  * @generated
  */
 public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.RepositoryModelPackage {
@@ -37,7 +39,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://hub.sam.repositorymodel/1.0";
+	String eNS_URI = "http://hub.sam.repositorymodel/1.0/emffrag";
 
 	/**
 	 * The package namespace name.

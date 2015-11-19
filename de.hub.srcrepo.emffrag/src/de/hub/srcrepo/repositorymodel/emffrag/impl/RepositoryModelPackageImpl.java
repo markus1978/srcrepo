@@ -1237,8 +1237,27 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createResource(eNS_URI);
 
 		// Create annotations
+		// http://www.eclipse.org/OCL/Import
+		createImportAnnotations();
 		// de.hub.emffrag
 		createDeAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/OCL/Import</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createImportAnnotations() {
+		String source = "http://www.eclipse.org/OCL/Import";	
+		addAnnotation
+		  (this, 
+		   source, 
+		   new String[] {
+			 "ecore", "http://www.eclipse.org/emf/2002/Ecore",
+			 "java", "../../../plugin/org.eclipse.gmt.modisco.java/model/java.ecore#/"
+		   });
 	}
 
 	/**
