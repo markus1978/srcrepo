@@ -122,6 +122,10 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
 		cuCount = repositoryMetaData.getCuCount();
 	}
+	
+	protected void updateDataStoreMetaData(RepositoryMetaData metaData, RepositoryModel model) {
+		
+	}
 
 	@Override
 	public void onMerge(Rev mergeRev, Rev branchRev) {
@@ -619,5 +623,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		repositoryMetaData.setCuCount(cuCount);
 		repositoryMetaData.setImportStats(Statistics.reportToString());
 		repositoryMetaData.setImportStatsAsJSON(Statistics.reportToJSON().toString(1));
+		updateDataStoreMetaData(repositoryMetaData, repositoryModel);
 	}
 }

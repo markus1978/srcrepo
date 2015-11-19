@@ -3,6 +3,7 @@
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -26,9 +27,12 @@ import org.eclipse.emf.ecore.EClass;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportStatsAsJSON <em>Import Stats As JSON</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getNewestRev <em>Newest Rev</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportDate <em>Import Date</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCuCount <em>Cu Count</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getObjectCount <em>Object Count</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRawByteSize <em>Raw Byte Size</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCuCount <em>Cu Count</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getWorkingCopy <em>Working Copy</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevsWithErrors <em>Revs With Errors</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getDataStoreMetaData <em>Data Store Meta Data</em>}</li>
  * </ul>
  *
  * @generated
@@ -223,6 +227,60 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 */
 	public void setRawByteSize(long newRawByteSize) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__RAW_BYTE_SIZE, newRawByteSize);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getWorkingCopy() {
+		return (String)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__WORKING_COPY, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setWorkingCopy(String newWorkingCopy) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__WORKING_COPY, newWorkingCopy);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getRevsWithErrors() {
+		return (Integer)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__REVS_WITH_ERRORS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRevsWithErrors(int newRevsWithErrors) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__REVS_WITH_ERRORS, newRevsWithErrors);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DataStoreMetaData getDataStoreMetaData() {
+		return (DataStoreMetaData)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__DATA_STORE_META_DATA, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDataStoreMetaData(DataStoreMetaData newDataStoreMetaData) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__DATA_STORE_META_DATA, newDataStoreMetaData);
 	}
 
 	/**

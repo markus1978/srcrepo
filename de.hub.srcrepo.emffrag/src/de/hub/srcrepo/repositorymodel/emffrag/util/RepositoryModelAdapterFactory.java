@@ -131,6 +131,18 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 				return createRepositoryMetaDataAdapter();
 			}
 			@Override
+			public Adapter caseRepositoryModelDirectory(RepositoryModelDirectory object) {
+				return createRepositoryModelDirectoryAdapter();
+			}
+			@Override
+			public Adapter caseDataStoreMetaData(DataStoreMetaData object) {
+				return createDataStoreMetaDataAdapter();
+			}
+			@Override
+			public Adapter caseMongoDBMetaData(MongoDBMetaData object) {
+				return createMongoDBMetaDataAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -329,6 +341,48 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createRepositoryMetaDataAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory <em>Directory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+	 * @generated
+	 */
+	public Adapter createRepositoryModelDirectoryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.DataStoreMetaData <em>Data Store Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.DataStoreMetaData
+	 * @generated
+	 */
+	public Adapter createDataStoreMetaDataAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.MongoDBMetaData <em>Mongo DB Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.MongoDBMetaData
+	 * @generated
+	 */
+	public Adapter createMongoDBMetaDataAdapter() {
 		return null;
 	}
 

@@ -81,6 +81,9 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return createCompilationUnitModel();
 			case RepositoryModelPackage.IMPORT_ERROR: return createImportError();
 			case RepositoryModelPackage.REPOSITORY_META_DATA: return createRepositoryMetaData();
+			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: return createRepositoryModelDirectory();
+			case RepositoryModelPackage.DATA_STORE_META_DATA: return createDataStoreMetaData();
+			case RepositoryModelPackage.MONGO_DB_META_DATA: return createMongoDBMetaData();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -234,6 +237,36 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public RepositoryMetaData createRepositoryMetaData() {
 		RepositoryMetaDataImpl repositoryMetaData = new RepositoryMetaDataImpl();
 		return repositoryMetaData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RepositoryModelDirectory createRepositoryModelDirectory() {
+		RepositoryModelDirectoryImpl repositoryModelDirectory = new RepositoryModelDirectoryImpl();
+		return repositoryModelDirectory;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DataStoreMetaData createDataStoreMetaData() {
+		DataStoreMetaDataImpl dataStoreMetaData = new DataStoreMetaDataImpl();
+		return dataStoreMetaData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MongoDBMetaData createMongoDBMetaData() {
+		MongoDBMetaDataImpl mongoDBMetaData = new MongoDBMetaDataImpl();
+		return mongoDBMetaData;
 	}
 
 	/**

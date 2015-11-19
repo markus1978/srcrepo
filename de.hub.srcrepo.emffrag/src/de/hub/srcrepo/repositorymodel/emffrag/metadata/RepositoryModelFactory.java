@@ -3,14 +3,17 @@
 package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
@@ -139,6 +142,33 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	RepositoryMetaData createRepositoryMetaData();
+
+	/**
+	 * Returns a new object of class '<em>Directory</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Directory</em>'.
+	 * @generated
+	 */
+	RepositoryModelDirectory createRepositoryModelDirectory();
+
+	/**
+	 * Returns a new object of class '<em>Data Store Meta Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Data Store Meta Data</em>'.
+	 * @generated
+	 */
+	DataStoreMetaData createDataStoreMetaData();
+
+	/**
+	 * Returns a new object of class '<em>Mongo DB Meta Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mongo DB Meta Data</em>'.
+	 * @generated
+	 */
+	MongoDBMetaData createMongoDBMetaData();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -2,6 +2,7 @@ package de.hub.srcrepo.emffrag;
 
 
 import org.eclipse.emf.common.util.URI;
+import org.junit.Assert;
 
 import de.hub.emffrag.fragmentation.Fragment;
 import de.hub.srcrepo.MoDiscoGitImportTest;
@@ -24,8 +25,9 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 		}		
 		URI modelURI = getTestModelURI();
 		
-		return new EmfFragSrcRepoImport.GitConfiguration(getWorkingCopy(), modelURI).
-				repositoryURL(repositoryURL);
+		Configuration configuration = new EmfFragSrcRepoImport.GitConfiguration(getWorkingCopy(), modelURI).repositoryURL(repositoryURL);
+		configuration.useCGit();
+		return configuration;
 	}
 
 	@Override
@@ -43,4 +45,14 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 	protected void closeRepositoryModel(RepositoryModel model) {
 		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), ((Fragment)model.eResource()).fFragmentation());
 	}
+
+	@Override
+	protected void assertMetaData(RepositoryModel repositoryModel) {
+		super.assertMetaData(repositoryModel);
+		Assert.assertNotNull(repositoryModel.getMetaData().getDataStoreMetaData());
+		Assert.assertTrue(repositoryModel.getMetaData().getDataStoreMetaData().getCount() >= 
+				(repositoryModel.getMetaData().getRevCount() + repositoryModel.getMetaData().getCuCount()));
+	}
+	
+	
 }

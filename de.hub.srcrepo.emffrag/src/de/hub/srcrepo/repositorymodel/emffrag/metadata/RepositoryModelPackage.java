@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
  * @model kind="package"
- *        annotation="http://www.eclipse.org/OCL/Import ecore='http://www.eclipse.org/emf/2002/Ecore' java='../../../plugin/org.eclipse.gmt.modisco.java/model/java.ecore#/'"
  * @generated
  */
 public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.RepositoryModelPackage {
@@ -38,7 +37,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://hub.sam.repositorymodel/1.0/emffrag";
+	String eNS_URI = "http://hub.sam.repositorymodel/1.0";
 
 	/**
 	 * The package namespace name.
@@ -862,13 +861,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_META_DATA__IMPORT_DATE = 6;
 
 	/**
+	 * The feature id for the '<em><b>Cu Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__CU_COUNT = 7;
+
+	/**
 	 * The feature id for the '<em><b>Object Count</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__OBJECT_COUNT = 7;
+	int REPOSITORY_META_DATA__OBJECT_COUNT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Raw Byte Size</b></em>' attribute.
@@ -877,16 +885,34 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__RAW_BYTE_SIZE = 8;
+	int REPOSITORY_META_DATA__RAW_BYTE_SIZE = 9;
 
 	/**
-	 * The feature id for the '<em><b>Cu Count</b></em>' attribute.
+	 * The feature id for the '<em><b>Working Copy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__CU_COUNT = 9;
+	int REPOSITORY_META_DATA__WORKING_COPY = 10;
+
+	/**
+	 * The feature id for the '<em><b>Revs With Errors</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__REVS_WITH_ERRORS = 11;
+
+	/**
+	 * The feature id for the '<em><b>Data Store Meta Data</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__DATA_STORE_META_DATA = 12;
 
 	/**
 	 * The number of structural features of the '<em>Repository Meta Data</em>' class.
@@ -895,7 +921,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA_FEATURE_COUNT = 10;
+	int REPOSITORY_META_DATA_FEATURE_COUNT = 13;
 
 	/**
 	 * The number of operations of the '<em>Repository Meta Data</em>' class.
@@ -907,6 +933,189 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_META_DATA_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl <em>Directory</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryModelDirectory()
+	 * @generated
+	 */
+	int REPOSITORY_MODEL_DIRECTORY = 13;
+
+	/**
+	 * The feature id for the '<em><b>Sub Directories</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES = 0;
+
+	/**
+	 * The feature id for the '<em><b>Repository Models</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__NAME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__DESCRIPTION = 3;
+
+	/**
+	 * The feature id for the '<em><b>Url</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__URL = 4;
+
+	/**
+	 * The number of structural features of the '<em>Directory</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY_FEATURE_COUNT = 5;
+
+	/**
+	 * The number of operations of the '<em>Directory</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DataStoreMetaDataImpl <em>Data Store Meta Data</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.DataStoreMetaDataImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDataStoreMetaData()
+	 * @generated
+	 */
+	int DATA_STORE_META_DATA = 14;
+
+	/**
+	 * The feature id for the '<em><b>Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_STORE_META_DATA__COUNT = 0;
+
+	/**
+	 * The number of structural features of the '<em>Data Store Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_STORE_META_DATA_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Data Store Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DATA_STORE_META_DATA_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.MongoDBMetaDataImpl <em>Mongo DB Meta Data</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.MongoDBMetaDataImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getMongoDBMetaData()
+	 * @generated
+	 */
+	int MONGO_DB_META_DATA = 15;
+
+	/**
+	 * The feature id for the '<em><b>Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA__COUNT = DATA_STORE_META_DATA__COUNT;
+
+	/**
+	 * The feature id for the '<em><b>Ns</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA__NS = DATA_STORE_META_DATA_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Avg Object Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA__AVG_OBJECT_SIZE = DATA_STORE_META_DATA_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Store Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA__STORE_SIZE = DATA_STORE_META_DATA_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Server</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA__SERVER = DATA_STORE_META_DATA_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Mongo DB Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA_FEATURE_COUNT = DATA_STORE_META_DATA_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>Mongo DB Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MONGO_DB_META_DATA_OPERATION_COUNT = DATA_STORE_META_DATA_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -914,7 +1123,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 13;
+	int CHANGE_TYPE = 16;
 
 
 	/**
@@ -1620,6 +1829,179 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getRepositoryMetaData_RawByteSize();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getWorkingCopy <em>Working Copy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Working Copy</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getWorkingCopy()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_WorkingCopy();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRevsWithErrors <em>Revs With Errors</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Revs With Errors</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRevsWithErrors()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_RevsWithErrors();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getDataStoreMetaData <em>Data Store Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Data Store Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getDataStoreMetaData()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EReference getRepositoryMetaData_DataStoreMetaData();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory <em>Directory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Directory</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+	 * @generated
+	 */
+	EClass getRepositoryModelDirectory();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getSubDirectories <em>Sub Directories</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sub Directories</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getSubDirectories()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EReference getRepositoryModelDirectory_SubDirectories();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getRepositoryModels <em>Repository Models</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Repository Models</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getRepositoryModels()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EReference getRepositoryModelDirectory_RepositoryModels();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getName()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EAttribute getRepositoryModelDirectory_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getDescription()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EAttribute getRepositoryModelDirectory_Description();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getUrl <em>Url</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Url</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getUrl()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EAttribute getRepositoryModelDirectory_Url();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.DataStoreMetaData <em>Data Store Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Data Store Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.DataStoreMetaData
+	 * @generated
+	 */
+	EClass getDataStoreMetaData();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.DataStoreMetaData#getCount <em>Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Count</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.DataStoreMetaData#getCount()
+	 * @see #getDataStoreMetaData()
+	 * @generated
+	 */
+	EAttribute getDataStoreMetaData_Count();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.MongoDBMetaData <em>Mongo DB Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Mongo DB Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.MongoDBMetaData
+	 * @generated
+	 */
+	EClass getMongoDBMetaData();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.MongoDBMetaData#getNs <em>Ns</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ns</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.MongoDBMetaData#getNs()
+	 * @see #getMongoDBMetaData()
+	 * @generated
+	 */
+	EAttribute getMongoDBMetaData_Ns();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.MongoDBMetaData#getAvgObjectSize <em>Avg Object Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Avg Object Size</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.MongoDBMetaData#getAvgObjectSize()
+	 * @see #getMongoDBMetaData()
+	 * @generated
+	 */
+	EAttribute getMongoDBMetaData_AvgObjectSize();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.MongoDBMetaData#getStoreSize <em>Store Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Store Size</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.MongoDBMetaData#getStoreSize()
+	 * @see #getMongoDBMetaData()
+	 * @generated
+	 */
+	EAttribute getMongoDBMetaData_StoreSize();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.MongoDBMetaData#getServer <em>Server</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Server</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.MongoDBMetaData#getServer()
+	 * @see #getMongoDBMetaData()
+	 * @generated
+	 */
+	EAttribute getMongoDBMetaData_Server();
+
+	/**
 	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCuCount <em>Cu Count</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2208,6 +2590,140 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EAttribute REPOSITORY_META_DATA__RAW_BYTE_SIZE = eINSTANCE.getRepositoryMetaData_RawByteSize();
+
+		/**
+		 * The meta object literal for the '<em><b>Working Copy</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__WORKING_COPY = eINSTANCE.getRepositoryMetaData_WorkingCopy();
+
+		/**
+		 * The meta object literal for the '<em><b>Revs With Errors</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__REVS_WITH_ERRORS = eINSTANCE.getRepositoryMetaData_RevsWithErrors();
+
+		/**
+		 * The meta object literal for the '<em><b>Data Store Meta Data</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_META_DATA__DATA_STORE_META_DATA = eINSTANCE.getRepositoryMetaData_DataStoreMetaData();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl <em>Directory</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryModelDirectory()
+		 * @generated
+		 */
+		EClass REPOSITORY_MODEL_DIRECTORY = eINSTANCE.getRepositoryModelDirectory();
+
+		/**
+		 * The meta object literal for the '<em><b>Sub Directories</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES = eINSTANCE.getRepositoryModelDirectory_SubDirectories();
+
+		/**
+		 * The meta object literal for the '<em><b>Repository Models</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS = eINSTANCE.getRepositoryModelDirectory_RepositoryModels();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_MODEL_DIRECTORY__NAME = eINSTANCE.getRepositoryModelDirectory_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_MODEL_DIRECTORY__DESCRIPTION = eINSTANCE.getRepositoryModelDirectory_Description();
+
+		/**
+		 * The meta object literal for the '<em><b>Url</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_MODEL_DIRECTORY__URL = eINSTANCE.getRepositoryModelDirectory_Url();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DataStoreMetaDataImpl <em>Data Store Meta Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.DataStoreMetaDataImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDataStoreMetaData()
+		 * @generated
+		 */
+		EClass DATA_STORE_META_DATA = eINSTANCE.getDataStoreMetaData();
+
+		/**
+		 * The meta object literal for the '<em><b>Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DATA_STORE_META_DATA__COUNT = eINSTANCE.getDataStoreMetaData_Count();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.MongoDBMetaDataImpl <em>Mongo DB Meta Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.MongoDBMetaDataImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getMongoDBMetaData()
+		 * @generated
+		 */
+		EClass MONGO_DB_META_DATA = eINSTANCE.getMongoDBMetaData();
+
+		/**
+		 * The meta object literal for the '<em><b>Ns</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MONGO_DB_META_DATA__NS = eINSTANCE.getMongoDBMetaData_Ns();
+
+		/**
+		 * The meta object literal for the '<em><b>Avg Object Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MONGO_DB_META_DATA__AVG_OBJECT_SIZE = eINSTANCE.getMongoDBMetaData_AvgObjectSize();
+
+		/**
+		 * The meta object literal for the '<em><b>Store Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MONGO_DB_META_DATA__STORE_SIZE = eINSTANCE.getMongoDBMetaData_StoreSize();
+
+		/**
+		 * The meta object literal for the '<em><b>Server</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MONGO_DB_META_DATA__SERVER = eINSTANCE.getMongoDBMetaData_Server();
 
 		/**
 		 * The meta object literal for the '<em><b>Cu Count</b></em>' attribute feature.
