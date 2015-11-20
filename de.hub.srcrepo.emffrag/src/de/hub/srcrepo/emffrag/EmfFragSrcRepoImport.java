@@ -165,7 +165,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 				withDescription("Just checkout each rev, but do not import via MoDisco.").create());
 		options.addOption(OptionBuilder.
 				withLongOpt("use-flat-traversal").
-				withDescription("Traverse the repository from refs to parents, not from root up.").create());
+				withDescription("Traverse the repository rev by rev not traversining branches.").create());
 		options.addOption(OptionBuilder.
 				withLongOpt("use-c-git").
 				withDescription("Use regular git shell commands and not jGit.").create());
@@ -379,11 +379,16 @@ public class EmfFragSrcRepoImport implements IApplication {
 			}
 		}
 		
-		SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
-		config.scs.close();
-		sourceImportVisitor.close();
-		closeFragmentation(config, fragmentation);
-		SrcRepoActivator.INSTANCE.info("Import done.");
+		try {
+			SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
+			config.scs.close();
+			sourceImportVisitor.close();
+		} catch (Exception e) {
+			SrcRepoActivator.INSTANCE.warning("Exception during cleanup and closing.", e);
+		} finally {
+			closeFragmentation(config, fragmentation);
+			SrcRepoActivator.INSTANCE.info("Import done.");
+		}
 		
 		return repositoryModel;
 	}

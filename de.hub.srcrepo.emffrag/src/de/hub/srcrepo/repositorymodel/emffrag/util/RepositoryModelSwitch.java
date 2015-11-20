@@ -2,27 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
-
-import de.hub.srcrepo.repositorymodel.AbstractFileRef;
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
-import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.ImportError;
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.Model;
-import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
-import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
-import de.hub.srcrepo.repositorymodel.Ref;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
-import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
-import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Target;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -85,7 +68,7 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.REPOSITORY_MODEL: {
 				RepositoryModel repositoryModel = (RepositoryModel)theEObject;
 				T result = caseRepositoryModel(repositoryModel);
-				if (result == null) result = caseModel(repositoryModel);
+				if (result == null) result = caseDirectoryElement(repositoryModel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -165,7 +148,7 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: {
 				RepositoryModelDirectory repositoryModelDirectory = (RepositoryModelDirectory)theEObject;
 				T result = caseRepositoryModelDirectory(repositoryModelDirectory);
-				if (result == null) result = caseModel(repositoryModelDirectory);
+				if (result == null) result = caseDirectoryElement(repositoryModelDirectory);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -182,9 +165,15 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case RepositoryModelPackage.MODEL: {
-				Model model = (Model)theEObject;
-				T result = caseModel(model);
+			case RepositoryModelPackage.DIRECTORY_ELEMENT: {
+				DirectoryElement directoryElement = (DirectoryElement)theEObject;
+				T result = caseDirectoryElement(directoryElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.IMPORT_META_DATA: {
+				ImportMetaData importMetaData = (ImportMetaData)theEObject;
+				T result = caseImportMetaData(importMetaData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -433,17 +422,32 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Directory Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Model</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Directory Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseModel(Model object) {
+	public T caseDirectoryElement(DirectoryElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Import Meta Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Import Meta Data</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseImportMetaData(ImportMetaData object) {
 		return null;
 	}
 

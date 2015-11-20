@@ -5,6 +5,7 @@ package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
@@ -159,6 +160,15 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	MongoDBMetaData createMongoDBMetaData();
+
+	/**
+	 * Returns a new object of class '<em>Import Meta Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Import Meta Data</em>'.
+	 * @generated
+	 */
+	ImportMetaData createImportMetaData();
 
 	/**
 	 * Returns the package supported by this factory.

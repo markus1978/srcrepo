@@ -143,8 +143,9 @@ public class MoDiscoGitImportTest {
 		Assert.assertNotNull(metaData.getNewestRev());
 		Assert.assertNotNull(metaData.getOldestRev());
 		Assert.assertTrue(metaData.getNewestRev().getTime() > metaData.getOldestRev().getTime());
-		Assert.assertNotNull(metaData.getImportStatsAsJSON());
-		Assert.assertNotNull(metaData.getImportStats());
+		Assert.assertNotNull(metaData.getImportMetaData());
+		Assert.assertNotNull(metaData.getImportMetaData().getImportStatsAsJSON());
+		Assert.assertNotNull(metaData.getImportMetaData().getImportStats());
 		Assert.assertEquals(16, metaData.getRevCount());
 		Assert.assertEquals(19, metaData.getCuCount());		
 	}

@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.EClass;
 
 import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -22,16 +23,12 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getOrigin <em>Origin</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getOldestRev <em>Oldest Rev</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevCount <em>Rev Count</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportStats <em>Import Stats</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportStatsAsJSON <em>Import Stats As JSON</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getNewestRev <em>Newest Rev</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportDate <em>Import Date</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCuCount <em>Cu Count</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getObjectCount <em>Object Count</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRawByteSize <em>Raw Byte Size</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getWorkingCopy <em>Working Copy</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevsWithErrors <em>Revs With Errors</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getDataStoreMetaData <em>Data Store Meta Data</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportMetaData <em>Import Meta Data</em>}</li>
  * </ul>
  *
  * @generated
@@ -125,42 +122,6 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getImportStats() {
-		return (String)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_STATS, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImportStats(String newImportStats) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_STATS, newImportStats);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getImportStatsAsJSON() {
-		return (String)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImportStatsAsJSON(String newImportStatsAsJSON) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON, newImportStatsAsJSON);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Date getNewestRev() {
 		return (Date)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__NEWEST_REV, true);
 	}
@@ -172,60 +133,6 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 */
 	public void setNewestRev(Date newNewestRev) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__NEWEST_REV, newNewestRev);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Date getImportDate() {
-		return (Date)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_DATE, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImportDate(Date newImportDate) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_DATE, newImportDate);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public long getObjectCount() {
-		return (Long)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__OBJECT_COUNT, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setObjectCount(long newObjectCount) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__OBJECT_COUNT, newObjectCount);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public long getRawByteSize() {
-		return (Long)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__RAW_BYTE_SIZE, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRawByteSize(long newRawByteSize) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__RAW_BYTE_SIZE, newRawByteSize);
 	}
 
 	/**
@@ -280,6 +187,24 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 */
 	public void setDataStoreMetaData(DataStoreMetaData newDataStoreMetaData) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__DATA_STORE_META_DATA, newDataStoreMetaData);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ImportMetaData getImportMetaData() {
+		return (ImportMetaData)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_META_DATA, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setImportMetaData(ImportMetaData newImportMetaData) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_META_DATA, newImportMetaData);
 	}
 
 	/**

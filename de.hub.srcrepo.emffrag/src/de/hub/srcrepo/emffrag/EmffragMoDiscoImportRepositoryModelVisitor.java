@@ -46,9 +46,9 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 				}
 				dataStoreMetaData.setNs((String)stats.get("ns"));
 				dataStoreMetaData.setServer((String)stats.get("serverUsed"));
-				dataStoreMetaData.setCount((Integer)stats.get("count"));
-				dataStoreMetaData.setAvgObjectSize((Integer)stats.get("avgObjSize"));
-				dataStoreMetaData.setStoreSize((Integer)stats.get("storageSize"));			
+				dataStoreMetaData.setCount(((Number)stats.get("count")).longValue());
+				dataStoreMetaData.setAvgObjectSize(((Number)stats.get("avgObjSize")).longValue());
+				dataStoreMetaData.setStoreSize(((Number)stats.get("storageSize")).longValue());			
 			}
 		}
 	}

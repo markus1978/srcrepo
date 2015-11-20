@@ -29,7 +29,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *
  * @generated
  */
-public class RepositoryModelImpl extends ModelImpl implements RepositoryModel {
+public class RepositoryModelImpl extends DirectoryElementImpl implements RepositoryModel {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

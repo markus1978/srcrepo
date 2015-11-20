@@ -2,34 +2,36 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import org.eclipse.emf.ecore.EClass;
-
 import de.hub.emffrag.fragmentation.FObjectImpl;
-import de.hub.srcrepo.repositorymodel.Model;
+
+import de.hub.srcrepo.repositorymodel.DirectoryElement;
+
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
+
+import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model</b></em>'.
+ * An implementation of the model object '<em><b>Directory Element</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl#getName <em>Name</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl#getUrl <em>Url</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl#getName <em>Name</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl#getUrl <em>Url</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class ModelImpl extends FObjectImpl implements Model {
+public abstract class DirectoryElementImpl extends FObjectImpl implements DirectoryElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ModelImpl() {
+	protected DirectoryElementImpl() {
 		super();
 	}
 
@@ -40,7 +42,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return RepositoryModelPackage.Literals.MODEL;
+		return RepositoryModelPackage.Literals.DIRECTORY_ELEMENT;
 	}
 
 	/**
@@ -59,7 +61,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 * @generated
 	 */
 	public String getName() {
-		return (String)eGet(RepositoryModelPackage.Literals.MODEL__NAME, true);
+		return (String)eGet(RepositoryModelPackage.Literals.DIRECTORY_ELEMENT__NAME, true);
 	}
 
 	/**
@@ -68,7 +70,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 * @generated
 	 */
 	public void setName(String newName) {
-		eSet(RepositoryModelPackage.Literals.MODEL__NAME, newName);
+		eSet(RepositoryModelPackage.Literals.DIRECTORY_ELEMENT__NAME, newName);
 	}
 
 	/**
@@ -77,7 +79,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 * @generated
 	 */
 	public String getDescription() {
-		return (String)eGet(RepositoryModelPackage.Literals.MODEL__DESCRIPTION, true);
+		return (String)eGet(RepositoryModelPackage.Literals.DIRECTORY_ELEMENT__DESCRIPTION, true);
 	}
 
 	/**
@@ -86,7 +88,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 * @generated
 	 */
 	public void setDescription(String newDescription) {
-		eSet(RepositoryModelPackage.Literals.MODEL__DESCRIPTION, newDescription);
+		eSet(RepositoryModelPackage.Literals.DIRECTORY_ELEMENT__DESCRIPTION, newDescription);
 	}
 
 	/**
@@ -95,7 +97,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 * @generated
 	 */
 	public String getUrl() {
-		return (String)eGet(RepositoryModelPackage.Literals.MODEL__URL, true);
+		return (String)eGet(RepositoryModelPackage.Literals.DIRECTORY_ELEMENT__URL, true);
 	}
 
 	/**
@@ -104,7 +106,7 @@ public abstract class ModelImpl extends FObjectImpl implements Model {
 	 * @generated
 	 */
 	public void setUrl(String newUrl) {
-		eSet(RepositoryModelPackage.Literals.MODEL__URL, newUrl);
+		eSet(RepositoryModelPackage.Literals.DIRECTORY_ELEMENT__URL, newUrl);
 	}
 
-} //ModelImpl
+} //DirectoryElementImpl

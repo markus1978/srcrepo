@@ -15,9 +15,10 @@ import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.DirectoryElement;
 import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.Model;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.PendingElement;
@@ -155,7 +156,14 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass modelEClass = null;
+	private EClass directoryElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass importMetaDataEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -764,7 +772,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRepositoryMetaData_ImportStats() {
+	public EAttribute getRepositoryMetaData_NewestRev() {
 		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -773,16 +781,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRepositoryMetaData_ImportStatsAsJSON() {
-		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRepositoryMetaData_NewestRev() {
+	public EAttribute getRepositoryMetaData_WorkingCopy() {
 		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -791,7 +790,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRepositoryMetaData_ImportDate() {
+	public EAttribute getRepositoryMetaData_RevsWithErrors() {
 		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -800,44 +799,17 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRepositoryMetaData_ObjectCount() {
-		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRepositoryMetaData_RawByteSize() {
-		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRepositoryMetaData_WorkingCopy() {
-		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRepositoryMetaData_RevsWithErrors() {
-		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(11);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getRepositoryMetaData_DataStoreMetaData() {
-		return (EReference)repositoryMetaDataEClass.getEStructuralFeatures().get(12);
+		return (EReference)repositoryMetaDataEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRepositoryMetaData_ImportMetaData() {
+		return (EReference)repositoryMetaDataEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -854,7 +826,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRepositoryModelDirectory_SubDirectories() {
+	public EReference getRepositoryModelDirectory_Repositories() {
 		return (EReference)repositoryModelDirectoryEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -863,8 +835,26 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRepositoryModelDirectory_RepositoryModels() {
+	public EReference getRepositoryModelDirectory_SubDirectories() {
 		return (EReference)repositoryModelDirectoryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRepositoryModelDirectory_ScheduledForImport() {
+		return (EReference)repositoryModelDirectoryEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRepositoryModelDirectory_Imported() {
+		return (EReference)repositoryModelDirectoryEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -935,8 +925,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getModel() {
-		return modelEClass;
+	public EClass getDirectoryElement() {
+		return directoryElementEClass;
 	}
 
 	/**
@@ -944,8 +934,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModel_Name() {
-		return (EAttribute)modelEClass.getEStructuralFeatures().get(0);
+	public EAttribute getDirectoryElement_Name() {
+		return (EAttribute)directoryElementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -953,8 +943,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModel_Description() {
-		return (EAttribute)modelEClass.getEStructuralFeatures().get(1);
+	public EAttribute getDirectoryElement_Description() {
+		return (EAttribute)directoryElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -962,8 +952,71 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModel_Url() {
-		return (EAttribute)modelEClass.getEStructuralFeatures().get(2);
+	public EAttribute getDirectoryElement_Url() {
+		return (EAttribute)directoryElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getImportMetaData() {
+		return importMetaDataEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportMetaData_Scheduled() {
+		return (EAttribute)importMetaDataEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportMetaData_Importing() {
+		return (EAttribute)importMetaDataEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportMetaData_Imported() {
+		return (EAttribute)importMetaDataEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportMetaData_ImportDate() {
+		return (EAttribute)importMetaDataEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportMetaData_ImportStats() {
+		return (EAttribute)importMetaDataEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getImportMetaData_ImportStatsAsJSON() {
+		return (EAttribute)importMetaDataEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -972,7 +1025,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	public EAttribute getRepositoryMetaData_CuCount() {
-		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(7);
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1083,20 +1136,18 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__ORIGIN);
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__OLDEST_REV);
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__REV_COUNT);
-		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_STATS);
-		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON);
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__NEWEST_REV);
-		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_DATE);
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__CU_COUNT);
-		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__OBJECT_COUNT);
-		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__RAW_BYTE_SIZE);
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__WORKING_COPY);
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__REVS_WITH_ERRORS);
 		createEReference(repositoryMetaDataEClass, REPOSITORY_META_DATA__DATA_STORE_META_DATA);
+		createEReference(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_META_DATA);
 
 		repositoryModelDirectoryEClass = createEClass(REPOSITORY_MODEL_DIRECTORY);
+		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__REPOSITORIES);
 		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES);
-		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS);
+		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__SCHEDULED_FOR_IMPORT);
+		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__IMPORTED);
 
 		dataStoreMetaDataEClass = createEClass(DATA_STORE_META_DATA);
 		createEAttribute(dataStoreMetaDataEClass, DATA_STORE_META_DATA__COUNT);
@@ -1107,10 +1158,18 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(mongoDBMetaDataEClass, MONGO_DB_META_DATA__STORE_SIZE);
 		createEAttribute(mongoDBMetaDataEClass, MONGO_DB_META_DATA__SERVER);
 
-		modelEClass = createEClass(MODEL);
-		createEAttribute(modelEClass, MODEL__NAME);
-		createEAttribute(modelEClass, MODEL__DESCRIPTION);
-		createEAttribute(modelEClass, MODEL__URL);
+		directoryElementEClass = createEClass(DIRECTORY_ELEMENT);
+		createEAttribute(directoryElementEClass, DIRECTORY_ELEMENT__NAME);
+		createEAttribute(directoryElementEClass, DIRECTORY_ELEMENT__DESCRIPTION);
+		createEAttribute(directoryElementEClass, DIRECTORY_ELEMENT__URL);
+
+		importMetaDataEClass = createEClass(IMPORT_META_DATA);
+		createEAttribute(importMetaDataEClass, IMPORT_META_DATA__SCHEDULED);
+		createEAttribute(importMetaDataEClass, IMPORT_META_DATA__IMPORTING);
+		createEAttribute(importMetaDataEClass, IMPORT_META_DATA__IMPORTED);
+		createEAttribute(importMetaDataEClass, IMPORT_META_DATA__IMPORT_DATE);
+		createEAttribute(importMetaDataEClass, IMPORT_META_DATA__IMPORT_STATS);
+		createEAttribute(importMetaDataEClass, IMPORT_META_DATA__IMPORT_STATS_AS_JSON);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -1147,9 +1206,9 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		repositoryModelEClass.getESuperTypes().add(this.getModel());
+		repositoryModelEClass.getESuperTypes().add(this.getDirectoryElement());
 		javaCompilationUnitRefEClass.getESuperTypes().add(this.getAbstractFileRef());
-		repositoryModelDirectoryEClass.getESuperTypes().add(this.getModel());
+		repositoryModelDirectoryEClass.getESuperTypes().add(this.getDirectoryElement());
 		mongoDBMetaDataEClass.getESuperTypes().add(this.getDataStoreMetaData());
 
 		// Initialize classes, features, and operations; add parameters
@@ -1224,20 +1283,18 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getRepositoryMetaData_Origin(), ecorePackage.getEString(), "origin", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRepositoryMetaData_OldestRev(), ecorePackage.getEDate(), "oldestRev", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRepositoryMetaData_RevCount(), ecorePackage.getEInt(), "revCount", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryMetaData_ImportStats(), ecorePackage.getEString(), "importStats", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryMetaData_ImportStatsAsJSON(), ecorePackage.getEString(), "importStatsAsJSON", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRepositoryMetaData_NewestRev(), ecorePackage.getEDate(), "newestRev", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryMetaData_ImportDate(), ecorePackage.getEDate(), "importDate", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRepositoryMetaData_CuCount(), ecorePackage.getELong(), "cuCount", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryMetaData_ObjectCount(), ecorePackage.getELong(), "objectCount", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRepositoryMetaData_RawByteSize(), ecorePackage.getELong(), "rawByteSize", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRepositoryMetaData_WorkingCopy(), ecorePackage.getEString(), "workingCopy", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRepositoryMetaData_RevsWithErrors(), ecorePackage.getEInt(), "revsWithErrors", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryMetaData_DataStoreMetaData(), this.getDataStoreMetaData(), null, "dataStoreMetaData", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepositoryMetaData_ImportMetaData(), this.getImportMetaData(), null, "importMetaData", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(repositoryModelDirectoryEClass, RepositoryModelDirectory.class, "RepositoryModelDirectory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRepositoryModelDirectory_Repositories(), this.getRepositoryModel(), null, "repositories", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModelDirectory_SubDirectories(), this.getRepositoryModelDirectory(), null, "subDirectories", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRepositoryModelDirectory_RepositoryModels(), this.getRepositoryModel(), null, "repositoryModels", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepositoryModelDirectory_ScheduledForImport(), this.getRepositoryModel(), null, "scheduledForImport", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepositoryModelDirectory_Imported(), this.getRepositoryModel(), null, "imported", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(dataStoreMetaDataEClass, DataStoreMetaData.class, "DataStoreMetaData", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDataStoreMetaData_Count(), ecorePackage.getELong(), "count", null, 0, 1, DataStoreMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1248,10 +1305,18 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getMongoDBMetaData_StoreSize(), ecorePackage.getELong(), "storeSize", null, 0, 1, MongoDBMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMongoDBMetaData_Server(), ecorePackage.getEString(), "server", null, 0, 1, MongoDBMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(modelEClass, Model.class, "Model", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModel_Description(), ecorePackage.getEString(), "description", null, 0, 1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModel_Url(), ecorePackage.getEString(), "url", null, 0, 1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(directoryElementEClass, DirectoryElement.class, "DirectoryElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDirectoryElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, DirectoryElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDirectoryElement_Description(), ecorePackage.getEString(), "description", null, 0, 1, DirectoryElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDirectoryElement_Url(), ecorePackage.getEString(), "url", null, 0, 1, DirectoryElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(importMetaDataEClass, ImportMetaData.class, "ImportMetaData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getImportMetaData_Scheduled(), ecorePackage.getEBoolean(), "scheduled", null, 0, 1, ImportMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportMetaData_Importing(), ecorePackage.getEBoolean(), "importing", null, 0, 1, ImportMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportMetaData_Imported(), ecorePackage.getEBoolean(), "imported", null, 0, 1, ImportMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportMetaData_ImportDate(), ecorePackage.getEDate(), "importDate", null, 0, 1, ImportMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportMetaData_ImportStats(), ecorePackage.getEString(), "importStats", null, 0, 1, ImportMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportMetaData_ImportStatsAsJSON(), ecorePackage.getEString(), "importStatsAsJSON", null, 0, 1, ImportMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -1310,7 +1375,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 			 "fragments", "true"
 		   });	
 		addAnnotation
-		  (getRepositoryModelDirectory_RepositoryModels(), 
+		  (getRepositoryModelDirectory_Repositories(), 
 		   source, 
 		   new String[] {
 			 "Fragmentation", "true"

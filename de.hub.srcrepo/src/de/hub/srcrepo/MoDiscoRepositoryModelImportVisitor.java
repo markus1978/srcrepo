@@ -51,6 +51,7 @@ import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -114,11 +115,16 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		if (repositoryModel.getMetaData() == null) {
 			repositoryMetaData = repositoryFactory.createRepositoryMetaData();
 			repositoryModel.setMetaData(repositoryMetaData);
+			ImportMetaData importMetaData = repositoryFactory.createImportMetaData();
+			repositoryMetaData.setImportMetaData(importMetaData);
 		} else {
 			repositoryMetaData = repositoryModel.getMetaData();
 		}
 		
-		repositoryMetaData.setImportDate(new Date());
+		repositoryMetaData.getImportMetaData().setImportDate(new Date());
+		repositoryMetaData.getImportMetaData().setScheduled(false);
+		repositoryMetaData.getImportMetaData().setImported(false);
+		repositoryMetaData.getImportMetaData().setImporting(true);
 		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
 		cuCount = repositoryMetaData.getCuCount();
 	}
@@ -618,11 +624,13 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void close() {
-		repositoryMetaData.setImportDate(new Date());
+		repositoryMetaData.getImportMetaData().setImportDate(new Date());
 		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
 		repositoryMetaData.setCuCount(cuCount);
-		repositoryMetaData.setImportStats(Statistics.reportToString());
-		repositoryMetaData.setImportStatsAsJSON(Statistics.reportToJSON().toString(1));
+		repositoryMetaData.getImportMetaData().setImportStats(Statistics.reportToString());
+		repositoryMetaData.getImportMetaData().setImportStatsAsJSON(Statistics.reportToJSON().toString(1));
+		repositoryMetaData.getImportMetaData().setImported(true);
+		repositoryMetaData.getImportMetaData().setImporting(false);
 		updateDataStoreMetaData(repositoryMetaData, repositoryModel);
 	}
 }

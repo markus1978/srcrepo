@@ -57,14 +57,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	RepositoryModelPackage eINSTANCE = de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl <em>Model</em>}' class.
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl <em>Directory Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl
-	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getModel()
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDirectoryElement()
 	 * @generated
 	 */
-	int MODEL = 16;
+	int DIRECTORY_ELEMENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -73,7 +73,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL__NAME = 0;
+	int DIRECTORY_ELEMENT__NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -82,7 +82,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL__DESCRIPTION = 1;
+	int DIRECTORY_ELEMENT__DESCRIPTION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -91,25 +91,25 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL__URL = 2;
+	int DIRECTORY_ELEMENT__URL = 2;
 
 	/**
-	 * The number of structural features of the '<em>Model</em>' class.
+	 * The number of structural features of the '<em>Directory Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_FEATURE_COUNT = 3;
+	int DIRECTORY_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
-	 * The number of operations of the '<em>Model</em>' class.
+	 * The number of operations of the '<em>Directory Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_OPERATION_COUNT = 0;
+	int DIRECTORY_ELEMENT_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl <em>Repository Model</em>}' class.
@@ -128,7 +128,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__NAME = MODEL__NAME;
+	int REPOSITORY_MODEL__NAME = DIRECTORY_ELEMENT__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -137,7 +137,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__DESCRIPTION = MODEL__DESCRIPTION;
+	int REPOSITORY_MODEL__DESCRIPTION = DIRECTORY_ELEMENT__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -146,7 +146,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__URL = MODEL__URL;
+	int REPOSITORY_MODEL__URL = DIRECTORY_ELEMENT__URL;
 
 	/**
 	 * The feature id for the '<em><b>All Refs</b></em>' containment reference list.
@@ -155,7 +155,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__ALL_REFS = MODEL_FEATURE_COUNT + 0;
+	int REPOSITORY_MODEL__ALL_REFS = DIRECTORY_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>All Revs</b></em>' containment reference list.
@@ -164,7 +164,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__ALL_REVS = MODEL_FEATURE_COUNT + 1;
+	int REPOSITORY_MODEL__ALL_REVS = DIRECTORY_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Root Revs</b></em>' reference list.
@@ -173,7 +173,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__ROOT_REVS = MODEL_FEATURE_COUNT + 2;
+	int REPOSITORY_MODEL__ROOT_REVS = DIRECTORY_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Traversals</b></em>' containment reference.
@@ -182,7 +182,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__TRAVERSALS = MODEL_FEATURE_COUNT + 3;
+	int REPOSITORY_MODEL__TRAVERSALS = DIRECTORY_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Meta Data</b></em>' containment reference.
@@ -191,7 +191,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL__META_DATA = MODEL_FEATURE_COUNT + 4;
+	int REPOSITORY_MODEL__META_DATA = DIRECTORY_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Repository Model</em>' class.
@@ -200,7 +200,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_FEATURE_COUNT = MODEL_FEATURE_COUNT + 5;
+	int REPOSITORY_MODEL_FEATURE_COUNT = DIRECTORY_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Repository Model</em>' class.
@@ -209,7 +209,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_OPERATION_COUNT = MODEL_OPERATION_COUNT + 0;
+	int REPOSITORY_MODEL_OPERATION_COUNT = DIRECTORY_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl <em>Rev</em>}' class.
@@ -908,40 +908,13 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_META_DATA__REV_COUNT = 2;
 
 	/**
-	 * The feature id for the '<em><b>Import Stats</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_META_DATA__IMPORT_STATS = 3;
-
-	/**
-	 * The feature id for the '<em><b>Import Stats As JSON</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON = 4;
-
-	/**
 	 * The feature id for the '<em><b>Newest Rev</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__NEWEST_REV = 5;
-
-	/**
-	 * The feature id for the '<em><b>Import Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_META_DATA__IMPORT_DATE = 6;
+	int REPOSITORY_META_DATA__NEWEST_REV = 3;
 
 	/**
 	 * The feature id for the '<em><b>Cu Count</b></em>' attribute.
@@ -950,25 +923,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__CU_COUNT = 7;
-
-	/**
-	 * The feature id for the '<em><b>Object Count</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_META_DATA__OBJECT_COUNT = 8;
-
-	/**
-	 * The feature id for the '<em><b>Raw Byte Size</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_META_DATA__RAW_BYTE_SIZE = 9;
+	int REPOSITORY_META_DATA__CU_COUNT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Working Copy</b></em>' attribute.
@@ -977,7 +932,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__WORKING_COPY = 10;
+	int REPOSITORY_META_DATA__WORKING_COPY = 5;
 
 	/**
 	 * The feature id for the '<em><b>Revs With Errors</b></em>' attribute.
@@ -986,7 +941,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__REVS_WITH_ERRORS = 11;
+	int REPOSITORY_META_DATA__REVS_WITH_ERRORS = 6;
 
 	/**
 	 * The feature id for the '<em><b>Data Store Meta Data</b></em>' containment reference.
@@ -995,7 +950,16 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA__DATA_STORE_META_DATA = 12;
+	int REPOSITORY_META_DATA__DATA_STORE_META_DATA = 7;
+
+	/**
+	 * The feature id for the '<em><b>Import Meta Data</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__IMPORT_META_DATA = 8;
 
 	/**
 	 * The number of structural features of the '<em>Repository Meta Data</em>' class.
@@ -1004,7 +968,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA_FEATURE_COUNT = 13;
+	int REPOSITORY_META_DATA_FEATURE_COUNT = 9;
 
 	/**
 	 * The number of operations of the '<em>Repository Meta Data</em>' class.
@@ -1032,7 +996,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY__NAME = MODEL__NAME;
+	int REPOSITORY_MODEL_DIRECTORY__NAME = DIRECTORY_ELEMENT__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -1041,7 +1005,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY__DESCRIPTION = MODEL__DESCRIPTION;
+	int REPOSITORY_MODEL_DIRECTORY__DESCRIPTION = DIRECTORY_ELEMENT__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -1050,7 +1014,16 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY__URL = MODEL__URL;
+	int REPOSITORY_MODEL_DIRECTORY__URL = DIRECTORY_ELEMENT__URL;
+
+	/**
+	 * The feature id for the '<em><b>Repositories</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__REPOSITORIES = DIRECTORY_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Directories</b></em>' containment reference list.
@@ -1059,16 +1032,25 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES = MODEL_FEATURE_COUNT + 0;
+	int REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES = DIRECTORY_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Repository Models</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Scheduled For Import</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS = MODEL_FEATURE_COUNT + 1;
+	int REPOSITORY_MODEL_DIRECTORY__SCHEDULED_FOR_IMPORT = DIRECTORY_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Imported</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_MODEL_DIRECTORY__IMPORTED = DIRECTORY_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Directory</em>' class.
@@ -1077,7 +1059,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY_FEATURE_COUNT = MODEL_FEATURE_COUNT + 2;
+	int REPOSITORY_MODEL_DIRECTORY_FEATURE_COUNT = DIRECTORY_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>Directory</em>' class.
@@ -1086,7 +1068,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_DIRECTORY_OPERATION_COUNT = MODEL_OPERATION_COUNT + 0;
+	int REPOSITORY_MODEL_DIRECTORY_OPERATION_COUNT = DIRECTORY_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DataStoreMetaDataImpl <em>Data Store Meta Data</em>}' class.
@@ -1199,6 +1181,88 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int MONGO_DB_META_DATA_OPERATION_COUNT = DATA_STORE_META_DATA_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl <em>Import Meta Data</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportMetaData()
+	 * @generated
+	 */
+	int IMPORT_META_DATA = 17;
+
+	/**
+	 * The feature id for the '<em><b>Scheduled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA__SCHEDULED = 0;
+
+	/**
+	 * The feature id for the '<em><b>Importing</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA__IMPORTING = 1;
+
+	/**
+	 * The feature id for the '<em><b>Imported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA__IMPORTED = 2;
+
+	/**
+	 * The feature id for the '<em><b>Import Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA__IMPORT_DATE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Import Stats</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA__IMPORT_STATS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Import Stats As JSON</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA__IMPORT_STATS_AS_JSON = 5;
+
+	/**
+	 * The number of structural features of the '<em>Import Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA_FEATURE_COUNT = 6;
+
+	/**
+	 * The number of operations of the '<em>Import Meta Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_META_DATA_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1206,7 +1270,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 17;
+	int CHANGE_TYPE = 18;
 
 
 	/**
@@ -1846,28 +1910,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getRepositoryMetaData_RevCount();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStats <em>Import Stats</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Import Stats</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStats()
-	 * @see #getRepositoryMetaData()
-	 * @generated
-	 */
-	EAttribute getRepositoryMetaData_ImportStats();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStatsAsJSON <em>Import Stats As JSON</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Import Stats As JSON</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportStatsAsJSON()
-	 * @see #getRepositoryMetaData()
-	 * @generated
-	 */
-	EAttribute getRepositoryMetaData_ImportStatsAsJSON();
-
-	/**
 	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getNewestRev <em>Newest Rev</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1877,39 +1919,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EAttribute getRepositoryMetaData_NewestRev();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportDate <em>Import Date</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Import Date</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportDate()
-	 * @see #getRepositoryMetaData()
-	 * @generated
-	 */
-	EAttribute getRepositoryMetaData_ImportDate();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getObjectCount <em>Object Count</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Object Count</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getObjectCount()
-	 * @see #getRepositoryMetaData()
-	 * @generated
-	 */
-	EAttribute getRepositoryMetaData_ObjectCount();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRawByteSize <em>Raw Byte Size</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Raw Byte Size</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getRawByteSize()
-	 * @see #getRepositoryMetaData()
-	 * @generated
-	 */
-	EAttribute getRepositoryMetaData_RawByteSize();
 
 	/**
 	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getWorkingCopy <em>Working Copy</em>}'.
@@ -1945,6 +1954,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getRepositoryMetaData_DataStoreMetaData();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportMetaData <em>Import Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Import Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getImportMetaData()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EReference getRepositoryMetaData_ImportMetaData();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory <em>Directory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1953,6 +1973,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EClass getRepositoryModelDirectory();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getRepositories <em>Repositories</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Repositories</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getRepositories()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EReference getRepositoryModelDirectory_Repositories();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getSubDirectories <em>Sub Directories</em>}'.
@@ -1966,15 +1997,26 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getRepositoryModelDirectory_SubDirectories();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getRepositoryModels <em>Repository Models</em>}'.
+	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getScheduledForImport <em>Scheduled For Import</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Repository Models</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getRepositoryModels()
+	 * @return the meta object for the reference list '<em>Scheduled For Import</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getScheduledForImport()
 	 * @see #getRepositoryModelDirectory()
 	 * @generated
 	 */
-	EReference getRepositoryModelDirectory_RepositoryModels();
+	EReference getRepositoryModelDirectory_ScheduledForImport();
+
+	/**
+	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getImported <em>Imported</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Imported</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryModelDirectory#getImported()
+	 * @see #getRepositoryModelDirectory()
+	 * @generated
+	 */
+	EReference getRepositoryModelDirectory_Imported();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.DataStoreMetaData <em>Data Store Meta Data</em>}'.
@@ -2052,47 +2094,123 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getMongoDBMetaData_Server();
 
 	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Model <em>Model</em>}'.
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.DirectoryElement <em>Directory Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Model</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.Model
+	 * @return the meta object for class '<em>Directory Element</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.DirectoryElement
 	 * @generated
 	 */
-	EClass getModel();
+	EClass getDirectoryElement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.Model#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.DirectoryElement#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.Model#getName()
-	 * @see #getModel()
+	 * @see de.hub.srcrepo.repositorymodel.DirectoryElement#getName()
+	 * @see #getDirectoryElement()
 	 * @generated
 	 */
-	EAttribute getModel_Name();
+	EAttribute getDirectoryElement_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.Model#getDescription <em>Description</em>}'.
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.DirectoryElement#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.Model#getDescription()
-	 * @see #getModel()
+	 * @see de.hub.srcrepo.repositorymodel.DirectoryElement#getDescription()
+	 * @see #getDirectoryElement()
 	 * @generated
 	 */
-	EAttribute getModel_Description();
+	EAttribute getDirectoryElement_Description();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.Model#getUrl <em>Url</em>}'.
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.DirectoryElement#getUrl <em>Url</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Url</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.Model#getUrl()
-	 * @see #getModel()
+	 * @see de.hub.srcrepo.repositorymodel.DirectoryElement#getUrl()
+	 * @see #getDirectoryElement()
 	 * @generated
 	 */
-	EAttribute getModel_Url();
+	EAttribute getDirectoryElement_Url();
+
+	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ImportMetaData <em>Import Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Import Meta Data</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData
+	 * @generated
+	 */
+	EClass getImportMetaData();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportMetaData#isScheduled <em>Scheduled</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Scheduled</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData#isScheduled()
+	 * @see #getImportMetaData()
+	 * @generated
+	 */
+	EAttribute getImportMetaData_Scheduled();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportMetaData#isImporting <em>Importing</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Importing</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData#isImporting()
+	 * @see #getImportMetaData()
+	 * @generated
+	 */
+	EAttribute getImportMetaData_Importing();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportMetaData#isImported <em>Imported</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Imported</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData#isImported()
+	 * @see #getImportMetaData()
+	 * @generated
+	 */
+	EAttribute getImportMetaData_Imported();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportMetaData#getImportDate <em>Import Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Import Date</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData#getImportDate()
+	 * @see #getImportMetaData()
+	 * @generated
+	 */
+	EAttribute getImportMetaData_ImportDate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportMetaData#getImportStats <em>Import Stats</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Import Stats</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData#getImportStats()
+	 * @see #getImportMetaData()
+	 * @generated
+	 */
+	EAttribute getImportMetaData_ImportStats();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.ImportMetaData#getImportStatsAsJSON <em>Import Stats As JSON</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Import Stats As JSON</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData#getImportStatsAsJSON()
+	 * @see #getImportMetaData()
+	 * @generated
+	 */
+	EAttribute getImportMetaData_ImportStatsAsJSON();
 
 	/**
 	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCuCount <em>Cu Count</em>}'.
@@ -2637,52 +2755,12 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EAttribute REPOSITORY_META_DATA__REV_COUNT = eINSTANCE.getRepositoryMetaData_RevCount();
 
 		/**
-		 * The meta object literal for the '<em><b>Import Stats</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REPOSITORY_META_DATA__IMPORT_STATS = eINSTANCE.getRepositoryMetaData_ImportStats();
-
-		/**
-		 * The meta object literal for the '<em><b>Import Stats As JSON</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REPOSITORY_META_DATA__IMPORT_STATS_AS_JSON = eINSTANCE.getRepositoryMetaData_ImportStatsAsJSON();
-
-		/**
 		 * The meta object literal for the '<em><b>Newest Rev</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute REPOSITORY_META_DATA__NEWEST_REV = eINSTANCE.getRepositoryMetaData_NewestRev();
-
-		/**
-		 * The meta object literal for the '<em><b>Import Date</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REPOSITORY_META_DATA__IMPORT_DATE = eINSTANCE.getRepositoryMetaData_ImportDate();
-
-		/**
-		 * The meta object literal for the '<em><b>Object Count</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REPOSITORY_META_DATA__OBJECT_COUNT = eINSTANCE.getRepositoryMetaData_ObjectCount();
-
-		/**
-		 * The meta object literal for the '<em><b>Raw Byte Size</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REPOSITORY_META_DATA__RAW_BYTE_SIZE = eINSTANCE.getRepositoryMetaData_RawByteSize();
 
 		/**
 		 * The meta object literal for the '<em><b>Working Copy</b></em>' attribute feature.
@@ -2709,6 +2787,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference REPOSITORY_META_DATA__DATA_STORE_META_DATA = eINSTANCE.getRepositoryMetaData_DataStoreMetaData();
 
 		/**
+		 * The meta object literal for the '<em><b>Import Meta Data</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_META_DATA__IMPORT_META_DATA = eINSTANCE.getRepositoryMetaData_ImportMetaData();
+
+		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl <em>Directory</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2719,6 +2805,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EClass REPOSITORY_MODEL_DIRECTORY = eINSTANCE.getRepositoryModelDirectory();
 
 		/**
+		 * The meta object literal for the '<em><b>Repositories</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_MODEL_DIRECTORY__REPOSITORIES = eINSTANCE.getRepositoryModelDirectory_Repositories();
+
+		/**
 		 * The meta object literal for the '<em><b>Sub Directories</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2727,12 +2821,20 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES = eINSTANCE.getRepositoryModelDirectory_SubDirectories();
 
 		/**
-		 * The meta object literal for the '<em><b>Repository Models</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Scheduled For Import</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS = eINSTANCE.getRepositoryModelDirectory_RepositoryModels();
+		EReference REPOSITORY_MODEL_DIRECTORY__SCHEDULED_FOR_IMPORT = eINSTANCE.getRepositoryModelDirectory_ScheduledForImport();
+
+		/**
+		 * The meta object literal for the '<em><b>Imported</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REPOSITORY_MODEL_DIRECTORY__IMPORTED = eINSTANCE.getRepositoryModelDirectory_Imported();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DataStoreMetaDataImpl <em>Data Store Meta Data</em>}' class.
@@ -2795,14 +2897,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EAttribute MONGO_DB_META_DATA__SERVER = eINSTANCE.getMongoDBMetaData_Server();
 
 		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl <em>Model</em>}' class.
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl <em>Directory Element</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.ModelImpl
-		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getModel()
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.DirectoryElementImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDirectoryElement()
 		 * @generated
 		 */
-		EClass MODEL = eINSTANCE.getModel();
+		EClass DIRECTORY_ELEMENT = eINSTANCE.getDirectoryElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -2810,7 +2912,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute MODEL__NAME = eINSTANCE.getModel_Name();
+		EAttribute DIRECTORY_ELEMENT__NAME = eINSTANCE.getDirectoryElement_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
@@ -2818,7 +2920,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute MODEL__DESCRIPTION = eINSTANCE.getModel_Description();
+		EAttribute DIRECTORY_ELEMENT__DESCRIPTION = eINSTANCE.getDirectoryElement_Description();
 
 		/**
 		 * The meta object literal for the '<em><b>Url</b></em>' attribute feature.
@@ -2826,7 +2928,65 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute MODEL__URL = eINSTANCE.getModel_Url();
+		EAttribute DIRECTORY_ELEMENT__URL = eINSTANCE.getDirectoryElement_Url();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl <em>Import Meta Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportMetaData()
+		 * @generated
+		 */
+		EClass IMPORT_META_DATA = eINSTANCE.getImportMetaData();
+
+		/**
+		 * The meta object literal for the '<em><b>Scheduled</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_META_DATA__SCHEDULED = eINSTANCE.getImportMetaData_Scheduled();
+
+		/**
+		 * The meta object literal for the '<em><b>Importing</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_META_DATA__IMPORTING = eINSTANCE.getImportMetaData_Importing();
+
+		/**
+		 * The meta object literal for the '<em><b>Imported</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_META_DATA__IMPORTED = eINSTANCE.getImportMetaData_Imported();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_META_DATA__IMPORT_DATE = eINSTANCE.getImportMetaData_ImportDate();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Stats</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_META_DATA__IMPORT_STATS = eINSTANCE.getImportMetaData_ImportStats();
+
+		/**
+		 * The meta object literal for the '<em><b>Import Stats As JSON</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_META_DATA__IMPORT_STATS_AS_JSON = eINSTANCE.getImportMetaData_ImportStatsAsJSON();
 
 		/**
 		 * The meta object literal for the '<em><b>Cu Count</b></em>' attribute feature.

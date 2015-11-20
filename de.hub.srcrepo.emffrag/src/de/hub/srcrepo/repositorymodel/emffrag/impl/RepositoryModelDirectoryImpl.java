@@ -17,13 +17,15 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl#getRepositories <em>Repositories</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl#getSubDirectories <em>Sub Directories</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl#getRepositoryModels <em>Repository Models</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl#getScheduledForImport <em>Scheduled For Import</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl#getImported <em>Imported</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class RepositoryModelDirectoryImpl extends ModelImpl implements RepositoryModelDirectory {
+public class RepositoryModelDirectoryImpl extends DirectoryElementImpl implements RepositoryModelDirectory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -49,6 +51,16 @@ public class RepositoryModelDirectoryImpl extends ModelImpl implements Repositor
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
+	public EList<RepositoryModel> getRepositories() {
+		return (EList<RepositoryModel>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL_DIRECTORY__REPOSITORIES, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	public EList<RepositoryModelDirectory> getSubDirectories() {
 		return (EList<RepositoryModelDirectory>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL_DIRECTORY__SUB_DIRECTORIES, true);
 	}
@@ -59,8 +71,18 @@ public class RepositoryModelDirectoryImpl extends ModelImpl implements Repositor
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public EList<RepositoryModel> getRepositoryModels() {
-		return (EList<RepositoryModel>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL_DIRECTORY__REPOSITORY_MODELS, true);
+	public EList<RepositoryModel> getScheduledForImport() {
+		return (EList<RepositoryModel>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL_DIRECTORY__SCHEDULED_FOR_IMPORT, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public EList<RepositoryModel> getImported() {
+		return (EList<RepositoryModel>)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL_DIRECTORY__IMPORTED, true);
 	}
 
 } //RepositoryModelDirectoryImpl

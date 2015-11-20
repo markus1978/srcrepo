@@ -49,6 +49,10 @@ class EclipseGitMegaModel {
 			System.out.println('''Added «name» with «url»''')	
 		}
 		
+		repositoryModel.metaData = RepositoryModelFactory.eINSTANCE.createRepositoryMetaData
+		repositoryModel.metaData.importMetaData = RepositoryModelFactory.eINSTANCE.createImportMetaData
+		repositoryModel.metaData.origin = url
+		
 		return repositoryModel
 	}
 	
@@ -99,7 +103,7 @@ class EclipseGitMegaModel {
 				}
 			}			
 		}
-		executor.invokeAll(callables).stream().map[it.get()].forEach[it.key.repositoryModels.add(it.value)]
+		executor.invokeAll(callables).stream().map[it.get()].forEach[it.key.repositories.add(it.value)]
 	}
 	
 	def void createRepositoryModelDirectory(String eclipseGitURL, String modelURI) {

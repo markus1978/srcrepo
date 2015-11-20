@@ -2,6 +2,7 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -9,21 +10,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.ImportError;
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
-import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
-import de.hub.srcrepo.repositorymodel.Ref;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
-import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
-import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Target;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -85,6 +71,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.REPOSITORY_META_DATA: return createRepositoryMetaData();
 			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: return createRepositoryModelDirectory();
 			case RepositoryModelPackage.MONGO_DB_META_DATA: return createMongoDBMetaData();
+			case RepositoryModelPackage.IMPORT_META_DATA: return createImportMetaData();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -258,6 +245,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public MongoDBMetaData createMongoDBMetaData() {
 		MongoDBMetaDataImpl mongoDBMetaData = new MongoDBMetaDataImpl();
 		return mongoDBMetaData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ImportMetaData createImportMetaData() {
+		ImportMetaDataImpl importMetaData = new ImportMetaDataImpl();
+		return importMetaData;
 	}
 
 	/**

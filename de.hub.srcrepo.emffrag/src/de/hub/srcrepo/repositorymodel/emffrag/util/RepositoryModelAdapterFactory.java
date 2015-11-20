@@ -2,28 +2,11 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
-
-import de.hub.srcrepo.repositorymodel.AbstractFileRef;
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
-import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.ImportError;
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.Model;
-import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
-import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
-import de.hub.srcrepo.repositorymodel.Ref;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
-import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
-import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Target;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -147,8 +130,12 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 				return createMongoDBMetaDataAdapter();
 			}
 			@Override
-			public Adapter caseModel(Model object) {
-				return createModelAdapter();
+			public Adapter caseDirectoryElement(DirectoryElement object) {
+				return createDirectoryElementAdapter();
+			}
+			@Override
+			public Adapter caseImportMetaData(ImportMetaData object) {
+				return createImportMetaDataAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -395,16 +382,30 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.Model <em>Model</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.DirectoryElement <em>Directory Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.Model
+	 * @see de.hub.srcrepo.repositorymodel.DirectoryElement
 	 * @generated
 	 */
-	public Adapter createModelAdapter() {
+	public Adapter createDirectoryElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.ImportMetaData <em>Import Meta Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.ImportMetaData
+	 * @generated
+	 */
+	public Adapter createImportMetaDataAdapter() {
 		return null;
 	}
 
