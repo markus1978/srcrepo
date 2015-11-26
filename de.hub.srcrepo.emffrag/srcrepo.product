@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="srcrepo" id="de.hub.srcrepo.emffrag.srcrepo" application="de.hub.srcrepo.emffrag.application" useFeatures="false" includeLaunchers="true">
+<product name="SrcRepoImportDeamon" uid="SrcRepoImportDeamon" id="de.hub.srcrepo.emffrag.srcrepo" application="de.hub.srcrepo.emffrag.importdeamon" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
    </launcherArgs>
+
+   <windowImages/>
+
 
    <launcher>
       <solaris/>
@@ -18,23 +22,34 @@
    </launcher>
 
    <vm>
+      <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
    </vm>
 
+
    <plugins>
+      <plugin id="com.google.guava"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
       <plugin id="de.hub.emffrag"/>
-      <plugin id="de.hub.emffrag.edit"/>
-      <plugin id="de.hub.emffrag.editor"/>
       <plugin id="de.hub.emffrag.hbase"/>
       <plugin id="de.hub.emffrag.mongodb"/>
+      <plugin id="de.hub.jstattrack"/>
       <plugin id="de.hub.srcrepo"/>
       <plugin id="de.hub.srcrepo.emffrag"/>
+      <plugin id="de.hub.srcrepo.tests"/>
+      <plugin id="javaewah"/>
+      <plugin id="javax.annotation"/>
+      <plugin id="javax.inject"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.xml"/>
       <plugin id="org.antlr.runtime"/>
       <plugin id="org.apache.ant"/>
-      <plugin id="org.apache.hadoop.hbase"/>
+      <plugin id="org.apache.batik.css"/>
+      <plugin id="org.apache.batik.util"/>
+      <plugin id="org.apache.batik.util.gui"/>
+      <plugin id="org.apache.commons.jxpath"/>
+      <plugin id="org.apache.log4j"/>
       <plugin id="org.eclipse.ant.core"/>
-      <plugin id="org.eclipse.compare"/>
       <plugin id="org.eclipse.compare.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
@@ -44,41 +59,53 @@
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filebuffers"/>
       <plugin id="org.eclipse.core.filesystem"/>
-      <plugin id="org.eclipse.core.filesystem.aix.ppc" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.hpux.ia64_32" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.linux.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.linux.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.java7" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.solaris.sparc" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.resources"/>
-      <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.debug.core"/>
       <plugin id="org.eclipse.debug.ui"/>
-      <plugin id="org.eclipse.egit.core"/>
+      <plugin id="org.eclipse.e4.core.commands"/>
+      <plugin id="org.eclipse.e4.core.contexts"/>
+      <plugin id="org.eclipse.e4.core.di"/>
+      <plugin id="org.eclipse.e4.core.di.annotations"/>
+      <plugin id="org.eclipse.e4.core.di.extensions"/>
+      <plugin id="org.eclipse.e4.core.services"/>
+      <plugin id="org.eclipse.e4.emf.xpath"/>
+      <plugin id="org.eclipse.e4.ui.bindings"/>
+      <plugin id="org.eclipse.e4.ui.css.core"/>
+      <plugin id="org.eclipse.e4.ui.css.swt"/>
+      <plugin id="org.eclipse.e4.ui.css.swt.theme"/>
+      <plugin id="org.eclipse.e4.ui.di"/>
+      <plugin id="org.eclipse.e4.ui.model.workbench"/>
+      <plugin id="org.eclipse.e4.ui.services"/>
+      <plugin id="org.eclipse.e4.ui.swt.gtk" fragment="true"/>
+      <plugin id="org.eclipse.e4.ui.widgets"/>
+      <plugin id="org.eclipse.e4.ui.workbench"/>
+      <plugin id="org.eclipse.e4.ui.workbench.addons.swt"/>
+      <plugin id="org.eclipse.e4.ui.workbench.renderers.swt"/>
+      <plugin id="org.eclipse.e4.ui.workbench.renderers.swt.cocoa" fragment="true"/>
+      <plugin id="org.eclipse.e4.ui.workbench.swt"/>
+      <plugin id="org.eclipse.e4.ui.workbench3"/>
       <plugin id="org.eclipse.emf"/>
       <plugin id="org.eclipse.emf.common"/>
-      <plugin id="org.eclipse.emf.common.ui"/>
       <plugin id="org.eclipse.emf.ecore"/>
-      <plugin id="org.eclipse.emf.ecore.edit"/>
+      <plugin id="org.eclipse.emf.ecore.change"/>
       <plugin id="org.eclipse.emf.ecore.xmi"/>
       <plugin id="org.eclipse.emf.edit"/>
-      <plugin id="org.eclipse.emf.edit.ui"/>
       <plugin id="org.eclipse.emf.facet.common.core"/>
-      <plugin id="org.eclipse.emf.facet.infra.common.core"/>
       <plugin id="org.eclipse.emf.facet.util.core"/>
       <plugin id="org.eclipse.emf.facet.util.emf.catalog"/>
       <plugin id="org.eclipse.emf.facet.util.emf.core"/>
-      <plugin id="org.eclipse.emf.mapping"/>
-      <plugin id="org.eclipse.emf.mapping.xsd2ecore"/>
+      <plugin id="org.eclipse.emf.facet.util.pde.core"/>
       <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.bidi"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.ds"/>
+      <plugin id="org.eclipse.equinox.event"/>
       <plugin id="org.eclipse.equinox.frameworkadmin"/>
       <plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
       <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
@@ -93,8 +120,11 @@
       <plugin id="org.eclipse.equinox.p2.publisher"/>
       <plugin id="org.eclipse.equinox.p2.publisher.eclipse"/>
       <plugin id="org.eclipse.equinox.p2.repository"/>
+      <plugin id="org.eclipse.equinox.p2.repository.tools"/>
       <plugin id="org.eclipse.equinox.p2.touchpoint.eclipse"/>
+      <plugin id="org.eclipse.equinox.p2.updatesite"/>
       <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.region" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
       <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
@@ -102,6 +132,7 @@
       <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator.manipulator"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.gmt.modisco.infra.common.core"/>
@@ -135,17 +166,18 @@
       <plugin id="org.eclipse.modisco.kdm.source.extension"/>
       <plugin id="org.eclipse.modisco.util.atl.core"/>
       <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.compatibility.state" fragment="true"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.pde.build"/>
       <plugin id="org.eclipse.pde.core"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.carbon.macosx" fragment="true"/>
-      <plugin id="org.eclipse.swt.cocoa.macosx" fragment="true"/>
       <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.aix.ppc" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.aix.ppc64" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.hpux.ia64_32" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.hpux.ia64" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.ppc" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.ppc64" fragment="true"/>
+      <plugin id="org.eclipse.swt.gtk.linux.ppc64le" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.s390" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.s390x" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.x86" fragment="true"/>
@@ -157,30 +189,51 @@
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.text"/>
       <plugin id="org.eclipse.ui"/>
-      <plugin id="org.eclipse.ui.carbon" fragment="true"/>
       <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
       <plugin id="org.eclipse.ui.console"/>
       <plugin id="org.eclipse.ui.editors"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
       <plugin id="org.eclipse.ui.views"/>
-      <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.eclipse.update.configurator"/>
-      <plugin id="org.eclipse.xsd"/>
-      <plugin id="org.eclipse.xsd.edit"/>
+      <plugin id="org.eclipse.xtend.lib"/>
+      <plugin id="org.eclipse.xtend.lib.macro"/>
+      <plugin id="org.eclipse.xtext.logging" fragment="true"/>
+      <plugin id="org.eclipse.xtext.xbase.lib"/>
       <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
-      <plugin id="org.junit4"/>
       <plugin id="org.sat4j.core"/>
       <plugin id="org.sat4j.pb"/>
-      <plugin id="org.scala-ide.scala.library"/>
+      <plugin id="org.slf4j.api"/>
+      <plugin id="org.slf4j.impl.log4j12" fragment="true"/>
+      <plugin id="org.tukaani.xz"/>
+      <plugin id="org.w3c.css.sac"/>
+      <plugin id="org.w3c.dom.events"/>
+      <plugin id="org.w3c.dom.smil"/>
+      <plugin id="org.w3c.dom.svg"/>
    </plugins>
 
    <features>
       <feature id="de.hub.srcrepo.feature" version="1.0.0.qualifier"/>
    </features>
 
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <property name="org.eclipse.update.reconcile" value="false" />
+   </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
 
 </product>

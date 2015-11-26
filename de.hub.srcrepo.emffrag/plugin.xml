@@ -47,11 +47,11 @@
           id="srcrepo"
           point="org.eclipse.core.runtime.products">
        <product
-             application="de.hub.srcrepo.emffrag.application"
-             name="srcrepo">
+             application="de.hub.srcrepo.emffrag.importdeamon"
+             name="SrcRepoImportDeamon">
           <property
                 name="appName"
-                value="srcrepo">
+                value="SrcRepoImportDeamon">
           </property>
        </product>
     </extension>

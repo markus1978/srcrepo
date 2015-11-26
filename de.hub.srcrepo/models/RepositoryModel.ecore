@@ -119,11 +119,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RepositoryModelDirectory" eSuperTypes="#//DirectoryElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="repositories" upperBound="-1"
-        eType="#//RepositoryModel" containment="true">
-      <eAnnotations source="de.hub.emffrag">
-        <details key="Fragmentation" value="true"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//RepositoryModel" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subDirectories" upperBound="-1"
         eType="#//RepositoryModelDirectory" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scheduledForImport" upperBound="-1"

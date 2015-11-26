@@ -855,7 +855,7 @@
     <children xmi:type="notation:Node" xmi:id="_-P95EI3-EeWTs67lhredLQ" type="4012">
       <layoutConstraint xmi:type="notation:Location" xmi:id="_-P95EY3-EeWTs67lhredLQ" x="16" y="-9"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_-P9SAY3-EeWTs67lhredLQ" routing="Rectilinear" lineColor="1314698"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_-P9SAY3-EeWTs67lhredLQ" routing="Rectilinear" lineColor="7091968"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_-P9SAo3-EeWTs67lhredLQ" fontColor="1314698" fontName="Lucida Grande" fontHeight="10" bold="true"/>
     <element xmi:type="ecore:EReference" href="RepositoryModel.ecore#//RepositoryModelDirectory/repositories"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_-P9SA43-EeWTs67lhredLQ" points="[8, -71, -181, -77]$[187, -71, -2, -77]"/>

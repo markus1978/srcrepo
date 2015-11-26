@@ -1,14 +1,9 @@
 package de.hub.srcrepo.eclipsegit
 
-import de.hub.emffrag.EmfFragActivator
-import de.hub.emffrag.datastore.DataStoreImpl
-import de.hub.emffrag.fragmentation.Fragmentation
-import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
-import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
+import de.hub.srcrepo.repositorymodel.util.AbstractRepositoryModelMain
 import java.net.URL
 import java.util.List
 import java.util.concurrent.Callable
@@ -17,12 +12,14 @@ import java.util.regex.Pattern
 import org.eclipse.emf.common.util.URI
 import org.jsoup.Jsoup
 
-class EclipseGitMegaModel {
+import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+
+class EclipseGitMegaModel extends AbstractRepositoryModelMain {
 	
 	val timeout = 30000
 	val executor = Executors::newFixedThreadPool(50)
 	
-	def createRepository(URL repositoryURL, String name, String description) {
+	private def createRepository(URL repositoryURL, String name, String description) {
 		val repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel
 		repositoryModel.name = name
 		repositoryModel.description = description
@@ -56,7 +53,7 @@ class EclipseGitMegaModel {
 		return repositoryModel
 	}
 	
-	def addContent(RepositoryModelDirectory rootDirectory, URL pageURL) {
+	private def addContent(RepositoryModelDirectory rootDirectory, URL pageURL) {
 		val document = Jsoup::parse(pageURL, timeout)
 		val repoTable = document.getElementsByAttributeValue("summary", "repository list").get(0)
 		var RepositoryModelDirectory currentSubDirectory = null
@@ -103,15 +100,15 @@ class EclipseGitMegaModel {
 				}
 			}			
 		}
-		executor.invokeAll(callables).stream().map[it.get()].forEach[it.key.repositories.add(it.value)]
+		executor.invokeAll(callables).stream().map[it.get()].forEach[
+			val repositoryModel = it.value
+			it.key.repositories.add(repositoryModel)
+			val uri = URI.createURI('''«modelURI.scheme»://«modelURI.host»/«repositoryModel.qualifiedName»''')
+			fs.getFragmentation(uri).contents.add(repositoryModel)
+		]
 	}
 	
-	def void createRepositoryModelDirectory(String eclipseGitURL, String modelURI) {
-		EmfFragActivator::standalone(RepositoryModelPackage.eINSTANCE)
-		EmfFragMongoDBActivator::standalone()
-		SrcRepoActivator::standalone
-		val fragmentation = new Fragmentation(DataStoreImpl::createDataStore(URI.createURI(modelURI)), 100)
-		
+	private def void createRepositoryModelDirectory(String eclipseGitURL) {
 		val rootDirectory = RepositoryModelFactory.eINSTANCE.createRepositoryModelDirectory()
 		rootDirectory.name = "git.eclipse.org"
 		rootDirectory.description = "All officially recognized eclipse related projects and their git repositories."
@@ -129,12 +126,15 @@ class EclipseGitMegaModel {
 		}
 		
 		executor.shutdown()
-		
-		fragmentation.close()
 	}
 	
 	static def void main(String[] args) {
 		val instance = new EclipseGitMegaModel()
-		instance.createRepositoryModelDirectory("https://git.eclipse.org/c/", "mongodb://localhost/git.eclipse.org")
+		instance.run(args)
 	}
+	
+	override protected perform(String[] args) {
+		createRepositoryModelDirectory("https://git.eclipse.org/c/")
+	}
+	
 }

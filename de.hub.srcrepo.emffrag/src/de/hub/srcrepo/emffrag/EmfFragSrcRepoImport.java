@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -134,41 +134,40 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}		
 	}
 	
-	@SuppressWarnings("static-access")
 	private Options createOptions() {
 		Options options = new Options();
-		options.addOption(OptionBuilder.
-				withLongOpt("clone").
-				withDescription("Clone the repository, old local copy is removed if it exists.").
+		options.addOption(Option.builder().
+				longOpt("clone").
+				desc("Clone the repository, old local copy is removed if it exists.").
 				hasArg().
-				withArgName("url").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("fragments-cache").
-				withDescription("Number of cached fragments. Default is 1000.").
-				hasArg().withArgName("size").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("bulk-insert").
-				withDescription("Number of bulk inserted key-value pairs. Default is 1000.").
-				hasArg().withArgName("size").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("disable-usages").
-				withDescription("Disables the tracking of usagesXXX opposites.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("resume").
-				withDescription("Resume import if a prior aborted import is saved within an existing repository model.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("abort-after").
-				withDescription("Abort after a given number of revisions. The traversal is saved to resume later.").
-				hasArg().withArgName("number-of-revs").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("checkout-without-import").
-				withDescription("Just checkout each rev, but do not import via MoDisco.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("use-flat-traversal").
-				withDescription("Traverse the repository rev by rev not traversining branches.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("use-c-git").
-				withDescription("Use regular git shell commands and not jGit.").create());
+				argName("url").build());
+		options.addOption(Option.builder().
+				longOpt("fragments-cache").
+				desc("Number of cached fragments. Default is 1000.").
+				hasArg().argName("size").build());
+		options.addOption(Option.builder().
+				longOpt("bulk-insert").
+				desc("Number of bulk inserted key-value pairs. Default is 1000.").
+				hasArg().argName("size").build());
+		options.addOption(Option.builder().
+				longOpt("disable-usages").
+				desc("Disables the tracking of usagesXXX opposites.").build());
+		options.addOption(Option.builder().
+				longOpt("resume").
+				desc("Resume import if a prior aborted import is saved within an existing repository model.").build());
+		options.addOption(Option.builder().
+				longOpt("abort-after").
+				desc("Abort after a given number of revisions. The traversal is saved to resume later.").
+				hasArg().argName("number-of-revs").build());
+		options.addOption(Option.builder().
+				longOpt("checkout-without-import").
+				desc("Just checkout each rev, but do not import via MoDisco.").build());
+		options.addOption(Option.builder().
+				longOpt("use-flat-traversal").
+				desc("Traverse the repository rev by rev not traversining branches.").build());
+		options.addOption(Option.builder().
+				longOpt("use-c-git").
+				desc("Use regular git shell commands and not jGit.").build());
 	
 		return options;
 	}
@@ -228,7 +227,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		final Map<?,?> args = context.getArguments();
 		final String[] appArgs = (String[]) args.get("application.args");
 		
-		CommandLineParser cliParser = new PosixParser();		
+		CommandLineParser cliParser = new DefaultParser();		
 		Options options = createOptions();
 		CommandLine commandLine = null;
 		try {			

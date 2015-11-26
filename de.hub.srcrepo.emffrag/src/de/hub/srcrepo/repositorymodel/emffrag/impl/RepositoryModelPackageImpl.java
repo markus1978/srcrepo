@@ -1373,12 +1373,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		   source, 
 		   new String[] {
 			 "fragments", "true"
-		   });	
-		addAnnotation
-		  (getRepositoryModelDirectory_Repositories(), 
-		   source, 
-		   new String[] {
-			 "Fragmentation", "true"
 		   });
 	}
 

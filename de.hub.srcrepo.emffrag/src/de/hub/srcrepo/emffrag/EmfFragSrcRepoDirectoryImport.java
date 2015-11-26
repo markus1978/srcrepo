@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -26,6 +26,7 @@ import de.hub.emffrag.datastore.IBaseDataStore;
 import de.hub.emffrag.datastore.IDataStore;
 import de.hub.emffrag.datastore.WriteCachingDataStore;
 import de.hub.emffrag.fragmentation.Fragmentation;
+import de.hub.emffrag.fragmentation.FragmentationSet;
 import de.hub.emffrag.hbase.EmfFragHBaseActivator;
 import de.hub.emffrag.hbase.HBaseDataStore;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
@@ -40,7 +41,7 @@ import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtil;
+import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils;
 
 public class EmfFragSrcRepoDirectoryImport implements IApplication {
 	
@@ -126,35 +127,34 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		}		
 	}
 	
-	@SuppressWarnings("static-access")
 	private Options createOptions() {
 		Options options = new Options();
-		options.addOption(OptionBuilder.
-				withLongOpt("workingcopies").
-				withDescription("Directory where I clone the repository to. Default is ./workingcopies").
-				hasArg().withArgName("directory").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("locks").
-				withDescription("Directory where I put the lock. Default is ./locks").
-				hasArg().withArgName("directory").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("directory-uri").
-				withDescription("Fragmentationi URI where the directory of repositories lies. Default is mongodb://localhost/git.eclipse.org").
-				hasArg().withArgName("uri").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("repository").
-				withDescription("Imports the specifically mentioned repository.").
-				hasArg().withArgName("name").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("fragments-cache").
-				withDescription("Number of cached fragments. Default is 100.").
-				hasArg().withArgName("size").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("enable-usages").
-				withDescription("Enables the tracking of usagesXXX opposites, use with caution.").create());
-		options.addOption(OptionBuilder.
-				withLongOpt("use-c-git").
-				withDescription("Use regular git shell commands and not jGit.").create());
+		options.addOption(Option.builder().
+				longOpt("workingcopies").
+				desc("Directory where I clone the repository to. Default is ./workingcopies").
+				hasArg().argName("directory").build());
+		options.addOption(Option.builder().
+				longOpt("locks").
+				desc("Directory where I put the lock. Default is ./locks").
+				hasArg().argName("directory").build());
+		options.addOption(Option.builder().
+				longOpt("directory-uri").
+				desc("Fragmentationi URI where the directory of repositories lies. Default is mongodb://localhost/git.eclipse.org").
+				hasArg().argName("uri").build());
+		options.addOption(Option.builder().
+				longOpt("repository").
+				desc("Imports the specifically mentioned repository.").
+				hasArg().argName("name").build());
+		options.addOption(Option.builder().
+				longOpt("fragments-cache").
+				desc("Number of cached fragments. Default is 100.").
+				hasArg().argName("size").build());
+		options.addOption(Option.builder().
+				longOpt("enable-usages").
+				desc("Enables the tracking of usagesXXX opposites, use with caution.").build());
+		options.addOption(Option.builder().
+				longOpt("use-c-git").
+				desc("Use regular git shell commands and not jGit.").build());
 	
 		return options;
 	}
@@ -212,7 +212,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		final Map<?,?> args = context.getArguments();
 		final String[] appArgs = (String[]) args.get("application.args");
 		
-		CommandLineParser cliParser = new PosixParser();		
+		CommandLineParser cliParser = new DefaultParser();		
 		Options options = createOptions();
 		CommandLine commandLine = null;
 		try {			
@@ -255,25 +255,24 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		return IApplication.EXIT_OK;
 	}
 	
-	public static Fragmentation openFragmentation(Configuration config) {
-		IBaseDataStore baseDataStore = null;
-		if ("mongodb".equals(config.directoryModelURI.scheme())) {
-			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.directoryModelURI.authority(), config.directoryModelURI.path().substring(1), false);
-			baseDataStore = mongoDbBaseDataStore;
-			
-		} else if ("hbase".equals(config.directoryModelURI.scheme())) {
-			HBaseDataStore hbaseBaseDataStore = new HBaseDataStore(config.directoryModelURI.path().substring(1), false);
-			baseDataStore = new WriteCachingDataStore(hbaseBaseDataStore, hbaseBaseDataStore, 100);
-		}
-		
-		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.directoryModelURI);
-		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
-		return fragmentation;
-	}
-	
-	public static void closeFragmentation(Configuration config, Fragmentation fragmentation) {
-		fragmentation.close();
-		fragmentation.getDataStore().close();
+	public static FragmentationSet openFragmentationSet(Configuration config) {	
+		return new FragmentationSet(config.fragmentCacheSize, new IDataStore.IDataStoreFactory() {			
+			@Override
+			public IDataStore createDataStore(URI uri) {
+				IBaseDataStore baseDataStore = null;
+				if ("mongodb".equals(uri.scheme())) {
+					MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(uri.authority(), uri.path().substring(1), false);
+					baseDataStore = mongoDbBaseDataStore;
+					
+				} else if ("hbase".equals(uri.scheme())) {
+					HBaseDataStore hbaseBaseDataStore = new HBaseDataStore(uri.path().substring(1), false);
+					baseDataStore = new WriteCachingDataStore(hbaseBaseDataStore, hbaseBaseDataStore, 100);
+				}
+				
+				IDataStore dataStore = new DataStoreImpl(baseDataStore, uri);
+				return dataStore;
+			}
+		});
 	}
 	
 	public static RepositoryModel importRepository(Configuration config) {
@@ -281,26 +280,31 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		RepositoryModel repositoryModel = null;
 
 		// create fragmentation
-		Fragmentation fragmentation = openFragmentation(config);		
+		FragmentationSet fs = openFragmentationSet(config);
+		Fragmentation fragmentation = fs.getFragmentation(config.directoryModelURI);		
 		File lockFile = null;
 		try {
 			// find a repository to import
 			RepositoryModelDirectory directory = (RepositoryModelDirectory)fragmentation.getRootFragment().getContents().get(0);
-			List<RepositoryModel> scheduledForImport = RepositoryModelUtil.scheduledForImport(directory);
+			List<RepositoryModel> scheduledForImport = RepositoryModelUtils.scheduledForImport(directory);
 			Iterator<RepositoryModel> scheduledForImportIterator = scheduledForImport.iterator();			
 			String repositoryModelNameAsFileName = null;
-			while (repositoryModel == null && scheduledForImportIterator.hasNext()) {
+			RepositoryModel currentRepositoryModel = null;
+			while (scheduledForImportIterator.hasNext()) {
 				// try to create a lock the next possible repositoryModel
-				repositoryModel = scheduledForImportIterator.next();
-				if (repositoryModel.getMetaData() == null || repositoryModel.getMetaData().getImportMetaData() == null) {
+				currentRepositoryModel = scheduledForImportIterator.next();
+				if (currentRepositoryModel.getMetaData() == null || currentRepositoryModel.getMetaData().getImportMetaData() == null) {
 					continue; // obviously not ready to be imported
 				}
-				if (config.repositoryName == null || config.repositoryName.equals(repositoryModel.getName())) {
-					repositoryModelNameAsFileName = repositoryModel.getName().replaceAll("[^\\w_\\.]+", "_");
+				String currentRepositoryName = RepositoryModelUtils.qualifiedName(currentRepositoryModel);
+				if (config.repositoryName == null || config.repositoryName.equals(currentRepositoryName)) {
+					repositoryModelNameAsFileName = currentRepositoryName.replaceAll("[^\\w_\\.]+", "_");
 					lockFile = new File(config.locks, repositoryModelNameAsFileName);
 					if (!lockFile.createNewFile()) {
 						// could not aquire the lock
-						SrcRepoActivator.INSTANCE.warning("Could not aquire lock for scheduled repository " + repositoryModel.getName() + "!");
+						SrcRepoActivator.INSTANCE.warning("Could not aquire lock for scheduled repository " + currentRepositoryName + "!");
+					} else {
+						repositoryModel = currentRepositoryModel;
 					}
 				}
 			}
@@ -384,10 +388,16 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			SrcRepoActivator.INSTANCE.error("Unexpected and unhandled exception occured.", e);
 		} finally {
 			try {
-				if (!lockFile.delete()) {
-					SrcRepoActivator.INSTANCE.error("Could not delete the lock file.");	
+				if(lockFile != null) {
+					if (!lockFile.delete()) {
+						SrcRepoActivator.INSTANCE.error("Could not delete the lock file.");	
+					}
 				}
-				closeFragmentation(config, fragmentation);
+				for (Fragmentation f: fs.getFragmentations()) {
+					f.close();
+					f.getDataStore().close();
+				}
+				fs.close();
 			} catch (Exception e) {
 				SrcRepoActivator.INSTANCE.error("Unknown error during closing fragmentation.", e);
 			}

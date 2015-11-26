@@ -28,7 +28,7 @@ public class RepositoryModelTraversal {
 	private final static TimeStatistic visitAllStat = 
 			new TimeStatistic(TimeUnit.MILLISECONDS)
 			.with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class)
-			.register(RepositoryModelFlatTraversal.class, "Visit time");
+			.register(RepositoryModelTraversal.class, "Visit time");
 	
 	private final static ValueStatistic usedMemoryStat = new ValueStatistic("b").with(BatchedPlot.class).register(RepositoryModelTraversal.class, "Used heap memory.");
 	
