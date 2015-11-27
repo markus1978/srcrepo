@@ -1,4 +1,4 @@
-package de.hub.srcrepo.repositorymodel.util
+package de.hub.srcrepo.eclipsegit
 
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import java.text.SimpleDateFormat
@@ -9,15 +9,20 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import org.apache.commons.cli.CommandLine
+import org.apache.commons.cli.Options
+import org.apache.commons.cli.Option
+import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils
 
 /**
  * Program that executes a headless {@link SrcRepoDirectoryImport} 
  * for each scheduled repository. Only executes a certain number of
  * imports at a time.
  */
-class SrcRepoDirectoryImportScript extends AbstractRepositoryModelMain {
+class SrcRepoDirectoryImportScript extends AbstractSrcRepoCommand {
 	
 	val List<Integer> ports = Collections.synchronizedList(newArrayList)   
+
 	
 	private def void runImport(RepositoryModel repository) {
 		val port = ports.remove(0)
@@ -37,8 +42,13 @@ class SrcRepoDirectoryImportScript extends AbstractRepositoryModelMain {
 		System.out.println('''Finished import of «repository.qualifiedName» with «result».''')
 	}
 	
-	override protected perform(String[] args) {		
-		val importerCount = if (args.length == 0) 5 else Integer::parseInt(args.get(0))
+	override protected addOptions(Options options) {
+		super.addOptions(options)
+		options.addOption(Option.builder("i").longOpt("--instances").desc("The number of parallel importers to run. Default is 5").hasArg.build)
+	}
+	
+	override protected run(CommandLine cl) {			
+		val importerCount = Integer.parseInt(cl.getOptionValue("i", "5"))
 		for (i:0..importerCount) ports += 8080 + i
 		val scheduledRepositories = RepositoryModelUtils::scheduledForImport(directory)
 		
@@ -51,10 +61,5 @@ class SrcRepoDirectoryImportScript extends AbstractRepositoryModelMain {
 		
 		executor.shutdown()
 		executor.awaitTermination(10, TimeUnit::DAYS)
-	}
-	
-	public static def void main(String[] args) {
-		val instance = new SrcRepoDirectoryImportScript
-		instance.run(args)
 	}
 }

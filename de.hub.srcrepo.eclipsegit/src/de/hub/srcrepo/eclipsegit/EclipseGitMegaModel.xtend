@@ -3,18 +3,20 @@ package de.hub.srcrepo.eclipsegit
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
-import de.hub.srcrepo.repositorymodel.util.AbstractRepositoryModelMain
 import java.net.URL
 import java.util.List
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.regex.Pattern
+import org.apache.commons.cli.CommandLine
+import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
 import org.jsoup.Jsoup
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
-class EclipseGitMegaModel extends AbstractRepositoryModelMain {
+class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 	
 	val timeout = 30000
 	val executor = Executors::newFixedThreadPool(50)
@@ -128,13 +130,13 @@ class EclipseGitMegaModel extends AbstractRepositoryModelMain {
 		executor.shutdown()
 	}
 	
-	static def void main(String[] args) {
-		val instance = new EclipseGitMegaModel()
-		instance.run(args)
+	override protected addOptions(Options options) {
+		super.addOptions(options)
+		options.addOption(Option.builder("u").longOpt("url").desc("The git.eclipse.org url. Default is https://git.eclipse.org/c/.").hasArg.build)
 	}
 	
-	override protected perform(String[] args) {
-		createRepositoryModelDirectory("https://git.eclipse.org/c/")
+	override protected run(CommandLine cl) {
+		createRepositoryModelDirectory(cl.getOptionValue("u", "https://git.eclipse.org/c/"))
 	}
 	
 }

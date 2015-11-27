@@ -8,7 +8,7 @@ import static extension de.hub.srcrepo.ocl.OclExtensions.*
 class RepositoryModelUtils {
 	
 	public static def List<RepositoryModel> selectRepositoryModels(RepositoryModelDirectory directory, (RepositoryModel)=>boolean predicate) {
-		directory.subDirectories.closure[subDirectories]
+		directory.subDirectories.closure[subDirectories].union(newArrayList(directory))
 				.collectAll[repositories]
 				.filter[predicate.apply(it)].toList
 	}
@@ -22,15 +22,13 @@ class RepositoryModelUtils {
 	}
 	
 	public static def void updateImportStatuses(RepositoryModelDirectory directory) {
-		directory.subDirectories.forEach[
-			it.updateImportStatuses
-		]
+		directory.subDirectories.forEach[it.updateImportStatuses]
 		
-		directory.imported.clear();
-		directory.imported.addAll(imported(directory));
+		directory.imported.clear()
+		imported(directory).forEach[directory.imported.add(it)]
 		
-		directory.scheduledForImport.clear();
-		directory.scheduledForImport.addAll(scheduledForImport(directory));
+		directory.scheduledForImport.clear()
+		scheduledForImport(directory).forEach[directory.scheduledForImport.add(it)]
 	}
 	
 	public static def qualifiedName(RepositoryModel repository) {
