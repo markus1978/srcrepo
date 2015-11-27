@@ -378,6 +378,10 @@
         <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//RepositoryMetaData/revsWithErrors"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_k2n1wY3_EeWTs67lhredLQ"/>
       </children>
+      <children xmi:type="notation:Node" xmi:id="_VhmRgJUbEeWMlJpsxtJGjA" type="2001">
+        <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//RepositoryMetaData/cusWithErrors"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_VhmRgZUbEeWMlJpsxtJGjA"/>
+      </children>
       <children xmi:type="notation:Node" xmi:id="_Vk2V0I30EeWTs67lhredLQ" type="2001">
         <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//RepositoryMetaData/cuCount"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_Vk2V0Y30EeWTs67lhredLQ"/>

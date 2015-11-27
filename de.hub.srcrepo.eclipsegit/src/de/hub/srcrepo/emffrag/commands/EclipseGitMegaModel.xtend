@@ -1,4 +1,4 @@
-package de.hub.srcrepo.eclipsegit
+package de.hub.srcrepo.emffrag.commands
 
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
@@ -43,10 +43,7 @@ class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 		if (url == null) {
 			repositoryModel.url = "<no url found in " + repositoryURL + ">"
 			System.err.println('''ERROR for «repositoryURL»''')
-		} else {
-			repositoryModel.url = url
-			System.out.println('''Added «name» with «url»''')	
-		}
+		} 
 		
 		repositoryModel.metaData = RepositoryModelFactory.eINSTANCE.createRepositoryMetaData
 		repositoryModel.metaData.importMetaData = RepositoryModelFactory.eINSTANCE.createImportMetaData
@@ -55,13 +52,12 @@ class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 		return repositoryModel
 	}
 	
+	private var RepositoryModelDirectory currentSubDirectory = null
+	
 	private def addContent(RepositoryModelDirectory rootDirectory, URL pageURL) {
 		val document = Jsoup::parse(pageURL, timeout)
 		val repoTable = document.getElementsByAttributeValue("summary", "repository list").get(0)
-		var RepositoryModelDirectory currentSubDirectory = null
-		if (!rootDirectory.subDirectories.isEmpty) {
-			currentSubDirectory = rootDirectory.subDirectories.last
-		}
+		
 		val List<Callable<Pair<RepositoryModelDirectory, RepositoryModel>>> callables = newArrayList()
 		for (row: repoTable.getElementsByTag("tr")) {
 			val tds = row.getElementsByTag("td")
@@ -70,9 +66,12 @@ class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 				if ((firstTd).attr("class").equals("reposection")) {
 					val subDirectoryName = firstTd.html
 					if (currentSubDirectory == null || !currentSubDirectory.name.equals(subDirectoryName)) {
-						currentSubDirectory = RepositoryModelFactory.eINSTANCE.createRepositoryModelDirectory
-						currentSubDirectory.name = subDirectoryName
-						rootDirectory.subDirectories += currentSubDirectory
+						currentSubDirectory = rootDirectory.subDirectories.findFirst[it.name == subDirectoryName]
+						if (currentSubDirectory == null) {
+							currentSubDirectory = RepositoryModelFactory.eINSTANCE.createRepositoryModelDirectory
+							currentSubDirectory.name = subDirectoryName
+							rootDirectory.subDirectories += currentSubDirectory	
+						}
 					}
 				} else if (firstTd.attr("class").equals("sublevel-repo")) {
 					val parent = currentSubDirectory
@@ -104,18 +103,29 @@ class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 		}
 		executor.invokeAll(callables).stream().map[it.get()].forEach[
 			val repositoryModel = it.value
-			it.key.repositories.add(repositoryModel)
-			val uri = URI.createURI('''«modelURI.scheme»://«modelURI.host»/«repositoryModel.qualifiedName»''')
-			fs.getFragmentation(uri).contents.add(repositoryModel)
+			if (it.key.repositories.findFirst[it.name == repositoryModel.name] == null) {
+				it.key.repositories.add(repositoryModel)
+				val uri = URI.createURI('''«modelURI.scheme»://«modelURI.host»/«repositoryModel.qualifiedName»''')
+				fs.getFragmentation(uri).contents.add(repositoryModel)		
+				
+				System.out.println('''Added «repositoryModel.name»''')			
+			} else {
+				System.out.println('''Already in the model «repositoryModel.name»''')	
+			}
 		]
 	}
 	
 	private def void createRepositoryModelDirectory(String eclipseGitURL) {
-		val rootDirectory = RepositoryModelFactory.eINSTANCE.createRepositoryModelDirectory()
-		rootDirectory.name = "git.eclipse.org"
-		rootDirectory.description = "All officially recognized eclipse related projects and their git repositories."
-		rootDirectory.url = eclipseGitURL
-		fragmentation.rootFragment.contents.add(rootDirectory)
+		val rootDirectory = if (directory == null) {
+			val newRootDirectory = RepositoryModelFactory.eINSTANCE.createRepositoryModelDirectory()
+			newRootDirectory.name = "git.eclipse.org"
+			newRootDirectory.description = "All officially recognized eclipse related projects and their git repositories."
+			newRootDirectory.url = eclipseGitURL
+			fragmentation.rootFragment.contents.add(newRootDirectory)
+			newRootDirectory
+		} else {
+			directory
+		}
 		
 		val baseUrl = new URL(eclipseGitURL)
 		val eclipseGitRootDocument = Jsoup::parse(baseUrl, timeout)

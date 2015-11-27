@@ -962,13 +962,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_META_DATA__IMPORT_META_DATA = 8;
 
 	/**
+	 * The feature id for the '<em><b>Cus With Errors</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__CUS_WITH_ERRORS = 9;
+
+	/**
 	 * The number of structural features of the '<em>Repository Meta Data</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA_FEATURE_COUNT = 9;
+	int REPOSITORY_META_DATA_FEATURE_COUNT = 10;
 
 	/**
 	 * The number of operations of the '<em>Repository Meta Data</em>' class.
@@ -1965,6 +1974,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getRepositoryMetaData_ImportMetaData();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCusWithErrors <em>Cus With Errors</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Cus With Errors</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCusWithErrors()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_CusWithErrors();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory <em>Directory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2793,6 +2813,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference REPOSITORY_META_DATA__IMPORT_META_DATA = eINSTANCE.getRepositoryMetaData_ImportMetaData();
+
+		/**
+		 * The meta object literal for the '<em><b>Cus With Errors</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__CUS_WITH_ERRORS = eINSTANCE.getRepositoryMetaData_CusWithErrors();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl <em>Directory</em>}' class.

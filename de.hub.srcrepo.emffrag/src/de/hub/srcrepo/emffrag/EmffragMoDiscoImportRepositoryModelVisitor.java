@@ -9,6 +9,7 @@ import de.hub.emffrag.datastore.IDataStore;
 import de.hub.emffrag.fragmentation.FObject;
 import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
+import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -24,6 +25,11 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 	public void onCompleteRev(Rev rev) {
 		super.onCompleteRev(rev);
 		((FObject)repositoryModel).fFragmentation().gc();
+		try {
+			repositoryModel.eResource().save(null);
+		} catch (Exception e) {
+			SrcRepoActivator.INSTANCE.error("Unexpected error during saving the repository fragment.", e);
+		}		
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package de.hub.srcrepo.eclipsegit
+package de.hub.srcrepo.emffrag.commands
 
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import java.text.SimpleDateFormat
@@ -26,13 +26,16 @@ class SrcRepoDirectoryImportScript extends AbstractSrcRepoCommand {
 	
 	private def void runImport(RepositoryModel repository) {
 		val port = ports.remove(0)
-		
-		System.out.println('''Start import of «repository.qualifiedName». Stats at port «port».''')
 		var result = 0
+		System.out.println('''Start import of «repository.qualifiedName». Stats at port «port».''')
 		try {
 			val cmd = '''02-scripts/run-importdeamon.sh «repository.qualifiedName» «port» «new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Date.newInstance)»'''		
 			val process = Runtime.runtime.exec(cmd)
-			result = process.waitFor
+			if (!process.waitFor(12, TimeUnit.HOURS)) {
+				System.out.println('''Need to abort the import of «repository.qualifiedName» because of timeout.''')
+				process.destroy
+			}
+			result = process.exitValue
 		} catch (Exception e) {
 			System.out.println('''Could not finish import of «repository.qualifiedName» with «result», because «e.toString + ":" + e.message».''')
 			e.printStackTrace(System.out)

@@ -29,6 +29,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevsWithErrors <em>Revs With Errors</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getDataStoreMetaData <em>Data Store Meta Data</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportMetaData <em>Import Meta Data</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCusWithErrors <em>Cus With Errors</em>}</li>
  * </ul>
  *
  * @generated
@@ -205,6 +206,24 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 */
 	public void setImportMetaData(ImportMetaData newImportMetaData) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_META_DATA, newImportMetaData);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getCusWithErrors() {
+		return (Integer)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__CUS_WITH_ERRORS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCusWithErrors(int newCusWithErrors) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__CUS_WITH_ERRORS, newCusWithErrors);
 	}
 
 	/**

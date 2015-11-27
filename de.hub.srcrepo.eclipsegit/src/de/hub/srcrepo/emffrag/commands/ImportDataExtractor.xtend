@@ -1,4 +1,4 @@
-package de.hub.srcrepo.eclipsegit
+package de.hub.srcrepo.emffrag.commands
 
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable

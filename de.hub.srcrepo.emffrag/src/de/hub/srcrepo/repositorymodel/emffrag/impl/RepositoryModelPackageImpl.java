@@ -817,6 +817,15 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getRepositoryMetaData_CusWithErrors() {
+		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getRepositoryModelDirectory() {
 		return repositoryModelDirectoryEClass;
 	}
@@ -1142,6 +1151,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__REVS_WITH_ERRORS);
 		createEReference(repositoryMetaDataEClass, REPOSITORY_META_DATA__DATA_STORE_META_DATA);
 		createEReference(repositoryMetaDataEClass, REPOSITORY_META_DATA__IMPORT_META_DATA);
+		createEAttribute(repositoryMetaDataEClass, REPOSITORY_META_DATA__CUS_WITH_ERRORS);
 
 		repositoryModelDirectoryEClass = createEClass(REPOSITORY_MODEL_DIRECTORY);
 		createEReference(repositoryModelDirectoryEClass, REPOSITORY_MODEL_DIRECTORY__REPOSITORIES);
@@ -1289,6 +1299,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getRepositoryMetaData_RevsWithErrors(), ecorePackage.getEInt(), "revsWithErrors", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryMetaData_DataStoreMetaData(), this.getDataStoreMetaData(), null, "dataStoreMetaData", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryMetaData_ImportMetaData(), this.getImportMetaData(), null, "importMetaData", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepositoryMetaData_CusWithErrors(), ecorePackage.getEInt(), "cusWithErrors", null, 0, 1, RepositoryMetaData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(repositoryModelDirectoryEClass, RepositoryModelDirectory.class, "RepositoryModelDirectory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRepositoryModelDirectory_Repositories(), this.getRepositoryModel(), null, "repositories", null, 0, -1, RepositoryModelDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

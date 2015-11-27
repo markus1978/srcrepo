@@ -218,6 +218,15 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				revImportSizeStat.track(javaDiffs.size());
 				cuCount += javaDiffs.size();
 				runJob(new ImportJavaCompilationUnits(javaDiffs));
+				for (Diff javaDiff: javaDiffs.values()) {
+					try {
+						if (((JavaCompilationUnitRef)javaDiff.getFile()).getCompilationUnitModel().getCompilationUnit().getTypes().isEmpty()) {
+							repositoryMetaData.setCusWithErrors(repositoryMetaData.getCusWithErrors() + 1);
+						}
+					} catch (Exception e) {
+						repositoryMetaData.setCusWithErrors(repositoryMetaData.getCusWithErrors() + 1);
+					}
+				}
 			} else {
 				revImportSizeStat.track(0);
 			}

@@ -1,4 +1,4 @@
-package de.hub.srcrepo.eclipsegit
+package de.hub.srcrepo.emffrag.commands
 
 import de.hub.emffrag.EmfFragActivator
 import de.hub.emffrag.datastore.DataStoreImpl
@@ -9,6 +9,7 @@ import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
 import java.util.Map
+import java.util.Scanner
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.HelpFormatter
@@ -16,7 +17,6 @@ import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
-import java.util.Scanner
 
 abstract class AbstractSrcRepoCommand {
 
@@ -80,7 +80,9 @@ public class SrcRepo {
 		"schedule-imports" -> new ScheduleImports,
 		"import" -> new SrcRepoDirectoryImportScript,
 		"data" -> new ImportDataExtractor,
-		"eclipse" -> new EclipseGitMegaModel
+		"eclipse" -> new EclipseGitMegaModel,
+		"ls" -> new LSCommand,
+		"rm" -> new RMCommand
 	)
 	
 	public static def void main(String[] argsVal) {
@@ -109,7 +111,13 @@ public class SrcRepo {
 		val options = new Options
 		command.addOptions(options)
 		val clParser = new DefaultParser
-		val cl = clParser.parse(options, arguments)
+		val cl = try {
+			clParser.parse(options, arguments)
+		} catch (Exception e) {
+			println("Could not parse arguments: " + e.message)
+			println("Ussage: srcrepo <command> [options...]")
+			null
+		}
 		val clIsValid = cl != null && command.validateOptions(cl)
 		if (clIsValid) {
 			command.init(cl)

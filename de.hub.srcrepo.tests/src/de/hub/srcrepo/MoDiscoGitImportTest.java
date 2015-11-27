@@ -147,7 +147,8 @@ public class MoDiscoGitImportTest {
 		Assert.assertNotNull(metaData.getImportMetaData().getImportStatsAsJSON());
 		Assert.assertNotNull(metaData.getImportMetaData().getImportStats());
 		Assert.assertEquals(16, metaData.getRevCount());
-		Assert.assertEquals(19, metaData.getCuCount());		
+		Assert.assertEquals(19, metaData.getCuCount());	
+		Assert.assertEquals(1, metaData.getCusWithErrors());
 	}
 	
 	@Test

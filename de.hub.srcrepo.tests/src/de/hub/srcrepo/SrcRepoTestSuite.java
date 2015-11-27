@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	MoDiscoGitImportTest.class, // order of tests is important: ImportedMoDiscoModelTests use the import of MoDiscoGitImportTest
 	ImportedMoDiscoModelTests.class,
-	MoDiscoGitEmptyCDOImportTest.class
+//	MoDiscoGitEmptyCDOImportTest.class
 })
 public class SrcRepoTestSuite {
 	
