@@ -10,7 +10,7 @@ public class MoDiscoGitEmptyCDOImportTest extends MoDiscoGitImportTest {
 	
 	@Override
 	protected File getWorkingCopy() {
-		return workingCopy;
+		return new File("/Users/markus/Documents/Projects/srcrepo-mars/07-jupiter/04-import/workingcopies/git.eclipse.org_cdo_cdo.git");
 	}
 	
 	@Override

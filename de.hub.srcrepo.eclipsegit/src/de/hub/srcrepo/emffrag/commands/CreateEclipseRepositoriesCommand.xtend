@@ -16,17 +16,22 @@ import org.jsoup.Jsoup
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
-class EclipseGitMegaModel extends AbstractSrcRepoCommand {
+class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 	
 	val timeout = 30000
 	val executor = Executors::newFixedThreadPool(50)
 	
 	private def createRepository(URL repositoryURL, String name, String description) {
 		val repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel
-		repositoryModel.name = name
+		repositoryModel.name = if (name==null) repositoryURL.toString else name
 		repositoryModel.description = description
 		
-		val document = Jsoup::parse(repositoryURL, timeout)		
+		val document = try {
+			Jsoup::parse(repositoryURL, timeout)
+		} catch (Exception e) {
+			System.err.println("Could not import an apparent sublevel-repo! Due due to exception while retrieving " + repositoryURL)
+			return null
+		}		
 		val gitClonePattern = Pattern::compile("git clone ((git|https|http)://\\S+)")
 		val matcher = gitClonePattern.matcher(document.text)
 		var String url = null
@@ -54,8 +59,13 @@ class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 	
 	private var RepositoryModelDirectory currentSubDirectory = null
 	
-	private def addContent(RepositoryModelDirectory rootDirectory, URL pageURL) {
-		val document = Jsoup::parse(pageURL, timeout)
+	private def addContent(RepositoryModelDirectory rootDirectory, URL pageURL) {			
+		val document = try {
+			Jsoup::parse(pageURL, timeout)
+		} catch(Exception e) {
+			System.err.println("Could not import an apparent sublevel-repo! Due due to exception while retrieving " + pageURL)
+			return		
+		}
 		val repoTable = document.getElementsByAttributeValue("summary", "repository list").get(0)
 		
 		val List<Callable<Pair<RepositoryModelDirectory, RepositoryModel>>> callables = newArrayList()
@@ -103,14 +113,16 @@ class EclipseGitMegaModel extends AbstractSrcRepoCommand {
 		}
 		executor.invokeAll(callables).stream().map[it.get()].forEach[
 			val repositoryModel = it.value
-			if (it.key.repositories.findFirst[it.name == repositoryModel.name] == null) {
-				it.key.repositories.add(repositoryModel)
-				val uri = URI.createURI('''«modelURI.scheme»://«modelURI.host»/«repositoryModel.qualifiedName»''')
-				fs.getFragmentation(uri).contents.add(repositoryModel)		
-				
-				System.out.println('''Added «repositoryModel.name»''')			
-			} else {
-				System.out.println('''Already in the model «repositoryModel.name»''')	
+			if (repositoryModel != null) {
+				if (it.key.repositories.findFirst[it.name == repositoryModel.name] == null) {
+					it.key.repositories.add(repositoryModel)
+					val uri = URI.createURI('''«modelURI.scheme»://«modelURI.host»/«repositoryModel.qualifiedName»''')
+					fs.getFragmentation(uri).contents.add(repositoryModel)		
+					
+					System.out.println('''Added «repositoryModel.name»''')			
+				} else {
+					System.out.println('''Already in the model «repositoryModel.name»''')	
+				}				
 			}
 		]
 	}

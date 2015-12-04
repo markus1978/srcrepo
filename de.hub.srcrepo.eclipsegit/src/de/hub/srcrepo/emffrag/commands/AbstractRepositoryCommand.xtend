@@ -32,7 +32,14 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 		
 		val repositories = directory.subDirectories.filter[if (directoryPattern != null) directoryPattern.asPredicate.test(it.name) else true]
 			.collectAll[subdirectory|
-				subdirectory.repositories.filter[if (repositoryPattern != null) repositoryPattern.asPredicate.test(it.name) else true].map[model| subdirectory->model]
+				subdirectory.repositories.filter[
+					if (repositoryPattern != null)
+						if (it.name != null) 
+							repositoryPattern.asPredicate.test(it.name)
+						else 
+							false 
+					else true
+				].map[model| subdirectory->model]
 			].toList
 			
 		repositories.forEach[entry|
@@ -50,7 +57,7 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 		super.addOptions(options)
 		options.addOption(Option.builder("r").longOpt("repositories").desc("Matches repositories.").hasArg.build)
 		options.addOption(Option.builder("d").longOpt("directories").desc("Matches repositories.").hasArg.build)
-		options.addOption(Option.builder("i").longOpt("imported").desc("Matches imported only.").hasArg.build)
+		options.addOption(Option.builder("i").longOpt("imported").desc("Matches imported only.").build)
 		options.addOption(Option.builder("s").longOpt("scheduled").desc("Matches scheduled for import only.").build)
 		options.addOption(Option.builder("x").longOpt("listed-only").desc("Matches listed only repositories only.").build)				
 	}

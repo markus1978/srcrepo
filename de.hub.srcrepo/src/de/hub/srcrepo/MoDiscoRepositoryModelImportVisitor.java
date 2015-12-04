@@ -241,11 +241,13 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		updateJavaProjectStructureForMerge = false;
 		
 		Date revTime = rev.getTime();
-		if (repositoryMetaData.getOldestRev() == null || repositoryMetaData.getOldestRev().getTime() > revTime.getTime()) {
-			repositoryMetaData.setOldestRev(revTime);
-		}
-		if (repositoryMetaData.getNewestRev() == null || repositoryMetaData.getNewestRev().getTime() < revTime.getTime()) {
-			repositoryMetaData.setNewestRev(revTime);
+		if (revTime != null) {
+			if (repositoryMetaData.getOldestRev() == null || repositoryMetaData.getOldestRev().getTime() > revTime.getTime()) {
+				repositoryMetaData.setOldestRev(revTime);
+			}
+			if (repositoryMetaData.getNewestRev() == null || repositoryMetaData.getNewestRev().getTime() < revTime.getTime()) {
+				repositoryMetaData.setNewestRev(revTime);
+			}
 		}
 		repositoryMetaData.setRevCount(repositoryMetaData.getRevCount()+1);
 	}

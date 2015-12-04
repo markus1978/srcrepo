@@ -52,6 +52,8 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	private final boolean isTryHard = false;
 	private Git git = null;
 	private DefaultExecutor executor = null;
+
+	private int importedRevCount = 0;
 	
 	private final TimeStatistic gitCleanStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT clean time");
 	private final TimeStatistic gitResetStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT reset time");
@@ -123,26 +125,6 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 			return origin;
 		}
 	}
-
-
-
-	private int importedRevCount = 0;
-
-	private Rev createRevModel(RepositoryModel model, RepositoryModelFactory factory, RevCommit commit) throws Exception {
-		String revName = commit.getName();
-		Rev revModel = RepositoryModelUtil.getRev(model, revName);
-		if (revModel == null) {
-			revModel = factory.createRev();
-			revModel.setName(revName);
-			model.getAllRevs().add(revModel);
-			if (RepositoryModelUtil.getRev(model, revName) != revModel) {
-				System.out.println("### NOOOOOOOOO WAAYYYYYYY");
-			}
-			SrcRepoActivator.INSTANCE.debug("Created a model for revision " + revModel.getName() + " (" + importedRevCount++ +")");
-		}
-		
-		return revModel;
-	}
 	
 	private void createParentRelation(RepositoryModelFactory factory, Rev childModel, Rev parentModel, List<DiffEntry> diffs) {
 		ParentRelation parentRelationModel = factory.createParentRelation();
@@ -188,7 +170,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				
 				for (Ref ref: allRefsByPeeledObjectId.get(peeledRefId)) {
 					de.hub.srcrepo.repositorymodel.Ref refModel = createRefModel(factory, ref);
-					Rev startRevModel = createRevModel(model, factory, startCommit);
+					Rev startRevModel = getRevModel(model, factory, startCommit);
 					refModel.setReferencedCommit(startRevModel);
 					model.getAllRefs().add(refModel);
 				}					
@@ -214,10 +196,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		
 		for (RevCommit commit: commitsToImport) {
 			SrcRepoActivator.INSTANCE.debug("import revision " + commit.getName());
-			Rev revModel = RepositoryModelUtil.getRev(model, commit.getName());
-			if (revModel == null) {
-				revModel = createRevModel(model, factory, commit);
-			} 
+			Rev revModel = getRevModel(model, factory, commit); 
 	
 			revModel.setTime(new Date(((long) commit.getCommitTime()) * 1000));
 			revModel.setMessage(commit.getFullMessage());
@@ -227,7 +206,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 			if (commit.getParentCount() > 0) {
 				for (RevCommit parent : commit.getParents()) {
 					diffs = df.scan(parent, commit);
-					Rev parentRevModel = createRevModel(model, factory, parent);
+					Rev parentRevModel = getRevModel(model, factory, parent);
 					createParentRelation(factory, revModel, parentRevModel, diffs);
 				}
 			} else {				
@@ -245,6 +224,26 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		
 		walk.close();
 		walk.dispose();
+	}
+
+	private Rev getRevModel(RepositoryModel model, RepositoryModelFactory factory, RevCommit commit) throws Exception {
+		Rev revModel = RepositoryModelUtil.getRev(model, commit.getName());
+		if (revModel == null) {
+			String revName = commit.getName();
+			Rev newRevModel = RepositoryModelUtil.getRev(model, revName);
+			if (newRevModel == null) {
+				newRevModel = factory.createRev();
+				newRevModel.setName(revName);
+				model.getAllRevs().add(newRevModel);
+//				if (RepositoryModelUtil.getRev(model, revName) != newRevModel) {
+//					SrcRepoActivator.INSTANCE.error("Unexpected model state.");
+//				}
+				SrcRepoActivator.INSTANCE.debug("Created a model for revision " + newRevModel.getName() + " (" + importedRevCount++ +")");
+				newRevModel = RepositoryModelUtil.getRev(model, revName);
+			}
+			revModel = newRevModel;
+		}
+		return revModel;
 	}
 	
 	private de.hub.srcrepo.repositorymodel.Ref createRefModel(RepositoryModelFactory factory, Ref ref) {

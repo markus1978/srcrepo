@@ -15,9 +15,11 @@ import de.hub.srcrepo.repositorymodel.Rev;
 
 public class RepositoryModelUtil {
 	private static final class RevCacheAdapter extends AdapterImpl {
-		Map<String, Rev> revMap = new HashMap<String, Rev>();
+		final RepositoryModel model;
+		final Map<String, Rev> revMap = new HashMap<String, Rev>();
 		
 		RevCacheAdapter(RepositoryModel model) {
+			this.model = model;
 			for (Rev rev: model.getAllRevs()) {
 				revMap.put(rev.getName(), rev);
 			}
@@ -30,10 +32,15 @@ public class RepositoryModelUtil {
 			if (feature != null && feature instanceof EReference && ((EReference)feature).getName().equals(RepositoryModelPackage.eINSTANCE.getRepositoryModel_AllRevs().getName())) {
 				if (msg.getEventType() == Notification.ADD) {
 					Rev rev = (Rev)msg.getNewValue();
+					// try to find the new rev in the model to get a proxy and deal with emffrags proxy limitations
+					Rev modelRev = model.getAllRevs().get(model.getAllRevs().size()-1);
+					if (modelRev.getName().equals(rev.getName())) {
+						rev = modelRev;
+					}
 					revMap.put(rev.getName(), rev);
 				} else if (msg.getEventType() == Notification.REMOVE) {
 					Rev rev = (Rev)msg.getOldValue();
-					revMap.remove(rev);
+					revMap.remove(rev.getName());
 				}
 			}				
 		}

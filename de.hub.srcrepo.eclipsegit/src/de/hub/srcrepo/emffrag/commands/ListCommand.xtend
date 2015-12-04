@@ -8,7 +8,7 @@ import org.apache.commons.cli.CommandLine
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
-class LSCommand extends AbstractRepositoryCommand {
+class ListCommand extends AbstractRepositoryCommand {
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
 		val countFormat = new DecimalFormat("#,###,###,###")
@@ -26,11 +26,7 @@ class LSCommand extends AbstractRepositoryCommand {
 		} else {
 			"listed only"
 		}
-		println('''
-			«model.qualifiedName»
-				status «status»
-				revs=«countFormat.format(model.metaData.revCount)» cus=«countFormat.format(model.metaData.cuCount)» size=«size»
-		''')	
+		println('''«model.qualifiedName» («status») revs=«countFormat.format(model.metaData.revCount)» cus=«countFormat.format(model.metaData.cuCount)» size=«size»''')	
 	}
 	
 }

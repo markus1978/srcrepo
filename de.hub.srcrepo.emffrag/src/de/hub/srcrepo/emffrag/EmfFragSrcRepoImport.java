@@ -310,9 +310,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		RepositoryModel repositoryModel = null;
 		
 		if (!config.resume) {
-			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();		
-			resource.getContents().add(repositoryModel);
-			repositoryModel = (RepositoryModel) resource.getContents().get(0);
+			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();					
 		} else {
 			if (resource.getContents().isEmpty()) {
 				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
@@ -347,6 +345,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
 				return null;
 			}
+			resource.getContents().add(repositoryModel);
+			repositoryModel = (RepositoryModel) resource.getContents().get(0);
 		}
 		
 		// importing source code

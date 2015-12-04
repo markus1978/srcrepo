@@ -30,12 +30,12 @@ abstract class AbstractSrcRepoCommand {
 	
 	protected final def void init(CommandLine cl) {
 		EmfFragActivator::standalone(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE)
-		EmfFragActivator::instance.logInStandAlone = cl.hasOption("v")
+		EmfFragActivator::instance.logInStandAlone = cl.hasOption("log")
 		EmfFragMongoDBActivator::standalone()
 		SrcRepoActivator::standalone
 
 		this.modelURI = URI.createURI(if (cl.hasOption("m")) cl.getOptionValue("m") else defaultModelURI)
-		fs = new FragmentationSet(if (cl.hasOption("c")) Integer.parseInt(cl.getOptionValue("c")) else defaultCacheSize, [uri|DataStoreImpl::createDataStore(uri)])		
+		fs = new FragmentationSet(if (cl.hasOption("cache")) Integer.parseInt(cl.getOptionValue("cache")) else defaultCacheSize, [uri|DataStoreImpl::createDataStore(uri)])		
 		fragmentation = fs.getFragmentation(this.modelURI)		
 		val contents = fragmentation.rootFragment.contents
 		val content = if (contents.size == 0) null else contents.get(0)
@@ -47,9 +47,9 @@ abstract class AbstractSrcRepoCommand {
 	}
 		
 	protected def addOptions(Options options) {
-		options.addOption(Option.builder("v").desc("Prints log output.").longOpt("--verbose").build)
-		options.addOption(Option.builder("m").desc('''Uses the given model URI. Default is «defaultModelURI».''').longOpt("--model").hasArg.build)
-		options.addOption(Option.builder("c").desc('''Uses the given fragmentation cache size. Default is «defaultCacheSize».''').longOpt("--cache").hasArg.build)
+		options.addOption(Option.builder().longOpt("log").desc("Prints log output.").build)
+		options.addOption(Option.builder("m").desc('''Uses the given model URI. Default is «defaultModelURI».''').longOpt("model").hasArg.build)
+		options.addOption(Option.builder().desc('''Uses the given fragmentation cache size. Default is «defaultCacheSize».''').longOpt("cache").hasArg.build)
 	}
 	
 	protected def checkIntArg(CommandLine cl, String name, int minimum) {
@@ -64,7 +64,7 @@ abstract class AbstractSrcRepoCommand {
 	}
 	
 	protected def validateOptions(CommandLine cl) {
-		return checkIntArg(cl, "c", 0)
+		return checkIntArg(cl, "cache", 0)
 	}
 				
 	protected abstract def void run(CommandLine cl)
@@ -75,17 +75,21 @@ abstract class AbstractSrcRepoCommand {
 }
 
 public class SrcRepo {
-	private static val Map<String, AbstractSrcRepoCommand> commands = newHashMap(
-		"update-derived" -> new UpdateDirectoryDerivedFeatures,
-		"schedule-imports" -> new ScheduleImports,
-		"import" -> new SrcRepoDirectoryImportScript,
-		"data" -> new ImportDataExtractor,
-		"eclipse" -> new EclipseGitMegaModel,
-		"ls" -> new LSCommand,
-		"rm" -> new RMCommand
-	)
-	
+		
 	public static def void main(String[] argsVal) {
+		SrcRepoActivator.standalone
+		
+		val Map<String, AbstractSrcRepoCommand> commands = newHashMap(
+			"derive" -> new UpdateDirectoryDerivedFeaturesCommand,
+			"schedule" -> new ScheduleImportCommand,
+			"import" -> new ImportCommand,
+			"data" -> new ImportDataCommand,
+			"eclipse" -> new CreateEclipseRepositoriesCommand,
+			"ls" -> new ListCommand,
+			"rm" -> new RemoveCommand,
+			"par" -> new ParallelCommand
+		)
+		
 		var args = argsVal
 		args = if (args.length < 1) {
 			System.out.println("Interactive mode. Enter your command and options ...")
@@ -123,7 +127,6 @@ public class SrcRepo {
 			command.init(cl)
 			command.run(cl)
 			command.after	
-			System.out.println("Finished command execution.")	
 		} else {
 			new HelpFormatter().printHelp('''srcrepo «commandName» [options...]''', options);
 			System.exit(1)			

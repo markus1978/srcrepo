@@ -32,6 +32,9 @@ class RepositoryModelUtils {
 	}
 	
 	public static def qualifiedName(RepositoryModel repository) {
+		if (repository.name == null) {
+			return "<unknown>"
+		}
 		var name = repository.name.replaceAll("[^\\w_\\-\\.]+", "_")
 		var container = repository.eContainer as RepositoryModelDirectory
 		while (container != null) {

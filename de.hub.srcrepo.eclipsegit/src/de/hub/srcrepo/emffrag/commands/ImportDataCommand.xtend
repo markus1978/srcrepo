@@ -2,19 +2,32 @@ package de.hub.srcrepo.emffrag.commands
 
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable
+import de.hub.jstattrack.TimeStatistic
+import de.hub.jstattrack.services.BatchedPlot
+import de.hub.jstattrack.services.Histogram
+import de.hub.jstattrack.services.Summary
+import de.hub.jstattrack.services.WindowedPlot
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
-import de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils
-import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+import java.io.File
+import java.io.PrintWriter
+import java.util.concurrent.TimeUnit
 import org.apache.commons.cli.CommandLine
+import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
 import org.json.JSONArray
 import org.json.JSONObject
-import org.apache.commons.cli.Options
-import org.apache.commons.cli.Option
 
-class ImportDataExtractor extends AbstractSrcRepoCommand {
+import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import java.util.List
+
+class ImportDataCommand extends AbstractRepositoryCommand {
 	
+	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, "Traverse execution time for 1k objects");
 	private var withElementCount = false
+	private var CommandLine cl = null
+	private var List<String> data = newArrayList
 	
 	private def toIterable(JSONArray jsonArray) {
 		return new FluentIterable<JSONObject> {			
@@ -51,10 +64,11 @@ class ImportDataExtractor extends AbstractSrcRepoCommand {
 		throw new IllegalArgumentException("Could not find a statistic called " + statName + ".")
 	}
 	
-	private def aquireData(RepositoryModel repo) {
-		println("Aquire data for " + repo.qualifiedName)
+	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
+		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
+		val elementCountResult = if (withElementCount) { repo.countObjects }
 		val statJSON = new JSONArray(repo.metaData.importMetaData.importStatsAsJSON)
-		'''
+		data += '''
 			{
 				1_name : "«repo.qualifiedName»",
 				2_revCount : «repo.metaData.revCount»,
@@ -63,14 +77,17 @@ class ImportDataExtractor extends AbstractSrcRepoCommand {
 				2_dbEntryCount : «repo.metaData.dataStoreMetaData.count»,
 				2_dbSize : «(repo.metaData.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				«IF withElementCount»
-					2_elementCount : «repo.countObjects»,
+					2_elementCount : «elementCountResult.key»,
 				«ENDIF»
 				«statSummaryData(statJSON, "Revision checkout time", "3_checkoutTime")»,
 				«statSummaryData(statJSON, "Revision refresh time", "4_refreshTime")»,
 				«statSummaryData(statJSON, "Revision import time", "5_importTime")»,
 				«statSummaryData(statJSON, "Write execution times", "6_writeTime")»,
+				«IF withElementCount»
+					6_traverseTime : «elementCountResult.value»
+				«ENDIF»
 			}
-		'''
+		'''.toString
 	}
 	
 	private def toCSV(JSONArray json) {
@@ -88,37 +105,56 @@ class ImportDataExtractor extends AbstractSrcRepoCommand {
 	}
 		
 	private def countObjects(RepositoryModel model) {
+		val startTime = System.currentTimeMillis
 		var long count = 0
 		val i = model.eAllContents
+		var timer = traverseOneKObjectsExecTimeStat.timer
 		while (i.hasNext) {
 			i.next
 			count++
+			if ((count +1) % 1000 == 0) {
+				timer.track
+				timer = traverseOneKObjectsExecTimeStat.timer
+			}
 			if ((count +1) % 100000 == 0) {
-				print(".")
+				if (cl.hasOption("v")) { print(".") }
 			}
 		}
-		return count
+		val time = System.currentTimeMillis - startTime
+		timer.track
+		return count -> time
 	}
 	
 	override protected addOptions(Options options) {
 		super.addOptions(options)
 		options.addOption(Option.builder("w").longOpt("with-counting").desc("Also counts the number of elements in each repository. Takes a while.").build)
+		options.addOption(Option.builder("o").longOpt("output").desc("File name to store the ouput instead of printing it").hasArg.build)
+		options.addOption(Option.builder("v").longOpt("verbose").desc("Create additional output. Careful in conjunction with -o").build)
 	}
 	
 	override protected run(CommandLine cl) {
+		this.cl = cl
 		withElementCount = cl.hasOption("w")
-		val importedRepositories = RepositoryModelUtils.imported(directory)
-		System.out.println('''Found «importedRepositories.size» impored repositories.''')
+		
+		super.run(cl)
 		val repositoryDataJSON = '''
 			[
-				«FOR repository: importedRepositories SEPARATOR ", "»
-					«repository.aquireData»
+				«FOR repository: data SEPARATOR ", "»
+					«repository»
 				«ENDFOR»
 			]
 		'''
 		val repositoryDataCSV = new JSONArray(repositoryDataJSON).toCSV
 		
-		System.out.println("The results ...")
-		System.out.println(repositoryDataCSV)
-	}	
+		if (cl.hasOption("o")) {
+			val out = new File(cl.getOptionValue("o"))
+			val printer = new PrintWriter(out)
+			printer.println(repositoryDataCSV)
+			printer.close
+		} else {
+			if (cl.hasOption("v")) { println('''The results...''') }
+			println(repositoryDataCSV)	
+		}
+	}
+
 }

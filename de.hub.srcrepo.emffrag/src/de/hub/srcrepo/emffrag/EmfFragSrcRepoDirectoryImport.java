@@ -341,7 +341,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			
 			// importing rev model
 			SrcRepoActivator.INSTANCE.info("Importing into " + EcoreUtil.getURI(repositoryModel) + " from " +  workingDirectory + ".");
-			try {
+			try {				
 				config.scs.importRevisions(repositoryModel);
 			} catch (SourceControlException e) {
 				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);

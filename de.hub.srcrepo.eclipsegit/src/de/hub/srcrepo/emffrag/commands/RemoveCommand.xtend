@@ -5,7 +5,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import org.apache.commons.cli.CommandLine
 
-class RMCommand extends AbstractRepositoryCommand {
+class RemoveCommand extends AbstractRepositoryCommand {
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
 		directory.repositories.remove(model)
