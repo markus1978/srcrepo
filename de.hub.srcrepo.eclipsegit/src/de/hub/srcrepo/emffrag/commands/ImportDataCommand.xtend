@@ -21,6 +21,8 @@ import org.json.JSONObject
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 import java.util.List
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 
 class ImportDataCommand extends AbstractRepositoryCommand {
 	
@@ -67,24 +69,26 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
 		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
 		val elementCountResult = if (withElementCount) { repo.countObjects }
-		val statJSON = new JSONArray(repo.metaData.importMetaData.importStatsAsJSON)
+		val statJSON = new JSONArray(repo.importMetaData.statsAsJSON)
 		data += '''
 			{
 				1_name : "«repo.qualifiedName»",
 				2_revCount : «repo.metaData.revCount»,
 				2_cuCount : «repo.metaData.cuCount»,
 				2_revErrorCount : «repo.metaData.revsWithErrors»,
-				2_dbEntryCount : «repo.metaData.dataStoreMetaData.count»,
-				2_dbSize : «(repo.metaData.dataStoreMetaData as MongoDBMetaData).storeSize»,
+				2_dbEntryCount : «repo.dataStoreMetaData.count»,
+				2_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				«IF withElementCount»
-					2_elementCount : «elementCountResult.key»,
+					2_elementCount : «elementCountResult.get("count")»,
+					2_SLOC : «elementCountResult.get("ncss")»,
 				«ENDIF»
 				«statSummaryData(statJSON, "Revision checkout time", "3_checkoutTime")»,
 				«statSummaryData(statJSON, "Revision refresh time", "4_refreshTime")»,
 				«statSummaryData(statJSON, "Revision import time", "5_importTime")»,
 				«statSummaryData(statJSON, "Write execution times", "6_writeTime")»,
+				«statSummaryData(statJSON, "Revision LOC time", "7_locTime")»,
 				«IF withElementCount»
-					6_traverseTime : «elementCountResult.value»
+					8_traverseTime : «elementCountResult.get("time")»
 				«ENDIF»
 			}
 		'''.toString
@@ -104,13 +108,14 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 		}
 	}
 		
-	private def countObjects(RepositoryModel model) {
+	private def countObjects(RepositoryModel model) {	
 		val startTime = System.currentTimeMillis
 		var long count = 0
+		var long ncss = 0
 		val i = model.eAllContents
 		var timer = traverseOneKObjectsExecTimeStat.timer
 		while (i.hasNext) {
-			i.next
+			val next = i.next
 			count++
 			if ((count +1) % 1000 == 0) {
 				timer.track
@@ -119,10 +124,13 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 			if ((count +1) % 100000 == 0) {
 				if (cl.hasOption("v")) { print(".") }
 			}
+			if (next instanceof JavaCompilationUnitRef) {
+				ncss += (next?.getData("LOC-metrics")?.data?.get("ncss") as Integer)?:0
+			}
 		}
 		val time = System.currentTimeMillis - startTime
 		timer.track
-		return count -> time
+		return newHashMap("time" -> time, "count" -> count, "ncss"-> ncss)
 	}
 	
 	override protected addOptions(Options options) {

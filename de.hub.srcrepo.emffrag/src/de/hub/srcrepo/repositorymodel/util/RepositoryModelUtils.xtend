@@ -1,8 +1,11 @@
 package de.hub.srcrepo.repositorymodel.util
 
+import de.hub.srcrepo.repositorymodel.ImportMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import java.util.List
+
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 class RepositoryModelUtils {
@@ -14,11 +17,11 @@ class RepositoryModelUtils {
 	}
 	
 	public static def List<RepositoryModel> scheduledForImport(RepositoryModelDirectory directory) {
-		directory.selectRepositoryModels[metaData != null && metaData.importMetaData.scheduled].toList
+		directory.selectRepositoryModels[it.getData(typeof(ImportMetaData))?.scheduled].toList
 	}
 	
 	public static def List<RepositoryModel> imported(RepositoryModelDirectory directory) {
-		directory.selectRepositoryModels[metaData != null && metaData.importMetaData.imported].toList
+		directory.selectRepositoryModels[it.getData(typeof(ImportMetaData))?.imported].toList
 	}
 	
 	public static def void updateImportStatuses(RepositoryModelDirectory directory) {

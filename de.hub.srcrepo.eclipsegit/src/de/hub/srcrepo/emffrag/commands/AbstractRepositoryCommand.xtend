@@ -7,6 +7,7 @@ import java.util.regex.Pattern
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
 
 abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 	
@@ -43,7 +44,7 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 			].toList
 			
 		repositories.forEach[entry|
-			val imd = entry.value.metaData.importMetaData
+			val imd = entry.value.importMetaData
 			val goodStatus = (imd.imported || !cl.hasOption("i")) &&
 				(imd.scheduled || !cl.hasOption("s")) &&
 				((!imd.imported && !imd.scheduled && !imd.importing) || !cl.hasOption("x"))

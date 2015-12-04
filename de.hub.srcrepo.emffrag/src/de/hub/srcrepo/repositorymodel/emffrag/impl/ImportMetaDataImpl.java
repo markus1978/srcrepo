@@ -2,15 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import org.eclipse.emf.ecore.EClass;
 
 import de.hub.srcrepo.repositorymodel.ImportMetaData;
-
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
-import java.util.Date;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,14 +18,12 @@ import org.eclipse.emf.ecore.EClass;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#isScheduled <em>Scheduled</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#isImporting <em>Importing</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#isImported <em>Imported</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#getImportDate <em>Import Date</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#getImportStats <em>Import Stats</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#getImportStatsAsJSON <em>Import Stats As JSON</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportMetaDataImpl#getWorkingCopy <em>Working Copy</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ImportMetaDataImpl extends FObjectImpl implements ImportMetaData {
+public class ImportMetaDataImpl extends TaskDataImpl implements ImportMetaData {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -48,16 +41,6 @@ public class ImportMetaDataImpl extends FObjectImpl implements ImportMetaData {
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.IMPORT_META_DATA;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**
@@ -119,8 +102,8 @@ public class ImportMetaDataImpl extends FObjectImpl implements ImportMetaData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Date getImportDate() {
-		return (Date)eGet(RepositoryModelPackage.Literals.IMPORT_META_DATA__IMPORT_DATE, true);
+	public String getWorkingCopy() {
+		return (String)eGet(RepositoryModelPackage.Literals.IMPORT_META_DATA__WORKING_COPY, true);
 	}
 
 	/**
@@ -128,44 +111,8 @@ public class ImportMetaDataImpl extends FObjectImpl implements ImportMetaData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setImportDate(Date newImportDate) {
-		eSet(RepositoryModelPackage.Literals.IMPORT_META_DATA__IMPORT_DATE, newImportDate);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getImportStats() {
-		return (String)eGet(RepositoryModelPackage.Literals.IMPORT_META_DATA__IMPORT_STATS, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImportStats(String newImportStats) {
-		eSet(RepositoryModelPackage.Literals.IMPORT_META_DATA__IMPORT_STATS, newImportStats);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getImportStatsAsJSON() {
-		return (String)eGet(RepositoryModelPackage.Literals.IMPORT_META_DATA__IMPORT_STATS_AS_JSON, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImportStatsAsJSON(String newImportStatsAsJSON) {
-		eSet(RepositoryModelPackage.Literals.IMPORT_META_DATA__IMPORT_STATS_AS_JSON, newImportStatsAsJSON);
+	public void setWorkingCopy(String newWorkingCopy) {
+		eSet(RepositoryModelPackage.Literals.IMPORT_META_DATA__WORKING_COPY, newWorkingCopy);
 	}
 
 } //ImportMetaDataImpl

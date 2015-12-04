@@ -7,7 +7,6 @@ import java.util.Date;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -33,7 +32,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *
  * @generated
  */
-public class RevImpl extends FObjectImpl implements Rev {
+public class RevImpl extends RepositoryElementImpl implements Rev {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -51,16 +50,6 @@ public class RevImpl extends FObjectImpl implements Rev {
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.REV;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**

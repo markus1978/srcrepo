@@ -23,10 +23,8 @@
         <details key="Fragmentation" value="true"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="metaData" eType="#//RepositoryMetaData"
-        containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Rev">
+  <eClassifiers xsi:type="ecore:EClass" name="Rev" eSuperTypes="#//RepositoryElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="commiter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -60,7 +58,7 @@
         eOpposite="#//Rev/childRelations"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="child" eType="#//Rev" eOpposite="#//Rev/parentRelations"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractFileRef" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractFileRef" abstract="true" eSuperTypes="#//RepositoryElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaCompilationUnitRef" eSuperTypes="#//AbstractFileRef">
@@ -104,18 +102,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="conrolled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exceptionClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RepositoryMetaData">
+  <eClassifiers xsi:type="ecore:EClass" name="RepositoryMetaData" eSuperTypes="#//DataSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldestRev" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="revCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newestRev" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cuCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="workingCopy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="revsWithErrors" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dataStoreMetaData" eType="#//DataStoreMetaData"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importMetaData" eType="#//ImportMetaData"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cusWithErrors" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RepositoryModelDirectory" eSuperTypes="#//DirectoryElement">
@@ -128,7 +121,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="imported" upperBound="-1"
         eType="#//RepositoryModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DataStoreMetaData" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="DataStoreMetaData" abstract="true" eSuperTypes="#//DataSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MongoDBMetaData" eSuperTypes="#//DataStoreMetaData">
@@ -137,17 +130,30 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="server" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DirectoryElement" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="DirectoryElement" abstract="true" eSuperTypes="#//RepositoryElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ImportMetaData">
+  <eClassifiers xsi:type="ecore:EClass" name="ImportMetaData" eSuperTypes="#//TaskData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheduled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="importing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="imported" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importStats" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importStatsAsJSON" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="workingCopy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RepositoryElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataSets" upperBound="-1"
+        eType="#//DataSet" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataSet" eSuperTypes="#//RepositoryElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="data" eType="#//EDataMap"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jsonData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TaskData" abstract="true" eSuperTypes="#//DataSet">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="statsAsJSON" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="EDataMap" instanceTypeName="java.util.Map&lt;java.lang.String, java.io.Serializable>"/>
 </ecore:EPackage>

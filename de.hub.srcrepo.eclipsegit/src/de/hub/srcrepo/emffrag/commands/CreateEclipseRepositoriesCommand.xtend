@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.URI
 import org.jsoup.Jsoup
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
 
 class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 	
@@ -50,8 +51,6 @@ class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 			System.err.println('''ERROR for «repositoryURL»''')
 		} 
 		
-		repositoryModel.metaData = RepositoryModelFactory.eINSTANCE.createRepositoryMetaData
-		repositoryModel.metaData.importMetaData = RepositoryModelFactory.eINSTANCE.createImportMetaData
 		repositoryModel.metaData.origin = url
 		
 		return repositoryModel

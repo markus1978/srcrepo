@@ -2,13 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import org.eclipse.emf.ecore.EClass;
 
 import de.hub.srcrepo.repositorymodel.DirectoryElement;
-
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public abstract class DirectoryElementImpl extends FObjectImpl implements DirectoryElement {
+public abstract class DirectoryElementImpl extends RepositoryElementImpl implements DirectoryElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -43,16 +40,6 @@ public abstract class DirectoryElementImpl extends FObjectImpl implements Direct
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.DIRECTORY_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package de.hub.srcrepo.emffrag;
 
-
 import org.eclipse.emf.common.util.URI;
 import org.junit.Assert;
 
@@ -8,6 +7,7 @@ import de.hub.emffrag.fragmentation.Fragment;
 import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import static de.hub.srcrepo.RepositoryModelUtil.*;
 
 public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
@@ -49,9 +49,9 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 	@Override
 	protected void assertMetaData(RepositoryModel repositoryModel) {
 		super.assertMetaData(repositoryModel);
-		Assert.assertNotNull(repositoryModel.getMetaData().getDataStoreMetaData());
-		Assert.assertTrue(repositoryModel.getMetaData().getDataStoreMetaData().getCount() >= 
-				(repositoryModel.getMetaData().getRevCount() + repositoryModel.getMetaData().getCuCount()));
+		Assert.assertNotNull(getDataStoreMetaData(repositoryModel));
+		Assert.assertTrue(getDataStoreMetaData(repositoryModel).getCount() >= 
+				(getMetaData(repositoryModel).getRevCount() + getMetaData(repositoryModel).getCuCount()));
 	}
 	
 	

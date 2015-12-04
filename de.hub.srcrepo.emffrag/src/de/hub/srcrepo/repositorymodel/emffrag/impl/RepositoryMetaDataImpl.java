@@ -6,9 +6,6 @@ import java.util.Date;
 
 import org.eclipse.emf.ecore.EClass;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
-import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -25,16 +22,13 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevCount <em>Rev Count</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getNewestRev <em>Newest Rev</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCuCount <em>Cu Count</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getWorkingCopy <em>Working Copy</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevsWithErrors <em>Revs With Errors</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getDataStoreMetaData <em>Data Store Meta Data</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getImportMetaData <em>Import Meta Data</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCusWithErrors <em>Cus With Errors</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMetaData {
+public class RepositoryMetaDataImpl extends DataSetImpl implements RepositoryMetaData {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -52,16 +46,6 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.REPOSITORY_META_DATA;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**
@@ -141,24 +125,6 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getWorkingCopy() {
-		return (String)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__WORKING_COPY, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setWorkingCopy(String newWorkingCopy) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__WORKING_COPY, newWorkingCopy);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public int getRevsWithErrors() {
 		return (Integer)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__REVS_WITH_ERRORS, true);
 	}
@@ -170,42 +136,6 @@ public class RepositoryMetaDataImpl extends FObjectImpl implements RepositoryMet
 	 */
 	public void setRevsWithErrors(int newRevsWithErrors) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__REVS_WITH_ERRORS, newRevsWithErrors);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DataStoreMetaData getDataStoreMetaData() {
-		return (DataStoreMetaData)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__DATA_STORE_META_DATA, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDataStoreMetaData(DataStoreMetaData newDataStoreMetaData) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__DATA_STORE_META_DATA, newDataStoreMetaData);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ImportMetaData getImportMetaData() {
-		return (ImportMetaData)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_META_DATA, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setImportMetaData(ImportMetaData newImportMetaData) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__IMPORT_META_DATA, newImportMetaData);
 	}
 
 	/**

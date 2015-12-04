@@ -2,10 +2,31 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
-import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
+
+import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataSet;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.DirectoryElement;
+import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
+import de.hub.srcrepo.repositorymodel.ParentRelation;
+import de.hub.srcrepo.repositorymodel.PendingElement;
+import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryElement;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
+import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
+import de.hub.srcrepo.repositorymodel.TaskData;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -69,12 +90,14 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				RepositoryModel repositoryModel = (RepositoryModel)theEObject;
 				T result = caseRepositoryModel(repositoryModel);
 				if (result == null) result = caseDirectoryElement(repositoryModel);
+				if (result == null) result = caseRepositoryElement(repositoryModel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case RepositoryModelPackage.REV: {
 				Rev rev = (Rev)theEObject;
 				T result = caseRev(rev);
+				if (result == null) result = caseRepositoryElement(rev);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -99,6 +122,7 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.ABSTRACT_FILE_REF: {
 				AbstractFileRef abstractFileRef = (AbstractFileRef)theEObject;
 				T result = caseAbstractFileRef(abstractFileRef);
+				if (result == null) result = caseRepositoryElement(abstractFileRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -106,6 +130,7 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				JavaCompilationUnitRef javaCompilationUnitRef = (JavaCompilationUnitRef)theEObject;
 				T result = caseJavaCompilationUnitRef(javaCompilationUnitRef);
 				if (result == null) result = caseAbstractFileRef(javaCompilationUnitRef);
+				if (result == null) result = caseRepositoryElement(javaCompilationUnitRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -142,6 +167,8 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 			case RepositoryModelPackage.REPOSITORY_META_DATA: {
 				RepositoryMetaData repositoryMetaData = (RepositoryMetaData)theEObject;
 				T result = caseRepositoryMetaData(repositoryMetaData);
+				if (result == null) result = caseDataSet(repositoryMetaData);
+				if (result == null) result = caseRepositoryElement(repositoryMetaData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -149,12 +176,15 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				RepositoryModelDirectory repositoryModelDirectory = (RepositoryModelDirectory)theEObject;
 				T result = caseRepositoryModelDirectory(repositoryModelDirectory);
 				if (result == null) result = caseDirectoryElement(repositoryModelDirectory);
+				if (result == null) result = caseRepositoryElement(repositoryModelDirectory);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case RepositoryModelPackage.DATA_STORE_META_DATA: {
 				DataStoreMetaData dataStoreMetaData = (DataStoreMetaData)theEObject;
 				T result = caseDataStoreMetaData(dataStoreMetaData);
+				if (result == null) result = caseDataSet(dataStoreMetaData);
+				if (result == null) result = caseRepositoryElement(dataStoreMetaData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -162,18 +192,45 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				MongoDBMetaData mongoDBMetaData = (MongoDBMetaData)theEObject;
 				T result = caseMongoDBMetaData(mongoDBMetaData);
 				if (result == null) result = caseDataStoreMetaData(mongoDBMetaData);
+				if (result == null) result = caseDataSet(mongoDBMetaData);
+				if (result == null) result = caseRepositoryElement(mongoDBMetaData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case RepositoryModelPackage.DIRECTORY_ELEMENT: {
 				DirectoryElement directoryElement = (DirectoryElement)theEObject;
 				T result = caseDirectoryElement(directoryElement);
+				if (result == null) result = caseRepositoryElement(directoryElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case RepositoryModelPackage.IMPORT_META_DATA: {
 				ImportMetaData importMetaData = (ImportMetaData)theEObject;
 				T result = caseImportMetaData(importMetaData);
+				if (result == null) result = caseTaskData(importMetaData);
+				if (result == null) result = caseDataSet(importMetaData);
+				if (result == null) result = caseRepositoryElement(importMetaData);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.REPOSITORY_ELEMENT: {
+				RepositoryElement repositoryElement = (RepositoryElement)theEObject;
+				T result = caseRepositoryElement(repositoryElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.DATA_SET: {
+				DataSet dataSet = (DataSet)theEObject;
+				T result = caseDataSet(dataSet);
+				if (result == null) result = caseRepositoryElement(dataSet);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.TASK_DATA: {
+				TaskData taskData = (TaskData)theEObject;
+				T result = caseTaskData(taskData);
+				if (result == null) result = caseDataSet(taskData);
+				if (result == null) result = caseRepositoryElement(taskData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -448,6 +505,51 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseImportMetaData(ImportMetaData object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Repository Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Repository Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRepositoryElement(RepositoryElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Data Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Data Set</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDataSet(DataSet object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Task Data</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Task Data</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTaskData(TaskData object) {
 		return null;
 	}
 

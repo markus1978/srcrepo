@@ -4,7 +4,6 @@ package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -21,7 +20,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *
  * @generated
  */
-public abstract class DataStoreMetaDataImpl extends FObjectImpl implements DataStoreMetaData {
+public abstract class DataStoreMetaDataImpl extends DataSetImpl implements DataStoreMetaData {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -39,16 +38,6 @@ public abstract class DataStoreMetaDataImpl extends FObjectImpl implements DataS
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.DATA_STORE_META_DATA;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**

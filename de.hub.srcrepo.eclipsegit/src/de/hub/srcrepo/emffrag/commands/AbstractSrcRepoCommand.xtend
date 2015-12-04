@@ -91,45 +91,63 @@ public class SrcRepo {
 		)
 		
 		var args = argsVal
-		args = if (args.length < 1) {
-			System.out.println("Interactive mode. Enter your command and options ...")
-			val input = new Scanner(System.in).nextLine.trim
-			input.split(" ")	
-		} else {
-			args
-		}
-		
+		var continue = true
 		if (args.length < 1) {
-			System.out.println("No command given. Usage: srcrepo <command> [options...]")
-			System.exit(1)
+			System.out.println("Interactive mode. Enter your command and options ...")
 		}
 		
-		val commandName = args.get(0)
-		val arguments = if (args.length > 1) args.subList(1, args.length) else newArrayList
-		
-		val command = commands.get(commandName)
-		if (command == null) {
-			System.out.println("There is no command " + commandName)
-			System.exit(1)
-		}
-		val options = new Options
-		command.addOptions(options)
-		val clParser = new DefaultParser
-		val cl = try {
-			clParser.parse(options, arguments)
-		} catch (Exception e) {
-			println("Could not parse arguments: " + e.message)
-			println("Ussage: srcrepo <command> [options...]")
-			null
-		}
-		val clIsValid = cl != null && command.validateOptions(cl)
-		if (clIsValid) {
-			command.init(cl)
-			command.run(cl)
-			command.after	
-		} else {
-			new HelpFormatter().printHelp('''srcrepo «commandName» [options...]''', options);
-			System.exit(1)			
+		while (continue) {
+			args = if (args == null || args.length < 1) {	
+				print(">> ")	
+				val input = new Scanner(System.in).nextLine.trim
+				input.split(" ")	
+			} else {
+				continue = false
+				args
+			}
+			
+			if (args.length < 1) {
+				System.out.println("No command given. Usage: srcrepo <command> [options...]")
+				System.exit(1)
+			}
+			
+			val commandName = args.get(0)
+			val arguments = if (args.length > 1) args.subList(1, args.length) else newArrayList
+			
+			val command = commands.get(commandName)
+			if (command == null) {
+				if (commandName == "exit") {
+					continue = false
+				} else {
+					System.out.println("There is no command " + commandName)					
+				}			
+			} else {
+				val options = new Options
+				command.addOptions(options)
+				val clParser = new DefaultParser
+				val cl = try {
+					clParser.parse(options, arguments)
+				} catch (Exception e) {
+					println("Could not parse arguments: " + e.message)
+					println("Ussage: srcrepo <command> [options...]")
+					null
+				}
+				val clIsValid = cl != null && command.validateOptions(cl)
+				if (clIsValid) {
+					try {
+						command.init(cl)
+						command.run(cl)
+						command.after
+					} catch (Exception e) {
+						println("Could not execute command due to exception: " + e.message)
+						e.printStackTrace(System.out)
+					}	
+				} else {
+					new HelpFormatter().printHelp('''srcrepo «commandName» [options...]''', options);		
+				}				
+			}
+			
+			args = null
 		}	
 	}
 }

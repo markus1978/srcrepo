@@ -5,6 +5,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
 
 class ScheduleImportCommand extends AbstractRepositoryCommand {
 	
@@ -14,7 +15,7 @@ class ScheduleImportCommand extends AbstractRepositoryCommand {
 	}
 	
 	override protected def void runOnRepository(RepositoryModelDirectory directory, RepositoryModel it, CommandLine cl) {
-		val importMetaData = it.metaData.importMetaData
+		val importMetaData = it.importMetaData
 		if (!importMetaData.imported && !importMetaData.importing && !importMetaData.scheduled) {
 			System.out.println("Schedule " + it.name)				
 			importMetaData.scheduled = true				
@@ -26,7 +27,7 @@ class ScheduleImportCommand extends AbstractRepositoryCommand {
 			it.metaData.cusWithErrors = 0
 			it.metaData.revsWithErrors = 0
 			
-			it.metaData.dataStoreMetaData = null
+			it.dataSets.remove(it.dataStoreMetaData)
 			
 			importMetaData.imported =  false
 			importMetaData.importing = false				

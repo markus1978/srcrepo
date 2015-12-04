@@ -37,7 +37,10 @@ import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.RepositoryModelRevisionCheckoutVisitor;
 import de.hub.srcrepo.RepositoryModelTraversal;
+import de.hub.srcrepo.RepositoryModelUtil;
 import de.hub.srcrepo.SrcRepoActivator;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -293,7 +296,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			while (scheduledForImportIterator.hasNext()) {
 				// try to create a lock the next possible repositoryModel
 				currentRepositoryModel = scheduledForImportIterator.next();
-				if (currentRepositoryModel.getMetaData() == null || currentRepositoryModel.getMetaData().getImportMetaData() == null) {
+				if ((ImportMetaData)RepositoryModelUtil.getData(currentRepositoryModel, RepositoryModelPackage.eINSTANCE.getImportMetaData()) == null) {
 					continue; // obviously not ready to be imported
 				}
 				String currentRepositoryName = RepositoryModelUtils.qualifiedName(currentRepositoryModel);
@@ -316,8 +319,9 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			
 			// try to update the import status the repository model
 			try {				
-				repositoryModel.getMetaData().getImportMetaData().setScheduled(false);
-				repositoryModel.getMetaData().getImportMetaData().setImporting(true);
+				ImportMetaData importMetaData = RepositoryModelUtil.getData(repositoryModel, RepositoryModelPackage.eINSTANCE.getImportMetaData());
+				importMetaData.setScheduled(false);
+				importMetaData.setImporting(true);
 				repositoryModel.eResource().save(null);
 			} catch (Exception e) {
 				SrcRepoActivator.INSTANCE.error("Unexpected error during updating the import status on the repository.", e);
@@ -329,9 +333,11 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			// creating working copy
 			File workingDirectory = null;
 			try {
-				String repositoryCloneURL = repositoryModel.getMetaData().getOrigin();
+				RepositoryMetaData metaData = RepositoryModelUtil.getData(repositoryModel, RepositoryModelPackage.eINSTANCE.getRepositoryMetaData());
+				ImportMetaData importMetaData = RepositoryModelUtil.getData(repositoryModel, RepositoryModelPackage.eINSTANCE.getImportMetaData());
+				String repositoryCloneURL = metaData.getOrigin();
 				workingDirectory = new File(config.workingcopies, repositoryModelNameAsFileName);
-				repositoryModel.getMetaData().setWorkingCopy(workingDirectory.getAbsolutePath());
+				importMetaData.setWorkingCopy(workingDirectory.getAbsolutePath());
 				
 				SrcRepoActivator.INSTANCE.info("Cloning " + repositoryCloneURL + " into " +  workingDirectory + ".");
 				config.scs.createWorkingCopy(workingDirectory, repositoryCloneURL, true);
@@ -378,9 +384,10 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			
 			// try to update the import status the repository model
 			try {
-				repositoryModel.getMetaData().getImportMetaData().setScheduled(false);
-				repositoryModel.getMetaData().getImportMetaData().setImporting(false);
-				repositoryModel.getMetaData().getImportMetaData().setImported(true);
+				ImportMetaData importMetaData = RepositoryModelUtil.getData(repositoryModel, RepositoryModelPackage.eINSTANCE.getImportMetaData());
+				importMetaData.setScheduled(false);
+				importMetaData.setImporting(false);
+				importMetaData.setImported(true);
 			} catch (Exception e) {
 				SrcRepoActivator.INSTANCE.error("Unexpected error during updating the import status on the repository.", e);
 			}			

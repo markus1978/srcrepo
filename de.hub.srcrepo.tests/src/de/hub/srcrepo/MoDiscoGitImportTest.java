@@ -39,11 +39,15 @@ import org.junit.Test;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.RepositoryModelTraversal.Stats;
 import de.hub.srcrepo.ocl.OclUtil;
+import de.hub.srcrepo.repositorymodel.DataSet;
+import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
+import static de.hub.srcrepo.RepositoryModelUtil.*;
 
 public class MoDiscoGitImportTest {
 	
@@ -138,14 +142,13 @@ public class MoDiscoGitImportTest {
 	}
 	
 	protected void assertMetaData(RepositoryModel repositoryModel) {
-		RepositoryMetaData metaData = repositoryModel.getMetaData();
+		RepositoryMetaData metaData = getMetaData(repositoryModel);
 		Assert.assertNotNull(metaData.getOrigin());
 		Assert.assertNotNull(metaData.getNewestRev());
 		Assert.assertNotNull(metaData.getOldestRev());
 		Assert.assertTrue(metaData.getNewestRev().getTime() > metaData.getOldestRev().getTime());
-		Assert.assertNotNull(metaData.getImportMetaData());
-		Assert.assertNotNull(metaData.getImportMetaData().getImportStatsAsJSON());
-		Assert.assertNotNull(metaData.getImportMetaData().getImportStats());
+		Assert.assertNotNull(getImportMetaData(repositoryModel));
+		Assert.assertNotNull(getImportMetaData(repositoryModel).getStatsAsJSON());
 		Assert.assertEquals(16, metaData.getRevCount());
 		Assert.assertEquals(19, metaData.getCuCount());	
 		Assert.assertEquals(1, metaData.getCusWithErrors());
@@ -172,11 +175,25 @@ public class MoDiscoGitImportTest {
 		final PrintStream out = new PrintStream(new ByteArrayOutputStream()); // write to nothing
 		final Collection<String> rootNames = new HashSet<String>();
 		//final PrintStream out = System.out;
-		Stats stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {			
+		Stats stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
 			@Override
 			protected void onRev(Rev rev, Model model) {				
 				try {
 					Assert.assertTrue("Revs should not be visited twice", visitedRevNames.add(rev.getName()));
+					
+					// assert LOC measures for the initial commit
+					if (rev.getName().equals("4e238b9752b33e18301bb0849ec9b5319a8cfa09")) {
+						boolean hasRevisionWithRequiredLOCMetric = false;
+						for (Diff diff: rev.getParentRelations().get(0).getDiffs()) {
+							if (diff.getFile() != null && diff.getFile() instanceof JavaCompilationUnitRef) {
+								DataSet locMetrics = RepositoryModelUtil.getData(diff.getFile(), "LOC-metrics");
+								Assert.assertNotNull(locMetrics);
+								Assert.assertEquals(4, locMetrics.getData().get("ncss"));
+								hasRevisionWithRequiredLOCMetric = true;
+							}
+						}
+						Assert.assertTrue(hasRevisionWithRequiredLOCMetric);
+					}
 					
 					if (RepositoryModelUtil.isRoot(rev)) {
 						rootNames.add(rev.getName());

@@ -1,6 +1,7 @@
 package de.hub.srcrepo;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +50,7 @@ import de.hub.jstattrack.services.WindowedPlot;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.ImportMetaData;
@@ -56,8 +58,12 @@ import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
+import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
+import javancss.Javancss;
+
+import static de.hub.srcrepo.RepositoryModelUtil.*;
 
 @SuppressWarnings("restriction")
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {
@@ -67,6 +73,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	protected final JavaPackage javaPackage;
 	protected final RepositoryModel repositoryModel;
 	protected final RepositoryModelFactory repositoryFactory;
+	protected final RepositoryModelPackage repositoryPackage;
 
 	// volatile
 	private IProject[] allProjects;
@@ -87,6 +94,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private static final TimeStatistic revCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision checkout time");
 	private static final TimeStatistic revRefreshStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time");
 	private static final TimeStatistic revImportTimeStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision import time");
+	private static final TimeStatistic revLOCTimeStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision LOC time");
 	private static final ValueStatistic revImportSizeStat = new ValueStatistic("#").with(Summary.class).with(Histogram.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Imported Java diffs / revision");
 	
 	private static final TimeStatistic revRefreshStructure = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (project structure)");
@@ -97,6 +105,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private static final ValueStatistic revNumberOfChangedProjectFiles = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision number of changed project files");
 	
 	private final RepositoryMetaData repositoryMetaData;
+	private final ImportMetaData importMetaData;
 	private long cuCount = 0;
 	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
@@ -105,6 +114,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		
 		this.sourceControlSystem = sourceControlSystem;
 		this.repositoryFactory = (RepositoryModelFactory)repositoryModel.eClass().getEPackage().getEFactoryInstance();
+		this.repositoryPackage = (RepositoryModelPackage)repositoryFactory.getEPackage();
 		this.repositoryModel = repositoryModel;
 		
 	
@@ -112,24 +122,18 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		this.absoluteWorkingDirectoryPath = new Path(sourceControlSystem.getWorkingCopy().getAbsolutePath());
 		Collections.addAll(javaLikeExtensions, JavaCore.getJavaLikeExtensions());
 		
-		if (repositoryModel.getMetaData() == null) {
-			repositoryMetaData = repositoryFactory.createRepositoryMetaData();
-			repositoryModel.setMetaData(repositoryMetaData);
-			ImportMetaData importMetaData = repositoryFactory.createImportMetaData();
-			repositoryMetaData.setImportMetaData(importMetaData);
-		} else {
-			repositoryMetaData = repositoryModel.getMetaData();
-		}
-		
-		repositoryMetaData.getImportMetaData().setImportDate(new Date());
-		repositoryMetaData.getImportMetaData().setScheduled(false);
-		repositoryMetaData.getImportMetaData().setImported(false);
-		repositoryMetaData.getImportMetaData().setImporting(true);
+		repositoryMetaData = getMetaData(repositoryModel);
+		importMetaData = getImportMetaData(repositoryModel);
+				
+		importMetaData.setDate(new Date());
+		importMetaData.setScheduled(false);
+		importMetaData.setImported(false);
+		importMetaData.setImporting(true);
 		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
 		cuCount = repositoryMetaData.getCuCount();
 	}
 	
-	protected void updateDataStoreMetaData(RepositoryMetaData metaData, RepositoryModel model) {
+	protected void updateDataStoreMetaData(RepositoryModel model) {
 		
 	}
 
@@ -227,10 +231,15 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						repositoryMetaData.setCusWithErrors(repositoryMetaData.getCusWithErrors() + 1);
 					}
 				}
+				importTimer.track();
+				
+				Timer locTimer = revLOCTimeStat.timer();
+				runJob(new GetLOCCount(javaDiffs));
+				locTimer.track();
 			} else {
 				revImportSizeStat.track(0);
+				importTimer.track();
 			}
-			importTimer.track();	
 		} else {
 			revRefreshStat.timer().track();
 			revImportTimeStat.timer().track();
@@ -581,7 +590,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					ref.setCompilationUnitModel(compilationUnitModel);
 					compilationUnitModel.setCompilationUnit(importedCompilationUnit);
 					compilationUnitModel.setJavaModel(javaModel);
-					ref.setPath(compilationUnit.getPath().toOSString());
+					String scsPath = sourceControlSystem.getWorkingCopy().getAbsolutePath();
+					
+					IProject project = compilationUnit.getJavaProject().getProject();
+					String projectFullPath = project.getRawLocation().toOSString();
+					projectFullPath = projectFullPath.substring(scsPath.length());
+					ref.setPath(projectFullPath + "/" + compilationUnit.getResource().getProjectRelativePath());
 					
 					// save targets
 					for(Map.Entry<String, NamedElement> target: bindings.getTargets().entrySet()) {
@@ -613,6 +627,46 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		}		
 	}
 	
+	private class GetLOCCount extends WorkspaceJob {
+		
+		private final Map<ICompilationUnit, Diff> javaDiffs;	
+
+		public GetLOCCount(Map<ICompilationUnit, Diff> javaDiffs) {
+			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " cound LOC metrics for current ref.");
+			this.javaDiffs = javaDiffs;
+		}
+
+		@Override
+		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			SrcRepoActivator.INSTANCE.info("about to count LOC metrics for " + javaDiffs.size() + " compilation units");
+			String absoluteScsPath = sourceControlSystem.getWorkingCopy().getAbsolutePath();
+			int count = 0;
+			for(Diff diff: javaDiffs.values()) {
+				try {
+					Javancss ncss = new Javancss(new File(absoluteScsPath + diff.getFile().getPath()));	
+					DataSet dataSet = repositoryFactory.createDataSet();
+					dataSet.setData(new HashMap<String,Serializable>());
+					diff.getFile().getDataSets().add(dataSet);
+					dataSet.setName("LOC-metrics");
+					
+					if (ncss.getLastError() != null) {
+						SrcRepoActivator.INSTANCE.error("Error during counting LOC-metrics.", (Exception)ncss.getLastError());
+						dataSet.getData().put("error", ncss.getLastErrorMessage());
+					} else {					
+						dataSet.getData().put("loc", ncss.getLOC());
+						dataSet.getData().put("ncss", ncss.getNcss());
+						dataSet.getData().put("comments", ncss.getJdcl() + ncss.getSl() + ncss.getMl());
+					}
+				} catch (Exception e) {
+					SrcRepoActivator.INSTANCE.error("Exception during counting LOC-metrics.", e);		
+				}
+			}										
+				
+			SrcRepoActivator.INSTANCE.info("counted " + count + " compilation units");
+			return Status.OK_STATUS;
+		}		
+	}
+	
 	private void reportImportError(Rev rev, String message, Throwable e, boolean controlledFail) {
 		if (e != null) {
 			message += ": " + e.getMessage() + "[" + e.getClass().getCanonicalName() + "].";
@@ -635,13 +689,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 	@Override
 	public void close() {
-		repositoryMetaData.getImportMetaData().setImportDate(new Date());
+		importMetaData.setDate(new Date());
 		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
 		repositoryMetaData.setCuCount(cuCount);
-		repositoryMetaData.getImportMetaData().setImportStats(Statistics.reportToString());
-		repositoryMetaData.getImportMetaData().setImportStatsAsJSON(Statistics.reportToJSON().toString(1));
-		repositoryMetaData.getImportMetaData().setImported(true);
-		repositoryMetaData.getImportMetaData().setImporting(false);
-		updateDataStoreMetaData(repositoryMetaData, repositoryModel);
+		importMetaData.setStatsAsJSON(Statistics.reportToJSON().toString(1));
+		importMetaData.setImported(true);
+		importMetaData.setImporting(false);
+		updateDataStoreMetaData(repositoryModel);
 	}
 }

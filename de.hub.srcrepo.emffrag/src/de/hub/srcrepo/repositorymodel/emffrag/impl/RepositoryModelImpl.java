@@ -6,7 +6,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import de.hub.srcrepo.repositorymodel.Ref;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.TraversalState;
@@ -24,7 +23,6 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getAllRevs <em>All Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getRootRevs <em>Root Revs</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getTraversals <em>Traversals</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelImpl#getMetaData <em>Meta Data</em>}</li>
  * </ul>
  *
  * @generated
@@ -95,24 +93,6 @@ public class RepositoryModelImpl extends DirectoryElementImpl implements Reposit
 	 */
 	public void setTraversals(TraversalState newTraversals) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__TRAVERSALS, newTraversals);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RepositoryMetaData getMetaData() {
-		return (RepositoryMetaData)eGet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__META_DATA, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setMetaData(RepositoryMetaData newMetaData) {
-		eSet(RepositoryModelPackage.Literals.REPOSITORY_MODEL__META_DATA, newMetaData);
 	}
 
 } //RepositoryModelImpl

@@ -3,6 +3,7 @@
 package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ImportError;
 import de.hub.srcrepo.repositorymodel.ImportMetaData;
@@ -169,6 +170,15 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	ImportMetaData createImportMetaData();
+
+	/**
+	 * Returns a new object of class '<em>Data Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Data Set</em>'.
+	 * @generated
+	 */
+	DataSet createDataSet();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -6,9 +6,15 @@ import java.util.Map;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
+import de.hub.srcrepo.repositorymodel.DataSet;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
+import de.hub.srcrepo.repositorymodel.RepositoryElement;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -72,5 +78,51 @@ public class RepositoryModelUtil {
 			}
 		}
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends DataSet> T getData(RepositoryElement element, String name) {
+		for(DataSet dataSet: element.getDataSets()) {
+			if (name.equals(dataSet.getName())) {
+				return (T)dataSet;
+			}
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends DataSet> T getData(RepositoryElement element, EClass clazz) {
+		for(DataSet dataSet: element.getDataSets()) {
+			if (clazz.isSuperTypeOf(dataSet.eClass())) {
+				return (T)dataSet;
+			}
+		}
+		
+		DataSet data = (DataSet)element.eClass().getEPackage().getEFactoryInstance().create(clazz);
+		element.getDataSets().add(data);
+		return (T)data;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends DataSet> T getData(RepositoryElement element, Class<T> clazz) {
+		for(DataSet dataSet: element.getDataSets()) {
+			if (clazz.isAssignableFrom(dataSet.getClass())) {
+				return (T)dataSet;
+			}
+		}
+		
+		return null;
+	}
+	
+	public static ImportMetaData getImportMetaData(RepositoryModel model) {
+		return getData(model, ((RepositoryModelPackage)model.eClass().getEPackage()).getImportMetaData());
+	}
+	
+	public static RepositoryMetaData getMetaData(RepositoryModel model) {
+		return getData(model, ((RepositoryModelPackage)model.eClass().getEPackage()).getRepositoryMetaData());
+	}
+	
+	public static DataStoreMetaData getDataStoreMetaData(RepositoryModel model) {
+		return getData(model, DataStoreMetaData.class);
 	}
 }

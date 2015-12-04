@@ -2,7 +2,9 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.srcrepo.repositorymodel.*;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -10,6 +12,23 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataSet;
+import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
+import de.hub.srcrepo.repositorymodel.ParentRelation;
+import de.hub.srcrepo.repositorymodel.PendingElement;
+import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
+import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -72,6 +91,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: return createRepositoryModelDirectory();
 			case RepositoryModelPackage.MONGO_DB_META_DATA: return createMongoDBMetaData();
 			case RepositoryModelPackage.IMPORT_META_DATA: return createImportMetaData();
+			case RepositoryModelPackage.DATA_SET: return createDataSet();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -87,6 +107,8 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 		switch (eDataType.getClassifierID()) {
 			case RepositoryModelPackage.CHANGE_TYPE:
 				return createChangeTypeFromString(eDataType, initialValue);
+			case RepositoryModelPackage.EDATA_MAP:
+				return createEDataMapFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -102,6 +124,8 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 		switch (eDataType.getClassifierID()) {
 			case RepositoryModelPackage.CHANGE_TYPE:
 				return convertChangeTypeToString(eDataType, instanceValue);
+			case RepositoryModelPackage.EDATA_MAP:
+				return convertEDataMapToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -262,6 +286,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public DataSet createDataSet() {
+		DataSetImpl dataSet = new DataSetImpl();
+		return dataSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ChangeType createChangeTypeFromString(EDataType eDataType, String initialValue) {
 		return (ChangeType)super.createFromString(eDataType, initialValue);
 	}
@@ -273,6 +307,25 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 */
 	public String convertChangeTypeToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, Serializable> createEDataMapFromString(EDataType eDataType, String initialValue) {
+		return (Map<String, Serializable>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertEDataMapToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

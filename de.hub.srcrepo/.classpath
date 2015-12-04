@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="src" path="xtend-gen"/>
+	<classpathentry exported="true" kind="lib" path="ilib/javancss-ccl.jar"/>
+	<classpathentry exported="true" kind="lib" path="ilib/javancss-34.55.jar" sourcepath="ilib/javancss-34.55-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jars/commons-exec-1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jars/jsr305-1.3.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bundles/guava-18.0.jar"/>

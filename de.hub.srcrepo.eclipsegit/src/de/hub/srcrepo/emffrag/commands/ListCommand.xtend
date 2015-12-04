@@ -7,21 +7,22 @@ import java.text.DecimalFormat
 import org.apache.commons.cli.CommandLine
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
 
 class ListCommand extends AbstractRepositoryCommand {
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
 		val countFormat = new DecimalFormat("#,###,###,###")
-		val size = if (model.metaData.dataStoreMetaData instanceof MongoDBMetaData) {
-			countFormat.format((model.metaData.dataStoreMetaData as MongoDBMetaData).storeSize / 1000000) + "MB"
+		val size = if (model.dataStoreMetaData instanceof MongoDBMetaData) {
+			countFormat.format((model.dataStoreMetaData as MongoDBMetaData).storeSize / 1000000) + "MB"
 		} else {
 			"unknown"
 		}
-		val status = if (model.metaData.importMetaData.imported) {
+		val status = if (model.importMetaData.imported) {
 			"imported"
-		} else if (model.metaData.importMetaData.scheduled) {
+		} else if (model.importMetaData.scheduled) {
 			"scheduled"
-		} else if (model.metaData.importMetaData.importing) {
+		} else if (model.importMetaData.importing) {
 			"importing"
 		} else {
 			"listed only"

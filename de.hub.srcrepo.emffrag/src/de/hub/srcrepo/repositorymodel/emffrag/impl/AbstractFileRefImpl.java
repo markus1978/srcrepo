@@ -4,7 +4,6 @@ package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -21,7 +20,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *
  * @generated
  */
-public abstract class AbstractFileRefImpl extends FObjectImpl implements AbstractFileRef {
+public abstract class AbstractFileRefImpl extends RepositoryElementImpl implements AbstractFileRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -39,16 +38,6 @@ public abstract class AbstractFileRefImpl extends FObjectImpl implements Abstrac
 	@Override
 	protected EClass eStaticClass() {
 		return RepositoryModelPackage.Literals.ABSTRACT_FILE_REF;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected int eStaticFeatureCount() {
-		return 0;
 	}
 
 	/**

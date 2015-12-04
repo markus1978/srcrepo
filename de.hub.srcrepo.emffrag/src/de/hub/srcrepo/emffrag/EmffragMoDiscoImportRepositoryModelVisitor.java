@@ -9,9 +9,9 @@ import de.hub.emffrag.datastore.IDataStore;
 import de.hub.emffrag.fragmentation.FObject;
 import de.hub.srcrepo.ISourceControlSystem;
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor;
+import de.hub.srcrepo.RepositoryModelUtil;
 import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 
@@ -39,17 +39,13 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 	}
 
 	@Override
-	protected void updateDataStoreMetaData(RepositoryMetaData metaData, RepositoryModel model) {
+	protected void updateDataStoreMetaData(RepositoryModel model) {
 		IDataStore dataStore = ((FObject)model).fFragmentation().getDataStore();
 		Object statObject = dataStore.getStats();
 		if (statObject instanceof Map<?, ?>) {
 			Map<?,?> stats = (Map<?,?>)statObject;
 			if (stats.keySet().containsAll(Arrays.asList("ns", "serverUsed", "count", "avgObjSize", "storageSize"))) {
-				MongoDBMetaData dataStoreMetaData = (MongoDBMetaData)metaData.getDataStoreMetaData();
-				if (dataStoreMetaData == null) {
-					dataStoreMetaData = repositoryFactory.createMongoDBMetaData();
-					metaData.setDataStoreMetaData(dataStoreMetaData);
-				}
+				MongoDBMetaData dataStoreMetaData = RepositoryModelUtil.getData(model, repositoryPackage.getMongoDBMetaData());				
 				dataStoreMetaData.setNs((String)stats.get("ns"));
 				dataStoreMetaData.setServer((String)stats.get("serverUsed"));
 				dataStoreMetaData.setCount(((Number)stats.get("count")).longValue());

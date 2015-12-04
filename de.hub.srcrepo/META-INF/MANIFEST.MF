@@ -28,6 +28,8 @@ Export-Package: de,
 Bundle-ClassPath: .,
  lib/bundles/guava-18.0.jar,
  lib/jars/jsr305-1.3.9.jar,
- lib/jars/commons-exec-1.3.jar
+ lib/jars/commons-exec-1.3.jar,
+ ilib/javancss-34.55.jar,
+ ilib/javancss-ccl.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

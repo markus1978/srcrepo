@@ -2,11 +2,32 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
-import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
+
+import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataSet;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.DirectoryElement;
+import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
+import de.hub.srcrepo.repositorymodel.ParentRelation;
+import de.hub.srcrepo.repositorymodel.PendingElement;
+import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryElement;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
+import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
+import de.hub.srcrepo.repositorymodel.TaskData;
+import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -136,6 +157,18 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseImportMetaData(ImportMetaData object) {
 				return createImportMetaDataAdapter();
+			}
+			@Override
+			public Adapter caseRepositoryElement(RepositoryElement object) {
+				return createRepositoryElementAdapter();
+			}
+			@Override
+			public Adapter caseDataSet(DataSet object) {
+				return createDataSetAdapter();
+			}
+			@Override
+			public Adapter caseTaskData(TaskData object) {
+				return createTaskDataAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -406,6 +439,48 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createImportMetaDataAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.RepositoryElement <em>Repository Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryElement
+	 * @generated
+	 */
+	public Adapter createRepositoryElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.DataSet <em>Data Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.DataSet
+	 * @generated
+	 */
+	public Adapter createDataSetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.TaskData <em>Task Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.hub.srcrepo.repositorymodel.TaskData
+	 * @generated
+	 */
+	public Adapter createTaskDataAdapter() {
 		return null;
 	}
 
