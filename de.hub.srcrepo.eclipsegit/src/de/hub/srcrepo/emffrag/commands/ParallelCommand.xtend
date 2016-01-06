@@ -1,5 +1,6 @@
 package de.hub.srcrepo.emffrag.commands
 
+import de.hub.emffrag.fragmentation.Fragmentation
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import java.io.File
@@ -26,6 +27,10 @@ class ParallelCommand extends AbstractRepositoryCommand {
 	
 	var CommandLine cl = null
 	var PrintWriter out = null
+
+	override def getConfig() {
+		return Fragmentation::READONLY.bitwiseOr(Fragmentation::NO_PROXIES) as byte
+	}
 
 	private def dateTime() {
 		new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date.newInstance)

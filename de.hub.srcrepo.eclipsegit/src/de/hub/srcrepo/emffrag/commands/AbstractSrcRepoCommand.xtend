@@ -33,6 +33,8 @@ abstract class AbstractSrcRepoCommand {
 		EmfFragActivator::instance.logInStandAlone = cl.hasOption("log")
 		EmfFragMongoDBActivator::standalone()
 		SrcRepoActivator::standalone
+		
+		Fragmentation.config = config;
 
 		this.modelURI = URI.createURI(if (cl.hasOption("m")) cl.getOptionValue("m") else defaultModelURI)
 		fs = new FragmentationSet(if (cl.hasOption("cache")) Integer.parseInt(cl.getOptionValue("cache")) else defaultCacheSize, [uri|DataStoreImpl::createDataStore(uri)])		
@@ -45,6 +47,10 @@ abstract class AbstractSrcRepoCommand {
 			directory = null
 		}
 	}
+	
+	protected def byte getConfig() {
+		return Fragmentation::NONE;
+	} 
 		
 	protected def addOptions(Options options) {
 		options.addOption(Option.builder().longOpt("log").desc("Prints log output.").build)

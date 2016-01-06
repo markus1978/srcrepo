@@ -2,34 +2,45 @@ package de.hub.srcrepo.emffrag.commands
 
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable
+import de.hub.emffrag.fragmentation.FObject
+import de.hub.emffrag.fragmentation.Fragmentation
+import de.hub.emffrag.proxies.Proxy
+import de.hub.jstattrack.Statistics
 import de.hub.jstattrack.TimeStatistic
+import de.hub.jstattrack.TimeStatistic.Timer
 import de.hub.jstattrack.services.BatchedPlot
 import de.hub.jstattrack.services.Histogram
 import de.hub.jstattrack.services.Summary
 import de.hub.jstattrack.services.WindowedPlot
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import java.io.File
 import java.io.PrintWriter
+import java.util.List
 import java.util.concurrent.TimeUnit
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.json.JSONArray
 import org.json.JSONObject
 
-import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
-import java.util.List
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
+import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
 class ImportDataCommand extends AbstractRepositoryCommand {
 	
-	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, "Traverse execution time for 1k objects");
+	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, "Traverse execution time for 100k objects");
 	private var withElementCount = false
 	private var CommandLine cl = null
 	private var List<String> data = newArrayList
+	
+	override def getConfig() {
+		return Fragmentation::READONLY.bitwiseOr(Fragmentation::NO_NOTIFY).bitwiseOr(Fragmentation::NO_PROXIES) as byte
+	}
 	
 	private def toIterable(JSONArray jsonArray) {
 		return new FluentIterable<JSONObject> {			
@@ -69,7 +80,8 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
 		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
 		val elementCountResult = if (withElementCount) { repo.countObjects }
-		val statJSON = new JSONArray(repo.importMetaData.statsAsJSON)
+		val importStatJSON = new JSONArray(repo.importMetaData.statsAsJSON)
+		val dataStatJSON = Statistics.reportToJSON
 		data += '''
 			{
 				1_name : "«repo.qualifiedName»",
@@ -82,13 +94,15 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 					2_elementCount : «elementCountResult.get("count")»,
 					2_SLOC : «elementCountResult.get("ncss")»,
 				«ENDIF»
-				«statSummaryData(statJSON, "Revision checkout time", "3_checkoutTime")»,
-				«statSummaryData(statJSON, "Revision refresh time", "4_refreshTime")»,
-				«statSummaryData(statJSON, "Revision import time", "5_importTime")»,
-				«statSummaryData(statJSON, "Write execution times", "6_writeTime")»,
-				«statSummaryData(statJSON, "Revision LOC time", "7_locTime")»,
-				«IF withElementCount»
-					8_traverseTime : «elementCountResult.get("time")»
+				«statSummaryData(importStatJSON, "Revision checkout time", "3_checkoutTime")»,
+				«statSummaryData(importStatJSON, "Revision refresh time", "4_refreshTime")»,
+				«statSummaryData(importStatJSON, "Revision import time", "5_importTime")»,
+				«statSummaryData(importStatJSON, "Write execution times", "6_writeTime")»,
+				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
+				«IF withElementCount»					
+					«statSummaryData(dataStatJSON, "Traverse execution time for 100k objects", "8_traverseTime")»,
+					«statSummaryData(dataStatJSON, "Load fragment execution time", "9_loadTime")»,
+					«statSummaryData(dataStatJSON, "GC execution time", "10_gcTime")»,
 				«ENDIF»
 			}
 		'''.toString
@@ -107,30 +121,52 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 			return ''''''
 		}
 	}
-		
-	private def countObjects(RepositoryModel model) {	
-		val startTime = System.currentTimeMillis
-		var long count = 0
-		var long ncss = 0
-		val i = model.eAllContents
-		var timer = traverseOneKObjectsExecTimeStat.timer
+	
+	private def void countFObjects(FObject fObject, (EObject)=>void apply) {
+		val i = fObject.eAllContents
 		while (i.hasNext) {
-			val next = i.next
-			count++
-			if ((count +1) % 1000 == 0) {
-				timer.track
-				timer = traverseOneKObjectsExecTimeStat.timer
-			}
-			if ((count +1) % 100000 == 0) {
-				if (cl.hasOption("v")) { print(".") }
-			}
-			if (next instanceof JavaCompilationUnitRef) {
-				ncss += (next?.getData("LOC-metrics")?.data?.get("ncss") as Integer)?:0
+			val next = i.next as FObject
+			apply.apply(next)
+			if (next.fIsRoot) {
+				next.fFragment.fHold(true)
+				next.countFObjects(apply)				
+				i.prune
+				next.fFragment.fHold(false)
 			}
 		}
-		val time = System.currentTimeMillis - startTime
+	}
+	
+	var long count = 0
+	var long ncss = 0
+	var Timer timer = null	
+		
+	private def countObjects(RepositoryModel modelProxy) {
+		var model = (modelProxy as Proxy).fSource as RepositoryModel
+		val fragment = (model as FObject).fFragment
+		val uri = EcoreUtil::getURI(model)
+		val fragmentation = fragment.fFragmentation
+		fragmentation.unloadFragment(fragment)
+		model = fragmentation.resourceSet.getEObject(uri, true) as RepositoryModel
+		(model as FObject).fFragment.fHold(true)
+			
+		count = 0
+		ncss = 0
+		timer = traverseOneKObjectsExecTimeStat.timer
+		
+		countFObjects(model as FObject) [	
+			count++	
+			if ((count +1) % 100000 == 0) {
+				timer.track
+				timer = traverseOneKObjectsExecTimeStat.timer
+				if (cl.hasOption("v")) { print(".") }
+			}
+			if (it instanceof JavaCompilationUnitRef) {
+				ncss += (it?.getData("LOC-metrics")?.data?.get("ncss") as Integer)?:0
+			}
+		]
+		
 		timer.track
-		return newHashMap("time" -> time, "count" -> count, "ncss"-> ncss)
+		return newHashMap("count" -> count, "ncss"-> ncss)
 	}
 	
 	override protected addOptions(Options options) {

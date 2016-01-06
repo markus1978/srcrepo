@@ -47,7 +47,7 @@ public class DiffImpl extends FObjectImpl implements Diff {
 	protected DiffImpl() {
 		super();
 		testCache.put(this, counter++);
-		if (counter % 1000 == 0) {
+		if (counter % 10000 == 0) {
 			// run gc, after that measure memory
 			for (int i = 0; i < 2; i++) {
 				Object obj = new Object();
