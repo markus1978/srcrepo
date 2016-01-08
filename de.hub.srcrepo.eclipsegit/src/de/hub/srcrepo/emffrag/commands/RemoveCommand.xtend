@@ -1,6 +1,6 @@
 package de.hub.srcrepo.emffrag.commands
 
-import de.hub.emffrag.fragmentation.FObject
+import de.hub.emffrag.FObject
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import org.apache.commons.cli.CommandLine

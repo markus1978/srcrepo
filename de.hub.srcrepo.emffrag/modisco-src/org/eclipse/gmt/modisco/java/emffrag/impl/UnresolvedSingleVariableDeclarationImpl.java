@@ -14,8 +14,6 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Unresolved Single Variable Declaration</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

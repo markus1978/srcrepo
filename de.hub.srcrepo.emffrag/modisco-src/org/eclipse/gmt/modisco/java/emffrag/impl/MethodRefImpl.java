@@ -20,12 +20,12 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.MethodRefImpl#getMethod <em>Method</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.MethodRefImpl#getQualifier <em>Qualifier</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.MethodRefImpl#getParameters <em>Parameters</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

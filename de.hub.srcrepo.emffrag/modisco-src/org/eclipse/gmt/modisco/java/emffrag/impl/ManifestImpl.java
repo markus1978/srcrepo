@@ -13,7 +13,7 @@ import org.eclipse.gmt.modisco.java.ManifestAttribute;
 import org.eclipse.gmt.modisco.java.ManifestEntry;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.emffrag.FObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,11 +21,11 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ManifestImpl#getMainAttributes <em>Main Attributes</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ManifestImpl#getEntryAttributes <em>Entry Attributes</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

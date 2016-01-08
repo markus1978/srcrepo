@@ -18,11 +18,11 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.InstanceofExpressionImpl#getRightOperand <em>Right Operand</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.InstanceofExpressionImpl#getLeftOperand <em>Left Operand</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

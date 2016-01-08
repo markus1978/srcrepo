@@ -1,6 +1,5 @@
 package de.hub.srcrepo.emffrag.commands
 
-import de.hub.emffrag.fragmentation.Fragmentation
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
@@ -11,10 +10,6 @@ import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
 class ListCommand extends AbstractRepositoryCommand {
-	
-	override def getConfig() {
-		return Fragmentation::READONLY.bitwiseOr(Fragmentation::NO_PROXIES) as byte
-	}
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
 		val countFormat = new DecimalFormat("#,###,###,###")

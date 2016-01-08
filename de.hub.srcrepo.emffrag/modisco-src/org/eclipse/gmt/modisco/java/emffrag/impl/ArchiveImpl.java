@@ -19,12 +19,12 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ArchiveImpl#getOriginalFilePath <em>Original File Path</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ArchiveImpl#getClassFiles <em>Class Files</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ArchiveImpl#getManifest <em>Manifest</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -18,10 +18,10 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.EnumDeclarationImpl#getEnumConstants <em>Enum Constants</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

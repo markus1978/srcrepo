@@ -2,10 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
+import de.hub.emffrag.FObjectImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.RepositoryElement;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;

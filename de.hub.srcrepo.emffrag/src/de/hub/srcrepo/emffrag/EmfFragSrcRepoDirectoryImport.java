@@ -21,14 +21,11 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
 import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.Fragmentation;
+import de.hub.emffrag.FragmentationSet;
 import de.hub.emffrag.datastore.DataStoreImpl;
 import de.hub.emffrag.datastore.IBaseDataStore;
 import de.hub.emffrag.datastore.IDataStore;
-import de.hub.emffrag.datastore.WriteCachingDataStore;
-import de.hub.emffrag.fragmentation.Fragmentation;
-import de.hub.emffrag.fragmentation.FragmentationSet;
-import de.hub.emffrag.hbase.EmfFragHBaseActivator;
-import de.hub.emffrag.hbase.HBaseDataStore;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.GitSourceControlSystem;
@@ -209,7 +206,6 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		EmfFragActivator.class.getName();
 		SrcRepoActivator.class.getName();
 		EmfFragMongoDBActivator.class.getName();
-		EmfFragHBaseActivator.class.getName();
 		
 		// checking command line options
 		final Map<?,?> args = context.getArguments();
@@ -259,7 +255,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 	}
 	
 	public static FragmentationSet openFragmentationSet(Configuration config) {	
-		return new FragmentationSet(config.fragmentCacheSize, new IDataStore.IDataStoreFactory() {			
+		return new FragmentationSet(null, new IDataStore.IDataStoreFactory() {			
 			@Override
 			public IDataStore createDataStore(URI uri) {
 				IBaseDataStore baseDataStore = null;
@@ -267,15 +263,14 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 					MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(uri.authority(), uri.path().substring(1), false);
 					baseDataStore = mongoDbBaseDataStore;
 					
-				} else if ("hbase".equals(uri.scheme())) {
-					HBaseDataStore hbaseBaseDataStore = new HBaseDataStore(uri.path().substring(1), false);
-					baseDataStore = new WriteCachingDataStore(hbaseBaseDataStore, hbaseBaseDataStore, 100);
+				} else {
+					throw new RuntimeException("Unknown scheme " + uri.scheme());
 				}
 				
 				IDataStore dataStore = new DataStoreImpl(baseDataStore, uri);
 				return dataStore;
 			}
-		});
+		}, config.fragmentCacheSize);
 	}
 	
 	public static RepositoryModel importRepository(Configuration config) {
@@ -288,7 +283,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		File lockFile = null;
 		try {
 			// find a repository to import
-			RepositoryModelDirectory directory = (RepositoryModelDirectory)fragmentation.getRootFragment().getContents().get(0);
+			RepositoryModelDirectory directory = (RepositoryModelDirectory)fragmentation.getRoot();
 			List<RepositoryModel> scheduledForImport = RepositoryModelUtils.scheduledForImport(directory);
 			Iterator<RepositoryModel> scheduledForImportIterator = scheduledForImport.iterator();			
 			String repositoryModelNameAsFileName = null;

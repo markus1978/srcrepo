@@ -18,11 +18,11 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.AnnotationMemberValuePairImpl#getMember <em>Member</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.AnnotationMemberValuePairImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

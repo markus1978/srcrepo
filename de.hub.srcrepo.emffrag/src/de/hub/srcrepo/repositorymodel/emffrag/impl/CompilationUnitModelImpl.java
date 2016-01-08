@@ -2,12 +2,12 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
+import de.hub.emffrag.FObjectImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Target;

@@ -76,22 +76,22 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case RepositoryModelPackage.REPOSITORY_MODEL: return createRepositoryModel();
-			case RepositoryModelPackage.REV: return createRev();
-			case RepositoryModelPackage.REF: return createRef();
-			case RepositoryModelPackage.DIFF: return createDiff();
-			case RepositoryModelPackage.PARENT_RELATION: return createParentRelation();
-			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return createJavaCompilationUnitRef();
-			case RepositoryModelPackage.TRAVERSAL_STATE: return createTraversalState();
-			case RepositoryModelPackage.PENDING_ELEMENT: return createPendingElement();
-			case RepositoryModelPackage.TARGET: return createTarget();
-			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return createCompilationUnitModel();
-			case RepositoryModelPackage.IMPORT_ERROR: return createImportError();
-			case RepositoryModelPackage.REPOSITORY_META_DATA: return createRepositoryMetaData();
-			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: return createRepositoryModelDirectory();
-			case RepositoryModelPackage.MONGO_DB_META_DATA: return createMongoDBMetaData();
-			case RepositoryModelPackage.IMPORT_META_DATA: return createImportMetaData();
-			case RepositoryModelPackage.DATA_SET: return createDataSet();
+			case RepositoryModelPackage.REPOSITORY_MODEL: return (EObject)createRepositoryModel();
+			case RepositoryModelPackage.REV: return (EObject)createRev();
+			case RepositoryModelPackage.REF: return (EObject)createRef();
+			case RepositoryModelPackage.DIFF: return (EObject)createDiff();
+			case RepositoryModelPackage.PARENT_RELATION: return (EObject)createParentRelation();
+			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return (EObject)createJavaCompilationUnitRef();
+			case RepositoryModelPackage.TRAVERSAL_STATE: return (EObject)createTraversalState();
+			case RepositoryModelPackage.PENDING_ELEMENT: return (EObject)createPendingElement();
+			case RepositoryModelPackage.TARGET: return (EObject)createTarget();
+			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return (EObject)createCompilationUnitModel();
+			case RepositoryModelPackage.IMPORT_ERROR: return (EObject)createImportError();
+			case RepositoryModelPackage.REPOSITORY_META_DATA: return (EObject)createRepositoryMetaData();
+			case RepositoryModelPackage.REPOSITORY_MODEL_DIRECTORY: return (EObject)createRepositoryModelDirectory();
+			case RepositoryModelPackage.MONGO_DB_META_DATA: return (EObject)createMongoDBMetaData();
+			case RepositoryModelPackage.IMPORT_META_DATA: return (EObject)createImportMetaData();
+			case RepositoryModelPackage.DATA_SET: return (EObject)createDataSet();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

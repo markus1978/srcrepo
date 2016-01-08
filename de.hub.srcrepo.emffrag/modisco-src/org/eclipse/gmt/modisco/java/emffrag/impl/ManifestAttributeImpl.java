@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmt.modisco.java.ManifestAttribute;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.emffrag.FObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,11 +18,11 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ManifestAttributeImpl#getKey <em>Key</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ManifestAttributeImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -2,10 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
+import de.hub.emffrag.FObjectImpl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmt.modisco.java.ASTNode;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 

@@ -1,11 +1,12 @@
 package de.hub.srcrepo.emffrag.commands
 
 import de.hub.emffrag.EmfFragActivator
+import de.hub.emffrag.Fragmentation
+import de.hub.emffrag.FragmentationSet
 import de.hub.emffrag.datastore.DataStoreImpl
-import de.hub.emffrag.fragmentation.Fragmentation
-import de.hub.emffrag.fragmentation.FragmentationSet
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
 import de.hub.srcrepo.SrcRepoActivator
+import de.hub.srcrepo.emffrag.EmffragSrcRepo
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
 import java.util.Map
@@ -33,23 +34,16 @@ abstract class AbstractSrcRepoCommand {
 		EmfFragActivator::instance.logInStandAlone = cl.hasOption("log")
 		EmfFragMongoDBActivator::standalone()
 		SrcRepoActivator::standalone
-		
-		Fragmentation.config = config;
 
 		this.modelURI = URI.createURI(if (cl.hasOption("m")) cl.getOptionValue("m") else defaultModelURI)
-		fs = new FragmentationSet(if (cl.hasOption("cache")) Integer.parseInt(cl.getOptionValue("cache")) else defaultCacheSize, [uri|DataStoreImpl::createDataStore(uri)])		
+		fs = new FragmentationSet(EmffragSrcRepo.packages, [uri|DataStoreImpl::createDataStore(uri)], if (cl.hasOption("cache")) Integer.parseInt(cl.getOptionValue("cache")) else defaultCacheSize)		
 		fragmentation = fs.getFragmentation(this.modelURI)		
-		val contents = fragmentation.rootFragment.contents
-		val content = if (contents.size == 0) null else contents.get(0)
+		val content = fragmentation.root
 		if (content instanceof RepositoryModelDirectory) {
 			directory = content as RepositoryModelDirectory		
 		} else {
 			directory = null
 		}
-	}
-	
-	protected def byte getConfig() {
-		return Fragmentation::NONE;
 	} 
 		
 	protected def addOptions(Options options) {

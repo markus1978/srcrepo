@@ -2,9 +2,6 @@ package de.hub.srcrepo.emffrag.commands
 
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable
-import de.hub.emffrag.fragmentation.FObject
-import de.hub.emffrag.fragmentation.Fragmentation
-import de.hub.emffrag.proxies.Proxy
 import de.hub.jstattrack.Statistics
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.TimeStatistic.Timer
@@ -24,7 +21,6 @@ import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -37,10 +33,6 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 	private var withElementCount = false
 	private var CommandLine cl = null
 	private var List<String> data = newArrayList
-	
-	override def getConfig() {
-		return Fragmentation::READONLY.bitwiseOr(Fragmentation::NO_NOTIFY).bitwiseOr(Fragmentation::NO_PROXIES) as byte
-	}
 	
 	private def toIterable(JSONArray jsonArray) {
 		return new FluentIterable<JSONObject> {			
@@ -122,38 +114,20 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 		}
 	}
 	
-	private def void countFObjects(FObject fObject, (EObject)=>void apply) {
-		val i = fObject.eAllContents
-		while (i.hasNext) {
-			val next = i.next as FObject
-			apply.apply(next)
-			if (next.fIsRoot) {
-				next.fFragment.fHold(true)
-				next.countFObjects(apply)				
-				i.prune
-				next.fFragment.fHold(false)
-			}
-		}
+	private def void countFObjects(EObject eObject, (EObject)=>void apply) {
+		eObject.eAllContents.forEach(apply)
 	}
 	
 	var long count = 0
 	var long ncss = 0
 	var Timer timer = null	
 		
-	private def countObjects(RepositoryModel modelProxy) {
-		var model = (modelProxy as Proxy).fSource as RepositoryModel
-		val fragment = (model as FObject).fFragment
-		val uri = EcoreUtil::getURI(model)
-		val fragmentation = fragment.fFragmentation
-		fragmentation.unloadFragment(fragment)
-		model = fragmentation.resourceSet.getEObject(uri, true) as RepositoryModel
-		(model as FObject).fFragment.fHold(true)
-			
+	private def countObjects(RepositoryModel model) {
 		count = 0
 		ncss = 0
 		timer = traverseOneKObjectsExecTimeStat.timer
 		
-		countFObjects(model as FObject) [	
+		countFObjects(model) [	
 			count++	
 			if ((count +1) % 100000 == 0) {
 				timer.track

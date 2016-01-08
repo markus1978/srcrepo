@@ -19,6 +19,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PackageImpl#getOwnedElements <em>Owned Elements</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PackageImpl#getModel <em>Model</em>}</li>
@@ -26,7 +27,6 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PackageImpl#getPackage <em>Package</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PackageImpl#getUsagesInPackageAccess <em>Usages In Package Access</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

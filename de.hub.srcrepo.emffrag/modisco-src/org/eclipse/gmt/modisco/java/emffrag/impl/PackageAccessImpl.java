@@ -16,11 +16,11 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PackageAccessImpl#getPackage <em>Package</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PackageAccessImpl#getQualifier <em>Qualifier</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -4,9 +4,8 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: de.hub.srcrepo.emffrag;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: de.hub.emffrag;bundle-version="1.0.0";visibility:=reexport,
- de.hub.emffrag.mongodb;bundle-version="1.0.0";visibility:=reexport,
- de.hub.emffrag.hbase;bundle-version="1.0.0",
+Require-Bundle: de.hub.emffrag4;visibility:=reexport,
+ de.hub.emffrag.mongodb;visibility:=reexport,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.gmt.modisco.java;visibility:=reexport,
@@ -26,6 +25,7 @@ Export-Package: de.hub.srcrepo.emffrag,
  org.apache.commons.exec.environment,
  org.apache.commons.exec.launcher,
  org.apache.commons.exec.util,
+ org.eclipse.gmt.modisco.java,
  org.eclipse.gmt.modisco.java.emffrag.impl,
  org.eclipse.gmt.modisco.java.emffrag.metadata,
  org.eclipse.gmt.modisco.java.emffrag.util

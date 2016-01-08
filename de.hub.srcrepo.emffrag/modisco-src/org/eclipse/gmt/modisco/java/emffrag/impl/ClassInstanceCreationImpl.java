@@ -22,6 +22,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ClassInstanceCreationImpl#getMethod <em>Method</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ClassInstanceCreationImpl#getArguments <em>Arguments</em>}</li>
@@ -30,7 +31,6 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ClassInstanceCreationImpl#getExpression <em>Expression</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ClassInstanceCreationImpl#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -16,6 +16,7 @@ import org.jsoup.Jsoup
 
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
+import de.hub.emffrag.FObject
 
 class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 	
@@ -116,7 +117,7 @@ class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 				if (it.key.repositories.findFirst[it.name == repositoryModel.name] == null) {
 					it.key.repositories.add(repositoryModel)
 					val uri = URI.createURI('''«modelURI.scheme»://«modelURI.host»/«repositoryModel.qualifiedName»''')
-					fs.getFragmentation(uri).contents.add(repositoryModel)		
+					fs.getFragmentation(uri).root = repositoryModel	as FObject
 					
 					System.out.println('''Added «repositoryModel.name»''')			
 				} else {
@@ -132,7 +133,7 @@ class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 			newRootDirectory.name = "git.eclipse.org"
 			newRootDirectory.description = "All officially recognized eclipse related projects and their git repositories."
 			newRootDirectory.url = eclipseGitURL
-			fragmentation.rootFragment.contents.add(newRootDirectory)
+			fragmentation.root = newRootDirectory as FObject
 			newRootDirectory
 		} else {
 			directory

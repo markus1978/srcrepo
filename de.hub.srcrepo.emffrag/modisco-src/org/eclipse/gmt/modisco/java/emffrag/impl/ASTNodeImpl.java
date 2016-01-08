@@ -14,7 +14,7 @@ import org.eclipse.gmt.modisco.java.Comment;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.emffrag.FObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,16 +22,17 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ASTNodeImpl#getComments <em>Comments</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ASTNodeImpl#getOriginalCompilationUnit <em>Original Compilation Unit</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ASTNodeImpl#getOriginalClassFile <em>Original Class File</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
 public abstract class ASTNodeImpl extends FObjectImpl implements ASTNode {
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -68,7 +69,7 @@ public abstract class ASTNodeImpl extends FObjectImpl implements ASTNode {
 	 */
 	@SuppressWarnings("unchecked")
 	public EList<Comment> getComments() {
-		return (EList<Comment>)eGet(JavaPackage.eINSTANCE.getASTNode_Comments(), true);
+		return (EList<Comment>)eGet(JavaPackage.eINSTANCE.getASTNode_Comments(), true); 
 	}
 
 	/**

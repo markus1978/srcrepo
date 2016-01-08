@@ -21,6 +21,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.EnumConstantDeclarationImpl#getExtraArrayDimensions <em>Extra Array Dimensions</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.EnumConstantDeclarationImpl#getInitializer <em>Initializer</em>}</li>
@@ -28,7 +29,6 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.EnumConstantDeclarationImpl#getAnonymousClassDeclaration <em>Anonymous Class Declaration</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.EnumConstantDeclarationImpl#getArguments <em>Arguments</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

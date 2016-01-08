@@ -3,8 +3,12 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %pluginVendor
 Bundle-SymbolicName: de.hub.srcrepo.emffrag.tests;singleton:=true
 Eclipse-AutoStart: true
-Require-Bundle: de.hub.srcrepo.emffrag;bundle-version="1.0.0",
- de.hub.srcrepo.tests;bundle-version="1.0.0",
+Require-Bundle: de.hub.srcrepo.emffrag,
+ de.hub.srcrepo.tests,
+ de.hub.emffrag4.tests,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro,
  org.junit;bundle-version="4.12.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ManifestVersion: 2

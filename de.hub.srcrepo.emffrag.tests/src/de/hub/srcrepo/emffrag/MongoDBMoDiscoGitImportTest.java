@@ -1,13 +1,15 @@
 package de.hub.srcrepo.emffrag;
 
+import static de.hub.srcrepo.RepositoryModelUtil.getDataStoreMetaData;
+import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
+
 import org.eclipse.emf.common.util.URI;
 import org.junit.Assert;
 
-import de.hub.emffrag.fragmentation.Fragment;
+import de.hub.emffrag.FObject;
 import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import static de.hub.srcrepo.RepositoryModelUtil.*;
 
 public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
@@ -27,6 +29,7 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 		
 		Configuration configuration = new EmfFragSrcRepoImport.GitConfiguration(getWorkingCopy(), modelURI).repositoryURL(repositoryURL);
 		configuration.useCGit();
+		configuration.fragmentCacheSize(1);
 		return configuration;
 	}
 
@@ -38,12 +41,12 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 
 	@Override
 	protected RepositoryModel openRepositoryModel(boolean dropExisting) {
-		return (RepositoryModel) EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(), dropExisting).getRootFragment().getContents().get(0);
+		return (RepositoryModel) EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(), dropExisting).getRoot();
 	}
 
 	@Override
 	protected void closeRepositoryModel(RepositoryModel model) {
-		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), ((Fragment)model.eResource()).fFragmentation());
+		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), ((FObject)model).fFragmentation());
 	}
 
 	@Override

@@ -18,11 +18,11 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.TagElementImpl#getTagName <em>Tag Name</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.TagElementImpl#getFragments <em>Fragments</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

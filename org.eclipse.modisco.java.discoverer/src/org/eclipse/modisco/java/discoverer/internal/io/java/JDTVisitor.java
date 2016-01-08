@@ -857,6 +857,7 @@ public class JDTVisitor extends ASTVisitor {
 		} catch (StringIndexOutOfBoundsException e) {
 			// ignore
 			// markus, hub, sam, srcrepo
+			System.out.println();
 		}
 
 		CommentsManager.resolveCommentPositions(this);

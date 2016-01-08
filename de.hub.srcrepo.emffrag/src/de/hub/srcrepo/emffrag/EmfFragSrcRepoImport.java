@@ -1,6 +1,7 @@
 package de.hub.srcrepo.emffrag;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -12,20 +13,21 @@ import org.apache.commons.cli.Options;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
+import com.google.common.collect.Lists;
+
 import de.hub.emffrag.EmfFragActivator;
+import de.hub.emffrag.FObject;
+import de.hub.emffrag.Fragmentation;
+import de.hub.emffrag.FragmentationImpl;
 import de.hub.emffrag.datastore.DataStoreImpl;
 import de.hub.emffrag.datastore.IBaseDataStore;
 import de.hub.emffrag.datastore.IDataStore;
-import de.hub.emffrag.datastore.WriteCachingDataStore;
-import de.hub.emffrag.fragmentation.Fragmentation;
-import de.hub.emffrag.hbase.EmfFragHBaseActivator;
-import de.hub.emffrag.hbase.HBaseDataStore;
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator;
 import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.GitSourceControlSystem;
@@ -54,7 +56,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private String repositoryURL = null; 
 		private boolean withDisabledUsages = false;
 		private int bulkInsertSize = 1000;
-		private int fragmentCacheSize = 1000;
+		private int fragmentCacheSize = 100;
 		private boolean resume = false;
 		private int stopAfterNumberOfRevs = -1;
 		private boolean skipSourceCodeImport = false;
@@ -221,7 +223,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		EmfFragActivator.class.getName();
 		SrcRepoActivator.class.getName();
 		EmfFragMongoDBActivator.class.getName();
-		EmfFragHBaseActivator.class.getName();
 		
 		// checking command line options
 		final Map<?,?> args = context.getArguments();
@@ -279,13 +280,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), dropIfExists && !config.resume);
 			baseDataStore = mongoDbBaseDataStore;
 			
-		} else if ("hbase".equals(config.modelURI.scheme())) {
-			HBaseDataStore hbaseBaseDataStore = new HBaseDataStore(config.modelURI.path().substring(1), dropIfExists && !config.resume);
-			baseDataStore = new WriteCachingDataStore(hbaseBaseDataStore, hbaseBaseDataStore, config.bulkInsertSize);
+		} else {
+			throw new RuntimeException("Unknown scheme " + config.modelURI.scheme());
 		}
 		
 		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
-		Fragmentation fragmentation = new Fragmentation(dataStore, config.fragmentCacheSize);
+		Fragmentation fragmentation = new FragmentationImpl(EmffragSrcRepo.packages, dataStore, config.fragmentCacheSize);
 		return fragmentation;
 	}
 	
@@ -302,7 +302,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 
 		// create fragmentation
 		Fragmentation fragmentation = openFragmentation(config, true);
-		Resource resource = fragmentation.getRootFragment();
 				
 		// create necessary models
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
@@ -312,11 +311,11 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (!config.resume) {
 			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();					
 		} else {
-			if (resource.getContents().isEmpty()) {
+			if (fragmentation.getRoot() == null) {
 				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
 				return null;
 			}
-			repositoryModel = (RepositoryModel) resource.getContents().get(0);
+			repositoryModel = (RepositoryModel) fragmentation.getRoot();
 			if (repositoryModel.getTraversals() == null) {
 				SrcRepoActivator.INSTANCE.info("No traversal present to resume,");
 				return repositoryModel;
@@ -345,8 +344,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
 				return null;
 			}
-			resource.getContents().add(repositoryModel);
-			repositoryModel = (RepositoryModel) resource.getContents().get(0);
+			fragmentation.setRoot((FObject)repositoryModel);
+			repositoryModel = fragmentation.getRoot();
 		}
 		
 		// importing source code

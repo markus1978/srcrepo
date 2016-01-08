@@ -16,7 +16,7 @@ import org.eclipse.gmt.modisco.java.Type;
 import org.eclipse.gmt.modisco.java.UnresolvedItem;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.emffrag.FObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,6 +24,7 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ModelImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
@@ -33,7 +34,6 @@ import de.hub.emffrag.fragmentation.FObjectImpl;
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ModelImpl#getClassFiles <em>Class Files</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.ModelImpl#getArchives <em>Archives</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

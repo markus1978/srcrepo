@@ -18,11 +18,11 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PrefixExpressionImpl#getOperator <em>Operator</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.PrefixExpressionImpl#getOperand <em>Operand</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

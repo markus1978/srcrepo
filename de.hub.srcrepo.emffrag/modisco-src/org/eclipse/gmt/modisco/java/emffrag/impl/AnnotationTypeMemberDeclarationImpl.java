@@ -20,12 +20,12 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.AnnotationTypeMemberDeclarationImpl#getDefault <em>Default</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.AnnotationTypeMemberDeclarationImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.AnnotationTypeMemberDeclarationImpl#getUsages <em>Usages</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

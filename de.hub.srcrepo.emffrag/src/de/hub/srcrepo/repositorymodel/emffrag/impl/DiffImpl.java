@@ -10,7 +10,7 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import de.hub.emffrag.fragmentation.FObjectImpl;
+import de.hub.emffrag.FObjectImpl;
 import de.hub.jstattrack.ValueStatistic;
 import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.jstattrack.services.Summary;

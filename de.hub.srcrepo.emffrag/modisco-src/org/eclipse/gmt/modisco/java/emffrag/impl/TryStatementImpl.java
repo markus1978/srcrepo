@@ -19,12 +19,12 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.TryStatementImpl#getBody <em>Body</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.TryStatementImpl#getFinally <em>Finally</em>}</li>
  *   <li>{@link org.eclipse.gmt.modisco.java.emffrag.impl.TryStatementImpl#getCatchClauses <em>Catch Clauses</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
