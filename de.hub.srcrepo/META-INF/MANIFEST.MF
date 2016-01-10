@@ -17,8 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  de.hub.emffrag;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: de,
- de.hub,
+Export-Package: 
  de.hub.srcrepo,
  de.hub.srcrepo.metrics,
  de.hub.srcrepo.ocl,

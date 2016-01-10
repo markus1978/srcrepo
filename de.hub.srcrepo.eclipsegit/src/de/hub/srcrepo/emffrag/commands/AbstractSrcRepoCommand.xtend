@@ -85,6 +85,7 @@ public class SrcRepo {
 			"import" -> new ImportCommand,
 			"data" -> new ImportDataCommand,
 			"eclipse" -> new CreateEclipseRepositoriesCommand,
+			"github" -> new CreateGitHubUserRepositoriesCommand,
 			"ls" -> new ListCommand,
 			"rm" -> new RemoveCommand,
 			"par" -> new ParallelCommand

@@ -25,4 +25,6 @@
         status="integration">
 	</info>
 	<dependency org="org.jsoup" name="jsoup" rev="1.7.2"/>
+	<dependency org="org.json" name="json" rev="20151123"/>
+	<dependency org="com.mashape.unirest" name="unirest-java" rev="1.4.7"/>
 </ivy-module>
