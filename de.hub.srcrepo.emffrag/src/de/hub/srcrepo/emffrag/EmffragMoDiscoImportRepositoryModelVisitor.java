@@ -20,12 +20,6 @@ public class EmffragMoDiscoImportRepositoryModelVisitor extends MoDiscoRepositor
 	}
 
 	@Override
-	public void close() {
-		super.close();
-		((FObject)repositoryModel).fStoreObject().fFragmentation().close();
-	}
-
-	@Override
 	protected void updateDataStoreMetaData(RepositoryModel model) {
 		IDataStore dataStore = ((FObject)model).fStoreObject().fFragmentation().getDataStore();
 		Object statObject = dataStore.getStats();

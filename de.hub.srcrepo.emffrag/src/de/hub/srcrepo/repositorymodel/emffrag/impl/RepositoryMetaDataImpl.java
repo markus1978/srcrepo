@@ -24,6 +24,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCuCount <em>Cu Count</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getRevsWithErrors <em>Revs With Errors</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getCusWithErrors <em>Cus With Errors</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryMetaDataImpl#getSize <em>Size</em>}</li>
  * </ul>
  *
  * @generated
@@ -154,6 +155,24 @@ public class RepositoryMetaDataImpl extends DataSetImpl implements RepositoryMet
 	 */
 	public void setCusWithErrors(int newCusWithErrors) {
 		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__CUS_WITH_ERRORS, newCusWithErrors);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getSize() {
+		return (Integer)eGet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__SIZE, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSize(int newSize) {
+		eSet(RepositoryModelPackage.Literals.REPOSITORY_META_DATA__SIZE, newSize);
 	}
 
 	/**

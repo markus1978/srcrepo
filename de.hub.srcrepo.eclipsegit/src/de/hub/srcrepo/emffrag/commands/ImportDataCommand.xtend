@@ -70,6 +70,8 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 	}
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
+		data.clear
+		
 		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
 		val elementCountResult = if (withElementCount) { repo.countObjects }
 		val importStatJSON = new JSONArray(repo.importMetaData.statsAsJSON)
@@ -92,9 +94,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				«statSummaryData(importStatJSON, "Write execution times", "6_writeTime")»,
 				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
 				«IF withElementCount»					
-					«statSummaryData(dataStatJSON, "Traverse execution time for 100k objects", "8_traverseTime")»,
-					«statSummaryData(dataStatJSON, "Load fragment execution time", "9_loadTime")»,
-					«statSummaryData(dataStatJSON, "GC execution time", "10_gcTime")»,
+					«statSummaryData(dataStatJSON, "Traverse execution time for 100k objects", "8_traverseTime")»
 				«ENDIF»
 			}
 		'''.toString

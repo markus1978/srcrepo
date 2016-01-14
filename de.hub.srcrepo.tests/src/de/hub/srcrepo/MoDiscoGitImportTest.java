@@ -254,6 +254,15 @@ public class MoDiscoGitImportTest {
 		
 		Assert.assertTrue(repositoryModel.getAllRevs().size() >= minimumNumberOfRevs);
 		
+		int count = 0;
+		TreeIterator<EObject> iterator = repositoryModel.eAllContents();
+		while(iterator.hasNext()) {
+			iterator.next();
+			count++;
+		}
+		Assert.assertTrue(count > minimumNumberOfRevs*2);
+		System.out.println(count + " objects in the repository");
+		
 		return revNames;
 	}
 

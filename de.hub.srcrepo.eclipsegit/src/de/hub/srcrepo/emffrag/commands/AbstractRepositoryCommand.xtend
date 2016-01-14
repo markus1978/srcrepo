@@ -31,7 +31,14 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 		val repositoryPattern = cl.patternForOption("r")
 		val directoryPattern = cl.patternForOption("d")
 		
-		val repositories = directory.subDirectories.filter[if (directoryPattern != null) directoryPattern.asPredicate.test(it.name) else true]
+		if (directory == null) {
+			println("There is no directory to list repos from.")
+			return
+		}
+		
+		val directories = newArrayList(directory)
+		directories.addAll(directory.subDirectories.filter[if (directoryPattern != null) directoryPattern.asPredicate.test(it.name) else true])
+		val repositories = directories
 			.collectAll[subdirectory|
 				subdirectory.repositories.filter[
 					if (repositoryPattern != null)

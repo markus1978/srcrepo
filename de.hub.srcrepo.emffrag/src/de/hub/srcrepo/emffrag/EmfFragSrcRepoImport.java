@@ -1,7 +1,6 @@
 package de.hub.srcrepo.emffrag;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -13,13 +12,10 @@ import org.apache.commons.cli.Options;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
-
-import com.google.common.collect.Lists;
 
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.FObject;
@@ -294,7 +290,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		fragmentation.getDataStore().close();
 	}
 	
-	public static RepositoryModel importRepository(Configuration config) {
+	public static void importRepository(Configuration config) {
 		
 		boolean stop = config.stopAfterNumberOfRevs > 0;
 		
@@ -313,12 +309,12 @@ public class EmfFragSrcRepoImport implements IApplication {
 		} else {
 			if (fragmentation.getRoot() == null) {
 				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
-				return null;
+				return;
 			}
 			repositoryModel = (RepositoryModel) fragmentation.getRoot();
 			if (repositoryModel.getTraversals() == null) {
 				SrcRepoActivator.INSTANCE.info("No traversal present to resume,");
-				return repositoryModel;
+				return;
 			}
 		}
 		
@@ -342,7 +338,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 				config.scs.importRevisions(repositoryModel);
 			} catch (SourceControlException e) {
 				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
-				return null;
+				return;
 			}
 			fragmentation.setRoot((FObject)repositoryModel);
 			repositoryModel = fragmentation.getRoot();
@@ -387,8 +383,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 			closeFragmentation(config, fragmentation);
 			SrcRepoActivator.INSTANCE.info("Import done.");
 		}
-		
-		return repositoryModel;
 	}
 
 	@Override

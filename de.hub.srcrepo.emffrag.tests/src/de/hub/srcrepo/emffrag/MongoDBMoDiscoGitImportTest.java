@@ -6,7 +6,9 @@ import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
 import org.eclipse.emf.common.util.URI;
 import org.junit.Assert;
 
-import de.hub.emffrag.FObject;
+import de.hub.emffrag.Fragmentation;
+import de.hub.emffrag.FragmentationImpl;
+import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -14,6 +16,8 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
 	public static URI testModelURI = URI.createURI("mongodb://localhost/srcrepo.example.gitmodel");
+	
+	private Fragmentation fragmentation = null;
 	
 	@Override
 	protected URI getTestModelURI() {
@@ -35,18 +39,21 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 
 	@Override
 	protected void runImport() {
-		RepositoryModel repositoryModel = EmfFragSrcRepoImport.importRepository(prepareConfiguration());
-		assertRepositoryModel(repositoryModel, 16);
+		EmfFragSrcRepoImport.importRepository(prepareConfiguration());
+		FragmentationImpl fragmentation = new FragmentationImpl(EmffragSrcRepo.packages, MongoDBDataStore.createDataStore(testModelURI, false), 1);
+		assertRepositoryModel(((RepositoryModel)fragmentation.getRoot()), 16);
+		fragmentation.close();
 	}
 
 	@Override
 	protected RepositoryModel openRepositoryModel(boolean dropExisting) {
-		return (RepositoryModel) EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(), dropExisting).getRoot();
+		fragmentation = EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(), dropExisting);
+		return (RepositoryModel) fragmentation.getRoot();
 	}
 
 	@Override
 	protected void closeRepositoryModel(RepositoryModel model) {
-		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), ((FObject)model).fFragmentation());
+		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), fragmentation);
 	}
 
 	@Override

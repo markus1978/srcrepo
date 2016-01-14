@@ -309,7 +309,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_6-DdUMFKEeO4HvSIgyIgjw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="10265827" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//NamedElement"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_6-DdUcFKEeO4HvSIgyIgjw" x="1773" y="45"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_6-DdUcFKEeO4HvSIgyIgjw" x="1773" y="72"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_u_kdoMOxEeOGHL9BvZ3Z2g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u_lEsMOxEeOGHL9BvZ3Z2g" type="4001"/>
@@ -381,6 +381,10 @@
       <children xmi:type="notation:Node" xmi:id="_Vk2V0I30EeWTs67lhredLQ" type="2001">
         <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//RepositoryMetaData/cuCount"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_Vk2V0Y30EeWTs67lhredLQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_IsTA8LnkEeWjrsdtgdX1iQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//RepositoryMetaData/size"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_IsTA8bnkEeWjrsdtgdX1iQ"/>
       </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_UpdEYo3PEeWTs67lhredLQ"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_UpdEY43PEeWTs67lhredLQ"/>

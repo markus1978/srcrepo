@@ -27,7 +27,7 @@ class ListCommand extends AbstractRepositoryCommand {
 		} else {
 			"listed only"
 		}
-		println('''«model.qualifiedName» («status») revs=«countFormat.format(model.metaData.revCount)» cus=«countFormat.format(model.metaData.cuCount)» size=«size»''')	
+		println('''«model.qualifiedName» («status») gitsize=«model.metaData.size»KB revs=«countFormat.format(model.metaData.revCount)» cus=«countFormat.format(model.metaData.cuCount)» size=«size»''')	
 	}
 	
 }

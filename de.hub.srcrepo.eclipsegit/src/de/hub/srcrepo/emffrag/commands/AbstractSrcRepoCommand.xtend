@@ -21,7 +21,7 @@ import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 
 abstract class AbstractSrcRepoCommand {
 
-	static val defaultModelURI = "mongodb://localhost/git.eclipse.org"
+	static val defaultModelURI = "mongodb://localhost/EclipseAtGitHub"
 	static val defaultCacheSize = 50
 
 	protected var FragmentationSet fs
@@ -31,7 +31,7 @@ abstract class AbstractSrcRepoCommand {
 	
 	protected final def void init(CommandLine cl) {
 		EmfFragActivator::standalone(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE)
-		EmfFragActivator::instance.logInStandAlone = cl.hasOption("log")
+		EmfFragActivator::instance.logInStandAlone = false;
 		EmfFragMongoDBActivator::standalone()
 		SrcRepoActivator::standalone
 

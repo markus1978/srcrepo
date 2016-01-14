@@ -1117,13 +1117,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_META_DATA__CUS_WITH_ERRORS = DATA_SET_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPOSITORY_META_DATA__SIZE = DATA_SET_FEATURE_COUNT + 7;
+
+	/**
 	 * The number of structural features of the '<em>Repository Meta Data</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_META_DATA_FEATURE_COUNT = DATA_SET_FEATURE_COUNT + 7;
+	int REPOSITORY_META_DATA_FEATURE_COUNT = DATA_SET_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Repository Meta Data</em>' class.
@@ -2315,6 +2324,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getRepositoryMetaData_CusWithErrors();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getSize <em>Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Size</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.RepositoryMetaData#getSize()
+	 * @see #getRepositoryMetaData()
+	 * @generated
+	 */
+	EAttribute getRepositoryMetaData_Size();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.RepositoryModelDirectory <em>Directory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3215,6 +3235,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EAttribute REPOSITORY_META_DATA__CUS_WITH_ERRORS = eINSTANCE.getRepositoryMetaData_CusWithErrors();
+
+		/**
+		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPOSITORY_META_DATA__SIZE = eINSTANCE.getRepositoryMetaData_Size();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelDirectoryImpl <em>Directory</em>}' class.

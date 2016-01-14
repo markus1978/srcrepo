@@ -20,6 +20,8 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 
+import com.google.common.base.Preconditions;
+
 import de.hub.emffrag.EmfFragActivator;
 import de.hub.emffrag.Fragmentation;
 import de.hub.emffrag.FragmentationSet;
@@ -53,7 +55,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		private final ISourceControlSystem scs; 
 				
 		private String repositoryName = null;
-		private URI directoryModelURI = URI.createURI("mongodb://localhost/git.eclipse.org");
+		private URI directoryModelURI = URI.createURI("mongodb://localhost/EclipseAtGitHub");
 		private File workingcopies = new File("workingcopies");
 		private File locks = new File("locks");
 		
@@ -255,7 +257,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 	}
 	
 	public static FragmentationSet openFragmentationSet(Configuration config) {	
-		return new FragmentationSet(null, new IDataStore.IDataStoreFactory() {			
+		return new FragmentationSet(EmffragSrcRepo.packages, new IDataStore.IDataStoreFactory() {			
 			@Override
 			public IDataStore createDataStore(URI uri) {
 				IBaseDataStore baseDataStore = null;
@@ -273,13 +275,14 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		}, config.fragmentCacheSize);
 	}
 	
-	public static RepositoryModel importRepository(Configuration config) {
+	public static void importRepository(Configuration config) {
 		SrcRepoActivator.INSTANCE.useCGit = config.useCGit;
 		RepositoryModel repositoryModel = null;
 
 		// create fragmentation
 		FragmentationSet fs = openFragmentationSet(config);
 		Fragmentation fragmentation = fs.getFragmentation(config.directoryModelURI);		
+		Preconditions.checkArgument(fragmentation.getRoot() != null, "There is no data at " + config.directoryModelURI.toString());
 		File lockFile = null;
 		try {
 			// find a repository to import
@@ -309,7 +312,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			
 			if (repositoryModel == null) {
 				SrcRepoActivator.INSTANCE.error("Could not find a scheduled repositoryModel.");
-				return null;
+				return;
 			}
 			
 			// try to update the import status the repository model
@@ -317,7 +320,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				ImportMetaData importMetaData = RepositoryModelUtil.getData(repositoryModel, RepositoryModelPackage.eINSTANCE.getImportMetaData());
 				importMetaData.setScheduled(false);
 				importMetaData.setImporting(true);
-				repositoryModel.eResource().save(null);
+				fs.save();
 			} catch (Exception e) {
 				SrcRepoActivator.INSTANCE.error("Unexpected error during updating the import status on the repository.", e);
 			}
@@ -346,7 +349,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				config.scs.importRevisions(repositoryModel);
 			} catch (SourceControlException e) {
 				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
-				return null;
+				return;
 			}
 			
 			// importing source code
@@ -395,10 +398,6 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 						SrcRepoActivator.INSTANCE.error("Could not delete the lock file.");	
 					}
 				}
-				for (Fragmentation f: fs.getFragmentations()) {
-					f.close();
-					f.getDataStore().close();
-				}
 				fs.close();
 			} catch (Exception e) {
 				SrcRepoActivator.INSTANCE.error("Unknown error during closing fragmentation.", e);
@@ -406,7 +405,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			SrcRepoActivator.INSTANCE.info("Import done.");
 		}
 		
-		return repositoryModel;
+		return;
 	}
 
 	@Override
