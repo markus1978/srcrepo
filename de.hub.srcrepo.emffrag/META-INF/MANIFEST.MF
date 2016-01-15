@@ -25,7 +25,6 @@ Export-Package: de.hub.srcrepo.emffrag,
  org.apache.commons.exec.environment,
  org.apache.commons.exec.launcher,
  org.apache.commons.exec.util,
- org.eclipse.gmt.modisco.java,
  org.eclipse.gmt.modisco.java.emffrag.impl,
  org.eclipse.gmt.modisco.java.emffrag.metadata,
  org.eclipse.gmt.modisco.java.emffrag.util

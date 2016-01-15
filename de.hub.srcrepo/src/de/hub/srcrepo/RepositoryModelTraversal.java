@@ -221,12 +221,12 @@ public class RepositoryModelTraversal {
 		}
 	}
 
-	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor, TraversalState state, boolean resume, int stopAfterNumberOfRevs) {
-		return new RepositoryModelTraversal(repositoryModel, visitor).run(resume, stopAfterNumberOfRevs > 0, state, stopAfterNumberOfRevs);
+	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor, TraversalState state, boolean resume, boolean saveSate, int stopAfterNumberOfRevs) {
+		return new RepositoryModelTraversal(repositoryModel, visitor).run(resume, saveSate, state, stopAfterNumberOfRevs);
 	}
 
 	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
-		return traverse(repositoryModel, visitor, null, false, -1);		
+		return traverse(repositoryModel, visitor, null, false, false, -1);		
 	}
 	
 }

@@ -1,7 +1,5 @@
 package de.hub.srcrepo.emffrag.commands
 
-import com.google.common.collect.AbstractIterator
-import com.google.common.collect.FluentIterable
 import de.hub.jstattrack.Statistics
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.TimeStatistic.Timer
@@ -22,7 +20,6 @@ import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.ecore.EObject
 import org.json.JSONArray
-import org.json.JSONObject
 
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
@@ -33,24 +30,6 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 	private var withElementCount = false
 	private var CommandLine cl = null
 	private var List<String> data = newArrayList
-	
-	private def toIterable(JSONArray jsonArray) {
-		return new FluentIterable<JSONObject> {			
-			override iterator() {
-				new AbstractIterator<JSONObject>() {
-					var index = 0				
-					override protected computeNext() {
-						if (jsonArray.length > index) {
-							return jsonArray.getJSONObject(index++)
-						} else {
-							endOfData
-							return null
-						}
-					}					
-				}
-			}			
-		}
-	}
 
 	private def statSummaryData(JSONArray jsonData, String statName, String key) {
 		for (stat:jsonData.toIterable) {
@@ -81,6 +60,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				1_name : "«repo.qualifiedName»",
 				2_revCount : «repo.metaData.revCount»,
 				2_cuCount : «repo.metaData.cuCount»,
+				2_skippedCuCount : «repo.metaData.data.get("skippedCuCount")»,
 				2_revErrorCount : «repo.metaData.revsWithErrors»,
 				2_dbEntryCount : «repo.dataStoreMetaData.count»,
 				2_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
@@ -98,20 +78,6 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				«ENDIF»
 			}
 		'''.toString
-	}
-	
-	private def toCSV(JSONArray json) {
-		if (json.length > 0) {
-			val keys = json.getJSONObject(0).keySet.toList.sort
-			return '''
-				«FOR key:keys SEPARATOR ", "»«key»«ENDFOR»
-				«FOR entry:json.toIterable»
-					«FOR key:keys SEPARATOR ", "»«entry.get(key).toString»«ENDFOR»
-				«ENDFOR»
-			'''
-		} else {
-			return ''''''
-		}
 	}
 	
 	private def void countFObjects(EObject eObject, (EObject)=>void apply) {

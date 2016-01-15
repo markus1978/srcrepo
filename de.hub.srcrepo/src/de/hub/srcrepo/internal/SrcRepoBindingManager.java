@@ -330,7 +330,11 @@ public class SrcRepoBindingManager extends BindingManager {
 				if (target == null) {
 					unresolvedBindings.add(pe);
 				} else {
-					pe.affectTarget(target);
+					try {
+						pe.affectTarget(target);
+					} catch (Exception e) { // TODO remove
+						//System.out.print("#");
+					}
 				}
 			}
 		}

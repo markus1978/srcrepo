@@ -1,5 +1,7 @@
 package de.hub.srcrepo.emffrag.commands
 
+import com.google.common.collect.AbstractIterator
+import com.google.common.collect.FluentIterable
 import de.hub.emffrag.EmfFragActivator
 import de.hub.emffrag.Fragmentation
 import de.hub.emffrag.FragmentationSet
@@ -8,7 +10,6 @@ import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
 import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.emffrag.EmffragSrcRepo
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
 import java.util.Map
 import java.util.Scanner
 import org.apache.commons.cli.CommandLine
@@ -17,7 +18,8 @@ import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
+import org.json.JSONArray
+import org.json.JSONObject
 
 abstract class AbstractSrcRepoCommand {
 
@@ -30,7 +32,8 @@ abstract class AbstractSrcRepoCommand {
 	protected var URI modelURI
 	
 	protected final def void init(CommandLine cl) {
-		EmfFragActivator::standalone(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE)
+		EmffragSrcRepo.configureJavaPackage(cl.hasOption("enable-usages"))
+		EmfFragActivator::standalone(EmffragSrcRepo.packages)
 		EmfFragActivator::instance.logInStandAlone = false;
 		EmfFragMongoDBActivator::standalone()
 		SrcRepoActivator::standalone
@@ -50,6 +53,7 @@ abstract class AbstractSrcRepoCommand {
 		options.addOption(Option.builder().longOpt("log").desc("Prints log output.").build)
 		options.addOption(Option.builder("m").desc('''Uses the given model URI. Default is «defaultModelURI».''').longOpt("model").hasArg.build)
 		options.addOption(Option.builder().desc('''Uses the given fragmentation cache size. Default is «defaultCacheSize».''').longOpt("cache").hasArg.build)
+		options.addOption(Option.builder().longOpt("enable-usages").desc("Enables the usageInXXXX reference opposites in the modisco meta-model.").build)
 	}
 	
 	protected def checkIntArg(CommandLine cl, String name, int minimum) {
@@ -72,6 +76,37 @@ abstract class AbstractSrcRepoCommand {
 	protected def void after() {
 		fs.close()
 	}
+		protected def toCSV(JSONArray json) {
+		if (json.length > 0) {
+			val keys = json.getJSONObject(0).keySet.toList.sort
+			return '''
+				«FOR key:keys SEPARATOR ", "»«key»«ENDFOR»
+				«FOR entry:json.toIterable»
+					«FOR key:keys SEPARATOR ", "»«entry.get(key).toString»«ENDFOR»
+				«ENDFOR»
+			'''
+		} else {
+			return ''''''
+		}
+	}
+	
+	protected def toIterable(JSONArray jsonArray) {
+		return new FluentIterable<JSONObject> {			
+			override iterator() {
+				new AbstractIterator<JSONObject>() {
+					var index = 0				
+					override protected computeNext() {
+						if (jsonArray.length > index) {
+							return jsonArray.getJSONObject(index++)
+						} else {
+							endOfData
+							return null
+						}
+					}					
+				}
+			}			
+		}
+	}
 }
 
 public class SrcRepo {
@@ -88,7 +123,8 @@ public class SrcRepo {
 			"github" -> new CreateGitHubUserRepositoriesCommand,
 			"ls" -> new ListCommand,
 			"rm" -> new RemoveCommand,
-			"par" -> new ParallelCommand
+			"par" -> new ParallelCommand,
+			"metrics" -> new MetricsCommand
 		)
 		
 		var args = argsVal

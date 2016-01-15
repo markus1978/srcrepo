@@ -2,6 +2,7 @@ package de.hub.srcrepo;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -25,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.resource.impl.EFSURIHandlerImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
@@ -107,6 +111,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private final RepositoryMetaData repositoryMetaData;
 	private final ImportMetaData importMetaData;
 	private long cuCount = 0;
+	private long skippedCuCount = 0;
 	
 	public MoDiscoRepositoryModelImportVisitor(ISourceControlSystem sourceControlSystem, RepositoryModel repositoryModel, JavaPackage javaPackage) {
 		this.javaPackage = javaPackage;
@@ -523,8 +528,9 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 								IJavaProject javaProject = JavaCore.create(project);
 								IResource resource = javaProject.getProject().findMember(relativeToWorkingDirectoryPath);
 								IJavaElement element = JavaCore.create(resource, javaProject);
+									
 								if (element != null && element instanceof ICompilationUnit) {
-									return (ICompilationUnit)element;							
+									return (ICompilationUnit)element;
 								}
 							}
 						} catch (Exception e) {
@@ -556,11 +562,18 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
 			int count = 0;
 			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {
+				long fileSize = EFS.getStore(compilationUnit.getResource().getLocationURI()).fetchInfo().getLength();
+				if (fileSize > 300000) { // TODO makes this configurable, add functionality to detect generated files
+					SrcRepoActivator.INSTANCE.warning("Skipped compilation unit " + compilationUnit.getResource().getProjectRelativePath() + " because it is awefully large (" + (fileSize/1024) + "kb) and probably generated.");
+					skippedCuCount++;
+					continue;
+				} 
+				
 				SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
 				// TODO reuse javaReader and Discover...
 				JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), null);
 				javaReader.setGlobalBindings(bindings);
-				javaReader.setDeepAnalysis(false);
+				javaReader.setDeepAnalysis(true);
 				javaReader.setIncremental(false);
 				Model javaModel = javaFactory.createModel();
 				SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
@@ -570,10 +583,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					if (e.getClass().getName().endsWith("AbortCompilation")) {
 						reportImportError(currentRev, "Could not compile " + compilationUnit.getResource().getProjectRelativePath() + " (is ignored): " + e.getMessage(), e, true);
 						EcoreUtil.delete(javaModel);
+						skippedCuCount++;
 						continue;
 					} else {
 						EcoreUtil.delete(javaModel);
 						reportImportError(currentRev, "Could not compile " + compilationUnit.getResource().getProjectRelativePath() + " (is ignored) for unknown reasons: " + e.getMessage(), e, true);
+						skippedCuCount++;
 						continue;
 					}
 				}							
@@ -619,6 +634,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 				} else {
 					EcoreUtil.delete(javaModel);
 					reportImportError(currentRev, "Sucessfully imported a compilation unit, but no model was created: " + compilationUnit, null, true);
+					skippedCuCount++;
 				}
 			}										
 				
@@ -637,13 +653,14 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		}
 
 		@Override
-		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {			
 			SrcRepoActivator.INSTANCE.info("about to count LOC metrics for " + javaDiffs.size() + " compilation units");
 			String absoluteScsPath = sourceControlSystem.getWorkingCopy().getAbsolutePath();
-			int count = 0;
 			for(Diff diff: javaDiffs.values()) {
 				try {
-					Javancss ncss = new Javancss(new File(absoluteScsPath + diff.getFile().getPath()));	
+					File file =  new File(absoluteScsPath + diff.getFile().getPath());
+					long fileSize = EFS.getStore(file.toURI()).fetchInfo().getLength();
+					Javancss ncss = new Javancss(file);	
 					DataSet dataSet = repositoryFactory.createDataSet();
 					dataSet.setData(new HashMap<String,Serializable>());
 					diff.getFile().getDataSets().add(dataSet);
@@ -656,13 +673,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						dataSet.getData().put("loc", ncss.getLOC());
 						dataSet.getData().put("ncss", ncss.getNcss());
 						dataSet.getData().put("comments", ncss.getJdcl() + ncss.getSl() + ncss.getMl());
+						dataSet.getData().put("filesize",  fileSize);
 					}
 				} catch (Exception e) {
-					SrcRepoActivator.INSTANCE.error("Exception during counting LOC-metrics.", e);		
+					SrcRepoActivator.INSTANCE.error("Exception during counting LOC-metrics: " + e.getMessage());		
 				}
 			}										
-				
-			SrcRepoActivator.INSTANCE.info("counted " + count + " compilation units");
 			return Status.OK_STATUS;
 		}		
 	}
@@ -692,6 +708,8 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		importMetaData.setDate(new Date());
 		repositoryMetaData.setOrigin(sourceControlSystem.getOrigin());
 		repositoryMetaData.setCuCount(cuCount);
+		repositoryMetaData.setData(new HashMap<String,Serializable>());
+		repositoryMetaData.getData().put("skippedCuCount", skippedCuCount);
 		importMetaData.setStatsAsJSON(Statistics.reportToJSON().toString(1));
 		importMetaData.setImported(true);
 		importMetaData.setImporting(false);

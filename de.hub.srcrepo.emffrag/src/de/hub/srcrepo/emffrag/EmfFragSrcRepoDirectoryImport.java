@@ -11,10 +11,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -59,21 +56,23 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		private File workingcopies = new File("workingcopies");
 		private File locks = new File("locks");
 		
-		private boolean withDisabledUsages = true;
+		private boolean withUsages = false;
 		private int fragmentCacheSize = 100;
 		private boolean skipSourceCodeImport = false;
 		private boolean checkOutWithoutImport = false;
 		private boolean useCGit = false;
 		
 		private RepositoryModelVisitorFactory visitorFactory = null;
+
+		private int stopAfterNumberOfRevs = -1;
 		
 		public Configuration(ISourceControlSystem scs) {
 			super();
 			this.scs = scs;
 		}
 
-		public Configuration withEnabledUsages(boolean withEnabledUsages) {
-			this.withDisabledUsages = !withEnabledUsages;
+		public Configuration withUsages(boolean withUsages) {
+			this.withUsages = withUsages;
 			return this;
 		}
 
@@ -101,6 +100,11 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			this.repositoryName = value;
 			return this;
 		}
+		
+		public Configuration stopAfterNumberOfRevs(int stopAfterNumberOfRevs) {
+			this.stopAfterNumberOfRevs  = stopAfterNumberOfRevs;
+			return this;
+		}	
 		
 		public Configuration directoryModelURI(URI value) {
 			this.directoryModelURI = value;
@@ -157,6 +161,10 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		options.addOption(Option.builder().
 				longOpt("use-c-git").
 				desc("Use regular git shell commands and not jGit.").build());
+		options.addOption(Option.builder().
+				longOpt("abort-after").
+				desc("Abort after a given number of revisions. The traversal is saved to resume later.").
+				hasArg().argName("number-of-revs").build());
 	
 		return options;
 	}
@@ -167,35 +175,12 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				(!cl.hasOption("log") || 
 						(Integer.parseInt(cl.getOptionValue("log")) >= 0 && 
 						 Integer.parseInt(cl.getOptionValue("log")) <=4)) &&
-				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0);
+				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0) &&
+				(!cl.hasOption("abort-after") || Integer.parseInt(cl.getOptionValue("abort-after")) > 0);
 	}
 	
 	private void printUsage() {
 		new HelpFormatter().printHelp("eclipse ... [options]", createOptions());
-	}
-	
-	public static JavaPackage configureJavaPackage(boolean disabledUsages) {	
-		JavaPackage javaPackage = JavaPackage.eINSTANCE;
-		
-		if (disabledUsages) {
-			TreeIterator<EObject> eAllContents = javaPackage.eAllContents();
-			while (eAllContents.hasNext()) {
-				EObject next = eAllContents.next();
-				if (next instanceof EReference) {
-					EReference reference = (EReference)next;
-					if (reference.getName().startsWith("usage")) {
-						EReference eOpposite = reference.getEOpposite();
-						if (eOpposite != null) {
-							SrcRepoActivator.INSTANCE.info(reference.getEContainingClass().getName() + "." + reference.getName() 
-									+ "->" + reference.getEOpposite().getEContainingClass().getName() + "." + reference.getEOpposite().getName());
-							eOpposite.setEOpposite(null);
-							reference.setEOpposite(null);								
-						}						
-					}
-				}
-			}
-		}
-		return javaPackage;
 	}
 	
 	public static RepositoryModelPackage createRepositoryModelPackage() {
@@ -244,7 +229,10 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		if (commandLine.hasOption("fragments-cache")) {			
 			config.fragmentCacheSize(Integer.parseInt(commandLine.getOptionValue("fragments-cache")));
 		}		
-		config.withEnabledUsages(commandLine.hasOption("enable-usages"));
+		if (commandLine.hasOption("abort-after")) {
+			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
+		}
+		config.withUsages(commandLine.hasOption("enable-usages"));
 		if (commandLine.hasOption("checkout-without-import")) {
 			config.checkOutWithoutImport();
 		}		
@@ -276,6 +264,9 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 	}
 	
 	public static void importRepository(Configuration config) {
+		// create necessary models
+		JavaPackage javaModelPackage = EmffragSrcRepo.configureJavaPackage(config.withUsages);
+		
 		SrcRepoActivator.INSTANCE.useCGit = config.useCGit;
 		RepositoryModel repositoryModel = null;
 
@@ -325,9 +316,6 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				SrcRepoActivator.INSTANCE.error("Unexpected error during updating the import status on the repository.", e);
 			}
 			
-			// create necessary models
-			JavaPackage javaModelPackage = configureJavaPackage(config.withDisabledUsages);
-			
 			// creating working copy
 			File workingDirectory = null;
 			try {
@@ -364,7 +352,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 						sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
 					}
 				}		
-				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, -1);
+				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, false, config.stopAfterNumberOfRevs);
 				try {
 					sourceImportVisitor.close();
 				} catch (Exception e) {

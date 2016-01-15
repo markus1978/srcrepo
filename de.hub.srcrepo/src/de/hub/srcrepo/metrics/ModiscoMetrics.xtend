@@ -27,6 +27,13 @@ import org.eclipse.gmt.modisco.java.WhileStatement
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import static extension de.hub.srcrepo.metrics.AnalysisVisitor.*
+import org.eclipse.gmt.modisco.java.StringLiteral
+import org.eclipse.gmt.modisco.java.NumberLiteral
+import org.eclipse.gmt.modisco.java.BooleanLiteral
+import org.eclipse.gmt.modisco.java.CharacterLiteral
+import org.eclipse.modisco.java.discoverer.internal.io.java.binding.VariableBinding
+import org.eclipse.gmt.modisco.java.TypeAccess
 
 class ModiscoMetrics {
 
@@ -39,9 +46,9 @@ class ModiscoMetrics {
 	static def weightedMethodsPerClass(AbstractTypeDeclaration type) {
 		type.weightedMethodsPerClass[1]
 	}
-	
+
 	static def weightedMethodsPerClass(AbstractTypeDeclaration type, (Block)=>Integer weight) {
-		type.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration)).sum[
+		type.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration)).sum [
 			if (it.body != null) {
 				weight.apply(it.body)
 			} else {
@@ -90,7 +97,7 @@ class ModiscoMetrics {
 		if (type.usagesInTypeAccess.empty) {
 			return 0
 		} else {
-			type.usagesInTypeAccess.sum[
+			type.usagesInTypeAccess.sum [
 				val accessingFeature = it.eContainingFeature
 				if (accessingFeature == JavaPackage::eINSTANCE.abstractTypeDeclaration_SuperInterfaces ||
 					accessingFeature == JavaPackage::eINSTANCE.classDeclaration_SuperClass) {
@@ -111,7 +118,7 @@ class ModiscoMetrics {
 			}).collect[it.type].typeSelect(typeof(AbstractTypeDeclaration))
 		]
 	}
-	
+
 	private static def eAllContentsWithoutAnonymousClasses(EObject container) {
 		container.eAllContentsAsIterable[!(it instanceof AnonymousClassDeclaration)]
 	}
@@ -125,38 +132,36 @@ class ModiscoMetrics {
 	static def int couplingBetweenObjects(AbstractTypeDeclaration type) {
 		if (type instanceof ClassDeclaration) {
 			val clazz = type as ClassDeclaration
-			val allContentsWithOutAnonymousClasses = clazz.bodyDeclarations
-				.typeSelect((typeof(AbstractMethodDeclaration)))
-				.collectAll[it.eAllContentsWithoutAnonymousClasses]
-				
-			val coupledTypes = new HashSet<AbstractTypeDeclaration>();	
-			coupledTypes.addAll(allContentsWithOutAnonymousClasses.typeSelect(typeof(SingleVariableAccess))
-				.collect[it.variable]
-				.typeSelect(typeof(VariableDeclarationFragment))
-				.collect[it.variablesContainer].typeSelect(typeof(FieldDeclaration))
-				.select[it.modifier != null && !it.modifier.isStatic]
-				.collect[it.eTypeSelectContainer(typeof(AbstractTypeDeclaration))]
-				.select[it != type]
+			val allContentsWithOutAnonymousClasses = clazz.bodyDeclarations.typeSelect((
+				typeof(AbstractMethodDeclaration))).collectAll[it.eAllContentsWithoutAnonymousClasses]
+
+			val coupledTypes = new HashSet<AbstractTypeDeclaration>();
+			coupledTypes.addAll(
+				allContentsWithOutAnonymousClasses.typeSelect(typeof(SingleVariableAccess)).collect[it.variable].
+					typeSelect(typeof(VariableDeclarationFragment)).collect[it.variablesContainer].typeSelect(
+						typeof(FieldDeclaration)).select[it.modifier != null && !it.modifier.isStatic].collect [
+						it.eTypeSelectContainer(typeof(AbstractTypeDeclaration))
+					].select[it != type]
 			)
-			
-			coupledTypes.addAll(allContentsWithOutAnonymousClasses.typeSelect(typeof(MethodInvocation))
-				.collect[it.method].select[it.modifier != null && !it.modifier.isStatic]
-				.collect[it.eTypeSelectContainer(typeof(AbstractTypeDeclaration))]
-				.select[it != type]
+
+			coupledTypes.addAll(
+				allContentsWithOutAnonymousClasses.typeSelect(typeof(MethodInvocation)).collect[it.method].select [
+					it.modifier != null && !it.modifier.isStatic
+				].collect[it.eTypeSelectContainer(typeof(AbstractTypeDeclaration))].select[it != type]
 			)
-				
+
 			return coupledTypes.size
 		} else {
 			return 0
 		}
 	}
-	
+
 	private static def qualifiedName(Type element) {
 		element.eAllContainer[it instanceof NamedElement].collect[(it as NamedElement).name].toList.reverse.join(".")
 	}
-	
+
 	private static def signature(AbstractMethodDeclaration method) {
-		return '''«method.name»@(«method.parameters.collect[type.type.qualifiedName].join(",")»)''' 
+		return '''«method.name»@(«method.parameters.collect[type.type.qualifiedName].join(",")»)'''
 	}
 
 	/**
@@ -165,40 +170,38 @@ class ModiscoMetrics {
 	 * @param type Is the type that this metric is applied to.
 	 * @returns the RFC of the given type.
 	 */
-	@Metric(name="rfc") 
+	@Metric(name="rfc")
 	static def int responseForClass(AbstractTypeDeclaration type) {
 		return type.allSuperTypes.collectAll [
-			it.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration))
-				.select[it.modifier != null && !it.modifier.isStatic &&
+			it.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration)).select [
+				it.modifier != null && !it.modifier.isStatic &&
 					(it.modifier.visibility == VisibilityKind.PUBLIC || it.modifier.visibility == VisibilityKind.NONE)
-				]
-				.collect[it.signature]
+			].collect[it.signature]
 		].toSet.size
 	}
-	
+
 	private static class UnorderedPair<E> {
 		val E one
 		val E two
-		new (E one, E two) {
+
+		new(E one, E two) {
 			this.one = one
 			this.two = two
 		}
-		
+
 		override hashCode() {
 			one.hashCode + two.hashCode
 		}
-	
+
 		override equals(Object obj) {
 			return if (obj instanceof UnorderedPair<?>) {
 				val other = obj as UnorderedPair<E>
-				(one.equals(other.one) && two.equals(other.two)) ||
-					(two.equals(other.one) && one.equals(other.two))	
-			} else {			
-				false				
+				(one.equals(other.one) && two.equals(other.two)) || (two.equals(other.one) && one.equals(other.two))
+			} else {
+				false
 			}
-		}		
+		}
 	}
-	
 
 	/**
 	 * Calculates the Lack of Cohesion Of Methods (LCOM) metrik. The difference of number of member method pairs that use 
@@ -206,41 +209,43 @@ class ModiscoMetrics {
 	 * @param type Is the type that this metric is applied to.
 	 * @Returns the LCOM number of the given type or 0 if the LCOM number is negative.
 	 */
-	 @Metric(name="lcom") 
+	@Metric(name="lcom")
 	static def int lackOfCohesionInMethods(AbstractTypeDeclaration type) {
 		val methods = type.bodyDeclarations.typeSelect(typeof(AbstractMethodDeclaration))
-		val methodToFieldsMap = methods.fold(new HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>)[result, method |
-			val accessedFieldsOfType = method
-				.eAllContentsWithoutAnonymousClasses
-				.typeSelect(typeof(SingleVariableAccess))
-				.collect[it.variable]
-				.select[it.eTypeSelectContainer(typeof(AbstractTypeDeclaration)) == type]
+		val methodToFieldsMap = methods.fold(new HashMap<AbstractMethodDeclaration, Iterable<VariableDeclaration>>) [ result, method |
+			val accessedFieldsOfType = method.eAllContentsWithoutAnonymousClasses.typeSelect(
+				typeof(SingleVariableAccess)).collect[it.variable].select [
+				it.eTypeSelectContainer(typeof(AbstractTypeDeclaration)) == type
+			]
 			result.put(method, accessedFieldsOfType)
 			return result
 		]
 		val pairsWithAccessesOfCommonFields = new HashSet<UnorderedPair<AbstractMethodDeclaration>>
 		val pairsWithOutAccessesOfCommonFields = new HashSet<UnorderedPair<AbstractMethodDeclaration>>
-		methods.forEach[m1 | methods.forEach[m2 | 
-			if (m1 != m2) {
-				if (methodToFieldsMap.get(m1).exists[field| methodToFieldsMap.get(m2).exists[it == field]]) {
-					pairsWithAccessesOfCommonFields.add(new UnorderedPair<AbstractMethodDeclaration>(m1,m2))
-				} else {
-					pairsWithOutAccessesOfCommonFields.add(new UnorderedPair<AbstractMethodDeclaration>(m1,m2))
+		methods.forEach [ m1 |
+			methods.forEach [ m2 |
+				if (m1 != m2) {
+					if (methodToFieldsMap.get(m1).exists[field|methodToFieldsMap.get(m2).exists[it == field]]) {
+						pairsWithAccessesOfCommonFields.add(new UnorderedPair<AbstractMethodDeclaration>(m1, m2))
+					} else {
+						pairsWithOutAccessesOfCommonFields.add(new UnorderedPair<AbstractMethodDeclaration>(m1, m2))
+					}
 				}
-			}
-		]]
-		
+			]
+		]
+
 		val result = pairsWithOutAccessesOfCommonFields.size - pairsWithAccessesOfCommonFields.size
-		return if (result >= 0) result else 0
+		return if(result >= 0) result else 0
 	}
-	
+
 	private static class Value<T> {
 		var T value
+
 		new(T value) {
 			this.value = value
 		}
 	}
-	
+
 	/**
 	 * Calculates the cyclomatic complexity. If/for/while etc expressions are not analysed, they all count as 1.
 	 * @param The block to compute the cyclomatic complexity for.
@@ -248,47 +253,85 @@ class ModiscoMetrics {
 	 */
 	@Metric(name="cc")
 	static def int cyclomaticComplexity(Block block) {
-		val blockHasReturnStatement = new Value(false)
-		block.eAllContentsAsIterable.sum[
+		block.eAllContentsAsIterable.sum [
 			return switch it {
-				IfStatement : 1
-				SwitchStatement: it.statements.size
-				ForStatement: 1
-				WhileStatement: 1
-				CatchClause: 1
-				DoStatement: 1
-				MethodInvocation: 1
-				ReturnStatement: {
-					blockHasReturnStatement.value = true
+				IfStatement:
 					1
-				}
-				default: 0
-			}			
-		] + if (blockHasReturnStatement.value) 0 else 1
+				SwitchStatement:
+					if (it.statements.size > 1) it.statements.size - 1 else 1
+				ForStatement:
+					1
+				WhileStatement:
+					1
+				CatchClause:
+					1
+				DoStatement:
+					1
+				MethodInvocation:
+					1
+				default:
+					0
+			}
+		] + 1 // return statement counts
 	}
 	
+	static class HalsteadValues {
+		var instances = 0
+		var classes = newHashSet()
+	}
+
+	@Metric(name="halstead")
+	static def int halsteadValume(Block block) {
+		// Rationale: Java metamodel classes represent operators and operands. 
+		// Some are operators, e.g. method-calls, arithmetic and bool operators. 
+		// Others represent operands, like variables or literals.
+		// Thus, counting used classes and their instances should give as a
+		// reasonable halstead-ish metric.
+		// In addition we should not count "equal" literals as different instances,
+		// even though they are different instances in the model. 
+		// Methods, variables, and types should be counted for as individuals.
+		val values = new HalsteadValues
+		block.traverse[obj,feature,value|
+			if (value instanceof EObject) {
+				values.classes.add(switch value {
+					StringLiteral: value.escapedValue		
+					NumberLiteral: value.tokenValue
+					BooleanLiteral: if (value.value) Boolean.TRUE else Boolean.FALSE
+					CharacterLiteral: value.escapedValue
+					TypeAccess: value.type
+					SingleVariableAccess: value.variable
+					MethodInvocation: value.method
+					default: value.eClass				
+				})
+				values.instances++
+			}
+		]
+		return (values.classes.size*(Math.log(values.instances)/Math.log(2))) as int
+	}
+
 	@Metric(name="wmc_cc")
 	static def int weightedMethodPerClassWithCCWeight(AbstractTypeDeclaration type) {
 		return type.weightedMethodsPerClass[it.cyclomaticComplexity]
 	}
-	
+
 	public static def getMetricName(Method method) {
 		(method.annotations.findFirst[it instanceof Metric] as Metric).name
 	}
-	
+
 	public static def getMetricSourceType(Method method) {
 		method.parameterTypes.get(0)
 	}
-	
+
 	public static def getMetrics() {
-		return ModiscoMetrics.methods.filter[
-			it.annotations.exists[
+		return ModiscoMetrics.methods.filter [
+			it.annotations.exists [
 				it instanceof Metric
 			]
 		]
 	}
-	
+
 	public static def String qualifiedName(EObject element) {
-		return element.eAllContainer[it instanceof NamedElement].collect[(it as NamedElement).name].toList.reverse.join("/")	
+		return element.eAllContainer[it instanceof NamedElement].collect[(it as NamedElement).name].toList.reverse.
+			join("/")
 	}
 }

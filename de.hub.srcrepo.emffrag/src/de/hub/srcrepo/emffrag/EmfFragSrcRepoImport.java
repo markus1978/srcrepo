@@ -9,10 +9,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
@@ -50,7 +47,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private final URI modelURI;
 		
 		private String repositoryURL = null; 
-		private boolean withDisabledUsages = false;
+		private boolean withUsages = false;
 		private int bulkInsertSize = 1000;
 		private int fragmentCacheSize = 100;
 		private boolean resume = false;
@@ -75,8 +72,8 @@ public class EmfFragSrcRepoImport implements IApplication {
 			return this;
 		}
 
-		public Configuration withDisabledUsages(boolean withDisabledUsages) {
-			this.withDisabledUsages = withDisabledUsages;
+		public Configuration withUsages(boolean withUsages) {
+			this.withUsages = withUsages;
 			return this;
 		}
 
@@ -185,30 +182,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 		new HelpFormatter().printHelp("eclipse ... [options] working-copy-path data-base-uri", createOptions());
 	}
 	
-	public static JavaPackage configureJavaPackage(boolean disabledUsages) {	
-		JavaPackage javaPackage = JavaPackage.eINSTANCE;
-		
-		if (disabledUsages) {
-			TreeIterator<EObject> eAllContents = javaPackage.eAllContents();
-			while (eAllContents.hasNext()) {
-				EObject next = eAllContents.next();
-				if (next instanceof EReference) {
-					EReference reference = (EReference)next;
-					if (reference.getName().startsWith("usage")) {
-						EReference eOpposite = reference.getEOpposite();
-						if (eOpposite != null) {
-							SrcRepoActivator.INSTANCE.info(reference.getEContainingClass().getName() + "." + reference.getName() 
-									+ "->" + reference.getEOpposite().getEContainingClass().getName() + "." + reference.getEOpposite().getName());
-							eOpposite.setEOpposite(null);
-							reference.setEOpposite(null);								
-						}						
-					}
-				}
-			}
-		}
-		return javaPackage;
-	}
-	
 	public static RepositoryModelPackage createRepositoryModelPackage() {
 		return RepositoryModelPackage.eINSTANCE;
 	}
@@ -254,7 +227,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (commandLine.hasOption("abort-after")) {
 			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
 		}
-		config.withDisabledUsages(commandLine.hasOption("disable-usages"));
+		config.withUsages(commandLine.hasOption("enable-usages"));
 		config.resume(commandLine.hasOption("resume"));
 		if (commandLine.hasOption("checkout-without-import")) {
 			config.checkOutWithoutImport();
@@ -301,7 +274,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 				
 		// create necessary models
 		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
-		JavaPackage javaModelPackage = configureJavaPackage(config.withDisabledUsages);
+		JavaPackage javaModelPackage = EmffragSrcRepo.configureJavaPackage(config.withUsages);
 		RepositoryModel repositoryModel = null;
 		
 		if (!config.resume) {
@@ -357,17 +330,17 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		if (!config.skipSourceCodeImport) {		
 			if (config.resume) {
-				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, repositoryModel.getTraversals(), true, stop ? config.stopAfterNumberOfRevs : -1);
+				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, repositoryModel.getTraversals(), true, true, stop ? config.stopAfterNumberOfRevs : -1);
 			} else {
 				if (stop) {
 					TraversalState traversalState = repositoryModelPackage.getRepositoryModelFactory().createTraversalState();
 					repositoryModel.setTraversals(traversalState);
-					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  traversalState, false, config.stopAfterNumberOfRevs);	
+					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  traversalState, false, false, config.stopAfterNumberOfRevs); // TODO save state configurable?	
 				} else {
 					if (config.useFlatTraversal) {
 						RepositoryModelFlatTraversal.traverse(repositoryModel, sourceImportVisitor);
 					} else {
-						RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, -1);
+						RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, false, -1);
 					}
 				}
 			}

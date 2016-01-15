@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.RepositoryModelTraversal.Stats;
+import de.hub.srcrepo.metrics.ModiscoMetrics;
 import de.hub.srcrepo.ocl.OclUtil;
 import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.Diff;
@@ -172,7 +173,7 @@ public class MoDiscoGitImportTest {
 		}
 		
 		final Collection<String> visitedRevNames = new HashSet<String>();
-		final PrintStream out = new PrintStream(new ByteArrayOutputStream()); // write to nothing
+		final PrintStream out = System.out; // new PrintStream(new ByteArrayOutputStream()); // write to nothing
 		final Collection<String> rootNames = new HashSet<String>();
 		//final PrintStream out = System.out;
 		Stats stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {

@@ -14,8 +14,9 @@ import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.Package;
 import org.eclipse.gmt.modisco.java.Type;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
-import org.eclipse.gmt.modisco.java.internal.util.JavaUtil;
+import org.eclipse.modisco.java.discoverer.internal.io.java.binding.Binding;
 
+import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
@@ -27,7 +28,7 @@ import de.hub.srcrepo.repositorymodel.Target;
 public abstract class MoDiscoRevVisitor extends RevVisitor {
 	
 	private final JavaPackage targetMetaModel;
-
+	
 	public MoDiscoRevVisitor(JavaPackage targetMetaModel) {
 		super();
 		this.targetMetaModel = targetMetaModel;
@@ -51,9 +52,10 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 			}
 		}
 		merge.completeMerge();
-										
-		// load all targets for this rev
-		final Map<String, NamedElement> targets = new HashMap<String, NamedElement>();
+		
+		SrcRepoBindingManager bindingManager = new SrcRepoBindingManager(targetMetaModel.getJavaFactory());
+		
+		// load all targets and pending elements
 		for (AbstractFileRef ref: files.values()) {
 			if (ref instanceof JavaCompilationUnitRef) {
 				CompilationUnitModel compilationUnitModel = ((JavaCompilationUnitRef)ref).getCompilationUnitModel();
@@ -62,36 +64,19 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 					if (targetElement == null) {
 						throw new NullPointerException();
 					}
-					targets.put(target.getId(), targetElement);
+					bindingManager.addTarget(target.getId(), targetElement);
+				}
+				for (PendingElement pending: compilationUnitModel.getPendings()) {
+					org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement pendingElement = new org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement(targetMetaModel.getJavaFactory());
+					pendingElement.setClientNode((ASTNode)merge.sourceToObject.get(pending.getClientNode()));
+					pendingElement.setLinkName(pending.getLinkName());					
+					bindingManager.addPending(pendingElement, new Binding(pending.getBinding()));					
 				}
 			}
 		}
 		
-		// resolve the pending elements of all compilation units
-		for (AbstractFileRef ref: files.values()) {
-			if (ref instanceof JavaCompilationUnitRef) {
-				CompilationUnitModel compilationUnitModel = ((JavaCompilationUnitRef)ref).getCompilationUnitModel();
-				for(PendingElement pendingElementModel: compilationUnitModel.getPendings()) {
-					org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement pendingElement = 
-							new org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement(targetMetaModel.getJavaFactory());
-					pendingElement.setClientNode((ASTNode)merge.sourceToObject.get(pendingElementModel.getClientNode()));
-					pendingElement.setLinkName(pendingElementModel.getLinkName());
-					
-					String id = pendingElementModel.getBinding();
-					NamedElement target = targets.get(id);
-					
-					if (target == null) {
-						target = JavaUtil.getNamedElementByQualifiedName(targetModel, id, targets);
-					}
-					
-					if (target != null) {
-						pendingElement.affectTarget(target);
-					} else {
-						pendingElement.affectUnresolvedTarget();
-					}
-				}
-			}
-		}
+		// resolve
+		bindingManager.resolveBindings();
 		
 		// do
 		onRev(rev, targetModel);
@@ -163,6 +148,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 					targetModel.getOwnedElements().add(targetPackage);
 				}
 			}
+			
 			sourceToObject.put(source, targetPackage);
 			
 			for(AbstractTypeDeclaration type: source.getOwnedElements()) {
@@ -190,7 +176,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 
 		@Override
 		protected EStructuralFeature getTarget(EStructuralFeature eStructuralFeature) {
-			return getTarget(eStructuralFeature.getEContainingClass()).getEStructuralFeature(eStructuralFeature.getFeatureID());			
+			return getTarget(eStructuralFeature.getEContainingClass()).getEStructuralFeature(eStructuralFeature.getFeatureID());	// TODO IMPORTANT		
 		}
 
 //		@Override
