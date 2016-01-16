@@ -74,7 +74,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				«statSummaryData(importStatJSON, "Write execution times", "6_writeTime")»,
 				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
 				«IF withElementCount»					
-					«statSummaryData(dataStatJSON, "Traverse execution time for 100k objects", "8_traverseTime")»
+					«statSummaryData(dataStatJSON, "Traverse execution time for a million objects", "8_traverseTime")»
 				«ENDIF»
 			}
 		'''.toString
@@ -95,7 +95,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 		
 		countFObjects(model) [	
 			count++	
-			if ((count +1) % 100000 == 0) {
+			if ((count +1) % 1000000 == 0) {
 				timer.track
 				timer = traverseOneKObjectsExecTimeStat.timer
 				if (cl.hasOption("v")) { print(".") }

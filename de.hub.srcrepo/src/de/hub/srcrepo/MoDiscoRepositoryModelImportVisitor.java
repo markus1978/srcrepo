@@ -1,8 +1,10 @@
 package de.hub.srcrepo;
 
+import static de.hub.srcrepo.RepositoryModelUtil.getImportMetaData;
+import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
+
 import java.io.File;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -28,7 +29,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.resource.impl.EFSURIHandlerImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
@@ -66,8 +66,6 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import javancss.Javancss;
-
-import static de.hub.srcrepo.RepositoryModelUtil.*;
 
 @SuppressWarnings("restriction")
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {

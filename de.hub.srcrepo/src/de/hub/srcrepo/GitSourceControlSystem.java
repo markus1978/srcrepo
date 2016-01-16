@@ -150,6 +150,18 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		}
 	}
 	
+	public void importRevisions(RepositoryModel model, String... names) throws Exception {
+		Repository jGitRepository = git.getRepository();
+		RevWalk walk = new RevWalk(jGitRepository);
+		ArrayList<RevCommit> commits = new ArrayList<RevCommit>();
+		for (String name: names) {
+			commits.add(walk.parseCommit(jGitRepository.resolve(name)));
+		}
+		walk.close();
+		walk.dispose();
+		doImportCommits(model, commits);
+	}
+	
 	private void doImportRevisions(RepositoryModel model) throws Exception {	
 		// create helper
 		RepositoryModelFactory factory = (RepositoryModelFactory)model.eClass().getEPackage().getEFactoryInstance();
@@ -183,11 +195,19 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				}
 			}
 		}
+		walk.close();
+		walk.dispose();
 		
-		SrcRepoActivator.INSTANCE.info("Found " + commitsToImport.size() + " commits based on " + peeledRefsIds.size() + " starting refs. Importing now...");
-		
+		SrcRepoActivator.INSTANCE.info("Found " + commitsToImport.size() + " commits based on " + peeledRefsIds.size() + " starting refs. Importing now...");		
 		// import all found commits
-		walk.reset();
+		doImportCommits(model, commitsToImport);
+	}
+
+	private void doImportCommits(RepositoryModel model, List<RevCommit> commitsToImport) throws Exception {
+		RepositoryModelFactory factory = (RepositoryModelFactory)model.eClass().getEPackage().getEFactoryInstance();
+		Repository jGitRepository = git.getRepository();
+		RevWalk walk = new RevWalk(jGitRepository);
+		
 		ObjectReader objectReader = walk.getObjectReader();
 		DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
 		df.setRepository(git.getRepository());
@@ -219,7 +239,6 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				model.getRootRevs().add(revModel);
 			}
 		}
-		
 		df.close();
 		
 		walk.close();
