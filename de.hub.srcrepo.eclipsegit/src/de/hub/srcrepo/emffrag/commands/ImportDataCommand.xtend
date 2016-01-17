@@ -26,7 +26,9 @@ import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils
 
 class ImportDataCommand extends AbstractRepositoryCommand {
 	
-	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, "Traverse execution time for 100k objects");
+	private static val traverseObjectsExecTimeStataTitle = "Traverse execution time for a million objects"
+	
+	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, traverseObjectsExecTimeStataTitle);
 	private var withElementCount = false
 	private var CommandLine cl = null
 	private var List<String> data = newArrayList
@@ -64,6 +66,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				2_revErrorCount : «repo.metaData.revsWithErrors»,
 				2_dbEntryCount : «repo.dataStoreMetaData.count»,
 				2_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
+				2_gitSize : «repo.metaData.size»,
 				«IF withElementCount»
 					2_elementCount : «elementCountResult.get("count")»,
 					2_SLOC : «elementCountResult.get("ncss")»,
@@ -74,7 +77,10 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				«statSummaryData(importStatJSON, "Write execution times", "6_writeTime")»,
 				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
 				«IF withElementCount»					
-					«statSummaryData(dataStatJSON, "Traverse execution time for a million objects", "8_traverseTime")»
+					«statSummaryData(dataStatJSON, traverseObjectsExecTimeStataTitle, "8_traverseTime")»,
+					«statSummaryData(dataStatJSON, "FragLoadET", "9_fragLoadET")»,
+					«statSummaryData(dataStatJSON, "FragUnloadET", "10_fragUnloadET")»,
+					«statSummaryData(dataStatJSON, "DataReadET", "11_dataReadET")»,
 				«ENDIF»
 			}
 		'''.toString

@@ -52,7 +52,7 @@ class ParallelCommand extends AbstractRepositoryCommand {
 	private def void runImport(RepositoryModel repository) {
 		var result = 0
 		try {
-			val cmd = '''java -jar 01-software/srcrepo.jar «cl.getOptionValue("c")» -d «(repository.eContainer as RepositoryModelDirectory).name» -r «repository.name»'''
+			val cmd = '''java -jar 01-software/srcrepo.jar «cl.getOptionValue("c")» -d «(repository.eContainer as RepositoryModelDirectory).name» -r ^«repository.name»$'''
 			println('''«dateTime»: Start command: «cmd»''')		
 			val process = Runtime.runtime.exec(cmd)
 			redirectOutput(process)
