@@ -45,6 +45,7 @@ import org.eclipse.gmt.modisco.java.TypeParameter;
 import org.eclipse.gmt.modisco.java.UnresolvedItem;
 import org.eclipse.gmt.modisco.java.VariableDeclarationFragment;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
+import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.gmt.modisco.java.internal.util.JavaUtil;
 import org.eclipse.modisco.java.discoverer.internal.JavaActivator;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.Binding;
@@ -84,7 +85,7 @@ public class SrcRepoBindingManager extends BindingManager {
 	/**
 	 * the targets (declared Java entities).
 	 */
-	private Map<String, NamedElement> targets = new HashMap<String, NamedElement>();
+	private final Map<String, NamedElement> targets;
 	
 	public Map<String, NamedElement> getTargets() {
 		return targets;
@@ -93,12 +94,12 @@ public class SrcRepoBindingManager extends BindingManager {
 	/**
 	 * Elements which causes problems during resolution.
 	 */
-	private final Map<String, UnresolvedItem> unresolvedItems = new HashMap<String, UnresolvedItem>();
+	private final Map<String, UnresolvedItem> unresolvedItems;
 
 	/**
 	 * the pending references.
 	 */
-	private List<PendingElement> pendings = new ArrayList<PendingElement>();
+	private final List<PendingElement> pendings;
 	
 	public List<PendingElement> getPendings() {
 		return pendings;
@@ -125,6 +126,9 @@ public class SrcRepoBindingManager extends BindingManager {
 	public SrcRepoBindingManager(final JavaFactory factory) {
 		super(factory);
 		this.factory = factory;
+		this.targets = new HashMap<String, NamedElement>();
+		this.pendings = new ArrayList<PendingElement>();
+		this.unresolvedItems = new HashMap<String, UnresolvedItem>();
 	}
 
 	/**
@@ -140,6 +144,16 @@ public class SrcRepoBindingManager extends BindingManager {
 		this.targets = new HashMap<String, NamedElement>(aBindingManager.targets);
 		this.pendings = new ArrayList<PendingElement>(aBindingManager.pendings);
 		this.model = aBindingManager.model;
+		this.unresolvedItems = new HashMap<String, UnresolvedItem>();
+	}
+	
+	public SrcRepoBindingManager(Model model, JavaPackage metaModel, Map<String,NamedElement> targets, List<PendingElement> pendings, Map<String,UnresolvedItem> unresolvedItems) {
+		super(metaModel.getJavaFactory());
+		this.factory = metaModel.getJavaFactory();
+		this.model = model;
+		this.targets = targets;
+		this.pendings = pendings;
+		this.unresolvedItems = unresolvedItems;
 	}
 
 	/**
@@ -330,18 +344,14 @@ public class SrcRepoBindingManager extends BindingManager {
 				if (target == null) {
 					unresolvedBindings.add(pe);
 				} else {
-					try {
-						pe.affectTarget(target);
-					} catch (Exception e) { // TODO remove
-						//System.out.print("#");
-					}
+					pe.affectTarget(target);
 				}
 			}
 		}
 		manageUnresolvedBindings(model1, unresolvedBindings);
 	}
 
-	private void manageUnresolvedBindings(final Model model1,
+	protected void manageUnresolvedBindings(final Model model1,
 			final List<PendingElement> unresolvedBindings) {
 		if (model1 != null) {
 			for (PendingElement pe : unresolvedBindings) {

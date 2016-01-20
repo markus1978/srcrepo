@@ -22,6 +22,7 @@ class MetricsCommand extends AbstractRepositoryCommand {
 	private def traverse(RepositoryModel repo, EmffragModiscoRevVisitor visitor) {
 		RepositoryModelTraversal.traverse(repo, visitor)
 	}
+	
 	var count = 0
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
 //		AnalysisVisitor.traverse(repo)[o,f,v|
@@ -30,8 +31,8 @@ class MetricsCommand extends AbstractRepositoryCommand {
 //		println("visited values " + count)
 		repo.traverse[rev, model|
 			println('''
-				«rev.name» 
-					halstead: «model.collectAllTypes.sum[it.weightedMethodsPerClass[it.halsteadValume]]»
+				«rev.name»
+					size: «model.eAllContents.size» 
 			''')
 		]					
 	}
