@@ -5,12 +5,17 @@ Bundle-SymbolicName: de.hub.srcrepo.tests;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
+ org.eclipse.gmt.modisco.java,
  org.eclipse.ui.ide;bundle-version="3.7.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.7.0",
  org.junit,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
- org.eclipse.xtend.lib.macro
+ org.eclipse.xtend.lib.macro,
+ org.eclipse.jdt.core;bundle-version="3.11.0",
+ org.eclipse.core.resources;bundle-version="3.10.0",
+ org.eclipse.core.runtime;bundle-version="3.11.0",
+ org.eclipse.modisco.java.discoverer;bundle-version="0.13.0"
 Export-Package: de.hub.srcrepo
 Bundle-ActivationPolicy: lazy

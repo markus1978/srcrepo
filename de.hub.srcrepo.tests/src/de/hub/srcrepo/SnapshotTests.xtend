@@ -1,0 +1,80 @@
+package de.hub.srcrepo
+
+import org.junit.Test
+import static org.junit.Assert.*
+import org.eclipse.gmt.modisco.java.emf.JavaFactory
+import org.eclipse.gmt.modisco.java.emf.JavaPackage
+import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
+import org.eclipse.emf.ecore.util.EcoreUtil
+
+class SnapshotTests {
+	
+	val factory = JavaFactory.eINSTANCE
+	val metaModel = JavaPackage.eINSTANCE
+	
+	@Test
+	public def void containmentOnlyAddTest() {
+		val snapshot = new Snapshot(metaModel)
+		
+		val m1 = factory.createModel
+		val p1 = factory.createPackage
+		p1.name = "p1"
+		m1.ownedElements += p1
+		val c1 = factory.createClassDeclaration
+		c1.name ="C1"
+		p1.ownedElements += c1
+		
+		val cu1 = factory.createCompilationUnit
+		m1.compilationUnits+=cu1
+		cu1.types+=c1
+		
+		val cuModel1 = RepositoryModelFactory.eINSTANCE.createCompilationUnitModel
+		cuModel1.javaModel = m1
+		cuModel1.compilationUnit = cu1
+		
+		snapshot.addCU(cuModel1)
+		val model = snapshot.snapshot
+		assertNotNull(model)
+		assertNotNull(model.ownedElements.get(0))
+		assertNotNull(model.ownedElements.get(0).ownedElements.get(0))
+		assertEquals("C1", model.ownedElements.get(0).ownedElements.get(0).name)
+		assertFalse(c1 == model.ownedElements.get(0).ownedElements.get(0))
+	} 
+	
+	@Test
+	public def void containmentOnlyChangeTest() {
+		val snapshot = new Snapshot(metaModel)
+		
+		val m1 = factory.createModel
+		val p1 = factory.createPackage
+		p1.name = "p1"
+		m1.ownedElements += p1
+		val c1 = factory.createClassDeclaration
+		c1.name ="C1"
+		p1.ownedElements += c1
+		
+		val cu1 = factory.createCompilationUnit
+		m1.compilationUnits+=cu1
+		cu1.types+=c1
+		
+		val cuModel1 = RepositoryModelFactory.eINSTANCE.createCompilationUnitModel
+		cuModel1.javaModel = m1
+		cuModel1.compilationUnit = cu1
+		
+		val cuModel2 = EcoreUtil.copy(cuModel1)
+		cuModel2.javaModel.ownedElements.get(0).ownedElements.get(0).name = "C2"
+		
+		snapshot.addCU(cuModel1)
+		snapshot.snapshot
+		snapshot.removeCU(cuModel1)
+		snapshot.addCU(cuModel2)
+		val model = snapshot.snapshot
+		
+		assertNotNull(model)
+		assertSame(1, model.ownedElements.size)
+		assertNotNull(model.ownedElements.get(0))
+		assertSame(1, model.ownedElements.get(0).ownedElements.size)
+		assertNotNull(model.ownedElements.get(0).ownedElements.get(0))
+		assertEquals("C2", model.ownedElements.get(0).ownedElements.get(0).name)
+	} 
+}
