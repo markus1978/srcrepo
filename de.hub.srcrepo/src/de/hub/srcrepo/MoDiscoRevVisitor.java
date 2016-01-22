@@ -14,16 +14,15 @@ import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.Rev;
 
-@SuppressWarnings("restriction")
 public abstract class MoDiscoRevVisitor extends RevVisitor {
 
-	private final IModiscoSnapshotModel snapshot;
+	private final IModicsoIncrementalSnapshotModel snapshot;
 
 	private final Map<String, CompilationUnitModel> contributingModels;
 
 	public MoDiscoRevVisitor(JavaPackage snapshotMetaModel) {
 		super();
-		snapshot = new Snapshot(snapshotMetaModel);
+		snapshot = new ModiscoIncrementalSnapshotImpl(snapshotMetaModel);
 		contributingModels = new HashMap<String, CompilationUnitModel>();
 	}
 
@@ -45,7 +44,6 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 				CompilationUnitModel oldCUModel = contributingModels.get(path);
 
 				if (oldCUModel != null) {
-					// TODO remove from snapshotModel
 					snapshot.removeCU(oldCUModel);
 				}
 				snapshot.addCU(newCUModel);

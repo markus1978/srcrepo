@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.ASTNode
+import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.UnresolvedAnnotationDeclaration
@@ -27,146 +28,182 @@ import org.eclipse.gmt.modisco.java.UnresolvedSingleVariableDeclaration
 import org.eclipse.gmt.modisco.java.UnresolvedType
 import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.UnresolvedVariableDeclarationFragment
-import org.eclipse.gmt.modisco.java.emf.JavaFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.Binding
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement
 
-class Snapshot implements IModiscoSnapshotModel {
-	
+class ModiscoIncrementalSnapshotImpl implements IModicsoIncrementalSnapshotModel {
+
 	val JavaPackage metaModel;
 	val Model model;
-	
+
+	/**
+	 * A map that connects all CompilationUnits in the model, with the SSCompilationUnitModel they are from. 
+	 */
+	val Map<CompilationUnit, SSCompilationUnitModel> compilationUnits = newHashMap
+
+	val Map<String, NamedElement> targets = newHashMap
 	val Map<String, UnresolvedItem> unresolvedItems = newHashMap
-	
-	val List<SSCompilationUnitModel> currentCUs = newArrayList
+
+	val Map<CompilationUnitModel, SSCompilationUnitModel> currentCUs = newHashMap
 	val List<SSCompilationUnitModel> inCUs = newArrayList
 	val List<SSCompilationUnitModel> outCUs = newArrayList
-	
-	
-	
+
 	new(JavaPackage metaModel) {
 		this.metaModel = metaModel;
 		model = metaModel.javaFactory.createModel
 	}
-	
+
+	def getMetaModel() {
+		return metaModel
+	}
+
+	def getCompilationUnits() {
+		return compilationUnits
+	}
+
 	override addCU(CompilationUnitModel model) {
-		inCUs += new SSCompilationUnitModel(metaModel, model)
+		inCUs += new SSCompilationUnitModel(this, model)
 	}
-	
+
 	override removeCU(CompilationUnitModel model) {
-		outCUs += currentCUs.findFirst[it.source == model] // TODO performance
+		outCUs += currentCUs.get(model)
 	}
-	
+
 	override getSnapshot() {
 		if (!outCUs.empty || !inCUs.empty) {
 			computeSnapshot
 		}
 		return model
 	}
-	
+
 	private def computeSnapshot() {
 		println("#compute")
-		// revert references to CUs that will be removed
-		outCUs.forEach[pendings.forEach[revert]] // TODO wrong direction (pendings are outgoing reference, not incoming)
-		
-		// remove and add compilation unit contents
-		outCUs.forEach[it.removeFromModel(model)]
-		currentCUs -= outCUs
-		inCUs.forEach[it.addToModel(model)]
-		currentCUs += inCUs
-		
-		// resolve all pending elements in the set of current CUs
-		val pendingElements = currentCUs.map[(it.pendings as List<?>) as List<PendingElement>].flatten.toList // TODO performance, keep only unresolved
-		val targets = newHashMap(); currentCUs.forEach[it.fillTargets(targets)] // TODO performance, do not compute fully do it incrementally by adding and removing targets
-		
-		val bindingManager = new SrcRepoBindingManager(model, metaModel, targets, pendingElements, unresolvedItems); 
-		// TODO keep only one manager?
-		//      perhaps make this class a binding manager decendant?
+		val List<PendingElement> pendingElementsToResolve = newArrayList
+
+		// remove old CUs
+		outCUs.forEach [
+			println("#remove: " + it)
+			// delete all references that leave or are completely within old CUs
+			it.pendingElements.forEach[delete]
+			// replace all references that enter old CUs with place holders and 
+			// add them to the list of pending elements, since they need to be 
+			// resolved again. Ignoring unresolved references, which must be
+			// references that were delete one step before.
+			it.incomingReferences.filter[resolved].forEach [
+				it.revert
+				pendingElementsToResolve += it
+			]
+			// remove the containment hierarchy
+			compilationUnits.remove(it.removeFromModel(model))
+			// remove targets
+			it.removeTargets(targets)
+			currentCUs.remove(it.source)
+		]
+
+		// add new CUs
+		inCUs.forEach [
+			println("#add: " + it)
+			// add containment hierarchy
+			compilationUnits.put(it.addToModel(model), it)
+			// add the pending elements of the new CU to the list of pending elements
+			pendingElementsToResolve += it.getPendingElements
+			// add targets
+			it.fillTargets(targets)
+			currentCUs.put(it.source, it)
+		]
+
+		// resolve all pending elements 
+		val bindingManager = new SrcRepoBindingManager(model, metaModel, targets, pendingElementsToResolve,
+			unresolvedItems);
 		bindingManager.resolveBindings(model); // unresolved bindings are added to the model's unresolvedItems
-		
 		// remove unresolvedItems that are no longer referenced
-		for (UnresolvedItem unresolvedItem: model.unresolvedItems) {
-			val isNotUsed = unresolvedItem.usagesInImports.empty && switch (unresolvedItem) {
-				UnresolvedAnnotationDeclaration: unresolvedItem.usagesInTypeAccess.empty
-				UnresolvedClassDeclaration: unresolvedItem.usagesInTypeAccess.empty
-				UnresolvedInterfaceDeclaration: unresolvedItem.usagesInTypeAccess.empty
-				UnresolvedEnumDeclaration: unresolvedItem.usagesInTypeAccess.empty
-				UnresolvedLabeledStatement: unresolvedItem.usagesInBreakStatements.empty && unresolvedItem.usagesInContinueStatements.empty
-				UnresolvedMethodDeclaration: unresolvedItem.usages.empty && unresolvedItem.usagesInDocComments.empty
-				UnresolvedSingleVariableDeclaration: unresolvedItem.usageInVariableAccess.empty
-				UnresolvedType: unresolvedItem.usagesInTypeAccess.empty
-				UnresolvedTypeDeclaration: unresolvedItem.usagesInTypeAccess.empty
-				UnresolvedVariableDeclarationFragment: unresolvedItem.usageInVariableAccess.empty	
-				default: throw new RuntimeException("unreachable")		
+		model.unresolvedItems.filter [
+			usagesInImports.empty && switch (it) {
+				UnresolvedAnnotationDeclaration: usagesInTypeAccess.empty
+				UnresolvedClassDeclaration: usagesInTypeAccess.empty
+				UnresolvedInterfaceDeclaration: usagesInTypeAccess.empty
+				UnresolvedEnumDeclaration: usagesInTypeAccess.empty
+				UnresolvedLabeledStatement: usagesInBreakStatements.empty && usagesInContinueStatements.empty
+				UnresolvedMethodDeclaration: usages.empty && usagesInDocComments.empty
+				UnresolvedSingleVariableDeclaration: usageInVariableAccess.empty
+				UnresolvedType: usagesInTypeAccess.empty
+				UnresolvedTypeDeclaration: usagesInTypeAccess.empty
+				UnresolvedVariableDeclarationFragment: usageInVariableAccess.empty
+				default: throw new RuntimeException("unreachable")
 			}
-			if (isNotUsed) {
-				EcoreUtil.remove(unresolvedItem)
-			}
-		}
-		
+		].toList.forEach [
+			unresolvedItems.remove(it.name) // modisco uses the binding name/id as name for the unresolved item
+			EcoreUtil.remove(it)
+		]
+
 		outCUs.clear
 		inCUs.clear
-	}  
+	}
 }
 
+// TODO make internal class of snapshot and remove obsolete access methods
 class SSPendingElement extends PendingElement {
-	val JavaFactory factory	
+	val ModiscoIncrementalSnapshotImpl snapshot
 	var ASTNode target = null;
 	var int index = -1;
 	var reverted = false
-	
-	new(JavaPackage metaModel, ASTNode clientNode, String linkName, String binding) {
-		super(metaModel.javaFactory)
-		this.factory = metaModel.javaFactory
-		this.clientNode = clientNode	
+
+	new(ModiscoIncrementalSnapshotImpl snapshot, ASTNode clientNode, String linkName, String binding) {
+		super(snapshot.metaModel.javaFactory)
+		this.snapshot = snapshot
+		this.clientNode = clientNode
 		this.linkName = linkName
 		this.binding = new Binding(binding)
 	}
-	
+
 	override affectTarget(ASTNode target) {
 		Preconditions.checkArgument(target != null)
 		if (this.target == null) {
-			resolve(target)			
+			resolve(target)
 		} else {
 			replace(target)
 		}
 		reverted = false
 	}
-	
+
 	def resolve(ASTNode target) {
 		Preconditions.checkState(!reverted && this.target == null)
 		this.target = target
-		
+
 		val owner = getClientNode()
 		val linkName = getLinkName()
 		val feature = owner.eClass().getEStructuralFeature(linkName) as EReference
-		
+
 		index = -1;
 		if (feature.isMany()) {
 			val lst = owner.eGet(feature) as EList<EObject>
 			lst += target
 			index = lst.size() - 1;
-		} else {			
+		} else {
 			owner.eSet(feature, target);
-		}		
+		}
+
+		if (!(target instanceof UnresolvedItem)) {
+			snapshot.compilationUnits.get(target.originalCompilationUnit).incomingReferences += this
+		}
 	}
-	
+
 	def replace(ASTNode newTarget) {
 		Preconditions.checkState(reverted && target != null)
 		this.target = newTarget
-		
+
 		val owner = getClientNode()
 		val linkName = getLinkName()
 		val feature = owner.eClass().getEStructuralFeature(linkName) as EReference
-		
+
 		if (index != -1) {
-			(owner.eGet(feature) as EList<EObject>).set(index, newTarget)	
+			(owner.eGet(feature) as EList<EObject>).set(index, newTarget)
 		} else {
 			owner.eSet(feature, newTarget)
 		}
 	}
-	
+
 	def isResolved() {
 		return target != null && !reverted
 	}
@@ -176,66 +213,95 @@ class SSPendingElement extends PendingElement {
 	 */
 	def revert() {
 		Preconditions.checkState(target != null && !reverted)
-		val placeHolder = factory.create(target.eClass) as ASTNode
+		println("#revert: ->" + (target as NamedElement).name)
+		val placeHolder = snapshot.metaModel.javaFactory.create(target.eClass) as ASTNode
 		(placeHolder as InternalEObject).eSetProxyURI(URI.createURI(linkName)); // TODO remove, for debug only
 		reverted = true;
 		replace(placeHolder)
 	}
+
+	def delete() {
+		Preconditions.checkState(!reverted && target != null)
+		println("#delete: ->" + (target as NamedElement).name)
+		val owner = getClientNode()
+		val feature = owner.eClass().getEStructuralFeature(linkName) as EReference
+
+		if (index != -1) {
+			(owner.eGet(feature) as EList<EObject>).remove(index)
+		} else {
+			owner.eUnset(feature)
+		}
+		target = null
+	}
 }
 
 public class SSCompilationUnitModel {
-	val CompilationUnitModel dbCUModel;
-	val JavaPackage metaModel
+	val CompilationUnitModel source;
+	val ModiscoIncrementalSnapshotImpl snapshot
 	val extension SSCopier copier
-	val List<SSPendingElement> pendings = newArrayList 
-	
+	val List<SSPendingElement> incomingReferences = newArrayList
+	val List<SSPendingElement> pendingElements = newArrayList
+
 	var boolean isAttached = false
-	
-	new (JavaPackage metaModel, CompilationUnitModel dbCUModel) {
-		this.metaModel = metaModel
-		this.dbCUModel = dbCUModel
-		this.copier = new SSCopier(metaModel)	
+
+	new(ModiscoIncrementalSnapshotImpl snapshot, CompilationUnitModel source) {
+		this.snapshot = snapshot
+		this.source = source
+		this.copier = new SSCopier(snapshot.metaModel)
 	}
-	
-	def getPendings() {
+
+	def getPendingElements() {
+		return pendingElements
+	}
+
+	/**
+	 * All pending elements that represent references that point towards elements in this CU.
+	 * This includes references sources within this very same CU.
+	 */
+	def getIncomingReferences() {
 		Preconditions.checkState(isAttached)
-		return pendings
+		return incomingReferences
 	}
-	
+
 	def void fillTargets(Map<String, NamedElement> allTargets) {
 		Preconditions.checkState(isAttached)
-		dbCUModel.targets.forEach[allTargets.put(id,target.copied)]
+		source.targets.forEach[allTargets.put(id, target.copied)]
 	}
-	
-	def void addToModel(Model model) {
+
+	def void removeTargets(Map<String, NamedElement> allTargets) {
+		source.targets.forEach[allTargets.remove(it.id)]
+	}
+
+	def CompilationUnit addToModel(Model model) {
 		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
-		println("<-" + dbCUModel.compilationUnit.originalFilePath)
 		// compilation unit
-		val cuCopy = copyt(dbCUModel.compilationUnit)
+		val cuCopy = copyt(source.compilationUnit)
 		model.compilationUnits.add(cuCopy)
 		// types
-		dbCUModel.compilationUnit.types.forEach[copy(model, dbCUModel.javaModel, it)]
+		source.compilationUnit.types.forEach[copy(model, source.javaModel, it)]
 		// orphan types
-		dbCUModel.javaModel.orphanTypes.forEach[copy(model, dbCUModel.javaModel, it)]
+		source.javaModel.orphanTypes.forEach[copy(model, source.javaModel, it)]
 		copyReferences
-		
-		pendings += dbCUModel.pendings.map[new SSPendingElement(metaModel, copied(clientNode), linkName, binding)]
+
+		pendingElements += source.pendings.map [
+			new SSPendingElement(snapshot, copied(clientNode), linkName, binding)
+		]
 		isAttached = true
+
+		return cuCopy
 	}
-	
-	def void removeFromModel(Model model) {
-		println("->" + dbCUModel.compilationUnit.originalFilePath)		
+
+	def CompilationUnit removeFromModel(Model model) {
 		Preconditions.checkState(isAttached, "Can only removed compilation unit model that is attached to a model.")
 		// orphant types
-		dbCUModel.javaModel.orphanTypes.forEach[
+		source.javaModel.orphanTypes.forEach [
 			val copy = copied(it)
 			if (copy.usagesInTypeAccess.empty && copy.usagesInImports.empty) {
 				EcoreUtil.remove(copy)
-				println(".")
 			}
 		]
 		// types
-		copied(dbCUModel.compilationUnit).types.forEach[
+		copied(source.compilationUnit).types.forEach [
 			var container = it.eContainer
 			it.delete
 			// also remove emptied packages
@@ -246,20 +312,28 @@ public class SSCompilationUnitModel {
 			}
 		]
 		// compilation unit
-		copied(dbCUModel.compilationUnit).delete
+		val cuCopy = copied(source.compilationUnit)
+		cuCopy.delete
 		// reset
 		copier.clear
-		pendings.clear
-		isAttached = false;	
+		incomingReferences.clear
+		pendingElements.clear
+		isAttached = false
+
+		return cuCopy;
 	}
-	
+
 	def getSource() {
-		return dbCUModel
+		return source
 	}
-	
+
 	private def void delete(EObject obj) {
 		obj.eContents.forEach[it.delete]
 		EcoreUtil.remove(obj)
+	}
+
+	override toString() {
+		return source.compilationUnit.originalFilePath
 	}
 }
 
@@ -269,16 +343,16 @@ class SSCopier extends EcoreUtil.Copier {
 	new(JavaPackage metaModel) {
 		this.metaModel = metaModel
 	}
-	
+
 	override getTarget(EClass eClass) {
 		return metaModel.getEClassifier(eClass.getName()) as EClass
-	}		
+	}
 
 	override getTarget(EStructuralFeature eStructuralFeature) {
 		val eClass = eStructuralFeature.getEContainingClass();
 		return getTarget(eClass).getEStructuralFeature(eStructuralFeature.getName());
 	}
-	
+
 	/**
 	 * Looks for an existing copy, within the copy of the parent before it is copied. Returns
 	 * the old copy if one already exists. Elements are identified by name. If no
@@ -291,33 +365,35 @@ class SSCopier extends EcoreUtil.Copier {
 	 * This method assumes that, original is an (indirect) contents of ctxOriginal;
 	 * that all parents of original are NamedElements. 
 	 */
-	def <T extends EObject,R extends EObject> T copy(R ctxCopy, R ctxOriginal, NamedElement original) {
+	def <T extends EObject, R extends EObject> T copy(R ctxCopy, R ctxOriginal, NamedElement original) {
 		val parent = if (original.eContainer != ctxOriginal) {
-			copy(ctxCopy, ctxOriginal, original.eContainer as NamedElement)
-		} else {
-			ctxCopy
-		}
-		
-		val existing = parent.eContents.findFirst[eClass == original.eClass.target && (it as NamedElement).name == original.name] as T
+				copy(ctxCopy, ctxOriginal, original.eContainer as NamedElement)
+			} else {
+				ctxCopy
+			}
+
+		val existing = parent.eContents.findFirst [
+			eClass == original.eClass.target && (it as NamedElement).name == original.name
+		] as T
 		if (existing == null) {
 			val feature = getTarget(original.eContainingFeature)
 			val copy = copy(original)
 			Preconditions.checkState(feature.isMany)
 			(parent.eGet(feature) as List<EObject>).add(copy)
-			return copy as T	
+			return copy as T
 		} else {
 			put(original, existing)
 			return existing as T
-		}	
+		}
 	}
-	
+
 	def <T extends EObject> T copyt(T source) {
 		return super.copy(source) as T
 	}
 
-	def <T extends EObject> T copied(T key) {		
+	def <T extends EObject> T copied(T key) {
 		val result = super.get(key) as T
 		Preconditions.checkArgument(result != null)
 		return result;
-	}		
+	}
 }

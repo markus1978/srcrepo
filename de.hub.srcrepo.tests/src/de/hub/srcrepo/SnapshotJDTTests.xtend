@@ -1,33 +1,28 @@
 package de.hub.srcrepo
 
-import de.hub.srcrepo.internal.SrcRepoBindingManager
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
-import java.util.HashMap
+import java.util.Arrays
+import java.util.Comparator
+import java.util.List
+import java.util.Map
 import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.IStatus
-import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
+import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
+import org.eclipse.gmt.modisco.java.Package
 import org.eclipse.gmt.modisco.java.emf.JavaFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.jdt.core.ICompilationUnit
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
-import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader
 import org.junit.Test
 
 import static org.junit.Assert.*
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.gmt.modisco.java.CompilationUnit
-import java.util.List
-import java.util.Map
-import org.eclipse.emf.common.util.EList
-import java.util.Comparator
-import java.util.Arrays
-import java.util.ListIterator
 
 class SnapshotJDTTests {
 	private val goalRev = "goal"
@@ -80,15 +75,17 @@ class SnapshotJDTTests {
 		assertNotNull(cum)
 		
 		cum.eAllContents.forEach[
-			if (it instanceof org.eclipse.gmt.modisco.java.Package) {
+			if (it instanceof Package) {
 				if (it.name == revName) {
 					it.name = goalRev
 				} 
 			}
 			if (it instanceof CompilationUnit) {
 				it.originalFilePath = it.originalFilePath.replace(revName, goalRev)
-			}
+			}			
 		]
+		cum.targets.forEach[it.id = it.id.replace(revName, goalRev)]
+		cum.pendings.forEach[it.binding = it.binding.replace(revName, goalRev)]
 		return cum										
 	}
 	
@@ -114,7 +111,7 @@ class SnapshotJDTTests {
 	
 	private def void performTest(String testName, List<Map<String, String>> revsData) {		
 		val currentCUMs = newHashMap
-		val snapshot = new Snapshot(JavaPackage.eINSTANCE)
+		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		for (index:1..revsData.size) {
 			val revData = revsData.get(index-1)
 			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))]
@@ -126,7 +123,7 @@ class SnapshotJDTTests {
 			assertNotNull(snapshot.snapshot)
 		}
 		
-		val goalSnapshot = new Snapshot(JavaPackage.eINSTANCE)
+		val goalSnapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		currentCUMs.keySet.toList.sort.forEach[
 			val goalCum = createCompilationUnitModel(testName, goalRev, it)
 			goalSnapshot.addCU(goalCum)
@@ -149,11 +146,12 @@ class SnapshotJDTTests {
 		model.orphanTypes.sortComposite(namedElementCmp)
 		model.unresolvedItems.sortComposite(namedElementCmp)
 		model.eAllContents.forEach[
-			if (it instanceof org.eclipse.gmt.modisco.java.Package) {
+			if (it instanceof Package) {
 				it.ownedElements.sortComposite(namedElementCmp)
 				it.ownedPackages.sortComposite(namedElementCmp)
 			}
 		]
+		model.compilationUnits.sortComposite(namedElementCmp)
 		return model
 	}
 	

@@ -14,7 +14,7 @@ class SnapshotTests {
 	
 	@Test
 	public def void containmentOnlyAddTest() {
-		val snapshot = new Snapshot(metaModel)
+		val snapshot = new ModiscoIncrementalSnapshotImpl(metaModel)
 		
 		val m1 = factory.createModel
 		val p1 = factory.createPackage
@@ -43,7 +43,7 @@ class SnapshotTests {
 	
 	@Test
 	public def void containmentOnlyChangeTest() {
-		val snapshot = new Snapshot(metaModel)
+		val snapshot = new ModiscoIncrementalSnapshotImpl(metaModel)
 		
 		val m1 = factory.createModel
 		val p1 = factory.createPackage
