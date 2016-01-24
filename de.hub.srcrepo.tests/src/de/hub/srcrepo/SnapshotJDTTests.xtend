@@ -2,6 +2,7 @@ package de.hub.srcrepo
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
+import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 import java.util.Arrays
 import java.util.Comparator
 import java.util.List
@@ -166,7 +167,12 @@ class SnapshotJDTTests {
 	}
 	
 	@Test
-	public def void outerRefsTest() {
-		performTest("outerRefs", #[#{"A"->null, "B"->null}, #{"AChanged"->"A"}])
+	public def void outerRefsTargetTest() {
+		performTest("outerRefsTarget", #[#{"A"->null, "B"->null}, #{"AChanged"->"A"}])
+	}
+	
+	@Test
+	public def void outerRefsSourceTest() {
+		performTest("outerRefsSource", #[#{"A"->null, "B"->null}, #{"B"->"B"}])
 	}
 }

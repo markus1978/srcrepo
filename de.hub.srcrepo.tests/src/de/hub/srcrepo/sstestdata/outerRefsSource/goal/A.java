@@ -1,4 +1,4 @@
-package de.hub.srcrepo.sstestdata.outerRefs.r1;
+package de.hub.srcrepo.sstestdata.outerRefsSource.goal;
 
 public class A {
 

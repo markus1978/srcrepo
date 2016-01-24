@@ -23,7 +23,8 @@ Export-Package: de.hub.srcrepo,
  de.hub.srcrepo.ocl,
  de.hub.srcrepo.repositorymodel,
  de.hub.srcrepo.repositorymodel.impl,
- de.hub.srcrepo.repositorymodel.util
+ de.hub.srcrepo.repositorymodel.util,
+ de.hub.srcrepo.snapshot
 Bundle-ClassPath: .,
  lib/bundles/guava-18.0.jar,
  lib/jars/jsr305-1.3.9.jar,

@@ -1,11 +1,13 @@
 package de.hub.srcrepo
 
-import org.junit.Test
-import static org.junit.Assert.*
+import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
+import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.emf.JavaFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
-import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
-import org.eclipse.emf.ecore.util.EcoreUtil
+import org.junit.Test
+
+import static org.junit.Assert.*
 
 class SnapshotTests {
 	
