@@ -52,6 +52,7 @@ import de.hub.jstattrack.services.Histogram;
 import de.hub.jstattrack.services.Summary;
 import de.hub.jstattrack.services.WindowedPlot;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
+import de.hub.srcrepo.internal.ProjectUtil;
 import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.DataSet;

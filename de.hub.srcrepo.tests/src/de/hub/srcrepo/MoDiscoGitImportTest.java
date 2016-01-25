@@ -1,6 +1,8 @@
 package de.hub.srcrepo;
 
-import java.io.ByteArrayOutputStream;
+import static de.hub.srcrepo.RepositoryModelUtil.getImportMetaData;
+import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -38,7 +40,6 @@ import org.junit.Test;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.RepositoryModelTraversal.Stats;
-import de.hub.srcrepo.metrics.ModiscoMetrics;
 import de.hub.srcrepo.ocl.OclUtil;
 import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.Diff;
@@ -48,7 +49,6 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
-import static de.hub.srcrepo.RepositoryModelUtil.*;
 
 public class MoDiscoGitImportTest {
 	

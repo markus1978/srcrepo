@@ -1,4 +1,4 @@
-package de.hub.srcrepo;
+package de.hub.srcrepo.internal;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
-import de.hub.srcrepo.internal.SrcRepoBindingManager;
+import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Target;

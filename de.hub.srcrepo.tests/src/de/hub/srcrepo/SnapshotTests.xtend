@@ -34,8 +34,10 @@ class SnapshotTests {
 		cuModel1.javaModel = m1
 		cuModel1.compilationUnit = cu1
 		
+		snapshot.start
 		snapshot.addCU(cuModel1)
-		val model = snapshot.snapshot
+		snapshot.end
+		val model = snapshot.model
 		assertNotNull(model)
 		assertNotNull(model.ownedElements.get(0))
 		assertNotNull(model.ownedElements.get(0).ownedElements.get(0))
@@ -66,11 +68,15 @@ class SnapshotTests {
 		val cuModel2 = EcoreUtil.copy(cuModel1)
 		cuModel2.javaModel.ownedElements.get(0).ownedElements.get(0).name = "C2"
 		
+		snapshot.start
 		snapshot.addCU(cuModel1)
-		snapshot.snapshot
+		snapshot.end
+		snapshot.model
+		snapshot.start
 		snapshot.removeCU(cuModel1)
 		snapshot.addCU(cuModel2)
-		val model = snapshot.snapshot
+		snapshot.end
+		val model = snapshot.model
 		
 		assertNotNull(model)
 		assertSame(1, model.ownedElements.size)

@@ -18,13 +18,14 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: de.hub.srcrepo,
- de.hub.srcrepo.internal,
+ de.hub.srcrepo.internal;x-friends:="de.hub.srcrepo.tests",
  de.hub.srcrepo.metrics,
  de.hub.srcrepo.ocl,
  de.hub.srcrepo.repositorymodel,
  de.hub.srcrepo.repositorymodel.impl,
  de.hub.srcrepo.repositorymodel.util,
- de.hub.srcrepo.snapshot
+ de.hub.srcrepo.snapshot,
+ de.hub.srcrepo.snapshot.internal;x-friends:="de.hub.srcrepo.tests"
 Bundle-ClassPath: .,
  lib/bundles/guava-18.0.jar,
  lib/jars/jsr305-1.3.9.jar,

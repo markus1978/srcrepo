@@ -1,19 +1,12 @@
 package de.hub.srcrepo.snapshot
 
-import com.google.common.base.Preconditions
 import de.hub.srcrepo.internal.SrcRepoBindingManager
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
+import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import java.util.List
 import java.util.Map
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
@@ -29,10 +22,9 @@ import org.eclipse.gmt.modisco.java.UnresolvedType
 import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.UnresolvedVariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.Binding
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement
 
-class ModiscoIncrementalSnapshotImpl implements IModicsoIncrementalSnapshotModel {
+class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 	val JavaPackage metaModel;
 	val Model model;
@@ -58,8 +50,14 @@ class ModiscoIncrementalSnapshotImpl implements IModicsoIncrementalSnapshotModel
 		return metaModel
 	}
 
-	override getCompilationUnits() {
-		return compilationUnits
+	override getPersistentOriginal(EObject eObject) {
+		while(true) {
+			if (eObject instanceof NamedElement) {
+				if (eObject.originalCompilationUnit != null) {
+					return compilationUnits.get(eObject.originalCompilationUnit).copied(eObject)
+				}
+			}	
+		}		
 	}
 
 	override addCU(CompilationUnitModel model) {
@@ -69,11 +67,14 @@ class ModiscoIncrementalSnapshotImpl implements IModicsoIncrementalSnapshotModel
 	override removeCU(CompilationUnitModel model) {
 		outCUs += currentCUs.get(model)
 	}
-
-	override getSnapshot() {
+	
+	override end() {
 		if (!outCUs.empty || !inCUs.empty) {
 			computeSnapshot
 		}
+	}
+
+	override getModel() {
 		return model
 	}
 
@@ -133,15 +134,19 @@ class ModiscoIncrementalSnapshotImpl implements IModicsoIncrementalSnapshotModel
 				UnresolvedType: usagesInTypeAccess.empty
 				UnresolvedTypeDeclaration: usagesInTypeAccess.empty
 				UnresolvedVariableDeclarationFragment: usageInVariableAccess.empty
-				default: throw new RuntimeException("unreachable")
+				UnresolvedItem: true
+				default: throw new RuntimeException("unreachable " + (it instanceof UnresolvedTypeDeclaration))
 			}
 		].toList.forEach [
 			println("#unresolved: ->" + it.name)
 			unresolvedItems.remove(it.name) // modisco uses the binding name/id as name for the unresolved item
 			EcoreUtil.remove(it)
 		]
-
+	}
+	
+	override start() {
 		outCUs.clear
 		inCUs.clear
 	}
+	
 }

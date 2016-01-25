@@ -1,6 +1,7 @@
-package de.hub.srcrepo.snapshot
+package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
+import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -55,7 +56,8 @@ class SSPendingElement extends PendingElement {
 		}
 
 		if (!(target instanceof UnresolvedItem)) {
-			snapshot.compilationUnits.get(target.originalCompilationUnit).incomingReferences += this
+			val cum = SSCompilationUnitModel.get(target.originalCompilationUnit)
+			cum.incomingReferences += this
 		}
 	}
 

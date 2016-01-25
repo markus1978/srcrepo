@@ -1,5 +1,6 @@
 package de.hub.srcrepo
 
+import de.hub.srcrepo.internal.ImportJavaCompilationUnitsJob
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
 import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
@@ -27,6 +28,7 @@ import static org.junit.Assert.*
 
 class SnapshotJDTTests {
 	private val goalRev = "goal"
+	private val deleted = "__deleted"
 	
 	private val javaFactory = JavaFactory.eINSTANCE
 	private val repositoryModelFactory = RepositoryModelFactory.eINSTANCE
@@ -114,23 +116,28 @@ class SnapshotJDTTests {
 		val currentCUMs = newHashMap
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		for (index:1..revsData.size) {
+			snapshot.start
 			val revData = revsData.get(index-1)
-			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))]
-			revData.keySet.toList.sort.forEach[
+			revData.keySet.filter[it == deleted].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))] // remove deleted
+			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))] // remove changed
+			revData.keySet.filter[it != deleted].toList.sort.forEach[ // add new & changed
 				val cum = createCompilationUnitModel(testName, '''r«index»''', it)
 				currentCUMs.put(it, cum)
 				snapshot.addCU(cum)
 			]
-			assertNotNull(snapshot.snapshot)
+			snapshot.end
+			assertNotNull(snapshot.model)
 		}
 		
 		val goalSnapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
+		goalSnapshot.start
 		currentCUMs.keySet.toList.sort.forEach[
 			val goalCum = createCompilationUnitModel(testName, goalRev, it)
 			goalSnapshot.addCU(goalCum)
 		]		
- 	
- 		assertTrue(EcoreUtil.equals(goalSnapshot.snapshot.normalize, snapshot.snapshot.normalize))
+ 		goalSnapshot.end
+ 		
+ 		assertTrue(EcoreUtil.equals(goalSnapshot.model.normalize, snapshot.model.normalize))
 	}
 	
 	private def <T> void sortComposite(EList<T> list, Comparator<T> cmp) {
@@ -174,5 +181,10 @@ class SnapshotJDTTests {
 	@Test
 	public def void outerRefsSourceTest() {
 		performTest("outerRefsSource", #[#{"A"->null, "B"->null}, #{"B"->"B"}])
+	}
+	
+		@Test
+	public def void outerRefsDeleteTest() {
+		performTest("outerRefsDelete", #[#{"A"->null, "B"->null}, #{deleted->"A", deleted->"B", "C"->null}])
 	}
 }

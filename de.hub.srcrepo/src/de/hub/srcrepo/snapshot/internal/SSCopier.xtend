@@ -1,4 +1,4 @@
-package de.hub.srcrepo.snapshot
+package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
 import java.util.List

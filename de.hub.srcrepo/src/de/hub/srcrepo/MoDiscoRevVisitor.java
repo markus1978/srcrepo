@@ -13,19 +13,22 @@ import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.snapshot.IModicsoIncrementalSnapshotModel;
+import de.hub.srcrepo.snapshot.IModiscoSnapshotModel;
 import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl;
 
 public abstract class MoDiscoRevVisitor extends RevVisitor {
 
-	private final IModicsoIncrementalSnapshotModel snapshot;
-
+	private final IModiscoSnapshotModel snapshot;
 	private final Map<String, CompilationUnitModel> contributingModels;
 
-	public MoDiscoRevVisitor(JavaPackage snapshotMetaModel) {
+	public MoDiscoRevVisitor(IModiscoSnapshotModel snapshot) {
 		super();
-		snapshot = new ModiscoIncrementalSnapshotImpl(snapshotMetaModel);
+		this.snapshot = snapshot;
 		contributingModels = new HashMap<String, CompilationUnitModel>();
+	}
+	
+	public MoDiscoRevVisitor(JavaPackage metaModel) {
+		this(new ModiscoIncrementalSnapshotImpl(metaModel));
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		if (!filter(rev)) {
 			return;
 		}
-
+		snapshot.start();
 		// merge the models from all compilation units
 		Collection<String> pathsInFiles = new HashSet<String>();
 		for (Entry<String, AbstractFileRef> entry : files.entrySet()) {
@@ -57,8 +60,8 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 				snapshot.removeCU(entry.getValue());
 			}
 		}
-		
-		onRev(rev, snapshot.getSnapshot());
+		snapshot.end();
+		onRev(rev, snapshot.getModel());
 	}
 
 	protected boolean filter(Rev rev) {

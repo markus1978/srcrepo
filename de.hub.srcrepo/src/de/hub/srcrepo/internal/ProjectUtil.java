@@ -9,7 +9,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package de.hub.srcrepo;
+package de.hub.srcrepo.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +33,8 @@ import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.osgi.util.NLS;
+
+import de.hub.srcrepo.SrcRepoActivator;
 
 public class ProjectUtil {
 

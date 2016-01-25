@@ -1,7 +1,8 @@
-package de.hub.srcrepo.snapshot
+package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
+import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
@@ -11,6 +12,12 @@ import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 
 public class SSCompilationUnitModel {
+	
+	static val Map<CompilationUnit, SSCompilationUnitModel> allInstances = newHashMap
+	static def get(CompilationUnit cu) {
+		return allInstances.get(cu)
+	}
+	
 	val CompilationUnitModel source;
 	val IModiscoSnapshotModel snapshot
 	val extension SSCopier copier
@@ -51,6 +58,7 @@ public class SSCompilationUnitModel {
 		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
 		// compilation unit
 		val cuCopy = copyt(source.compilationUnit)
+		
 		model.compilationUnits.add(cuCopy)
 		// types
 		source.compilationUnit.types.forEach[copy(model, source.javaModel, it)]
@@ -63,6 +71,7 @@ public class SSCompilationUnitModel {
 		]
 		isAttached = true
 
+		allInstances.put(cuCopy, this)
 		return cuCopy
 	}
 
@@ -95,6 +104,7 @@ public class SSCompilationUnitModel {
 		pendingElements.clear
 		isAttached = false
 
+		allInstances.remove(cuCopy)
 		return cuCopy;
 	}
 
@@ -109,5 +119,9 @@ public class SSCompilationUnitModel {
 
 	override toString() {
 		return source.compilationUnit.originalFilePath
+	}
+	
+	def <T extends EObject> T copied(T source) {
+		return copier.copied(source)
 	}
 }
