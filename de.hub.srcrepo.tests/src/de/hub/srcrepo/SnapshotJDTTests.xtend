@@ -29,9 +29,14 @@ import static org.junit.Assert.*
 class SnapshotJDTTests {
 	private val goalRev = "goal"
 	private val deleted = "__deleted"
+	private var deleteModifier = 0
 	
 	private val javaFactory = JavaFactory.eINSTANCE
 	private val repositoryModelFactory = RepositoryModelFactory.eINSTANCE
+	
+	private def deleted() {
+		return deleted + (deleteModifier++)
+	}
 	
 	private def IJavaProject openProject(String projectPath) {
 		val projectDescriptionFile = new Path(projectPath + "/.project");
@@ -118,9 +123,8 @@ class SnapshotJDTTests {
 		for (index:1..revsData.size) {
 			snapshot.start
 			val revData = revsData.get(index-1)
-			revData.keySet.filter[it == deleted].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))] // remove deleted
-			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))] // remove changed
-			revData.keySet.filter[it != deleted].toList.sort.forEach[ // add new & changed
+			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))] // remove changed & deleted
+			revData.keySet.filter[!it.startsWith(deleted)].toList.sort.forEach[ // add new & changed
 				val cum = createCompilationUnitModel(testName, '''r«index»''', it)
 				currentCUMs.put(it, cum)
 				snapshot.addCU(cum)
@@ -185,6 +189,6 @@ class SnapshotJDTTests {
 	
 		@Test
 	public def void outerRefsDeleteTest() {
-		performTest("outerRefsDelete", #[#{"A"->null, "B"->null}, #{deleted->"A", deleted->"B", "C"->null}])
+		performTest("outerRefsDelete", #[#{"A"->null, "B"->null}, #{deleted()->"A", deleted()->"B", "C"->null}])
 	}
 }

@@ -23,6 +23,7 @@ import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.UnresolvedVariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement
+import com.google.common.base.Preconditions
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
@@ -61,10 +62,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	override addCU(CompilationUnitModel model) {
+		Preconditions.checkArgument(model != null)
 		inCUs += new SSCompilationUnitModel(this, model)
 	}
 
 	override removeCU(CompilationUnitModel model) {
+		Preconditions.checkArgument(model != null)
 		outCUs += currentCUs.get(model)
 	}
 	
