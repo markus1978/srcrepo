@@ -53,8 +53,28 @@ class SnapshotJDTTests {
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String testCaseName, String revName, String compilationUnitName) {
+		val cumPath = '''«testCaseName»/«revName»/«compilationUnitName»'''
+		val cum = createCompilationUnitModel(cumPath)
+		if (revName != null) {
+			cum.eAllContents.forEach[
+				if (it instanceof Package) {
+					if (it.name == revName) {
+						it.name = goalRev
+					} 
+				}
+				if (it instanceof CompilationUnit) {
+					it.originalFilePath = it.originalFilePath.replace(revName, goalRev)
+				}			
+			]
+			cum.targets.forEach[it.id = it.id.replace(revName, goalRev)]
+			cum.pendings.forEach[it.binding = it.binding.replace(revName, goalRev)]
+		}
+		return cum
+	}
+	
+	private def CompilationUnitModel createCompilationUnitModel(String compilationUnitPath) {
 		val javaProject = openProject("/Users/markus/Documents/Projects/srcrepo-mars/03-git/srcrepo/de.hub.srcrepo.tests")
-		val cumPath = '''src/de/hub/srcrepo/sstestdata/«testCaseName»/«revName»/«compilationUnitName».java'''.toString
+		val cumPath = '''src/de/hub/srcrepo/sstestdata/«compilationUnitPath».java'''.toString
 		
 		val resource = javaProject.getProject().findMember(cumPath)
 		val element = JavaCore.create(resource, javaProject)
@@ -81,19 +101,6 @@ class SnapshotJDTTests {
 		
 		val cum = importJob.results.get(cu)
 		assertNotNull(cum)
-		
-		cum.eAllContents.forEach[
-			if (it instanceof Package) {
-				if (it.name == revName) {
-					it.name = goalRev
-				} 
-			}
-			if (it instanceof CompilationUnit) {
-				it.originalFilePath = it.originalFilePath.replace(revName, goalRev)
-			}			
-		]
-		cum.targets.forEach[it.id = it.id.replace(revName, goalRev)]
-		cum.pendings.forEach[it.binding = it.binding.replace(revName, goalRev)]
 		return cum										
 	}
 	
@@ -187,8 +194,20 @@ class SnapshotJDTTests {
 		performTest("outerRefsSource", #[#{"A"->null, "B"->null}, #{"B"->"B"}])
 	}
 	
-		@Test
+	@Test
 	public def void outerRefsDeleteTest() {
 		performTest("outerRefsDelete", #[#{"A"->null, "B"->null}, #{deleted()->"A", deleted()->"B", "C"->null}])
+	}
+	
+	@Test
+	public def void complexBindingsTest() {
+		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
+		val cum = createCompilationUnitModel("ComplexBindingTest")
+		snapshot.start
+		snapshot.addCU(cum)
+		snapshot.end
+		val model = snapshot.model
+		println(model.unresolvedItems)
+		assertEquals(1, model.unresolvedItems.size)
 	}
 }
