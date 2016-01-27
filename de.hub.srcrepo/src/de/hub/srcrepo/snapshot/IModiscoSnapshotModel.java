@@ -45,4 +45,6 @@ public interface IModiscoSnapshotModel {
 	 * @return The corresponding original persistent repository model element.
 	 */
 	public <T extends EObject> T getPersistentOriginal(T eObject);
+
+	public void clear();
 }

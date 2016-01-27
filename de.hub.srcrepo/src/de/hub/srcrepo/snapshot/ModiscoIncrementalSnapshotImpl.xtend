@@ -1,5 +1,6 @@
 package de.hub.srcrepo.snapshot
 
+import com.google.common.base.Preconditions
 import de.hub.srcrepo.internal.SrcRepoBindingManager
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
@@ -23,12 +24,11 @@ import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.UnresolvedVariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement
-import com.google.common.base.Preconditions
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 	val JavaPackage metaModel;
-	val Model model;
+	var Model model = null;
 
 	/**
 	 * A map that connects all CompilationUnits in the model, with the SSCompilationUnitModel they are from. 
@@ -39,6 +39,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	val Map<String, UnresolvedItem> unresolvedItems = newHashMap
 
 	val Map<CompilationUnitModel, SSCompilationUnitModel> currentCUs = newHashMap
+	val Map<String, SSCompilationUnitModel> currentCUPaths = newHashMap
 	val List<SSCompilationUnitModel> inCUs = newArrayList
 	val List<SSCompilationUnitModel> outCUs = newArrayList
 
@@ -55,7 +56,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		while(true) {
 			if (eObject instanceof NamedElement) {
 				if (eObject.originalCompilationUnit != null) {
-					return compilationUnits.get(eObject.originalCompilationUnit).copied(eObject)
+					return compilationUnits.get(eObject.originalCompilationUnit).original(eObject)
 				}
 			}	
 		}		
@@ -63,11 +64,16 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 	override addCU(CompilationUnitModel model) {
 		Preconditions.checkArgument(model != null)
+		Preconditions.checkArgument(currentCUPaths.get(model.compilationUnit.originalFilePath) == null || outCUs.exists[source.compilationUnit.originalFilePath == model.compilationUnit.originalFilePath])
+		Preconditions.checkArgument(!inCUs.exists[it.source == model]) // TODO remove, to expensive
+		Preconditions.checkArgument(!outCUs.exists[it.source == model]) // TODO remove, to expensive
 		inCUs += new SSCompilationUnitModel(this, model)
 	}
 
 	override removeCU(CompilationUnitModel model) {
-		Preconditions.checkArgument(model != null)
+		Preconditions.checkArgument(model != null && currentCUs.get(model) != null)
+		Preconditions.checkArgument(!inCUs.exists[it.source == model]) // TODO remove, to expensive
+		Preconditions.checkArgument(!outCUs.exists[it.source == model]) // TODO remove, to expensive
 		outCUs += currentCUs.get(model)
 	}
 	
@@ -102,7 +108,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			compilationUnits.remove(it.removeFromModel(model))
 			// remove targets
 			it.removeTargets(targets)
+		]
+		outCUs.forEach[
 			currentCUs.remove(it.source)
+			val path = it.source.compilationUnit.originalFilePath // TODO remove?
+			Preconditions.checkState(currentCUPaths.get(path) != null)
+			currentCUPaths.remove(path)
 		]
 
 		// add new CUs
@@ -113,8 +124,13 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			// add the pending elements of the new CU to the list of pending elements
 			pendingElementsToResolve += it.getPendingElements
 			// add targets
-			it.fillTargets(targets)
+			it.fillTargets(targets)			
+		]
+		inCUs.forEach[
 			currentCUs.put(it.source, it)
+			val path = it.source.compilationUnit.originalFilePath // TODO remove?
+			Preconditions.checkState(currentCUPaths.get(path) == null)
+			currentCUPaths.put(path, it)
 		]
 
 		// resolve all pending elements 
@@ -150,6 +166,49 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	override start() {
 		outCUs.clear
 		inCUs.clear
+	}
+	
+	override toString() {
+		return '''
+			snapshot {
+				current: [
+					«FOR cu:currentCUs.values»
+						«cu»
+					«ENDFOR»
+				]
+				in: [
+					«FOR in:inCUs»
+						«in»
+					«ENDFOR»
+				]
+				out: [
+					«FOR out:outCUs»
+						«out»
+					«ENDFOR»
+				]
+			}
+		'''
+	}
+	
+	override clear() {
+		currentCUs.values.forEach[
+			it.pendingElements.forEach[delete]
+			it.removeFromModel(model)
+			it.removeTargets(targets)
+		]
+		
+		// just in case
+		EcoreUtil.delete(model)
+		model = metaModel.javaFactory.createModel
+		
+		currentCUs.clear
+		currentCUPaths.clear
+		
+		compilationUnits.clear
+		targets.clear
+		unresolvedItems.clear
+		inCUs.clear
+		outCUs.clear
 	}
 	
 }

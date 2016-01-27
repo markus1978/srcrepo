@@ -58,6 +58,8 @@ import org.eclipse.modisco.java.discoverer.internal.io.java.binding.ParameterBin
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.UnresolvedBinding;
 
+import de.hub.srcrepo.SrcRepoActivator;
+
 /**
  * Class used to store and resolves pending references between Java
  * {@link ASTNode}s.
@@ -343,6 +345,7 @@ public class SrcRepoBindingManager extends BindingManager {
 				NamedElement target = this.getTarget(pe.getBinding());
 				if (target == null) {
 					unresolvedBindings.add(pe);
+					System.out.println("#### unresolved: " + pe); // TODO remove
 				} else {
 					pe.affectTarget(target);
 				}
@@ -366,11 +369,12 @@ public class SrcRepoBindingManager extends BindingManager {
 
 	private NamedElement searchQNInModel(final String qualifiedName) {
 		NamedElement resultNamedElement = null;
-		if (isIncrementalDiscovering()) {
-			resultNamedElement = JavaUtil.getNamedElementByQualifiedName(this.model, qualifiedName,
-					this.targets);
+		if (isIncrementalDiscovering()) {		
+			resultNamedElement = JavaUtil.getNamedElementByQualifiedName(this.model, qualifiedName, this.targets);
 			if (resultNamedElement != null) {
 				this.addTarget(qualifiedName, resultNamedElement);
+			} else {
+				SrcRepoActivator.INSTANCE.warning("Could not resolve " + qualifiedName);
 			}
 		}
 		return resultNamedElement;

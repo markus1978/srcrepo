@@ -1,8 +1,10 @@
 package de.hub.srcrepo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,6 +34,13 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 	}
 
 	@Override
+	public void onMerge(Rev mergeRev, Rev branchRev) {
+		super.onMerge(mergeRev, branchRev);
+		snapshot.clear();
+		contributingModels.clear();
+	}
+
+	@Override
 	protected final void onRev(Rev rev, Map<String, AbstractFileRef> files) {
 		if (!filter(rev)) {
 			return;
@@ -48,17 +57,30 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 				CompilationUnitModel newCUModel = compilationUnitRef.getCompilationUnitModel();
 				CompilationUnitModel oldCUModel = contributingModels.get(path);
 
-				if (oldCUModel != null) {
-					snapshot.removeCU(oldCUModel);
+				if (newCUModel != oldCUModel) {
+					if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
+						if (oldCUModel != null) {
+							snapshot.removeCU(oldCUModel);
+						}
+						snapshot.addCU(newCUModel);
+						contributingModels.put(path, newCUModel);
+					} else {
+						SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
+								newCUModel.getCompilationUnit().getOriginalFilePath() + 
+								" without a type (probably due to incorrect CU code), using older version of same CU.");
+					}
 				}
-				snapshot.addCU(newCUModel);
-				contributingModels.put(path, newCUModel);
 			}
 		}
+		List<String> pathsToRemoveFromContributingModel = new ArrayList<String>(); 
 		for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
 			if (!pathsInFiles.contains(entry.getKey())) {
 				snapshot.removeCU(entry.getValue());
+				pathsToRemoveFromContributingModel.add(entry.getKey());
 			}
+		}
+		for (String pathToRemoveFromContributingModel: pathsToRemoveFromContributingModel) {
+			contributingModels.remove(pathToRemoveFromContributingModel);
 		}
 		snapshot.end();
 		onRev(rev, snapshot.getModel());

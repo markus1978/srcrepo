@@ -87,7 +87,7 @@ class SSPendingElement extends PendingElement {
 	def revert() {
 		Preconditions.checkState(target != null && !reverted)		
 		val placeHolder = snapshot.metaModel.javaFactory.create(target.eClass) as ASTNode
-		(placeHolder as InternalEObject).eSetProxyURI(URI.createURI(linkName)); // TODO remove, for debug only
+		(placeHolder as InternalEObject).eSetProxyURI(URI.createURI(binding.name)); // TODO remove, for debug only
 		reverted = true;
 		replace(placeHolder)
 	}
@@ -105,4 +105,16 @@ class SSPendingElement extends PendingElement {
 		}
 		target = null
 	}
+	
+	override toString() {
+		val targetStr = if (target == null) {
+			"unresolved"
+		} else if (target.eIsProxy) {
+			'''unresolved[«(target as InternalEObject).eProxyURI»]''' 
+		} else {
+			(target as NamedElement).name
+		}
+		return '''«clientNode.eClass.name» -> «targetStr» («IF resolved»V«ENDIF»«IF reverted»R«ENDIF» «linkName»->«binding.name»)'''
+	}
+	
 }
