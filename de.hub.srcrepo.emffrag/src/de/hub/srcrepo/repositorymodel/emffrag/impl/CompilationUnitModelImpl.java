@@ -2,12 +2,13 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.impl;
 
-import de.hub.emffrag.FObjectImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.NamedElement;
 
+import de.hub.emffrag.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Target;
@@ -25,6 +26,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getPendings <em>Pendings</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getTargets <em>Targets</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getProxyTargets <em>Proxy Targets</em>}</li>
  * </ul>
  *
  * @generated
@@ -113,6 +115,16 @@ public class CompilationUnitModelImpl extends FObjectImpl implements Compilation
 	@SuppressWarnings("unchecked")
 	public EList<Target> getTargets() {
 		return (EList<Target>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__TARGETS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public EList<NamedElement> getProxyTargets() {
+		return (EList<NamedElement>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PROXY_TARGETS, true);
 	}
 
 } //CompilationUnitModelImpl

@@ -21,6 +21,8 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
+import com.google.common.base.Preconditions;
+
 import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
@@ -60,7 +62,33 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 			skipError("Could not estimate size of " + compilationUnit.getResource().getProjectRelativePath(), e);
 		}
 		
-		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
+		CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
+		
+		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory) {
+			@Override
+			protected void manageUnresolvedBindings(final Model model1,
+					final List<PendingElement> unresolvedBindings) {
+				if (model1 != null) {
+					for (PendingElement pe : unresolvedBindings) {
+						NamedElement target = null;
+						target = getProxyElement(pe, model1);
+						if (target != null && !(target instanceof UnresolvedItem)) {
+							pe.affectTarget(target);
+							// target is a proxy
+							Preconditions.checkState(target.isProxy());
+							compilationUnitModel.getProxyTargets().add(target);
+						} else {
+							// pe is stays unresolved, save it
+							de.hub.srcrepo.repositorymodel.PendingElement pendingElementModel = repositoryFactory.createPendingElement();
+							pendingElementModel.setBinding(pe.getBinding().toString());
+							pendingElementModel.setLinkName(pe.getLinkName());
+							pendingElementModel.setClientNode(pe.getClientNode());
+							compilationUnitModel.getPendings().add(pendingElementModel);							
+						}
+					}
+				}
+			}
+		};
 		// TODO reuse javaReader and Discover...
 		JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), null);
 		javaReader.setGlobalBindings(bindings);
@@ -71,7 +99,10 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 		
 		try {
 			javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());
-//			bindings.resolveBindings(); TODO save resolved or unresolved?
+			// We need to try to resolve the bindings. This will save performance, when snapshots are merged,
+			// and more importantly, it will create bindings that result in proxy elements, which will
+			// be added to the targets of the binding manager. Those targets are also placed in the java model.
+			bindings.resolveBindings();
 		} catch (Exception e) {
 			if (e.getClass().getName().endsWith("AbortCompilation")) {
 				skipError("Could not compile " + compilationUnit.getResource().getProjectRelativePath() + 
@@ -92,7 +123,6 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 			}
 			
 			CompilationUnit importedCompilationUnit = javaModel.getCompilationUnits().get(0);
-			CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
 			compilationUnitModel.setCompilationUnit(importedCompilationUnit);
 			compilationUnitModel.setJavaModel(javaModel);
 			
@@ -104,18 +134,9 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 				compilationUnitModel.getTargets().add(targetModel);
 			}
 			
-			// save pending bindings
-			// TODO we do not need pendings, since unresolved items are saved in the model (model.unresolvedItems).
-			for(PendingElement pendingElement: bindings.getPendings()) {
-				de.hub.srcrepo.repositorymodel.PendingElement pendingElementModel = repositoryFactory.createPendingElement();
-				pendingElementModel.setBinding(pendingElement.getBinding().toString());
-				pendingElementModel.setLinkName(pendingElement.getLinkName());
-				pendingElementModel.setClientNode(pendingElement.getClientNode());
-				compilationUnitModel.getPendings().add(pendingElementModel);
-			}
-			
 			results.put(compilationUnit, compilationUnitModel);
 		} else {
+			EcoreUtil.delete(compilationUnitModel);
 			EcoreUtil.delete(javaModel);
 			skipError("Sucessfully imported a compilation unit, but no model was created: " + compilationUnit, null);
 		}

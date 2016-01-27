@@ -338,20 +338,24 @@ public class SrcRepoBindingManager extends BindingManager {
 	 * @param model1
 	 *            the resulting {@link Model}.
 	 */
-	public void resolveBindings(final Model model1) {
+	public void resolveBindings(final Model model) {
+		List<PendingElement> unresolvedBindings = tryToResolveBindings();
+		manageUnresolvedBindings(model, unresolvedBindings);
+	}
+	
+	private List<PendingElement> tryToResolveBindings() {
 		List<PendingElement> unresolvedBindings = new ArrayList<PendingElement>();
 		for (PendingElement pe : this.pendings) {
 			if (pe.getClientNode() != null) {
 				NamedElement target = this.getTarget(pe.getBinding());
 				if (target == null) {
 					unresolvedBindings.add(pe);
-					System.out.println("#### unresolved: " + pe); // TODO remove
 				} else {
 					pe.affectTarget(target);
 				}
 			}
 		}
-		manageUnresolvedBindings(model1, unresolvedBindings);
+		return unresolvedBindings;
 	}
 
 	protected void manageUnresolvedBindings(final Model model1,
@@ -387,7 +391,7 @@ public class SrcRepoBindingManager extends BindingManager {
 		this.resolveBindings(null);
 	}
 
-	private NamedElement getProxyElement(final PendingElement pe, final Model model1) {
+	protected final NamedElement getProxyElement(final PendingElement pe, final Model model1) {
 		NamedElement result = null;
 		Binding bd = pe.getBinding();
 		if (bd instanceof PackageBinding) {

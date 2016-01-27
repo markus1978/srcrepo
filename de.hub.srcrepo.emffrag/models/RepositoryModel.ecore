@@ -96,6 +96,9 @@
         eType="#//PendingElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
         eType="#//Target" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="proxyTargets" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//NamedElement"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ImportError">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

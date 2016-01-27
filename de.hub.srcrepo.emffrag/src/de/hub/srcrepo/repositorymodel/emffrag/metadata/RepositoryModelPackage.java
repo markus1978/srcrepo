@@ -871,13 +871,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int COMPILATION_UNIT_MODEL__TARGETS = 3;
 
 	/**
+	 * The feature id for the '<em><b>Proxy Targets</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL__PROXY_TARGETS = 4;
+
+	/**
 	 * The number of structural features of the '<em>Compilation Unit Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
+	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Compilation Unit Model</em>' class.
@@ -2205,6 +2214,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getCompilationUnitModel_Targets();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProxyTargets <em>Proxy Targets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Proxy Targets</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProxyTargets()
+	 * @see #getCompilationUnitModel()
+	 * @generated
+	 */
+	EReference getCompilationUnitModel_ProxyTargets();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ImportError <em>Import Error</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3143,6 +3163,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference COMPILATION_UNIT_MODEL__TARGETS = eINSTANCE.getCompilationUnitModel_Targets();
+
+		/**
+		 * The meta object literal for the '<em><b>Proxy Targets</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPILATION_UNIT_MODEL__PROXY_TARGETS = eINSTANCE.getCompilationUnitModel_ProxyTargets();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.
