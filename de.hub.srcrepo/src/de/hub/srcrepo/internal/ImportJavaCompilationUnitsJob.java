@@ -75,28 +75,28 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 					final List<PendingElement> unresolvedBindings) {
 				if (model1 != null) {
 					for (PendingElement pe : unresolvedBindings) {
+						ASTNode source = pe.getClientNode();
+						UnresolvedLink unresolvedLink = repositoryFactory.createUnresolvedLink();
+						compilationUnitModel.getUnresolvedLinks().add(unresolvedLink);
+						unresolvedLink.setId(pe.getBinding().getName());
+						unresolvedLink.setSource(source);
+						EClass sourceClass = source.eClass();
+						EStructuralFeature feature = sourceClass.getEStructuralFeature(pe.getLinkName());
+						unresolvedLink.setFeatureID(sourceClass.getFeatureID(feature));
+												
 						NamedElement target = null;
 						target = getProxyElement(pe, model1);
 						if (target != null) {
 							pe.affectTarget(target);
-							if (target instanceof UnresolvedItem || target.isProxy()) {
-								ASTNode source = pe.getClientNode();
-								UnresolvedLink unresolvedLink = repositoryFactory.createUnresolvedLink();
-								compilationUnitModel.getUnresolvedLinks().add(unresolvedLink);
-								unresolvedLink.setId(pe.getBinding().getName());
-								unresolvedLink.setSource(source);
-								unresolvedLink.setTarget(target);
-								EClass sourceClass = source.eClass();
-								EStructuralFeature feature = sourceClass.getEStructuralFeature(pe.getLinkName());
-								unresolvedLink.setFeatureID(sourceClass.getFeatureID(feature));
-								if (feature.isMany()) {
-									unresolvedLink.setFeatureIndex(((List<?>)source.eGet(feature)).indexOf(target));
-								} else {
-									unresolvedLink.setFeatureIndex(-1);
-								}
+							Preconditions.checkState(target instanceof UnresolvedItem || target.isProxy());
+							unresolvedLink.setTarget(target);
+							if (feature.isMany()) {
+								unresolvedLink.setFeatureIndex(((List<?>)source.eGet(feature)).indexOf(target));
+							} else {
+								unresolvedLink.setFeatureIndex(-1);
 							}							
 						} else {
-							// TODO
+							// TODO maybe there is a regular case where this happen?
 							SrcRepoActivator.INSTANCE.warning("Found an element that could not be resolved, " + 
 									"even with proxies or unresolved items: " + pe.getBinding().getName());
 						}						

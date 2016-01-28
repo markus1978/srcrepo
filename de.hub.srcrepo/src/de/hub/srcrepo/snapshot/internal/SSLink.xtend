@@ -7,16 +7,16 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
 
-class SSPendingElement {
-	val SSCopier copier
+class SSLink {
+	val ASTNode copiedSource
 	val UnresolvedLink originalUnresolvedLink 	
 	var NamedElement resolvedTarget = null
 	var NamedElement unresolvedTarget = null
 
-	new(SSCopier copier, UnresolvedLink originalUnresolvedLink) {
-		this.copier = copier
+	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, NamedElement copiedUnresolvedTarget) {
 		this.originalUnresolvedLink = originalUnresolvedLink
-		this.unresolvedTarget = copier.copied(originalUnresolvedLink.target)
+		this.unresolvedTarget = copiedUnresolvedTarget
+		this.copiedSource = copiedSource
 	}
 
 	def resolve(NamedElement resolvedTarget) {
@@ -32,7 +32,7 @@ class SSPendingElement {
 	}
 	
 	private def ASTNode getSource() {
-		copier.copied(originalUnresolvedLink.source)
+		copiedSource
 	}
 	
 	private def NamedElement replaceTarget(NamedElement target) {

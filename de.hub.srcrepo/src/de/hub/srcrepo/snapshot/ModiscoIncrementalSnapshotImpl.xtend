@@ -24,7 +24,7 @@ import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.UnresolvedVariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement
-import de.hub.srcrepo.snapshot.internal.SSPendingElement
+import de.hub.srcrepo.snapshot.internal.SSLink
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
@@ -92,7 +92,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 	private def computeSnapshot() {
 		println("#compute")
-		val List<SSPendingElement> linksToResolve = newArrayList
+		val List<SSLink> linksToResolve = newArrayList
 
 		// remove old CUs
 		outCUs.forEach [

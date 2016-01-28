@@ -20,17 +20,22 @@ public class SSCompilationUnitModel {
 		return allInstances.get(cu)
 	}
 
-	val CompilationUnitModel source;
+	val CompilationUnitModel originalCompilationUnitModel;
 	val IModiscoSnapshotModel snapshot
 	val extension SSCopier copier
-	val List<SSPendingElement> incomingReferences = newArrayList
-	val List<SSPendingElement> pendingElements = newArrayList
+	
+	@Deprecated
+	val List<SSLink> incomingReferences = newArrayList
+	@Deprecated
+	val List<SSLink> pendingElements = newArrayList
+	
+	val List<SSLink> outgoingLinks = newArrayList
 
 	var boolean isAttached = false
 
-	new(IModiscoSnapshotModel snapshot, CompilationUnitModel source) {
+	new(IModiscoSnapshotModel snapshot, CompilationUnitModel originalCompilationUnitModel) {
 		this.snapshot = snapshot
-		this.source = source
+		this.originalCompilationUnitModel = originalCompilationUnitModel
 		this.copier = new SSCopier(snapshot.metaModel)
 	}
 
@@ -49,40 +54,40 @@ public class SSCompilationUnitModel {
 		return incomingReferences
 	}
 	
-	def Iterable<SSPendingElement> getIncomingLinks() {
+	def Iterable<SSLink> getIncomingLinks() {
 		// TODO
 	}
 	
-	def Iterable<SSPendingElement> getOutgoingLinks() {
-		// TODO
+	def Iterable<SSLink> getOutgoingLinks() {
+		return outgoingLinks
 	}
 
 	// TODO
 	def void fillTargets(Map<String, NamedElement> allTargets) {
 		Preconditions.checkState(isAttached)
-		source.targets.forEach[allTargets.put(id, target.copied)]
+		originalCompilationUnitModel.targets.forEach[allTargets.put(id, target.copied)]
 	}
 
 	// TODO
 	def void removeTargets(Map<String, NamedElement> allTargets) {
-		source.targets.forEach[allTargets.remove(it.id)]
+		originalCompilationUnitModel.targets.forEach[allTargets.remove(it.id)]
 	}
 
 	// TODO
 	def CompilationUnit addToModel(Model model) {
 		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
 		// compilation unit
-		val cuCopy = copyt(source.compilationUnit)
+		val cuCopy = copyt(originalCompilationUnitModel.compilationUnit)
 
 		model.compilationUnits.add(cuCopy)
 		// types
-		source.compilationUnit.types.forEach [
-			copy(model, source.javaModel, it)
+		originalCompilationUnitModel.compilationUnit.types.forEach [
+			copy(model, originalCompilationUnitModel.javaModel, it)
 		]
 		// orphan types
-		source.javaModel.orphanTypes.forEach[copy(model, source.javaModel, it)]
+		originalCompilationUnitModel.javaModel.orphanTypes.forEach[copy(model, originalCompilationUnitModel.javaModel, it)]
 		// TODO remove debug only
-		Preconditions.checkState(source.javaModel.eAllContents.filter[it instanceof NamedElement].
+		Preconditions.checkState(originalCompilationUnitModel.javaModel.eAllContents.filter[it instanceof NamedElement].
 			forall[copied != null])
 		copyReferences
 
@@ -103,6 +108,9 @@ public class SSCompilationUnitModel {
 //			return new SSPendingElement(snapshot, copied(clientNode), linkName, binding)							
 //		]
 		isAttached = true
+		
+		Preconditions.checkState(outgoingLinks.empty)
+		outgoingLinks += originalCompilationUnitModel.unresolvedLinks.map[new SSLink(it, copied(it.source), it.target?.copied)]
 
 		allInstances.put(cuCopy, this)
 		return cuCopy
@@ -112,14 +120,14 @@ public class SSCompilationUnitModel {
 	def CompilationUnit removeFromModel(Model model) {
 		Preconditions.checkState(isAttached, "Can only removed compilation unit model that is attached to a model.")
 		// orphant types
-		source.javaModel.orphanTypes.forEach [
+		originalCompilationUnitModel.javaModel.orphanTypes.forEach [
 			val copy = copied(it)
 			if (copy.usagesInTypeAccess.empty && copy.usagesInImports.empty) {
 				EcoreUtil.remove(copy)
 			}
 		]
 		// types
-		copied(source.compilationUnit).types.forEach [
+		copied(originalCompilationUnitModel.compilationUnit).types.forEach [
 			var container = it.eContainer
 			it.delete
 			// also remove emptied packages
@@ -130,7 +138,7 @@ public class SSCompilationUnitModel {
 			}
 		]
 		// compilation unit
-		val cuCopy = copied(source.compilationUnit)
+		val cuCopy = copied(originalCompilationUnitModel.compilationUnit)
 		cuCopy.delete
 		// reset
 		copier.clear
@@ -143,7 +151,7 @@ public class SSCompilationUnitModel {
 	}
 
 	def getSource() {
-		return source
+		return originalCompilationUnitModel
 	}
 
 	private def void delete(EObject object) {
@@ -153,11 +161,11 @@ public class SSCompilationUnitModel {
 	}
 
 	override toString() {
-		var path = source.compilationUnit.originalFilePath
+		var path = originalCompilationUnitModel.compilationUnit.originalFilePath
 		if (path.contains("src")) {
 			path = path.substring(path.lastIndexOf("src"))
 		}
-		return '''«path» at «(source?.eContainer?.eContainer?.eContainer?.eContainer as Rev)?.name»'''
+		return '''«path» at «(originalCompilationUnitModel?.eContainer?.eContainer?.eContainer?.eContainer as Rev)?.name»'''
 	}
 
 	/**
