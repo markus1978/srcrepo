@@ -1,5 +1,6 @@
 package de.hub.srcrepo.internal;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gmt.modisco.java.ASTNode;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
@@ -27,17 +31,18 @@ import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Target;
+import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 
 @SuppressWarnings("restriction")
 public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 	
-	private final List<ICompilationUnit> compilationUnits;
+	private final Collection<ICompilationUnit> compilationUnits;
 	private final JavaFactory javaFactory;
 	private final RepositoryModelFactory repositoryFactory;
 	
 	private final Map<ICompilationUnit, CompilationUnitModel> results = new HashMap<>();
 
-	public ImportJavaCompilationUnitsJob(List<ICompilationUnit> compilationUnits, 
+	public ImportJavaCompilationUnitsJob(Collection<ICompilationUnit> compilationUnits, 
 			JavaFactory javaFactory, 
 			RepositoryModelFactory repositoryFactory) {
 		super(ImportJavaCompilationUnitsJob.class.getName() + " import compilation units for current ref.");
@@ -72,19 +77,29 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 					for (PendingElement pe : unresolvedBindings) {
 						NamedElement target = null;
 						target = getProxyElement(pe, model1);
-						if (target != null && !(target instanceof UnresolvedItem)) {
+						if (target != null) {
 							pe.affectTarget(target);
-							// target is a proxy
-							Preconditions.checkState(target.isProxy());
-							compilationUnitModel.getProxyTargets().add(target);
+							if (target instanceof UnresolvedItem || target.isProxy()) {
+								ASTNode source = pe.getClientNode();
+								UnresolvedLink unresolvedLink = repositoryFactory.createUnresolvedLink();
+								compilationUnitModel.getUnresolvedLinks().add(unresolvedLink);
+								unresolvedLink.setId(pe.getBinding().getName());
+								unresolvedLink.setSource(source);
+								unresolvedLink.setTarget(target);
+								EClass sourceClass = source.eClass();
+								EStructuralFeature feature = sourceClass.getEStructuralFeature(pe.getLinkName());
+								unresolvedLink.setFeatureID(sourceClass.getFeatureID(feature));
+								if (feature.isMany()) {
+									unresolvedLink.setFeatureIndex(((List<?>)source.eGet(feature)).indexOf(target));
+								} else {
+									unresolvedLink.setFeatureIndex(-1);
+								}
+							}							
 						} else {
-							// pe is stays unresolved, save it
-							de.hub.srcrepo.repositorymodel.PendingElement pendingElementModel = repositoryFactory.createPendingElement();
-							pendingElementModel.setBinding(pe.getBinding().toString());
-							pendingElementModel.setLinkName(pe.getLinkName());
-							pendingElementModel.setClientNode(pe.getClientNode());
-							compilationUnitModel.getPendings().add(pendingElementModel);							
-						}
+							// TODO
+							SrcRepoActivator.INSTANCE.warning("Found an element that could not be resolved, " + 
+									"even with proxies or unresolved items: " + pe.getBinding().getName());
+						}						
 					}
 				}
 			}

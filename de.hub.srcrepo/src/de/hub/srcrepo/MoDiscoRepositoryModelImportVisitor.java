@@ -29,10 +29,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmt.modisco.java.CompilationUnit;
-import org.eclipse.gmt.modisco.java.Model;
-import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -40,8 +36,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
 import de.hub.jstattrack.Statistics;
 import de.hub.jstattrack.TimeStatistic;
@@ -52,8 +46,8 @@ import de.hub.jstattrack.services.Histogram;
 import de.hub.jstattrack.services.Summary;
 import de.hub.jstattrack.services.WindowedPlot;
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
+import de.hub.srcrepo.internal.ImportJavaCompilationUnitsJob;
 import de.hub.srcrepo.internal.ProjectUtil;
-import de.hub.srcrepo.internal.SrcRepoBindingManager;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.Diff;
@@ -65,10 +59,8 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Target;
 import javancss.Javancss;
 
-@SuppressWarnings("restriction")
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {
 
 	protected final ISourceControlSystem sourceControlSystem;
@@ -546,100 +538,46 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		return null;
 	}
 	
-	private class ImportJavaCompilationUnits extends WorkspaceJob {
-		
-		private final Map<ICompilationUnit, Diff> javaDiffs;	
-
+	private class ImportJavaCompilationUnits extends ImportJavaCompilationUnitsJob {
+		private final Map<ICompilationUnit, Diff> javaDiffs;
 		public ImportJavaCompilationUnits(Map<ICompilationUnit, Diff> javaDiffs) {
-			super(MoDiscoRepositoryModelImportVisitor.class.getName() + " import compilation units for current ref.");
+			super(javaDiffs.keySet(), javaFactory, repositoryFactory);
 			this.javaDiffs = javaDiffs;
 		}
-
 		@Override
-		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {									
-			// import diffs
-			SrcRepoActivator.INSTANCE.info("about to import " + javaDiffs.size() + " compilation units");
-			int count = 0;
-			for(ICompilationUnit compilationUnit: javaDiffs.keySet()) {
-				long fileSize = EFS.getStore(compilationUnit.getResource().getLocationURI()).fetchInfo().getLength();
-				if (fileSize > 300000) { // TODO makes this configurable, add functionality to detect generated files
-					SrcRepoActivator.INSTANCE.warning("Skipped compilation unit " + compilationUnit.getResource().getProjectRelativePath() + " because it is awefully large (" + (fileSize/1024) + "kb) and probably generated.");
-					skippedCuCount++;
-					continue;
-				} 
-				
-				SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory);
-				// TODO reuse javaReader and Discover...
-				JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), null);
-				javaReader.setGlobalBindings(bindings);
-				javaReader.setDeepAnalysis(true);
-				javaReader.setIncremental(false);
-				Model javaModel = javaFactory.createModel();
-				SrcRepoActivator.INSTANCE.debug("import compilation unit " + compilationUnit.getPath());
-				try {
-					javaReader.readModel(compilationUnit, javaModel, bindings, new NullProgressMonitor());	
-				} catch (Exception e) {
-					if (e.getClass().getName().endsWith("AbortCompilation")) {
-						reportImportError(currentRev, "Could not compile " + compilationUnit.getResource().getProjectRelativePath() + " (is ignored): " + e.getMessage(), e, true);
-						EcoreUtil.delete(javaModel);
-						skippedCuCount++;
-						continue;
-					} else {
-						EcoreUtil.delete(javaModel);
-						reportImportError(currentRev, "Could not compile " + compilationUnit.getResource().getProjectRelativePath() + " (is ignored) for unknown reasons: " + e.getMessage(), e, true);
-						skippedCuCount++;
-						continue;
-					}
-				}							
-				
-				if (javaModel.getCompilationUnits().size() == 1) {
-					// check if a new top level class was imported (and not only the compilation unit)					
-					if (javaModel.getCompilationUnits().get(0).getTypes().isEmpty()) {
-						SrcRepoActivator.INSTANCE.warning("A compilation was imported, but no new type created, probably due to parser errors: " + compilationUnit.getPath());						
-					}
-					
-					CompilationUnit importedCompilationUnit = javaModel.getCompilationUnits().get(0);
-					JavaCompilationUnitRef ref = repositoryFactory.createJavaCompilationUnitRef();
-					CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
+		protected void skipWarning(String message) {
+			reportImportError(currentRev, message, null, true);
+			skippedCuCount++;
+		}
+		@Override
+		protected void skipError(String message, Exception e) {
+			reportImportError(currentRev, message, e, true);
+			skippedCuCount++;
+		}
+		
+		@Override
+		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			IStatus result = super.runInWorkspace(monitor);
+			
+			for (Map.Entry<ICompilationUnit, Diff> entry: javaDiffs.entrySet()) {
+				ICompilationUnit compilationUnit = entry.getKey();
+				CompilationUnitModel compilationUnitModel = getResults().get(compilationUnit);
+				if (compilationUnitModel != null) {
+					JavaCompilationUnitRef ref = repositoryFactory.createJavaCompilationUnitRef();					
 					ref.setCompilationUnitModel(compilationUnitModel);
-					compilationUnitModel.setCompilationUnit(importedCompilationUnit);
-					compilationUnitModel.setJavaModel(javaModel);
-					String scsPath = sourceControlSystem.getWorkingCopy().getAbsolutePath();
 					
+					String scsPath = sourceControlSystem.getWorkingCopy().getAbsolutePath();					
 					IProject project = compilationUnit.getJavaProject().getProject();
 					String projectFullPath = project.getRawLocation().toOSString();
 					projectFullPath = projectFullPath.substring(scsPath.length());
 					ref.setPath(projectFullPath + "/" + compilationUnit.getResource().getProjectRelativePath());
-					
-					// save targets
-					for(Map.Entry<String, NamedElement> target: bindings.getTargets().entrySet()) {
-						Target targetModel = repositoryFactory.createTarget();
-						targetModel.setId(target.getKey());
-						targetModel.setTarget(target.getValue());
-						compilationUnitModel.getTargets().add(targetModel);
-					}
-					
-					// save pending bindings
-					for(PendingElement pendingElement: bindings.getPendings()) {
-						de.hub.srcrepo.repositorymodel.PendingElement pendingElementModel = repositoryFactory.createPendingElement();
-						pendingElementModel.setBinding(pendingElement.getBinding().toString());
-						pendingElementModel.setLinkName(pendingElement.getLinkName());
-						pendingElementModel.setClientNode(pendingElement.getClientNode());
-						compilationUnitModel.getPendings().add(pendingElementModel);
-					}
-					javaDiffs.get(compilationUnit).setFile(ref);
-					count++;
+					entry.getValue().setFile(ref);
 					importedCompilationUnits++;
-				} else {
-					EcoreUtil.delete(javaModel);
-					reportImportError(currentRev, "Sucessfully imported a compilation unit, but no model was created: " + compilationUnit, null, true);
-					skippedCuCount++;
-				}
-			}										
-				
-			SrcRepoActivator.INSTANCE.info("imported " + count + " compilation units");
-			return Status.OK_STATUS;
-		}		
+				}		
+			}
+			
+			return result;
+		}	
 	}
 	
 	private class GetLOCCount extends WorkspaceJob {

@@ -10,7 +10,6 @@ import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -18,6 +17,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
+import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 
 /**
  * <!-- begin-user-doc -->
@@ -100,15 +100,6 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	TraversalState createTraversalState();
 
 	/**
-	 * Returns a new object of class '<em>Pending Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Pending Element</em>'.
-	 * @generated
-	 */
-	PendingElement createPendingElement();
-
-	/**
 	 * Returns a new object of class '<em>Target</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -179,6 +170,15 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	DataSet createDataSet();
+
+	/**
+	 * Returns a new object of class '<em>Unresolved Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Unresolved Link</em>'.
+	 * @generated
+	 */
+	UnresolvedLink createUnresolvedLink();
 
 	/**
 	 * Returns the package supported by this factory.

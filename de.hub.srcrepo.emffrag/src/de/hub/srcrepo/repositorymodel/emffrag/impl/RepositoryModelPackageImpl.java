@@ -24,7 +24,6 @@ import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryElement;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
@@ -34,6 +33,7 @@ import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TaskData;
 import de.hub.srcrepo.repositorymodel.TraversalState;
+import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -99,13 +99,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass traversalStateEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass pendingElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -190,6 +183,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass taskDataEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass unresolvedLinkEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -616,42 +616,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getPendingElement() {
-		return pendingElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getPendingElement_ClientNode() {
-		return (EReference)pendingElementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPendingElement_Binding() {
-		return (EAttribute)pendingElementEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPendingElement_LinkName() {
-		return (EAttribute)pendingElementEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getTarget() {
 		return targetEClass;
 	}
@@ -706,7 +670,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCompilationUnitModel_Pendings() {
+	public EReference getCompilationUnitModel_Targets() {
 		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -715,17 +679,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCompilationUnitModel_Targets() {
+	public EReference getCompilationUnitModel_UnresolvedLinks() {
 		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getCompilationUnitModel_ProxyTargets() {
-		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1120,6 +1075,60 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getUnresolvedLink() {
+		return unresolvedLinkEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUnresolvedLink_Source() {
+		return (EReference)unresolvedLinkEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUnresolvedLink_Target() {
+		return (EReference)unresolvedLinkEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getUnresolvedLink_FeatureID() {
+		return (EAttribute)unresolvedLinkEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getUnresolvedLink_FeatureIndex() {
+		return (EAttribute)unresolvedLinkEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getUnresolvedLink_Id() {
+		return (EAttribute)unresolvedLinkEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getRepositoryMetaData_CuCount() {
 		return (EAttribute)repositoryMetaDataEClass.getEStructuralFeatures().get(4);
 	}
@@ -1216,11 +1225,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(traversalStateEClass, TRAVERSAL_STATE__COMPLETED_BRANCHES);
 		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS);
 
-		pendingElementEClass = createEClass(PENDING_ELEMENT);
-		createEReference(pendingElementEClass, PENDING_ELEMENT__CLIENT_NODE);
-		createEAttribute(pendingElementEClass, PENDING_ELEMENT__BINDING);
-		createEAttribute(pendingElementEClass, PENDING_ELEMENT__LINK_NAME);
-
 		targetEClass = createEClass(TARGET);
 		createEAttribute(targetEClass, TARGET__ID);
 		createEReference(targetEClass, TARGET__TARGET);
@@ -1228,9 +1232,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		compilationUnitModelEClass = createEClass(COMPILATION_UNIT_MODEL);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__COMPILATION_UNIT);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__JAVA_MODEL);
-		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__PENDINGS);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__TARGETS);
-		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__PROXY_TARGETS);
+		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS);
 
 		importErrorEClass = createEClass(IMPORT_ERROR);
 		createEAttribute(importErrorEClass, IMPORT_ERROR__MESSAGE);
@@ -1285,6 +1288,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(taskDataEClass, TASK_DATA__DATE);
 		createEAttribute(taskDataEClass, TASK_DATA__STATS_AS_JSON);
 		createEAttribute(taskDataEClass, TASK_DATA__DESCRIPTION);
+
+		unresolvedLinkEClass = createEClass(UNRESOLVED_LINK);
+		createEReference(unresolvedLinkEClass, UNRESOLVED_LINK__SOURCE);
+		createEReference(unresolvedLinkEClass, UNRESOLVED_LINK__TARGET);
+		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__FEATURE_ID);
+		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__FEATURE_INDEX);
+		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__ID);
 
 		// Create data types
 		changeTypeEDataType = createEDataType(CHANGE_TYPE);
@@ -1382,11 +1392,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getTraversalState_CompletedBranches(), this.getRev(), null, "completedBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTraversalState_NumberOfImportedRevs(), ecorePackage.getEInt(), "numberOfImportedRevs", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(pendingElementEClass, PendingElement.class, "PendingElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getPendingElement_ClientNode(), theJavaPackage.getASTNode(), null, "clientNode", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPendingElement_Binding(), ecorePackage.getEString(), "binding", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPendingElement_LinkName(), ecorePackage.getEString(), "linkName", null, 0, 1, PendingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(targetEClass, Target.class, "Target", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTarget_Id(), ecorePackage.getEString(), "id", null, 0, 1, Target.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTarget_Target(), theJavaPackage.getNamedElement(), null, "target", null, 0, 1, Target.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1394,9 +1399,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEClass(compilationUnitModelEClass, CompilationUnitModel.class, "CompilationUnitModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCompilationUnitModel_CompilationUnit(), theJavaPackage.getCompilationUnit(), null, "compilationUnit", null, 0, 1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCompilationUnitModel_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCompilationUnitModel_Pendings(), this.getPendingElement(), null, "pendings", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCompilationUnitModel_Targets(), this.getTarget(), null, "targets", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCompilationUnitModel_ProxyTargets(), theJavaPackage.getNamedElement(), null, "proxyTargets", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCompilationUnitModel_UnresolvedLinks(), this.getUnresolvedLink(), null, "unresolvedLinks", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(importErrorEClass, ImportError.class, "ImportError", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportError_Message(), ecorePackage.getEString(), "message", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1451,6 +1455,13 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getTaskData_Date(), ecorePackage.getEDate(), "date", null, 0, 1, TaskData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTaskData_StatsAsJSON(), ecorePackage.getEString(), "statsAsJSON", null, 0, 1, TaskData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTaskData_Description(), ecorePackage.getEString(), "description", null, 0, 1, TaskData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(unresolvedLinkEClass, UnresolvedLink.class, "UnresolvedLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUnresolvedLink_Source(), theJavaPackage.getASTNode(), null, "source", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getUnresolvedLink_Target(), theJavaPackage.getNamedElement(), null, "target", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUnresolvedLink_FeatureID(), ecorePackage.getEInt(), "featureID", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUnresolvedLink_FeatureIndex(), ecorePackage.getEInt(), "featureIndex", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUnresolvedLink_Id(), ecorePackage.getEString(), "id", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(changeTypeEDataType, ChangeType.class, "ChangeType", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

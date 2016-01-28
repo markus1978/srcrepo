@@ -1,120 +1,87 @@
 package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
-import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
+import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
-import org.eclipse.gmt.modisco.java.UnresolvedItem
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.Binding
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement
 
-class SSPendingElement extends PendingElement {
-	val IModiscoSnapshotModel snapshot
-	var ASTNode target = null;
-	var int index = -1;
-	var reverted = false
+class SSPendingElement {
+	val SSCopier copier
+	val UnresolvedLink originalUnresolvedLink 	
+	var NamedElement resolvedTarget = null
+	var NamedElement unresolvedTarget = null
 
-	new(IModiscoSnapshotModel snapshot, ASTNode clientNode, String linkName, String binding) {
-		super(snapshot.metaModel.javaFactory)
-		this.snapshot = snapshot
-		this.clientNode = clientNode
-		this.linkName = linkName
-		this.binding = new Binding(binding)
+	new(SSCopier copier, UnresolvedLink originalUnresolvedLink) {
+		this.copier = copier
+		this.originalUnresolvedLink = originalUnresolvedLink
+		this.unresolvedTarget = copier.copied(originalUnresolvedLink.target)
 	}
 
-	override affectTarget(ASTNode target) {
-		Preconditions.checkArgument(target != null)
-		if (this.target == null) {
-			resolve(target)
-		} else {
-			replace(target)
-		}
-		reverted = false
+	def resolve(NamedElement resolvedTarget) {
+		println("#resolve: ->" + (resolvedTarget as NamedElement).name)
+		Preconditions.checkState(!resolved)
+		this.resolvedTarget = resolvedTarget
+		unresolvedTarget = replaceTarget(resolvedTarget)
+
+//		if (!(target instanceof UnresolvedItem)) {
+//			val cum = SSCompilationUnitModel.get(target.originalCompilationUnit)
+//			cum.incomingReferences += this
+//		}
 	}
-
-	def resolve(ASTNode target) {
-		println("#resolve: ->" + (target as NamedElement).name)
-		Preconditions.checkState(!reverted && this.target == null)
-		this.target = target
-
-		val owner = getClientNode()
-		val linkName = getLinkName()
-		val feature = owner.eClass().getEStructuralFeature(linkName) as EReference
-
-		index = -1;
-		if (feature.isMany()) {
-			val lst = owner.eGet(feature) as EList<EObject>
-			lst += target
-			index = lst.size() - 1;
-		} else {
-			owner.eSet(feature, target);
-		}
-
-		if (!(target instanceof UnresolvedItem)) {
-			val cum = SSCompilationUnitModel.get(target.originalCompilationUnit)
-			cum.incomingReferences += this
-		}
+	
+	private def ASTNode getSource() {
+		copier.copied(originalUnresolvedLink.source)
 	}
+	
+	private def NamedElement replaceTarget(NamedElement target) {
+		val source = getSource()
+		val feature = source.eClass().getEStructuralFeature(originalUnresolvedLink.featureID) as EReference
 
-	def replace(ASTNode newTarget) {
-		println("#replace: " + (target as NamedElement)?.name + "<-" + (newTarget as NamedElement)?.name)
-		Preconditions.checkState(reverted && target != null)
-		this.target = newTarget
-
-		val owner = getClientNode()
-		val linkName = getLinkName()
-		val feature = owner.eClass().getEStructuralFeature(linkName) as EReference
-
-		if (index != -1) {
-			(owner.eGet(feature) as EList<EObject>).set(index, newTarget)
+		if (feature.isMany()) {			
+			val lst = source.eGet(feature) as EList<NamedElement>
+			return lst.set(originalUnresolvedLink.featureIndex, target)
 		} else {
-			owner.eSet(feature, newTarget)
+			val old = source.eGet(feature) as NamedElement
+			source.eSet(feature, target);
+			return old
 		}
 	}
 
 	def isResolved() {
-		return target != null && !reverted
+		return resolvedTarget != null
 	}
 
-	/**
-	 * Replaces the resolved target with an empty place holder
-	 */
 	def revert() {
-		Preconditions.checkState(target != null && !reverted)		
-		val placeHolder = snapshot.metaModel.javaFactory.create(target.eClass) as ASTNode
-		(placeHolder as InternalEObject).eSetProxyURI(URI.createURI(binding.name)); // TODO remove, for debug only
-		reverted = true;
-		replace(placeHolder)
+		Preconditions.checkState(resolved)		
+		replaceTarget(unresolvedTarget);
+		resolvedTarget = null
 	}
 
-	def delete() {
-		Preconditions.checkState(!reverted && target != null)
-		println("#delete: ->" + (target as NamedElement).name)
-		val owner = getClientNode()
-		val feature = owner.eClass().getEStructuralFeature(linkName) as EReference
-
-		if (index != -1) {
-			(owner.eGet(feature) as EList<EObject>).remove(index)
-		} else {
-			owner.eUnset(feature)
-		}
-		target = null
-	}
+//	def delete() {
+//		Preconditions.checkState(resolved)
+//		println("#delete: ->" + resolvedTarget.name)
+//	
+//		val source = getSource()
+//		val feature = source.eClass().getEStructuralFeature(originalUnresolvedLink.featureID) as EReference
+//
+//		val index = originalUnresolvedLink.featureIndex
+//		if (index != -1) {
+//			(source.eGet(feature) as EList<EObject>).remove(index)
+//		} else {
+//			source.eUnset(feature)
+//		}
+//		resolvedTarget = null
+//	}
 	
 	override toString() {
-		val targetStr = if (target == null) {
-			"unresolved"
-		} else if (target.eIsProxy) {
-			'''unresolved[«(target as InternalEObject).eProxyURI»]''' 
+		val targetStr = if (resolvedTarget == null) {
+			'''unresolved[«unresolvedTarget.name»]'''
 		} else {
-			(target as NamedElement).name
+			resolvedTarget.name
 		}
-		return '''«clientNode.eClass.name» -> «targetStr» («IF resolved»V«ENDIF»«IF reverted»R«ENDIF» «linkName»->«binding.name»)'''
+		return '''«source.eClass.name» -> «targetStr»'''
 	}
 	
 }

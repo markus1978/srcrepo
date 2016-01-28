@@ -67,7 +67,7 @@ class SnapshotJDTTests {
 				}			
 			]
 			cum.targets.forEach[it.id = it.id.replace(revName, goalRev)]
-			cum.pendings.forEach[it.binding = it.binding.replace(revName, goalRev)]
+			cum.unresolvedLinks.forEach[it.id = it.id.replace(revName, goalRev)]
 		}
 		return cum
 	}

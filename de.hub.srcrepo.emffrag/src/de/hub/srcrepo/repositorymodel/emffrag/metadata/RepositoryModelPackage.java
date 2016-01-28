@@ -64,7 +64,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryElement()
 	 * @generated
 	 */
-	int REPOSITORY_ELEMENT = 18;
+	int REPOSITORY_ELEMENT = 17;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -101,7 +101,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDirectoryElement()
 	 * @generated
 	 */
-	int DIRECTORY_ELEMENT = 16;
+	int DIRECTORY_ELEMENT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -724,61 +724,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int TRAVERSAL_STATE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl <em>Pending Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl
-	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getPendingElement()
-	 * @generated
-	 */
-	int PENDING_ELEMENT = 8;
-
-	/**
-	 * The feature id for the '<em><b>Client Node</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PENDING_ELEMENT__CLIENT_NODE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Binding</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PENDING_ELEMENT__BINDING = 1;
-
-	/**
-	 * The feature id for the '<em><b>Link Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PENDING_ELEMENT__LINK_NAME = 2;
-
-	/**
-	 * The number of structural features of the '<em>Pending Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PENDING_ELEMENT_FEATURE_COUNT = 3;
-
-	/**
-	 * The number of operations of the '<em>Pending Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PENDING_ELEMENT_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl <em>Target</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -786,7 +731,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getTarget()
 	 * @generated
 	 */
-	int TARGET = 9;
+	int TARGET = 8;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -832,7 +777,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getCompilationUnitModel()
 	 * @generated
 	 */
-	int COMPILATION_UNIT_MODEL = 10;
+	int COMPILATION_UNIT_MODEL = 9;
 
 	/**
 	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
@@ -853,31 +798,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int COMPILATION_UNIT_MODEL__JAVA_MODEL = 1;
 
 	/**
-	 * The feature id for the '<em><b>Pendings</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPILATION_UNIT_MODEL__PENDINGS = 2;
-
-	/**
 	 * The feature id for the '<em><b>Targets</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPILATION_UNIT_MODEL__TARGETS = 3;
+	int COMPILATION_UNIT_MODEL__TARGETS = 2;
 
 	/**
-	 * The feature id for the '<em><b>Proxy Targets</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Unresolved Links</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPILATION_UNIT_MODEL__PROXY_TARGETS = 4;
+	int COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Compilation Unit Model</em>' class.
@@ -886,7 +822,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 * @ordered
 	 */
-	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 5;
+	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Compilation Unit Model</em>' class.
@@ -905,7 +841,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportError()
 	 * @generated
 	 */
-	int IMPORT_ERROR = 11;
+	int IMPORT_ERROR = 10;
 
 	/**
 	 * The feature id for the '<em><b>Message</b></em>' attribute.
@@ -960,7 +896,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDataSet()
 	 * @generated
 	 */
-	int DATA_SET = 19;
+	int DATA_SET = 18;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1024,7 +960,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryMetaData()
 	 * @generated
 	 */
-	int REPOSITORY_META_DATA = 12;
+	int REPOSITORY_META_DATA = 11;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1160,7 +1096,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryModelDirectory()
 	 * @generated
 	 */
-	int REPOSITORY_MODEL_DIRECTORY = 13;
+	int REPOSITORY_MODEL_DIRECTORY = 12;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1260,7 +1196,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDataStoreMetaData()
 	 * @generated
 	 */
-	int DATA_STORE_META_DATA = 14;
+	int DATA_STORE_META_DATA = 13;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1333,7 +1269,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getMongoDBMetaData()
 	 * @generated
 	 */
-	int MONGO_DB_META_DATA = 15;
+	int MONGO_DB_META_DATA = 14;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1442,7 +1378,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getTaskData()
 	 * @generated
 	 */
-	int TASK_DATA = 20;
+	int TASK_DATA = 19;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1533,7 +1469,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportMetaData()
 	 * @generated
 	 */
-	int IMPORT_META_DATA = 17;
+	int IMPORT_META_DATA = 16;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1651,6 +1587,79 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @ordered
 	 */
 	int IMPORT_META_DATA_OPERATION_COUNT = TASK_DATA_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.UnresolvedLinkImpl
+	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getUnresolvedLink()
+	 * @generated
+	 */
+	int UNRESOLVED_LINK = 20;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK__SOURCE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK__TARGET = 1;
+
+	/**
+	 * The feature id for the '<em><b>Feature ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK__FEATURE_ID = 2;
+
+	/**
+	 * The feature id for the '<em><b>Feature Index</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK__FEATURE_INDEX = 3;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK__ID = 4;
+
+	/**
+	 * The number of structural features of the '<em>Unresolved Link</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK_FEATURE_COUNT = 5;
+
+	/**
+	 * The number of operations of the '<em>Unresolved Link</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNRESOLVED_LINK_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '<em>Change Type</em>' data type.
@@ -2085,49 +2094,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getTraversalState_CompletedBranches();
 
 	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.PendingElement <em>Pending Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Pending Element</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.PendingElement
-	 * @generated
-	 */
-	EClass getPendingElement();
-
-	/**
-	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.PendingElement#getClientNode <em>Client Node</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Client Node</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.PendingElement#getClientNode()
-	 * @see #getPendingElement()
-	 * @generated
-	 */
-	EReference getPendingElement_ClientNode();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.PendingElement#getBinding <em>Binding</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Binding</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.PendingElement#getBinding()
-	 * @see #getPendingElement()
-	 * @generated
-	 */
-	EAttribute getPendingElement_Binding();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.PendingElement#getLinkName <em>Link Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Link Name</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.PendingElement#getLinkName()
-	 * @see #getPendingElement()
-	 * @generated
-	 */
-	EAttribute getPendingElement_LinkName();
-
-	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Target <em>Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2192,17 +2158,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getCompilationUnitModel_JavaModel();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getPendings <em>Pendings</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Pendings</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getPendings()
-	 * @see #getCompilationUnitModel()
-	 * @generated
-	 */
-	EReference getCompilationUnitModel_Pendings();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getTargets <em>Targets</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2214,15 +2169,15 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getCompilationUnitModel_Targets();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProxyTargets <em>Proxy Targets</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getUnresolvedLinks <em>Unresolved Links</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Proxy Targets</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProxyTargets()
+	 * @return the meta object for the containment reference list '<em>Unresolved Links</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getUnresolvedLinks()
 	 * @see #getCompilationUnitModel()
 	 * @generated
 	 */
-	EReference getCompilationUnitModel_ProxyTargets();
+	EReference getCompilationUnitModel_UnresolvedLinks();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ImportError <em>Import Error</em>}'.
@@ -2688,6 +2643,71 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EAttribute getTaskData_Description();
 
 	/**
+	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.UnresolvedLink <em>Unresolved Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Unresolved Link</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.UnresolvedLink
+	 * @generated
+	 */
+	EClass getUnresolvedLink();
+
+	/**
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.UnresolvedLink#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.UnresolvedLink#getSource()
+	 * @see #getUnresolvedLink()
+	 * @generated
+	 */
+	EReference getUnresolvedLink_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link de.hub.srcrepo.repositorymodel.UnresolvedLink#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.UnresolvedLink#getTarget()
+	 * @see #getUnresolvedLink()
+	 * @generated
+	 */
+	EReference getUnresolvedLink_Target();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.UnresolvedLink#getFeatureID <em>Feature ID</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Feature ID</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.UnresolvedLink#getFeatureID()
+	 * @see #getUnresolvedLink()
+	 * @generated
+	 */
+	EAttribute getUnresolvedLink_FeatureID();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.UnresolvedLink#getFeatureIndex <em>Feature Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Feature Index</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.UnresolvedLink#getFeatureIndex()
+	 * @see #getUnresolvedLink()
+	 * @generated
+	 */
+	EAttribute getUnresolvedLink_FeatureIndex();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.UnresolvedLink#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.UnresolvedLink#getId()
+	 * @see #getUnresolvedLink()
+	 * @generated
+	 */
+	EAttribute getUnresolvedLink_Id();
+
+	/**
 	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.RepositoryMetaData#getCuCount <em>Cu Count</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3063,40 +3083,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference TRAVERSAL_STATE__COMPLETED_BRANCHES = eINSTANCE.getTraversalState_CompletedBranches();
 
 		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl <em>Pending Element</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.PendingElementImpl
-		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getPendingElement()
-		 * @generated
-		 */
-		EClass PENDING_ELEMENT = eINSTANCE.getPendingElement();
-
-		/**
-		 * The meta object literal for the '<em><b>Client Node</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PENDING_ELEMENT__CLIENT_NODE = eINSTANCE.getPendingElement_ClientNode();
-
-		/**
-		 * The meta object literal for the '<em><b>Binding</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PENDING_ELEMENT__BINDING = eINSTANCE.getPendingElement_Binding();
-
-		/**
-		 * The meta object literal for the '<em><b>Link Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PENDING_ELEMENT__LINK_NAME = eINSTANCE.getPendingElement_LinkName();
-
-		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl <em>Target</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3149,14 +3135,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference COMPILATION_UNIT_MODEL__JAVA_MODEL = eINSTANCE.getCompilationUnitModel_JavaModel();
 
 		/**
-		 * The meta object literal for the '<em><b>Pendings</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference COMPILATION_UNIT_MODEL__PENDINGS = eINSTANCE.getCompilationUnitModel_Pendings();
-
-		/**
 		 * The meta object literal for the '<em><b>Targets</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3165,12 +3143,12 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference COMPILATION_UNIT_MODEL__TARGETS = eINSTANCE.getCompilationUnitModel_Targets();
 
 		/**
-		 * The meta object literal for the '<em><b>Proxy Targets</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Unresolved Links</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference COMPILATION_UNIT_MODEL__PROXY_TARGETS = eINSTANCE.getCompilationUnitModel_ProxyTargets();
+		EReference COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS = eINSTANCE.getCompilationUnitModel_UnresolvedLinks();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.
@@ -3535,6 +3513,56 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EAttribute TASK_DATA__DESCRIPTION = eINSTANCE.getTaskData_Description();
+
+		/**
+		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.UnresolvedLinkImpl
+		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getUnresolvedLink()
+		 * @generated
+		 */
+		EClass UNRESOLVED_LINK = eINSTANCE.getUnresolvedLink();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UNRESOLVED_LINK__SOURCE = eINSTANCE.getUnresolvedLink_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UNRESOLVED_LINK__TARGET = eINSTANCE.getUnresolvedLink_Target();
+
+		/**
+		 * The meta object literal for the '<em><b>Feature ID</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute UNRESOLVED_LINK__FEATURE_ID = eINSTANCE.getUnresolvedLink_FeatureID();
+
+		/**
+		 * The meta object literal for the '<em><b>Feature Index</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute UNRESOLVED_LINK__FEATURE_INDEX = eINSTANCE.getUnresolvedLink_FeatureIndex();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute UNRESOLVED_LINK__ID = eINSTANCE.getUnresolvedLink_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Cu Count</b></em>' attribute feature.

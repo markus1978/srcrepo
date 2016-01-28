@@ -34,6 +34,7 @@ public class SSCompilationUnitModel {
 		this.copier = new SSCopier(snapshot.metaModel)
 	}
 
+	@Deprecated
 	def getPendingElements() {
 		return pendingElements
 	}
@@ -42,20 +43,32 @@ public class SSCompilationUnitModel {
 	 * All pending elements that represent references that point towards elements in this CU.
 	 * This includes references sources within this very same CU.
 	 */
+	@Deprecated
 	def getIncomingReferences() {
 		Preconditions.checkState(isAttached)
 		return incomingReferences
 	}
+	
+	def Iterable<SSPendingElement> getIncomingLinks() {
+		// TODO
+	}
+	
+	def Iterable<SSPendingElement> getOutgoingLinks() {
+		// TODO
+	}
 
+	// TODO
 	def void fillTargets(Map<String, NamedElement> allTargets) {
 		Preconditions.checkState(isAttached)
 		source.targets.forEach[allTargets.put(id, target.copied)]
 	}
 
+	// TODO
 	def void removeTargets(Map<String, NamedElement> allTargets) {
 		source.targets.forEach[allTargets.remove(it.id)]
 	}
 
+	// TODO
 	def CompilationUnit addToModel(Model model) {
 		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
 		// compilation unit
@@ -73,28 +86,29 @@ public class SSCompilationUnitModel {
 			forall[copied != null])
 		copyReferences
 
-		pendingElements += source.pendings.filter[
-			// orphan types are merged with existing orphan types. orphan types can contain pending elements. 
-			// If merged those pending elements are already resolved, and no copy of the client node exists.
-			return if (ifCopied(it.clientNode) != null) {
-				true
-			} else { // TODO remove, debug only
-				var EObject parent = clientNode 
-				while(parent != null && parent.eContainingFeature != snapshot.metaModel.model_OrphanTypes) {
-					parent = parent.eContainer
-				}
-				Preconditions.checkState(parent != null)
-				false
-			}
-		].map [			
-			return new SSPendingElement(snapshot, copied(clientNode), linkName, binding)							
-		]
+//		pendingElements += source.pendings.filter[
+//			// orphan types are merged with existing orphan types. orphan types can contain pending elements. 
+//			// If merged those pending elements are already resolved, and no copy of the client node exists.
+//			return if (ifCopied(it.clientNode) != null) {
+//				true
+//			} else { // TODO remove, debug only
+//				var EObject parent = clientNode 
+//				while(parent != null && parent.eContainingFeature != snapshot.metaModel.model_OrphanTypes) {
+//					parent = parent.eContainer
+//				}
+//				Preconditions.checkState(parent != null)
+//				false
+//			}
+//		].map [			
+//			return new SSPendingElement(snapshot, copied(clientNode), linkName, binding)							
+//		]
 		isAttached = true
 
 		allInstances.put(cuCopy, this)
 		return cuCopy
 	}
 
+	// TODO
 	def CompilationUnit removeFromModel(Model model) {
 		Preconditions.checkState(isAttached, "Can only removed compilation unit model that is attached to a model.")
 		// orphant types

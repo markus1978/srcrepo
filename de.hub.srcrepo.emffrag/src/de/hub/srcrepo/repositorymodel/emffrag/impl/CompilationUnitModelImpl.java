@@ -6,12 +6,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gmt.modisco.java.CompilationUnit;
 import org.eclipse.gmt.modisco.java.Model;
-import org.eclipse.gmt.modisco.java.NamedElement;
 
 import de.hub.emffrag.FObjectImpl;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Target;
+import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -24,9 +23,8 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getCompilationUnit <em>Compilation Unit</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getJavaModel <em>Java Model</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getPendings <em>Pendings</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getTargets <em>Targets</em>}</li>
- *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getProxyTargets <em>Proxy Targets</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getUnresolvedLinks <em>Unresolved Links</em>}</li>
  * </ul>
  *
  * @generated
@@ -103,16 +101,6 @@ public class CompilationUnitModelImpl extends FObjectImpl implements Compilation
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public EList<PendingElement> getPendings() {
-		return (EList<PendingElement>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PENDINGS, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
 	public EList<Target> getTargets() {
 		return (EList<Target>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__TARGETS, true);
 	}
@@ -123,8 +111,8 @@ public class CompilationUnitModelImpl extends FObjectImpl implements Compilation
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public EList<NamedElement> getProxyTargets() {
-		return (EList<NamedElement>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PROXY_TARGETS, true);
+	public EList<UnresolvedLink> getUnresolvedLinks() {
+		return (EList<UnresolvedLink>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS, true);
 	}
 
 } //CompilationUnitModelImpl

@@ -79,11 +79,6 @@
         eType="#//Rev"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfImportedRevs" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PendingElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="clientNode" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//ASTNode"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="binding" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Target">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//NamedElement"/>
@@ -92,13 +87,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="compilationUnit" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//CompilationUnit"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="javaModel" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//Model"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pendings" upperBound="-1"
-        eType="#//PendingElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
         eType="#//Target" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="proxyTargets" upperBound="-1"
-        eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//NamedElement"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unresolvedLinks" upperBound="-1"
+        eType="#//UnresolvedLink" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ImportError">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -164,4 +156,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="EDataMap" instanceTypeName="java.util.Map&lt;java.lang.String, java.io.Serializable>"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UnresolvedLink">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//ASTNode"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="ecore:EClass platform:/plugin/org.eclipse.gmt.modisco.java/model/java.ecore#//NamedElement"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="featureID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="featureIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

@@ -2,31 +2,10 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
+import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
-
-import de.hub.srcrepo.repositorymodel.AbstractFileRef;
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.DataSet;
-import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
-import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.DirectoryElement;
-import de.hub.srcrepo.repositorymodel.ImportError;
-import de.hub.srcrepo.repositorymodel.ImportMetaData;
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
-import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
-import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
-import de.hub.srcrepo.repositorymodel.Ref;
-import de.hub.srcrepo.repositorymodel.RepositoryElement;
-import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
-import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
-import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.Target;
-import de.hub.srcrepo.repositorymodel.TaskData;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**
@@ -140,12 +119,6 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case RepositoryModelPackage.PENDING_ELEMENT: {
-				PendingElement pendingElement = (PendingElement)theEObject;
-				T result = casePendingElement(pendingElement);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case RepositoryModelPackage.TARGET: {
 				Target target = (Target)theEObject;
 				T result = caseTarget(target);
@@ -231,6 +204,12 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				T result = caseTaskData(taskData);
 				if (result == null) result = caseDataSet(taskData);
 				if (result == null) result = caseRepositoryElement(taskData);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RepositoryModelPackage.UNRESOLVED_LINK: {
+				UnresolvedLink unresolvedLink = (UnresolvedLink)theEObject;
+				T result = caseUnresolvedLink(unresolvedLink);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -355,21 +334,6 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTraversalState(TraversalState object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Pending Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Pending Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T casePendingElement(PendingElement object) {
 		return null;
 	}
 
@@ -550,6 +514,21 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTaskData(TaskData object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Unresolved Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Unresolved Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUnresolvedLink(UnresolvedLink object) {
 		return null;
 	}
 

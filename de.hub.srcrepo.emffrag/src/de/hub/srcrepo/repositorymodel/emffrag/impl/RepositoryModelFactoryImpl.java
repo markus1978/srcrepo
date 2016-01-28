@@ -21,7 +21,6 @@ import de.hub.srcrepo.repositorymodel.ImportMetaData;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
-import de.hub.srcrepo.repositorymodel.PendingElement;
 import de.hub.srcrepo.repositorymodel.Ref;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -29,6 +28,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TraversalState;
+import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
@@ -83,7 +83,6 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.PARENT_RELATION: return (EObject)createParentRelation();
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return (EObject)createJavaCompilationUnitRef();
 			case RepositoryModelPackage.TRAVERSAL_STATE: return (EObject)createTraversalState();
-			case RepositoryModelPackage.PENDING_ELEMENT: return (EObject)createPendingElement();
 			case RepositoryModelPackage.TARGET: return (EObject)createTarget();
 			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return (EObject)createCompilationUnitModel();
 			case RepositoryModelPackage.IMPORT_ERROR: return (EObject)createImportError();
@@ -92,6 +91,7 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.MONGO_DB_META_DATA: return (EObject)createMongoDBMetaData();
 			case RepositoryModelPackage.IMPORT_META_DATA: return (EObject)createImportMetaData();
 			case RepositoryModelPackage.DATA_SET: return (EObject)createDataSet();
+			case RepositoryModelPackage.UNRESOLVED_LINK: return (EObject)createUnresolvedLink();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -206,16 +206,6 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PendingElement createPendingElement() {
-		PendingElementImpl pendingElement = new PendingElementImpl();
-		return pendingElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Target createTarget() {
 		TargetImpl target = new TargetImpl();
 		return target;
@@ -289,6 +279,16 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public DataSet createDataSet() {
 		DataSetImpl dataSet = new DataSetImpl();
 		return dataSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UnresolvedLink createUnresolvedLink() {
+		UnresolvedLinkImpl unresolvedLink = new UnresolvedLinkImpl();
+		return unresolvedLink;
 	}
 
 	/**
