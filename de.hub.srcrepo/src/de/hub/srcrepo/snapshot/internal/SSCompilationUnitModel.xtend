@@ -11,6 +11,7 @@ import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import de.hub.srcrepo.repositorymodel.Rev
+import org.eclipse.gmt.modisco.java.UnresolvedItem
 
 public class SSCompilationUnitModel {
 
@@ -76,37 +77,43 @@ public class SSCompilationUnitModel {
 	// TODO
 	def CompilationUnit addToModel(Model model) {
 		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
+		// TODO
+		// deal with proxies
+		// deal with unresolved items
+		// deal with orphan types
+		// all those might already exist in the snapshot model, 
+		// the first two might be resolvable with targets in the existing snapshot model
+		
+		
 		// compilation unit
 		val cuCopy = copyt(originalCompilationUnitModel.compilationUnit)
-
 		model.compilationUnits.add(cuCopy)
-		// types
+		
+		// owned types
 		originalCompilationUnitModel.compilationUnit.types.forEach [
 			copy(model, originalCompilationUnitModel.javaModel, it)
 		]
 		// orphan types
 		originalCompilationUnitModel.javaModel.orphanTypes.forEach[copy(model, originalCompilationUnitModel.javaModel, it)]
+		// proxies and unresolved types
+		originalCompilationUnitModel.unresolvedLinks.forEach[
+			if (target == null) {
+				
+			} else if (target instanceof UnresolvedItem) {
+				
+			} else if (target.isProxy) {
+				
+			} else {
+				
+			}
+		]
+		
 		// TODO remove debug only
 		Preconditions.checkState(originalCompilationUnitModel.javaModel.eAllContents.filter[it instanceof NamedElement].
 			forall[copied != null])
 		copyReferences
 
-//		pendingElements += source.pendings.filter[
-//			// orphan types are merged with existing orphan types. orphan types can contain pending elements. 
-//			// If merged those pending elements are already resolved, and no copy of the client node exists.
-//			return if (ifCopied(it.clientNode) != null) {
-//				true
-//			} else { // TODO remove, debug only
-//				var EObject parent = clientNode 
-//				while(parent != null && parent.eContainingFeature != snapshot.metaModel.model_OrphanTypes) {
-//					parent = parent.eContainer
-//				}
-//				Preconditions.checkState(parent != null)
-//				false
-//			}
-//		].map [			
-//			return new SSPendingElement(snapshot, copied(clientNode), linkName, binding)							
-//		]
+
 		isAttached = true
 		
 		Preconditions.checkState(outgoingLinks.empty)
