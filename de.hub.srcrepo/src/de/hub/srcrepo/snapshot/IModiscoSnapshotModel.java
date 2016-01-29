@@ -19,14 +19,14 @@ public interface IModiscoSnapshotModel {
 	 * persistent repository model to the snapshot. Changes to compilation units
 	 * need to be implemented as remove/add pairs.
 	 */
-	public void addCU(CompilationUnitModel model);
+	public void addCompilationUnitModel(CompilationUnitModel model);
 
 	/**
 	 * Remove an old compilation unit model from the snapshot. The models are
 	 * taken from a persistent repository model to the snapshot. Changes to
 	 * compilation units need to be implemented as remove/add pairs.
 	 */
-	public void removeCU(CompilationUnitModel model);
+	public void removeCompilationUnitModel(CompilationUnitModel model);
 
 	/**
 	 * End the current snapshot update. Needs to be called after all CUs for the

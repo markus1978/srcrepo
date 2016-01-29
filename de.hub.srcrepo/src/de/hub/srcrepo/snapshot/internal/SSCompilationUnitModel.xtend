@@ -1,17 +1,25 @@
 package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
+import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
+import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
+import org.eclipse.gmt.modisco.java.AnnotationTypeMemberDeclaration
 import org.eclipse.gmt.modisco.java.CompilationUnit
+import org.eclipse.gmt.modisco.java.LabeledStatement
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
-import de.hub.srcrepo.repositorymodel.Rev
+import org.eclipse.gmt.modisco.java.Package
+import org.eclipse.gmt.modisco.java.Type
 import org.eclipse.gmt.modisco.java.UnresolvedItem
+import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
+import org.eclipse.gmt.modisco.java.VariableDeclaration
 
 public class SSCompilationUnitModel {
 
@@ -25,12 +33,8 @@ public class SSCompilationUnitModel {
 	val IModiscoSnapshotModel snapshot
 	val extension SSCopier copier
 	
-	@Deprecated
-	val List<SSLink> incomingReferences = newArrayList
-	@Deprecated
-	val List<SSLink> pendingElements = newArrayList
-	
 	val List<SSLink> outgoingLinks = newArrayList
+	val List<SSLink> incomingLinks = newArrayList
 
 	var boolean isAttached = false
 
@@ -40,79 +44,61 @@ public class SSCompilationUnitModel {
 		this.copier = new SSCopier(snapshot.metaModel)
 	}
 
-	@Deprecated
-	def getPendingElements() {
-		return pendingElements
-	}
-
 	/**
 	 * All pending elements that represent references that point towards elements in this CU.
 	 * This includes references sources within this very same CU.
-	 */
-	@Deprecated
-	def getIncomingReferences() {
-		Preconditions.checkState(isAttached)
-		return incomingReferences
+	 */	
+	def List<SSLink> getIncomingLinks() {
+		return incomingLinks
 	}
 	
-	def Iterable<SSLink> getIncomingLinks() {
-		// TODO
-	}
-	
-	def Iterable<SSLink> getOutgoingLinks() {
+	def List<SSLink> getOutgoingLinks() {
 		return outgoingLinks
 	}
 
-	// TODO
 	def void fillTargets(Map<String, NamedElement> allTargets) {
 		Preconditions.checkState(isAttached)
 		originalCompilationUnitModel.targets.forEach[allTargets.put(id, target.copied)]
 	}
 
-	// TODO
 	def void removeTargets(Map<String, NamedElement> allTargets) {
-		originalCompilationUnitModel.targets.forEach[allTargets.remove(it.id)]
+		originalCompilationUnitModel.targets.filter[!target.copied.isUsed].forEach[allTargets.remove(id)]
 	}
 
-	// TODO
 	def CompilationUnit addToModel(Model model) {
 		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
-		// TODO
-		// deal with proxies
-		// deal with unresolved items
-		// deal with orphan types
-		// all those might already exist in the snapshot model, 
-		// the first two might be resolvable with targets in the existing snapshot model
-		
-		
+
 		// compilation unit
 		val cuCopy = copyt(originalCompilationUnitModel.compilationUnit)
 		model.compilationUnits.add(cuCopy)
 		
 		// owned types
 		originalCompilationUnitModel.compilationUnit.types.forEach [
+			copy(model, originalCompilationUnitModel.javaModel, it)			
+		]
+		
+		// orphan types
+		originalCompilationUnitModel.javaModel.orphanTypes.forEach[
 			copy(model, originalCompilationUnitModel.javaModel, it)
 		]
-		// orphan types
-		originalCompilationUnitModel.javaModel.orphanTypes.forEach[copy(model, originalCompilationUnitModel.javaModel, it)]
+		
 		// proxies and unresolved types
 		originalCompilationUnitModel.unresolvedLinks.forEach[
 			if (target == null) {
-				
+				// TODO
+				SrcRepoActivator.INSTANCE.warning("Have to deal with absolutely not resolved elements. Implementation is missing.")
 			} else if (target instanceof UnresolvedItem) {
-				
+				copy(model, originalCompilationUnitModel.javaModel, target)
 			} else if (target.isProxy) {
-				
+				copy(model, originalCompilationUnitModel.javaModel, target)
 			} else {
-				
+				Preconditions.checkState(false, "This should be impossible to read.")
 			}
 		]
 		
 		// TODO remove debug only
-		Preconditions.checkState(originalCompilationUnitModel.javaModel.eAllContents.filter[it instanceof NamedElement].
-			forall[copied != null])
+		Preconditions.checkState(originalCompilationUnitModel.javaModel.eAllContents.filter[it instanceof NamedElement].forall[copied != null])
 		copyReferences
-
 
 		isAttached = true
 		
@@ -122,35 +108,49 @@ public class SSCompilationUnitModel {
 		allInstances.put(cuCopy, this)
 		return cuCopy
 	}
+	
+	private def isUsed(NamedElement it) {
+		return !(usagesInImports.empty && switch (it) {
+			Type: usagesInTypeAccess.empty
+			AbstractMethodDeclaration: usages.empty && usagesInDocComments.empty
+			LabeledStatement: usagesInBreakStatements.empty && usagesInContinueStatements.empty
+			Package: usagesInPackageAccess.empty
+			VariableDeclaration: usageInVariableAccess.empty
+			AnnotationTypeMemberDeclaration: usages.empty 			
+			UnresolvedItem: true
+			default: throw new RuntimeException("unreachable " + (it instanceof UnresolvedTypeDeclaration))
+		})
+	}
 
-	// TODO
 	def CompilationUnit removeFromModel(Model model) {
 		Preconditions.checkState(isAttached, "Can only removed compilation unit model that is attached to a model.")
+		
+		// proxies and unresolved types
+		originalCompilationUnitModel.unresolvedLinks.map[target?.copied].filter[it != null && !isUsed].forEach[delete]	
+		
 		// orphant types
-		originalCompilationUnitModel.javaModel.orphanTypes.forEach [
-			val copy = copied(it)
-			if (copy.usagesInTypeAccess.empty && copy.usagesInImports.empty) {
-				EcoreUtil.remove(copy)
-			}
-		]
-		// types
+		originalCompilationUnitModel.javaModel.orphanTypes.map[copied].filter[!isUsed].forEach[delete]			
+		
+		// owned types
 		copied(originalCompilationUnitModel.compilationUnit).types.forEach [
 			var container = it.eContainer
 			it.delete
 			// also remove emptied packages
-			while (container.eContents.empty && container instanceof NamedElement) {
+			while (container.eContents.empty && container instanceof NamedElement && !(container as NamedElement).isUsed) {
 				val content = container
 				container = container.eContainer
 				EcoreUtil.remove(content)
 			}
 		]
+		
 		// compilation unit
 		val cuCopy = copied(originalCompilationUnitModel.compilationUnit)
 		cuCopy.delete
+		
 		// reset
 		copier.clear
-		incomingReferences.clear
-		pendingElements.clear
+		outgoingLinks.clear
+		incomingLinks.clear
 		isAttached = false
 
 		allInstances.remove(cuCopy)

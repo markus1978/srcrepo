@@ -60,9 +60,9 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 				if (newCUModel != oldCUModel) {
 					if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
 						if (oldCUModel != null) {
-							snapshot.removeCU(oldCUModel);
+							snapshot.removeCompilationUnitModel(oldCUModel);
 						}
-						snapshot.addCU(newCUModel);
+						snapshot.addCompilationUnitModel(newCUModel);
 						contributingModels.put(path, newCUModel);
 					} else {
 						SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
@@ -75,7 +75,7 @@ public abstract class MoDiscoRevVisitor extends RevVisitor {
 		List<String> pathsToRemoveFromContributingModel = new ArrayList<String>(); 
 		for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
 			if (!pathsInFiles.contains(entry.getKey())) {
-				snapshot.removeCU(entry.getValue());
+				snapshot.removeCompilationUnitModel(entry.getValue());
 				pathsToRemoveFromContributingModel.add(entry.getKey());
 			}
 		}

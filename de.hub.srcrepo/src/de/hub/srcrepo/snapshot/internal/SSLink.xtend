@@ -6,6 +6,11 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
+import org.eclipse.gmt.modisco.java.UnresolvedItem
+import java.lang.reflect.ParameterizedType
+import javax.lang.model.type.PrimitiveType
+import java.lang.reflect.WildcardType
+import javax.lang.model.type.ArrayType
 
 class SSLink {
 	val ASTNode copiedSource
@@ -18,6 +23,10 @@ class SSLink {
 		this.unresolvedTarget = copiedUnresolvedTarget
 		this.copiedSource = copiedSource
 	}
+	
+	def getId() {
+		return originalUnresolvedLink.id
+	}
 
 	def resolve(NamedElement resolvedTarget) {
 		println("#resolve: ->" + (resolvedTarget as NamedElement).name)
@@ -25,10 +34,20 @@ class SSLink {
 		this.resolvedTarget = resolvedTarget
 		unresolvedTarget = replaceTarget(resolvedTarget)
 
-//		if (!(target instanceof UnresolvedItem)) {
-//			val cum = SSCompilationUnitModel.get(target.originalCompilationUnit)
-//			cum.incomingReferences += this
-//		}
+		if (!resolvedTarget.proxy) {
+			val isValidTarget = switch (resolvedTarget) {
+				UnresolvedItem: false
+				ParameterizedType: false 
+				PrimitiveType: false
+				WildcardType: false
+				ArrayType: false
+				default: true
+			}
+			if (isValidTarget) {
+				val cum = SSCompilationUnitModel.get(resolvedTarget.originalCompilationUnit)
+				cum.incomingLinks += this
+			}
+		} 		
 	}
 	
 	private def ASTNode getSource() {

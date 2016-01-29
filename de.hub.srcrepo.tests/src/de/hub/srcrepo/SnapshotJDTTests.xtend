@@ -130,11 +130,11 @@ class SnapshotJDTTests {
 		for (index:1..revsData.size) {
 			snapshot.start
 			val revData = revsData.get(index-1)
-			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCU(currentCUMs.remove(it))] // remove changed & deleted
+			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCompilationUnitModel(currentCUMs.remove(it))] // remove changed & deleted
 			revData.keySet.filter[!it.startsWith(deleted)].toList.sort.forEach[ // add new & changed
 				val cum = createCompilationUnitModel(testName, '''r«index»''', it)
 				currentCUMs.put(it, cum)
-				snapshot.addCU(cum)
+				snapshot.addCompilationUnitModel(cum)
 			]
 			snapshot.end
 			assertNotNull(snapshot.model)
@@ -144,7 +144,7 @@ class SnapshotJDTTests {
 		goalSnapshot.start
 		currentCUMs.keySet.toList.sort.forEach[
 			val goalCum = createCompilationUnitModel(testName, goalRev, it)
-			goalSnapshot.addCU(goalCum)
+			goalSnapshot.addCompilationUnitModel(goalCum)
 		]		
  		goalSnapshot.end
  		
@@ -204,7 +204,7 @@ class SnapshotJDTTests {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		val cum = createCompilationUnitModel("ComplexBindingTest")
 		snapshot.start
-		snapshot.addCU(cum)
+		snapshot.addCompilationUnitModel(cum)
 		snapshot.end
 		val model = snapshot.model
 		println(model.unresolvedItems)

@@ -41,6 +41,8 @@ class SSCopier extends EcoreUtil.Copier {
 	 * 
 	 * It also goes up existing containment hierarchies to add respective entries to the 
 	 * copied map.
+	 * 
+	 * @returns The (existing) copy.
 	 */
 	def <T extends EObject, R extends EObject> T copy(R ctxCopy, R ctxOriginal, NamedElement original) {
 		val parentCopy = if (original.eContainer != ctxOriginal) {
