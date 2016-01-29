@@ -56,27 +56,15 @@ public class SSCompilationUnitModel {
 		return outgoingLinks
 	}
 
-	def void fillTargets(Map<String, NamedElement> allTargets) {
-		Preconditions.checkState(isAttached)
-		originalCompilationUnitModel.targets.forEach[allTargets.put(id, target.copied)]
-	}
-
 	def void removeTargets(Map<String, NamedElement> allTargets) {
 		originalCompilationUnitModel.targets.filter[!target.copied.isUsed].forEach[allTargets.remove(id)]
 	}
 
-	def CompilationUnit addToModel(Model model) {
-		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
-
-		// compilation unit
-		val cuCopy = copyt(originalCompilationUnitModel.compilationUnit)
-		model.compilationUnits.add(cuCopy)
-		
-		// owned types
-		originalCompilationUnitModel.compilationUnit.types.forEach [
-			copy(model, originalCompilationUnitModel.javaModel, it)			
-		]
-		
+	def copyReferences() {
+		copier.copyReferences
+	}
+	
+	def addLinksToModel(Model model) {
 		// orphan types
 		originalCompilationUnitModel.javaModel.orphanTypes.forEach[
 			copy(model, originalCompilationUnitModel.javaModel, it)
@@ -96,19 +84,33 @@ public class SSCompilationUnitModel {
 			}
 		]
 		
-		// TODO remove debug only
-		Preconditions.checkState(originalCompilationUnitModel.javaModel.eAllContents.filter[it instanceof NamedElement].forall[copied != null])
-		copyReferences
-
-		isAttached = true
-		
+		// populate outgoingLinks
 		Preconditions.checkState(outgoingLinks.empty)
 		outgoingLinks += originalCompilationUnitModel.unresolvedLinks.map[new SSLink(it, copied(it.source), it.target?.copied)]
-
+	}
+	
+	def addCompilationUnitToModel(Model model) {
+		Preconditions.checkState(!isAttached, "Can only be attached to the snapshot model once.")
+				
+		// compilation unit
+		val cuCopy = copyt(originalCompilationUnitModel.compilationUnit)
+		model.compilationUnits.add(cuCopy)
+		
+		// owned types
+		originalCompilationUnitModel.compilationUnit.types.forEach [
+			val existing = copy(model, originalCompilationUnitModel.javaModel, it)
+			Preconditions.checkState(!existing.proxy)
+		]
+		isAttached = true
 		allInstances.put(cuCopy, this)
 		return cuCopy
 	}
 	
+	def void fillTargets(Map<String, NamedElement> allTargets) {
+		Preconditions.checkState(isAttached)
+		originalCompilationUnitModel.targets.forEach[allTargets.put(id, target.copied)]
+	}
+
 	private def isUsed(NamedElement it) {
 		return !(usagesInImports.empty && switch (it) {
 			Type: usagesInTypeAccess.empty
@@ -136,10 +138,10 @@ public class SSCompilationUnitModel {
 			var container = it.eContainer
 			it.delete
 			// also remove emptied packages
-			while (container.eContents.empty && container instanceof NamedElement && !(container as NamedElement).isUsed) {
+			while (container != null && container.eContents.empty && container instanceof NamedElement && !(container as NamedElement).isUsed) {
 				val content = container
-				container = container.eContainer
-				EcoreUtil.remove(content)
+				container = content.eContainer
+				content.delete
 			}
 		]
 		
@@ -162,6 +164,9 @@ public class SSCompilationUnitModel {
 	}
 
 	private def void delete(EObject object) {
+		if (object instanceof NamedElement) {
+			println("#delete: " + object.name)		
+		}
 		val objects = object.eAllContents.toList
 		objects.forEach[EcoreUtil.remove(it)]
 		EcoreUtil.remove(object)

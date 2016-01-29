@@ -23,6 +23,7 @@ import org.eclipse.gmt.modisco.java.UnresolvedItem;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
+import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManager;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
 import com.google.common.base.Preconditions;
@@ -78,7 +79,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 						ASTNode source = pe.getClientNode();
 						UnresolvedLink unresolvedLink = repositoryFactory.createUnresolvedLink();
 						compilationUnitModel.getUnresolvedLinks().add(unresolvedLink);
-						unresolvedLink.setId(pe.getBinding().getName());
+						unresolvedLink.setId(pe.getBinding().toString());
 						unresolvedLink.setSource(source);
 						EClass sourceClass = source.eClass();
 						EStructuralFeature feature = sourceClass.getEStructuralFeature(pe.getLinkName());
@@ -106,7 +107,6 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 		};
 		// TODO reuse javaReader and Discover...
 		JavaReader javaReader = new JavaReader(javaFactory, new HashMap<String, Object>(), null);
-		javaReader.setGlobalBindings(bindings);
 		javaReader.setDeepAnalysis(true);
 		javaReader.setIncremental(false);
 		Model javaModel = javaFactory.createModel();
@@ -117,7 +117,8 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 			// We need to try to resolve the bindings. This will save performance, when snapshots are merged,
 			// and more importantly, it will create bindings that result in proxy elements, which will
 			// be added to the targets of the binding manager. Those targets are also placed in the java model.
-			bindings.resolveBindings();
+			//bindings.resolveBindings(javaModel);
+			javaReader.terminate(new NullProgressMonitor());
 		} catch (Exception e) {
 			if (e.getClass().getName().endsWith("AbortCompilation")) {
 				skipError("Could not compile " + compilationUnit.getResource().getProjectRelativePath() + 

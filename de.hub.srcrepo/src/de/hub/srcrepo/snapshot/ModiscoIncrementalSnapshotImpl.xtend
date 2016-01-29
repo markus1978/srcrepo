@@ -88,7 +88,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		oldCompilationUnitModels.forEach [
 			println("#remove: " + it)
 			// delete all references that leave or are completely within old CUs
-			it.outgoingLinks.forEach[revert] // TODO or delete?
+			it.outgoingLinks.forEach[delete]
 			// replace all references that enter old CUs with place holders and 
 			// add them to the list of pending elements, since they need to be 
 			// resolved again. Ignoring unresolved references, which must be
@@ -97,10 +97,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				it.revert
 				linksToResolve += it
 			]
-			// remove the containment hierarchy
-			currentCompilationUnits.remove(it.removeFromModel(model))
+			
 			// remove targets
 			it.removeTargets(targets)
+			
+			// remove the containment hierarchy
+			currentCompilationUnits.remove(it.removeFromModel(model))
 		]
 		oldCompilationUnitModels.forEach[
 			currentCompilationUnitModels.remove(it.source)
@@ -113,10 +115,10 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		newCompilationUnitModels.forEach [
 			println("#add: " + it)
 			// add containment hierarchy
-			currentCompilationUnits.put(it.addToModel(model), it)
-			// add targets
-			it.fillTargets(targets)			
+			currentCompilationUnits.put(it.addCompilationUnitToModel(model), it)
 		]
+		newCompilationUnitModels.forEach[addLinksToModel(model); copyReferences; fillTargets(targets)]
+		
 		newCompilationUnitModels.forEach[
 			currentCompilationUnitModels.put(it.source, it)
 			val path = it.source.compilationUnit.originalFilePath // TODO remove?

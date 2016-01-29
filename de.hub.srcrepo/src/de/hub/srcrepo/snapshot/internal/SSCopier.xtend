@@ -9,6 +9,8 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
+import org.eclipse.emf.ecore.EAttribute
+import org.eclipse.emf.ecore.EReference
 
 class SSCopier extends EcoreUtil.Copier {
 	val JavaPackage metaModel
@@ -44,24 +46,28 @@ class SSCopier extends EcoreUtil.Copier {
 	 * 
 	 * @returns The (existing) copy.
 	 */
-	def <T extends EObject, R extends EObject> T copy(R ctxCopy, R ctxOriginal, NamedElement original) {
+	def <T extends NamedElement, R extends EObject> T copy(R ctxCopy, R ctxOriginal, T original) {
+		return copy(ctxCopy, ctxOriginal, original, true)
+	}
+	private def <T extends NamedElement, R extends EObject> T copy(R ctxCopy, R ctxOriginal, T original, boolean deep) {
 		val parentCopy = if (original.eContainer != ctxOriginal) {
-				copy(ctxCopy, ctxOriginal, original.eContainer as NamedElement)
-			} else {
-				ctxCopy
-			}
-
-		val existing = parentCopy.eContents.findFirst [
+			copy(ctxCopy, ctxOriginal, original.eContainer as NamedElement, false)
+		} else {
+			ctxCopy
+		}
+		
+		val existing = parentCopy.eContents.findFirst[
 			eClass == original.eClass.target && (it as NamedElement).name == original.name
 		] as T
+		
 		if (existing == null) {
 			val feature = getTarget(original.eContainingFeature)
-			val copy = copy(original)
+			val copy = if (deep) copy(original) else copyShallow(original)
 			Preconditions.checkState(feature.isMany)
 			(parentCopy.eGet(feature) as List<EObject>).add(copy)
 			return copy as T
 		} else {
-			put(original, existing) // TODO elements contained in the original are not merged into the existing hierarchy
+			put(original, existing) 
 			return existing as T
 		}
 	}
@@ -72,7 +78,7 @@ class SSCopier extends EcoreUtil.Copier {
 
 	def <T extends EObject> T copied(T original) {
 		val result = super.get(original) as T
-		Preconditions.checkArgument(result != null)
+		Preconditions.checkArgument(result != null, "No copy for given original.")
 		return result;
 	}
 	
@@ -82,11 +88,32 @@ class SSCopier extends EcoreUtil.Copier {
 	
 	def <T extends EObject> T original(T copy) {
 		val result = reverseCopiedMap.get(copy) as T
-		Preconditions.checkArgument(result != null)
+		Preconditions.checkArgument(result != null, "No original for given copy.")
 		return result;
 	}
 	
+	def copyShallow(EObject original) {
+		if (original == null) {
+			return null;
+		} else {
+			val copy = createCopy(original);
+			if (copy != null) {
+				put(original, copy);
+				val eClass = original.eClass();
+				for (eAttribute : eClass.EAllAttributes.filter[changeable && !isDerived]) {
+					copyAttribute(eAttribute, original, copy);
+				}
+
+				copyProxyURI(original, copy);
+			}
+
+			return copy;
+		}
+	}
+	
 	override put(EObject key, EObject value) {
+		Preconditions.checkArgument(key.eClass.name == value.eClass.name)
+		Preconditions.checkArgument(key != value)
 		super.put(key, value)
 		reverseCopiedMap.put(value, key)
 	}

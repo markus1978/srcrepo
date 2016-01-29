@@ -30,7 +30,7 @@ class SSLink {
 
 	def resolve(NamedElement resolvedTarget) {
 		println("#resolve: ->" + (resolvedTarget as NamedElement).name)
-		Preconditions.checkState(!resolved)
+		Preconditions.checkState(!resolved && !deleted)
 		this.resolvedTarget = resolvedTarget
 		unresolvedTarget = replaceTarget(resolvedTarget)
 
@@ -60,10 +60,18 @@ class SSLink {
 
 		if (feature.isMany()) {			
 			val lst = source.eGet(feature) as EList<NamedElement>
-			return lst.set(originalUnresolvedLink.featureIndex, target)
+			if (target != null) {
+				return lst.set(originalUnresolvedLink.featureIndex, target)				
+			} else {
+				return lst.remove(originalUnresolvedLink.featureIndex)
+			}
 		} else {
 			val old = source.eGet(feature) as NamedElement
-			source.eSet(feature, target);
+			if (target != null) {
+				source.eSet(feature, target);				
+			} else {
+				source.eUnset(feature)
+			}
 			return old
 		}
 	}
@@ -71,11 +79,27 @@ class SSLink {
 	def isResolved() {
 		return resolvedTarget != null
 	}
+	
+	def isMerged() {
+		return resolvedTarget == unresolvedTarget && resolvedTarget != null
+	}
+	
+	def isDeleted() {
+		return resolvedTarget == unresolvedTarget && unresolvedTarget == null
+	}
 
 	def revert() {
-		Preconditions.checkState(resolved)		
+		Preconditions.checkState(resolved && !merged && !deleted)	
+		println("#revert: ->" + (unresolvedTarget as NamedElement).name)	
 		replaceTarget(unresolvedTarget);
 		resolvedTarget = null
+	}
+	
+	def delete() {
+		Preconditions.checkState(resolved && !deleted)
+		replaceTarget(null)
+		resolvedTarget = null
+		unresolvedTarget = null
 	}
 
 //	def delete() {

@@ -9,6 +9,7 @@ import java.util.Comparator
 import java.util.List
 import java.util.Map
 import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
@@ -25,6 +26,11 @@ import org.eclipse.jdt.core.JavaCore
 import org.junit.Test
 
 import static org.junit.Assert.*
+import com.google.common.base.Preconditions
+import org.eclipse.core.resources.IResource
+import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage
+
+import static de.hub.srcrepo.metrics.ModiscoMetrics.*
 
 class SnapshotJDTTests {
 	private val goalRev = "goal"
@@ -41,15 +47,11 @@ class SnapshotJDTTests {
 	private def IJavaProject openProject(String projectPath) {
 		val projectDescriptionFile = new Path(projectPath + "/.project");
 		val description = ResourcesPlugin.getWorkspace().loadProjectDescription(projectDescriptionFile); 
-	    var project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());	
-	    if (!project.exists()) {						  		    
-			project.create(description, null);
-			if (!project.isOpen()) {
-		    	project.open(null);
-		    }					
-	    }
+	    var project = ResourcesPlugin.getWorkspace().getRoot().getProject(description.getName());
+	    JavaCapabilityConfigurationPage.createProject(project, description.getLocationURI(), null);
+	    val javaProject = JavaCore.create(project)
 	    
-	    return JavaCore.create(project);
+	    return javaProject
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String testCaseName, String revName, String compilationUnitName) {
@@ -75,7 +77,7 @@ class SnapshotJDTTests {
 	private def CompilationUnitModel createCompilationUnitModel(String compilationUnitPath) {
 		val javaProject = openProject("/Users/markus/Documents/Projects/srcrepo-mars/03-git/srcrepo/de.hub.srcrepo.tests")
 		val cumPath = '''src/de/hub/srcrepo/sstestdata/«compilationUnitPath».java'''.toString
-		
+
 		val resource = javaProject.getProject().findMember(cumPath)
 		val element = JavaCore.create(resource, javaProject)
 		val cu = element as ICompilationUnit
@@ -170,6 +172,7 @@ class SnapshotJDTTests {
 				it.ownedPackages.sortComposite(namedElementCmp)
 			}
 		]
+		model.ownedElements.sortComposite(namedElementCmp)
 		model.compilationUnits.sortComposite(namedElementCmp)
 		return model
 	}
@@ -203,11 +206,16 @@ class SnapshotJDTTests {
 	public def void complexBindingsTest() {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		val cum = createCompilationUnitModel("ComplexBindingTest")
+		assertFalse(cum.unresolvedLinks.empty)
+		assertEquals(2, cum.javaModel.ownedElements.size)
+		
 		snapshot.start
 		snapshot.addCompilationUnitModel(cum)
 		snapshot.end
 		val model = snapshot.model
-		println(model.unresolvedItems)
-		assertEquals(1, model.unresolvedItems.size)
+		assertEquals(0, model.unresolvedItems.size)
+		assertTrue(model.eAllContents.filter[it instanceof NamedElement && (it as NamedElement).name.startsWith("java")]
+			.map[it as NamedElement].forall[it.proxy])
+		assertTrue(weightedMethodsPerClass(model.compilationUnits.get(0).types.get(0)) == 3)
 	}
 }
