@@ -4,9 +4,16 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.jdt.internal.ui.model.JavaModelProvider;
 import org.osgi.framework.BundleContext;
 
 import de.hub.jstattrack.JStatTrackActivator;
+import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 
 public class SrcRepoActivator extends Plugin {
 
@@ -56,6 +63,10 @@ public class SrcRepoActivator extends Plugin {
 		INSTANCE.isStandAlone = true;
 		JStatTrackActivator.standalone();
 		INSTANCE.init();
+		
+		EPackage.Registry.INSTANCE.put(RepositoryModelPackage.eINSTANCE.getNsURI(), RepositoryModelPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(JavaPackage.eINSTANCE.getNsURI(), JavaPackage.eINSTANCE);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
 	}
 	
 	private void log(int level, String msg, Exception e) {

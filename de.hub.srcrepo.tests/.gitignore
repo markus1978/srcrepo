@@ -3,3 +3,4 @@ metrics-test.git/
 /.cache
 /test-models
 /testdata/
+/lib/

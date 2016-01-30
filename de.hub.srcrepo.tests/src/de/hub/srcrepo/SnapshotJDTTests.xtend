@@ -4,15 +4,20 @@ import de.hub.srcrepo.internal.ImportJavaCompilationUnitsJob
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
 import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
+import java.io.File
 import java.util.Arrays
 import java.util.Comparator
 import java.util.List
 import java.util.Map
+import org.apache.commons.exec.CommandLine
+import org.apache.commons.exec.DefaultExecutor
+import org.apache.commons.io.FileUtils
 import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
@@ -23,16 +28,18 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.jdt.core.ICompilationUnit
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
+import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage
+import org.junit.BeforeClass
 import org.junit.Test
 
-import static org.junit.Assert.*
-import com.google.common.base.Preconditions
-import org.eclipse.core.resources.IResource
-import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage
-
 import static de.hub.srcrepo.metrics.ModiscoMetrics.*
+import static org.junit.Assert.*
+import java.util.concurrent.TimeUnit
 
 class SnapshotJDTTests {
+	private static val saveCompilationUnitModel = false
+	private static var useSavedCompilationUnitModels = false
+	
 	private val goalRev = "goal"
 	private val deleted = "__deleted"
 	private var deleteModifier = 0
@@ -74,36 +81,61 @@ class SnapshotJDTTests {
 		return cum
 	}
 	
+	@BeforeClass
+	static def standaloneSrcRepo() {
+		if (SrcRepoActivator.INSTANCE == null) {
+			useSavedCompilationUnitModels = true
+			SrcRepoActivator.standalone
+		}
+	}
+	
 	private def CompilationUnitModel createCompilationUnitModel(String compilationUnitPath) {
-		val javaProject = openProject("/Users/markus/Documents/Projects/srcrepo-mars/03-git/srcrepo/de.hub.srcrepo.tests")
 		val cumPath = '''src/de/hub/srcrepo/sstestdata/«compilationUnitPath».java'''.toString
-
-		val resource = javaProject.getProject().findMember(cumPath)
-		val element = JavaCore.create(resource, javaProject)
-		val cu = element as ICompilationUnit
-		
-		assertNotNull(cu)
-		
-		val importJob = new ImportJavaCompilationUnitsJob(newArrayList(cu), javaFactory, repositoryModelFactory) {			
-			override protected skipError(String message, Exception e) {
-				fail('''«message» («e.message»)''')
+		if (useSavedCompilationUnitModels) {
+			val xmiPath = "models/" + cumPath.replace("src/", "").replace(".java", ".xmi").trim()
+			val rs = new ResourceSetImpl();
+			val xmiResource = rs.getResource(URI.createURI(xmiPath), true)
+			return xmiResource.contents.get(0) as CompilationUnitModel
+		} else {
+			val javaProject = openProject("/Users/markus/Documents/Projects/srcrepo-mars/03-git/srcrepo/de.hub.srcrepo.tests")
+			
+	
+			val resource = javaProject.getProject().findMember(cumPath)
+			val element = JavaCore.create(resource, javaProject)
+			val cu = element as ICompilationUnit
+			
+			assertNotNull(cu)
+			
+			val importJob = new ImportJavaCompilationUnitsJob(newArrayList(cu), javaFactory, repositoryModelFactory) {			
+				override protected skipError(String message, Exception e) {
+					fail('''«message» («e.message»)''')
+				}
+				
+				override protected skipWarning(String message) {
+					fail(message)
+				}			
 			}
 			
-			override protected skipWarning(String message) {
-				fail(message)
-			}			
-		}
-		
-		importJob.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		importJob.schedule();
-		importJob.join();
-		if (importJob.result == null || !importJob.result.isOK()) {
-			fail("Could not run import job successfully.")
-		}
-		
-		val cum = importJob.results.get(cu)
-		assertNotNull(cum)
-		return cum										
+			importJob.setRule(ResourcesPlugin.getWorkspace().getRoot());
+			importJob.schedule();
+			importJob.join();
+			if (importJob.result == null || !importJob.result.isOK()) {
+				fail("Could not run import job successfully.")
+			}
+			
+			val cum = importJob.results.get(cu)
+			assertNotNull(cum)
+			
+			if (saveCompilationUnitModel) {
+				val xmiPath = javaProject.path.toOSString + "/models/" + cumPath.replace("src/", "").replace(".java", ".xmi")
+				val rs = new ResourceSetImpl();
+				val xmiResource = rs.createResource(URI.createURI(xmiPath))
+				xmiResource.contents += cum
+				xmiResource.save(null)
+			}
+			
+			return cum
+		}											
 	}
 	
 	private def <T extends NamedElement> get(EObject container, String qualifiedName) {
@@ -119,8 +151,6 @@ class SnapshotJDTTests {
 	
 	@Test
 	public def void compilationUnitModelImportTest() {
-		val jProject = openProject("/Users/markus/Documents/Projects/srcrepo-mars/03-git/srcrepo/de.hub.srcrepo.tests")
-		assertNotNull(jProject)
 		val cum = createCompilationUnitModel("", "", "C1")
 		val classDeclaration = cum.javaModel.get("de.hub.srcrepo.sstestdata.C1")
 		assertNotNull(classDeclaration)
@@ -150,7 +180,26 @@ class SnapshotJDTTests {
 		]		
  		goalSnapshot.end
  		
- 		assertTrue(EcoreUtil.equals(goalSnapshot.model.normalize, snapshot.model.normalize))
+ 		assertCompare(snapshot.model, goalSnapshot.model)
+	}
+	
+	private def assertCompare(Model result, Model goal) {
+		result.normalize
+		goal.normalize
+		try {	
+ 			assertTrue(EcoreUtil.equals(goal, result))	
+ 		} catch (Throwable e) {
+ 			FileUtils.write(new File("models/goal.txt"), '''GOAL\n«EMFPrettyPrint.prettyPrint(goal)»''')
+ 			FileUtils.write(new File("models/result.txt"), '''RESULT\n«EMFPrettyPrint.prettyPrint(result)»''')
+// 			println('''
+// 				#### goal #########################
+// 				«EMFPrettyPrint.prettyPrint(goal)»
+// 				#### result #######################
+// 				«EMFPrettyPrint.prettyPrint(goal)»
+// 				#### end ##########################
+// 			''')
+ 			throw e
+ 		}
 	}
 	
 	private def <T> void sortComposite(EList<T> list, Comparator<T> cmp) {
@@ -206,6 +255,7 @@ class SnapshotJDTTests {
 	public def void complexBindingsTest() {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		val cum = createCompilationUnitModel("ComplexBindingTest")
+		println(EMFPrettyPrint.prettyPrint(cum))
 		assertFalse(cum.unresolvedLinks.empty)
 		assertEquals(2, cum.javaModel.ownedElements.size)
 		

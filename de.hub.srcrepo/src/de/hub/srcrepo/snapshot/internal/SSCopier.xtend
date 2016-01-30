@@ -62,12 +62,23 @@ class SSCopier extends EcoreUtil.Copier {
 		
 		if (existing == null) {
 			val feature = getTarget(original.eContainingFeature)
-			val copy = if (deep) copy(original) else copyShallow(original)
+			val copy = if (deep) copy(original) as T else copyShallow(original)
 			Preconditions.checkState(feature.isMany)
 			(parentCopy.eGet(feature) as List<EObject>).add(copy)
+			println("copy: " + copy.name)
 			return copy as T
 		} else {
-			put(original, existing) 
+			if (!original.proxy && existing.proxy) {
+				EcoreUtil.remove(existing)
+				val feature = getTarget(original.eContainingFeature)
+				val copy = copy(original) as T
+				Preconditions.checkState(feature.isMany)
+				(parentCopy.eGet(feature) as List<EObject>).add(copy)
+				println("copy: " + copy.name)
+				return copy as T
+			} else {
+				put(original, existing) // TODO we need a real merge here
+			}
 			return existing as T
 		}
 	}
@@ -92,7 +103,7 @@ class SSCopier extends EcoreUtil.Copier {
 		return result;
 	}
 	
-	def copyShallow(EObject original) {
+	def <T extends EObject> T copyShallow(T original) {
 		if (original == null) {
 			return null;
 		} else {
@@ -107,7 +118,7 @@ class SSCopier extends EcoreUtil.Copier {
 				copyProxyURI(original, copy);
 			}
 
-			return copy;
+			return copy as T;
 		}
 	}
 	

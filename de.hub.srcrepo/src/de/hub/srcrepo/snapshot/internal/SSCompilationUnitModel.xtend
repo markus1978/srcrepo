@@ -72,6 +72,7 @@ public class SSCompilationUnitModel {
 		
 		// proxies and unresolved types
 		originalCompilationUnitModel.unresolvedLinks.forEach[
+			println("(%%%% " + it.target?.name)
 			if (target == null) {
 				// TODO
 				SrcRepoActivator.INSTANCE.warning("Have to deal with absolutely not resolved elements. Implementation is missing.")
@@ -86,7 +87,9 @@ public class SSCompilationUnitModel {
 		
 		// populate outgoingLinks
 		Preconditions.checkState(outgoingLinks.empty)
-		outgoingLinks += originalCompilationUnitModel.unresolvedLinks.map[new SSLink(it, copied(it.source), it.target?.copied)]
+		outgoingLinks += originalCompilationUnitModel.unresolvedLinks.map[
+			new SSLink(it, copied(it.source), snapshot.metaModel.javaFactory.create(it.target.eClass) as NamedElement)
+		]
 	}
 	
 	def addCompilationUnitToModel(Model model) {
@@ -108,7 +111,12 @@ public class SSCompilationUnitModel {
 	
 	def void fillTargets(Map<String, NamedElement> allTargets) {
 		Preconditions.checkState(isAttached)
-		originalCompilationUnitModel.targets.forEach[allTargets.put(id, target.copied)]
+		originalCompilationUnitModel.targets.forEach[
+			val existing = allTargets.get(id)
+			if (existing == null || existing.isProxy) {
+				allTargets.put(id, target.copied) // TODO there are proxy targets in the model not covered by unresolved references
+			}
+		]
 	}
 
 	private def isUsed(NamedElement it) {
@@ -128,7 +136,7 @@ public class SSCompilationUnitModel {
 		Preconditions.checkState(isAttached, "Can only removed compilation unit model that is attached to a model.")
 		
 		// proxies and unresolved types
-		originalCompilationUnitModel.unresolvedLinks.map[target?.copied].filter[it != null && !isUsed].forEach[delete]	
+		originalCompilationUnitModel.unresolvedLinks.map[target?.copied].filter[it != null && (proxy || eContainmentFeature == snapshot.metaModel.model_OrphanTypes || it instanceof UnresolvedItem) && !isUsed].forEach[delete]	
 		
 		// orphant types
 		originalCompilationUnitModel.javaModel.orphanTypes.map[copied].filter[!isUsed].forEach[delete]			

@@ -1,27 +1,47 @@
 package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
+import java.util.List
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
-import org.eclipse.gmt.modisco.java.UnresolvedItem
-import java.lang.reflect.ParameterizedType
-import javax.lang.model.type.PrimitiveType
-import java.lang.reflect.WildcardType
-import javax.lang.model.type.ArrayType
 
 class SSLink {
 	val ASTNode copiedSource
 	val UnresolvedLink originalUnresolvedLink 	
-	var NamedElement resolvedTarget = null
-	var NamedElement unresolvedTarget = null
 
-	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, NamedElement copiedUnresolvedTarget) {
+	var NamedElement placeHolder = null
+
+	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, NamedElement placeHolder) {
 		this.originalUnresolvedLink = originalUnresolvedLink
-		this.unresolvedTarget = copiedUnresolvedTarget
 		this.copiedSource = copiedSource
+		this.placeHolder = placeHolder
+		replaceTarget(placeHolder)
+		Preconditions.checkState(!resolved)
+		
+		println("#new link: " + toString)
+	}
+	
+	def getCurrentTarget() {
+		val source = getSource()
+		val feature = source.eClass().getEStructuralFeature(originalUnresolvedLink.featureID) as EReference
+		if (feature.many) {
+			return (source.eGet(feature) as List<NamedElement>).get(originalUnresolvedLink.featureIndex)
+		} else {
+			return source.eGet(feature) as NamedElement
+		}
+	}
+	
+	def ASTNode getSource() {
+		copiedSource
+	}
+	
+	def isResolved() {
+		return currentTarget != placeHolder 
 	}
 	
 	def getId() {
@@ -29,29 +49,40 @@ class SSLink {
 	}
 
 	def resolve(NamedElement resolvedTarget) {
+		Preconditions.checkState(!isResolved, "You cannot resolve an resolved link.")
+		Preconditions.checkArgument(!resolvedTarget.isPersistent, "You can only resolve a link with a target from an snaptshot model.")
+		Preconditions.checkArgument(source.root == resolvedTarget.root, "Resolved target and source must be in the same model.")
+		
 		println("#resolve: ->" + (resolvedTarget as NamedElement).name)
-		Preconditions.checkState(!resolved && !deleted)
-		this.resolvedTarget = resolvedTarget
-		unresolvedTarget = replaceTarget(resolvedTarget)
-
+		replaceTarget(resolvedTarget)
 		if (!resolvedTarget.proxy) {
-			val isValidTarget = switch (resolvedTarget) {
-				UnresolvedItem: false
-				ParameterizedType: false 
-				PrimitiveType: false
-				WildcardType: false
-				ArrayType: false
-				default: true
-			}
-			if (isValidTarget) {
-				val cum = SSCompilationUnitModel.get(resolvedTarget.originalCompilationUnit)
-				cum.incomingLinks += this
-			}
-		} 		
+			val cum = SSCompilationUnitModel.get(resolvedTarget.originalCompilationUnit)
+			cum.incomingLinks += this			
+		}
 	}
 	
-	private def ASTNode getSource() {
-		copiedSource
+		def revert() {
+		Preconditions.checkState(isResolved, "Only resolved links can be reverted.")
+		replaceTarget(placeHolder)
+	}
+	
+	override toString() {
+		val targetStr = if (resolved) {
+			'''«currentTarget.name»'''
+		} else {
+			'''<unresolved:«id»>'''
+		}
+		return '''«source.eClass.name» -> «targetStr»'''
+	}
+	
+	private def isPersistent(EObject obj) {	
+		return obj.root instanceof CompilationUnitModel	
+	}
+	
+	private def root(EObject obj) {
+		var root = obj
+		while (root.eContainer != null) root = root.eContainer
+		return root	
 	}
 	
 	private def NamedElement replaceTarget(NamedElement target) {
@@ -75,56 +106,4 @@ class SSLink {
 			return old
 		}
 	}
-
-	def isResolved() {
-		return resolvedTarget != null
-	}
-	
-	def isMerged() {
-		return resolvedTarget == unresolvedTarget && resolvedTarget != null
-	}
-	
-	def isDeleted() {
-		return resolvedTarget == unresolvedTarget && unresolvedTarget == null
-	}
-
-	def revert() {
-		Preconditions.checkState(resolved && !merged && !deleted)	
-		println("#revert: ->" + (unresolvedTarget as NamedElement).name)	
-		replaceTarget(unresolvedTarget);
-		resolvedTarget = null
-	}
-	
-	def delete() {
-		Preconditions.checkState(resolved && !deleted)
-		replaceTarget(null)
-		resolvedTarget = null
-		unresolvedTarget = null
-	}
-
-//	def delete() {
-//		Preconditions.checkState(resolved)
-//		println("#delete: ->" + resolvedTarget.name)
-//	
-//		val source = getSource()
-//		val feature = source.eClass().getEStructuralFeature(originalUnresolvedLink.featureID) as EReference
-//
-//		val index = originalUnresolvedLink.featureIndex
-//		if (index != -1) {
-//			(source.eGet(feature) as EList<EObject>).remove(index)
-//		} else {
-//			source.eUnset(feature)
-//		}
-//		resolvedTarget = null
-//	}
-	
-	override toString() {
-		val targetStr = if (resolvedTarget == null) {
-			'''unresolved[«unresolvedTarget.name»]'''
-		} else {
-			resolvedTarget.name
-		}
-		return '''«source.eClass.name» -> «targetStr»'''
-	}
-	
 }

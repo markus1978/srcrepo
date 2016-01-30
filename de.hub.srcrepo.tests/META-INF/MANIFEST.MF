@@ -19,3 +19,6 @@ Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.modisco.java.discoverer;bundle-version="0.13.0"
 Export-Package: de.hub.srcrepo
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/jars/commons-io-2.4.jar,
+ lib/jars/commons-exec-1.3.jar,
+ .

@@ -88,14 +88,14 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		oldCompilationUnitModels.forEach [
 			println("#remove: " + it)
 			// delete all references that leave or are completely within old CUs
-			it.outgoingLinks.forEach[delete]
+			it.outgoingLinks.forEach[revert]
 			// replace all references that enter old CUs with place holders and 
 			// add them to the list of pending elements, since they need to be 
 			// resolved again. Ignoring unresolved references, which must be
 			// references that were delete one step before.
 			it.incomingLinks.filter[resolved].forEach [
 				it.revert
-				linksToResolve += it
+				linksToResolve += it				
 			]
 			
 			// remove targets
@@ -112,23 +112,26 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		]
 
 		// add new CUs
+		// add containment
 		newCompilationUnitModels.forEach [
 			println("#add: " + it)
 			// add containment hierarchy
 			currentCompilationUnits.put(it.addCompilationUnitToModel(model), it)
-		]
-		newCompilationUnitModels.forEach[addLinksToModel(model); copyReferences; fillTargets(targets)]
-		
-		newCompilationUnitModels.forEach[
+			copyReferences
+			
 			currentCompilationUnitModels.put(it.source, it)
 			val path = it.source.compilationUnit.originalFilePath // TODO remove?
 			Preconditions.checkState(currentCUPaths.get(path) == null)
 			currentCUPaths.put(path, it)
 		]
+		// add unresolved stuff
+		newCompilationUnitModels.forEach[addLinksToModel(model); fillTargets(targets)]
+		
+		linksToResolve += newCompilationUnitModels.map[outgoingLinks].flatten
 		
 		// resolve
 		println("resolving links: ")
-		newCompilationUnitModels.map[outgoingLinks].flatten.forEach[
+		linksToResolve.filter[!resolved].forEach[
 			println("   " + it)
 			val resolvedTarget = targets.get(it.id)
 			if (resolvedTarget != null) {
