@@ -20,6 +20,7 @@ import org.eclipse.gmt.modisco.java.Type
 import org.eclipse.gmt.modisco.java.UnresolvedItem
 import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.VariableDeclaration
+import org.eclipse.jdt.core.dom.rewrite.TargetSourceRangeComputer.SourceRange
 
 public class SSCompilationUnitModel {
 
@@ -70,19 +71,14 @@ public class SSCompilationUnitModel {
 			copy(model, originalCompilationUnitModel.javaModel, it)
 		]
 		
-		// proxies and unresolved types
-		originalCompilationUnitModel.unresolvedLinks.forEach[
-			println("(%%%% " + it.target?.name)
-			if (target == null) {
-				// TODO
-				SrcRepoActivator.INSTANCE.warning("Have to deal with absolutely not resolved elements. Implementation is missing.")
-			} else if (target instanceof UnresolvedItem) {
-				copy(model, originalCompilationUnitModel.javaModel, target)
-			} else if (target.isProxy) {
-				copy(model, originalCompilationUnitModel.javaModel, target)
-			} else {
-				Preconditions.checkState(false, "This should be impossible to read.")
-			}
+		// unresolved types and proxy targets
+		originalCompilationUnitModel.unresolvedLinks.filter[target != null && target instanceof UnresolvedItem].forEach[			
+			copy(model, originalCompilationUnitModel.javaModel, target)			
+		]
+		
+		// proxy targets
+		originalCompilationUnitModel.targets.map[target].filter[proxy].forEach[
+			copy(model, originalCompilationUnitModel.javaModel, it)
 		]
 		
 		// populate outgoingLinks
