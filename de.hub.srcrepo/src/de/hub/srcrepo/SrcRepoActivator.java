@@ -6,10 +6,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
-import org.eclipse.jdt.internal.ui.model.JavaModelProvider;
 import org.osgi.framework.BundleContext;
 
 import de.hub.jstattrack.JStatTrackActivator;

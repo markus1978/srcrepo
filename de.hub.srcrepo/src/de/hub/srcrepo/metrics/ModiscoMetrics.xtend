@@ -8,7 +8,9 @@ import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration
 import org.eclipse.gmt.modisco.java.AnonymousClassDeclaration
 import org.eclipse.gmt.modisco.java.Block
+import org.eclipse.gmt.modisco.java.BooleanLiteral
 import org.eclipse.gmt.modisco.java.CatchClause
+import org.eclipse.gmt.modisco.java.CharacterLiteral
 import org.eclipse.gmt.modisco.java.ClassDeclaration
 import org.eclipse.gmt.modisco.java.DoStatement
 import org.eclipse.gmt.modisco.java.FieldDeclaration
@@ -16,24 +18,20 @@ import org.eclipse.gmt.modisco.java.ForStatement
 import org.eclipse.gmt.modisco.java.IfStatement
 import org.eclipse.gmt.modisco.java.MethodInvocation
 import org.eclipse.gmt.modisco.java.NamedElement
-import org.eclipse.gmt.modisco.java.ReturnStatement
+import org.eclipse.gmt.modisco.java.NumberLiteral
 import org.eclipse.gmt.modisco.java.SingleVariableAccess
+import org.eclipse.gmt.modisco.java.StringLiteral
 import org.eclipse.gmt.modisco.java.SwitchStatement
 import org.eclipse.gmt.modisco.java.Type
+import org.eclipse.gmt.modisco.java.TypeAccess
 import org.eclipse.gmt.modisco.java.VariableDeclaration
 import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.VisibilityKind
 import org.eclipse.gmt.modisco.java.WhileStatement
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
-import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.metrics.AnalysisVisitor.*
-import org.eclipse.gmt.modisco.java.StringLiteral
-import org.eclipse.gmt.modisco.java.NumberLiteral
-import org.eclipse.gmt.modisco.java.BooleanLiteral
-import org.eclipse.gmt.modisco.java.CharacterLiteral
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.VariableBinding
-import org.eclipse.gmt.modisco.java.TypeAccess
+import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 class ModiscoMetrics {
 

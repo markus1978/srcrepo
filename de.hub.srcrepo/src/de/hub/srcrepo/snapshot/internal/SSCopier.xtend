@@ -9,8 +9,6 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
-import org.eclipse.emf.ecore.EAttribute
-import org.eclipse.emf.ecore.EReference
 
 class SSCopier extends EcoreUtil.Copier {
 	val JavaPackage metaModel

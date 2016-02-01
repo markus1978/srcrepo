@@ -23,7 +23,6 @@ import org.eclipse.gmt.modisco.java.UnresolvedItem;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
-import org.eclipse.modisco.java.discoverer.internal.io.java.binding.BindingManager;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
 import com.google.common.base.Preconditions;

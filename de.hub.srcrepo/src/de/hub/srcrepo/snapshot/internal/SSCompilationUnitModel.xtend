@@ -1,7 +1,6 @@
 package de.hub.srcrepo.snapshot.internal
 
 import com.google.common.base.Preconditions
-import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
@@ -20,7 +19,6 @@ import org.eclipse.gmt.modisco.java.Type
 import org.eclipse.gmt.modisco.java.UnresolvedItem
 import org.eclipse.gmt.modisco.java.UnresolvedTypeDeclaration
 import org.eclipse.gmt.modisco.java.VariableDeclaration
-import org.eclipse.jdt.core.dom.rewrite.TargetSourceRangeComputer.SourceRange
 
 public class SSCompilationUnitModel {
 
