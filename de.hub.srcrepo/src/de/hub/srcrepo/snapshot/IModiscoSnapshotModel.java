@@ -1,7 +1,9 @@
 package de.hub.srcrepo.snapshot;
 
-import org.eclipse.emf.ecore.EObject;
+import java.util.Map;
+
 import org.eclipse.gmt.modisco.java.Model;
+import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
@@ -37,14 +39,8 @@ public interface IModiscoSnapshotModel {
 	public Model getModel();
 
 	public JavaPackage getMetaModel();
-
-	/**
-	 * Implements a map that connects the objects in the snapshot, with the original object
-	 * stored in the persistent repository model.
-	 * @param eObject A snapshot model element.
-	 * @return The corresponding original persistent repository model element.
-	 */
-	public <T extends EObject> T getPersistentOriginal(T eObject);
+	
+	public Map<String, NamedElement> getTargets();
 
 	public void clear();
 }

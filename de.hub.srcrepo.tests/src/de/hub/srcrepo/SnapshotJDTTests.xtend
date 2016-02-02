@@ -35,9 +35,10 @@ import org.junit.Test
 import static de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static org.junit.Assert.*
 import java.util.concurrent.TimeUnit
+import org.eclipse.emf.ecore.EClass
 
 class SnapshotJDTTests {
-	private static val saveCompilationUnitModel = false
+	private static val saveCompilationUnitModel = true
 	private static var useSavedCompilationUnitModels = false
 	
 	private val goalRev = "goal"
@@ -191,13 +192,6 @@ class SnapshotJDTTests {
  		} catch (Throwable e) {
  			FileUtils.write(new File("models/goal.txt"), '''GOAL\n«EMFPrettyPrint.prettyPrint(goal)»''')
  			FileUtils.write(new File("models/result.txt"), '''RESULT\n«EMFPrettyPrint.prettyPrint(result)»''')
-// 			println('''
-// 				#### goal #########################
-// 				«EMFPrettyPrint.prettyPrint(goal)»
-// 				#### result #######################
-// 				«EMFPrettyPrint.prettyPrint(goal)»
-// 				#### end ##########################
-// 			''')
  			throw e
  		}
 	}
@@ -252,10 +246,14 @@ class SnapshotJDTTests {
 	}
 	
 	@Test
+	public def void proxyTest() {		
+		performTest("proxy", #[#{"A"->null, "B"->null}, #{"A"->"A", "B"->"B"}])
+	}
+	
+	@Test
 	public def void complexBindingsTest() {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		val cum = createCompilationUnitModel("ComplexBindingTest")
-		println(EMFPrettyPrint.prettyPrint(cum))
 		assertFalse(cum.unresolvedLinks.empty)
 		assertEquals(2, cum.javaModel.ownedElements.size)
 		
