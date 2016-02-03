@@ -3,11 +3,14 @@ package de.hub.srcrepo;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import de.hub.srcrepo.metrics.ModiscoMetricsTests;
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	ModiscoSnapshotTests.class,
 	MoDiscoGitImportTest.class, // order of tests is important: ImportedMoDiscoModelTests use the import of MoDiscoGitImportTest
 	ImportedMoDiscoModelTests.class,
-	MoDiscoGitEmptyCDOImportTest.class
+	ModiscoMetricsTests.class
 })
 public class SrcRepoTestSuite {
 	

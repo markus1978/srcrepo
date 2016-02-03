@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ 
 	MongoDBMoDiscoGitImportTest.class,
+	MongoDBImportedMoDiscoModelTests.class, // order is important
 	//ResumeMongoDBMoDiscoGitImportTest.class
 })
 public class EmfFragSrcRepoTestSuite {

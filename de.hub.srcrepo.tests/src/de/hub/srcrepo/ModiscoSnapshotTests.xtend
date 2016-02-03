@@ -9,33 +9,25 @@ import java.util.Arrays
 import java.util.Comparator
 import java.util.List
 import java.util.Map
-import java.util.concurrent.TimeUnit
-import org.apache.commons.exec.CommandLine
-import org.apache.commons.exec.DefaultExecutor
 import org.apache.commons.io.FileUtils
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.gmt.modisco.java.ClassDeclaration
 import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.ConstructorDeclaration
-import org.eclipse.gmt.modisco.java.FieldDeclaration
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.Package
-import org.eclipse.gmt.modisco.java.SingleVariableDeclaration
 import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.jdt.core.ICompilationUnit
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
-import org.eclipse.jdt.internal.core.JavaModel
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage
 import org.junit.BeforeClass
 import org.junit.Test
@@ -45,15 +37,15 @@ import static org.junit.Assert.*
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
-class SnapshotJDTTests {
-	private static val saveCompilationUnitModel = true
-	private static var useSavedCompilationUnitModels = false
+class ModiscoSnapshotTests {
+	private static var isStandalone = false
 	
 	private val goalRev = "goal"
 	private val deleted = "__deleted"
 	private var deleteModifier = 0
 	
 	private val javaFactory = JavaFactory.eINSTANCE
+	private val javaMetaModel = JavaPackage.eINSTANCE
 	private val repositoryModelFactory = RepositoryModelFactory.eINSTANCE
 	
 	private def deleted() {
@@ -93,14 +85,14 @@ class SnapshotJDTTests {
 	@BeforeClass
 	static def standaloneSrcRepo() {
 		if (SrcRepoActivator.INSTANCE == null) {
-			useSavedCompilationUnitModels = true
+			ModiscoSnapshotTests.isStandalone = true
 			SrcRepoActivator.standalone
 		}
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String compilationUnitPath) {
 		val cumPath = '''src/de/hub/srcrepo/sstestdata/«compilationUnitPath».java'''.toString
-		if (useSavedCompilationUnitModels) {
+		if (ModiscoSnapshotTests.isStandalone) {
 			val xmiPath = "models/" + cumPath.replace("src/", "").replace(".java", ".xmi").trim()
 			val rs = new ResourceSetImpl();
 			val xmiResource = rs.getResource(URI.createURI(xmiPath), true)
@@ -135,13 +127,11 @@ class SnapshotJDTTests {
 			val cum = importJob.results.get(cu)
 			assertNotNull(cum)
 			
-			if (saveCompilationUnitModel) {
-				val xmiPath = javaProject.path.toOSString + "/models/" + cumPath.replace("src/", "").replace(".java", ".xmi")
-				val rs = new ResourceSetImpl();
-				val xmiResource = rs.createResource(URI.createURI(xmiPath))
-				xmiResource.contents += cum
-				xmiResource.save(null)
-			}
+			val xmiPath = javaProject.path.toOSString + "/models/" + cumPath.replace("src/", "").replace(".java", ".xmi")
+			val rs = new ResourceSetImpl();
+			val xmiResource = rs.createResource(URI.createURI(xmiPath))
+			xmiResource.contents += cum
+			xmiResource.save(null)			
 			
 			return cum
 		}											

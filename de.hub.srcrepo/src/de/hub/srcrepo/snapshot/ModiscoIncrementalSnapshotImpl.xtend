@@ -74,7 +74,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	override removeCompilationUnitModel(CompilationUnitModel model) {
-		oldCompilationUnitModels += currentCompilationUnitModels.remove(model)
+		val oldCompilationUnitModel = currentCompilationUnitModels.remove(model)
+		Preconditions.checkArgument(oldCompilationUnitModel != null)
+		oldCompilationUnitModels += oldCompilationUnitModel
 	}
 	
 	override end() {
@@ -88,7 +90,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	private def computeSnapshot() {
-		val rev = newCompilationUnitModels.findFirst[true]?.originalCompilationUnitModel.eSelectContainer[it instanceof Rev] as Rev
+		val rev = if (!newCompilationUnitModels.empty) newCompilationUnitModels.findFirst[true]
+			.originalCompilationUnitModel
+			.eSelectContainer[it instanceof Rev] as Rev
 		val revName = if (rev != null) {
 			'''«projectID»[«rev.name»]'''
 		} else ""

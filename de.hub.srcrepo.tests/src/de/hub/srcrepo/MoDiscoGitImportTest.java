@@ -5,7 +5,6 @@ import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +18,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.gmt.modisco.java.AbstractTypeDeclaration;
-import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -40,11 +37,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
-import de.hub.srcrepo.RepositoryModelTraversal.Stats;
-import de.hub.srcrepo.ocl.OclUtil;
-import de.hub.srcrepo.repositorymodel.DataSet;
-import de.hub.srcrepo.repositorymodel.Diff;
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
@@ -176,133 +168,7 @@ public class MoDiscoGitImportTest {
 		// assert results
 		RepositoryModel repositoryModel = openRepositoryModel(false);
 		assertMetaData(repositoryModel);
-		
-		Collection<String> revNames = assertRepositoryModel(repositoryModel, 0);
-		
-		System.out.println("Java diffs: " + OclUtil.coutJavaDiffs(repositoryModel));
-		
-		for(Rev root: repositoryModel.getRootRevs()) {
-			Assert.assertTrue("Root revision isn't root.", RepositoryModelUtil.isRoot(root));
-		}
-		
-		RepositoryModelTraversal.traverse(repositoryModel, new IRepositoryModelVisitor() {
-			
-			@Override
-			public boolean onStartRev(Rev rev, int number) {
-				System.out.println("#" + rev.getName() + "(" + number + ")");
-				return false;
-			}
-			
-			@Override
-			public void onRenamedFile(Diff diff) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onModifiedFile(Diff diff) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onMerge(Rev mergeRev, Rev branchRev) {
-				// TODO Auto-generated method stub
-				System.out.println("#### merge ####");
-			}
-			
-			@Override
-			public void onDeletedFile(Diff diff) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onCopiedFile(Diff diff) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onCompleteRev(Rev rev) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onAddedFile(Diff diff) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void close() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		final Collection<String> visitedRevNames = new HashSet<String>();
-		final PrintStream out = System.out; // new PrintStream(new ByteArrayOutputStream()); // write to nothing
-		final Collection<String> rootNames = new HashSet<String>();
-		//final PrintStream out = System.out;
-		Stats stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-			@Override
-			protected void onRev(Rev rev, Model model) {				
-				try {
-					Assert.assertTrue("Revs should not be visited twice", visitedRevNames.add(rev.getName()));
-					
-					// assert LOC measures for the initial commit
-					if (rev.getName().equals("4e238b9752b33e18301bb0849ec9b5319a8cfa09")) {
-						boolean hasRevisionWithRequiredLOCMetric = false;
-						for (Diff diff: rev.getParentRelations().get(0).getDiffs()) {
-							if (diff.getFile() != null && diff.getFile() instanceof JavaCompilationUnitRef) {
-								DataSet locMetrics = RepositoryModelUtil.getData(diff.getFile(), "LOC-metrics");
-								Assert.assertNotNull(locMetrics);
-								Assert.assertEquals(4, locMetrics.getData().get("ncss"));
-								hasRevisionWithRequiredLOCMetric = true;
-							}
-						}
-						Assert.assertTrue(hasRevisionWithRequiredLOCMetric);
-					}
-					
-					if (RepositoryModelUtil.isRoot(rev)) {
-						rootNames.add(rev.getName());
-					}
-					
-					out.println(rev.getName());
-					TreeIterator<EObject> i = model.eAllContents();
-					while(i.hasNext()) {
-						EObject next = i.next();
-						if (next instanceof AbstractTypeDeclaration) {
-							out.println("Class: " + ((AbstractTypeDeclaration)next).getName());
-						}
-					}
-													
-					out.println("Primitives: " + OclUtil.countPrimitives(model));
-					out.println("Top level classes: " + OclUtil.countTopLevelClasses(model));
-					out.println("Methods: " + OclUtil.countMethodDeclarations(model));
-					out.println("Type usages: " + OclUtil.countTypeUsages(model));
-					out.println("Methods wo body: " + OclUtil.nullMethod(model));
-					out.println("McCabe: " + OclUtil.mcCabeMetric(model));
-				} catch (Exception e) {
-					Assert.fail(e.getMessage());
-				}
-			}
-		});				
-		
-		final Collection<String> revNamesDiff = new HashSet<String>();
-		for(String name: revNames) {
-			if (!visitedRevNames.contains(name)) {
-				revNamesDiff.add(name);
-				System.out.print("not visited: " + name);
-				Rev rev = RepositoryModelUtil.getRev(repositoryModel, name);
-				System.out.println(" " + RepositoryModelUtil.isRoot(rev));
-			}
-		}
-		
-		Assert.assertEquals("Branches and merges do not match.", stats.mergeCounter + stats.openBranchCounter, stats.branchCounter);
-		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), visitedRevNames.size());
+		assertRepositoryModel(repositoryModel, 0);		
 		closeRepositoryModel(repositoryModel);
 	}
 
@@ -332,7 +198,6 @@ public class MoDiscoGitImportTest {
 			count++;
 		}
 		Assert.assertTrue(count > minimumNumberOfRevs*2);
-		System.out.println(count + " objects in the repository");
 		
 		return revNames;
 	}

@@ -20,13 +20,13 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 
 	private final IModiscoSnapshotModel.Factory snapshotFactory;
 	private final Map<String, IModiscoSnapshotModel> snapshots;
-	private final Map<String, CompilationUnitModel> contributingModels;
+	private final Map<String, Map<String, CompilationUnitModel>> contributingModels;
 
 	public MoDiscoRevVisitor(IModiscoSnapshotModel.Factory snapshotFactory) {
 		super();
 		this.snapshotFactory = snapshotFactory;
 		snapshots = new HashMap<String, IModiscoSnapshotModel>();
-		contributingModels = new HashMap<String, CompilationUnitModel>();
+		contributingModels = new HashMap<String, Map<String, CompilationUnitModel>>();
 	}
 	
 	public MoDiscoRevVisitor(JavaPackage metaModel) {
@@ -57,6 +57,11 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 		if (snapshot == null) {
 			snapshot = snapshotFactory.create(projectID);
 			snapshots.put(projectID, snapshot);
+		}
+		Map<String, CompilationUnitModel> contributingModels = this.contributingModels.get(projectID);
+		if (contributingModels == null) {
+			contributingModels = new HashMap<String, CompilationUnitModel>();
+			this.contributingModels.put(projectID, contributingModels);
 		}
 		snapshot.start();
 		// merge the models from all compilation units
@@ -93,13 +98,13 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 			contributingModels.remove(pathToRemoveFromContributingModel);
 		}
 		snapshot.end();
-		onRev(rev, snapshot.getModel());
+		onRev(rev, projectID, snapshot.getModel());
 	}
 
 	protected boolean filter(Rev rev) {
 		return true;
 	}
 
-	protected abstract void onRev(Rev rev, Model model);
+	protected abstract void onRev(Rev rev, String projectID, Model model);
 
 }

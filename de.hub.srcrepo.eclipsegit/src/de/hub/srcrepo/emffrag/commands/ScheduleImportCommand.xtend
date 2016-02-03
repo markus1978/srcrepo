@@ -5,8 +5,8 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
+
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
-import de.hub.emffrag.FObject
 
 class ScheduleImportCommand extends AbstractRepositoryCommand {
 	

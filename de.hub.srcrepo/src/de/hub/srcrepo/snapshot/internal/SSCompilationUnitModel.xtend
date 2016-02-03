@@ -55,7 +55,7 @@ public class SSCompilationUnitModel {
 
 	override toString() {
 		var path = originalCompilationUnitModel.compilationUnit.originalFilePath
-		if (path.contains("src")) {
+		if (path != null && path.contains("src")) {
 			path = path.substring(path.lastIndexOf("src"))
 		}
 		return '''«path» at «(originalCompilationUnitModel?.eContainer?.eContainer?.eContainer?.eContainer as Rev)?.name»'''

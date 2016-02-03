@@ -30,7 +30,7 @@ public class AnalyzeImportedRepositories {
 		RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(org.eclipse.gmt.modisco.java.emf.JavaPackage.eINSTANCE) {
 				int i = 0;
 				@Override
-				protected void onRev(Rev rev, Model model) {
+				protected void onRev(Rev rev, String projectID, Model model) {
 					System.out.println("#" + i++);
 				}		      		    
 		});
