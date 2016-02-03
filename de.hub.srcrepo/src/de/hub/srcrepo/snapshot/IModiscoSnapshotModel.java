@@ -10,6 +10,10 @@ import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 
 public interface IModiscoSnapshotModel {
 
+	public interface Factory {
+		public IModiscoSnapshotModel create(String projectID);
+	}
+
 	/**
 	 * Start snapshot update. Needs to be called before CUs are added or removed
 	 * for computing the next snapshot.

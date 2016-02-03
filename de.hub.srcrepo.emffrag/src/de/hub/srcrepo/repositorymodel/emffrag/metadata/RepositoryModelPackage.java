@@ -816,13 +816,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS = 3;
 
 	/**
+	 * The feature id for the '<em><b>Project ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPILATION_UNIT_MODEL__PROJECT_ID = 4;
+
+	/**
 	 * The number of structural features of the '<em>Compilation Unit Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
+	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Compilation Unit Model</em>' class.
@@ -2180,6 +2189,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getCompilationUnitModel_UnresolvedLinks();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProjectID <em>Project ID</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Project ID</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProjectID()
+	 * @see #getCompilationUnitModel()
+	 * @generated
+	 */
+	EAttribute getCompilationUnitModel_ProjectID();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ImportError <em>Import Error</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3149,6 +3169,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS = eINSTANCE.getCompilationUnitModel_UnresolvedLinks();
+
+		/**
+		 * The meta object literal for the '<em><b>Project ID</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMPILATION_UNIT_MODEL__PROJECT_ID = eINSTANCE.getCompilationUnitModel_ProjectID();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.

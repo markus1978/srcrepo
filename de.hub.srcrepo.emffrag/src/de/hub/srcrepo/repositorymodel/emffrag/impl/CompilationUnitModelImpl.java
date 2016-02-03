@@ -25,6 +25,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getJavaModel <em>Java Model</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getTargets <em>Targets</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getUnresolvedLinks <em>Unresolved Links</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.CompilationUnitModelImpl#getProjectID <em>Project ID</em>}</li>
  * </ul>
  *
  * @generated
@@ -113,6 +114,24 @@ public class CompilationUnitModelImpl extends FObjectImpl implements Compilation
 	@SuppressWarnings("unchecked")
 	public EList<UnresolvedLink> getUnresolvedLinks() {
 		return (EList<UnresolvedLink>)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getProjectID() {
+		return (String)eGet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PROJECT_ID, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setProjectID(String newProjectID) {
+		eSet(RepositoryModelPackage.Literals.COMPILATION_UNIT_MODEL__PROJECT_ID, newProjectID);
 	}
 
 } //CompilationUnitModelImpl

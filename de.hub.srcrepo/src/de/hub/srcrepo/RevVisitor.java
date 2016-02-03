@@ -8,7 +8,6 @@ import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.Rev;
 
 public abstract class RevVisitor implements IRepositoryModelVisitor {
-	
 	public Map<Rev, Map<String, AbstractFileRef>> branches = new HashMap<Rev, Map<String,AbstractFileRef>>();
 	public Map<String, AbstractFileRef> files = new HashMap<String, AbstractFileRef>();
 	

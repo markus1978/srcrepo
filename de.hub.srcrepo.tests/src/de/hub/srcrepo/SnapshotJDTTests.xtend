@@ -294,4 +294,9 @@ class SnapshotJDTTests {
 		val snapshot = createSingleCUSingeRevSnapshot("FieldAccessTest")
 		assertNotNull(snapshot.model.eAllContentsAsIterable.typeSelect(VariableDeclarationFragment).findFirst[name=="out"])
 	}
+	
+	@Test
+	public def void fieldAccessRefsTest() {
+		performTest("fieldAccessRefs", #[#{"A"->null, "B"->null}, #{"A"->"A"}])
+	}
 }

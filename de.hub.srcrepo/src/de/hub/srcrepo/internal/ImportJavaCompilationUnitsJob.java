@@ -68,6 +68,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 		}
 		
 		CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
+		compilationUnitModel.setProjectID(compilationUnit.getJavaProject().getPath().toPortableString());
 		
 		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory) {
 			@Override

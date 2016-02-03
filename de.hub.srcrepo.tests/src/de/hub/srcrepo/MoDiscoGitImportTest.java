@@ -185,6 +185,63 @@ public class MoDiscoGitImportTest {
 			Assert.assertTrue("Root revision isn't root.", RepositoryModelUtil.isRoot(root));
 		}
 		
+		RepositoryModelTraversal.traverse(repositoryModel, new IRepositoryModelVisitor() {
+			
+			@Override
+			public boolean onStartRev(Rev rev, int number) {
+				System.out.println("#" + rev.getName() + "(" + number + ")");
+				return false;
+			}
+			
+			@Override
+			public void onRenamedFile(Diff diff) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onModifiedFile(Diff diff) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onMerge(Rev mergeRev, Rev branchRev) {
+				// TODO Auto-generated method stub
+				System.out.println("#### merge ####");
+			}
+			
+			@Override
+			public void onDeletedFile(Diff diff) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onCopiedFile(Diff diff) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onCompleteRev(Rev rev) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAddedFile(Diff diff) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void close() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		final Collection<String> visitedRevNames = new HashSet<String>();
 		final PrintStream out = System.out; // new PrintStream(new ByteArrayOutputStream()); // write to nothing
 		final Collection<String> rootNames = new HashSet<String>();

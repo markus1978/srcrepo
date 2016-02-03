@@ -11,66 +11,76 @@ import java.util.Map.Entry;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
-import de.hub.srcrepo.repositorymodel.AbstractFileRef;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
-import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel;
 import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl;
 
-public abstract class MoDiscoRevVisitor extends RevVisitor {
+public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 
-	private final IModiscoSnapshotModel snapshot;
+	private final IModiscoSnapshotModel.Factory snapshotFactory;
+	private final Map<String, IModiscoSnapshotModel> snapshots;
 	private final Map<String, CompilationUnitModel> contributingModels;
 
-	public MoDiscoRevVisitor(IModiscoSnapshotModel snapshot) {
+	public MoDiscoRevVisitor(IModiscoSnapshotModel.Factory snapshotFactory) {
 		super();
-		this.snapshot = snapshot;
+		this.snapshotFactory = snapshotFactory;
+		snapshots = new HashMap<String, IModiscoSnapshotModel>();
 		contributingModels = new HashMap<String, CompilationUnitModel>();
 	}
 	
 	public MoDiscoRevVisitor(JavaPackage metaModel) {
-		this(new ModiscoIncrementalSnapshotImpl(metaModel));
+		this(new IModiscoSnapshotModel.Factory() {			
+			@Override
+			public IModiscoSnapshotModel create(String projectID) {
+				return new ModiscoIncrementalSnapshotImpl(metaModel, projectID);
+			}
+		});
 	}
 
 	@Override
 	public void onMerge(Rev mergeRev, Rev branchRev) {
 		super.onMerge(mergeRev, branchRev);
-		snapshot.clear();
+		for(IModiscoSnapshotModel snapshot: snapshots.values()) {
+			snapshot.clear();
+		}
+		snapshots.clear();
 		contributingModels.clear();
 	}
 
 	@Override
-	protected final void onRev(Rev rev, Map<String, AbstractFileRef> files) {
+	protected final void onRev(Rev rev, String projectID, Map<String, CompilationUnitModel> files) {
 		if (!filter(rev)) {
 			return;
+		}
+		IModiscoSnapshotModel snapshot = snapshots.get(projectID);
+		if (snapshot == null) {
+			snapshot = snapshotFactory.create(projectID);
+			snapshots.put(projectID, snapshot);
 		}
 		snapshot.start();
 		// merge the models from all compilation units
 		Collection<String> pathsInFiles = new HashSet<String>();
-		for (Entry<String, AbstractFileRef> entry : files.entrySet()) {
-			AbstractFileRef ref = entry.getValue();
+		for (Entry<String, CompilationUnitModel> entry : files.entrySet()) {
 			String path = entry.getKey();
 			pathsInFiles.add(path);
-			if (ref instanceof JavaCompilationUnitRef) {
-				JavaCompilationUnitRef compilationUnitRef = (JavaCompilationUnitRef) ref;
-				CompilationUnitModel newCUModel = compilationUnitRef.getCompilationUnitModel();
-				CompilationUnitModel oldCUModel = contributingModels.get(path);
+			
+			CompilationUnitModel newCUModel = entry.getValue();
+			CompilationUnitModel oldCUModel = contributingModels.get(path);
 
-				if (newCUModel != oldCUModel) {
-					if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
-						if (oldCUModel != null) {
-							snapshot.removeCompilationUnitModel(oldCUModel);
-						}
-						snapshot.addCompilationUnitModel(newCUModel);
-						contributingModels.put(path, newCUModel);
-					} else {
-						SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
-								newCUModel.getCompilationUnit().getOriginalFilePath() + 
-								" without a type (probably due to incorrect CU code), using older version of same CU.");
+			if (newCUModel != oldCUModel) {
+				if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
+					if (oldCUModel != null) {
+						snapshot.removeCompilationUnitModel(oldCUModel);
 					}
+					snapshot.addCompilationUnitModel(newCUModel);
+					contributingModels.put(path, newCUModel);
+				} else {
+					SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
+							newCUModel.getCompilationUnit().getOriginalFilePath() + 
+							" without a type (probably due to incorrect CU code), using older version of same CU.");
 				}
-			}
+			}			
 		}
 		List<String> pathsToRemoveFromContributingModel = new ArrayList<String>(); 
 		for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
