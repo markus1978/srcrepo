@@ -36,6 +36,7 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
@@ -55,6 +56,8 @@ public class MoDiscoGitImportTest {
 	public final static URI testModelURI = URI.createURI("testdata/models/example.java.xmi");
 	public final static File workingCopy = new File(SrcRepoTestSuite.workingCopiesPrefix + "srcrepo.example.git");
 	
+	private static boolean isStandalone = false;
+	
 	protected URI getTestModelURI() {
 		return testModelURI;
 	}
@@ -69,6 +72,14 @@ public class MoDiscoGitImportTest {
 	
 	protected String getCloneURL() {
 		return "git://github.com/markus1978/srcrepo.example.git";
+	}
+	
+	@BeforeClass
+	public static void standaloneSrcRepo() {
+		if (SrcRepoActivator.INSTANCE == null) {	
+			SrcRepoActivator.standalone();
+			isStandalone = true;
+		}
 	}
 	
 	@Before 
@@ -118,28 +129,30 @@ public class MoDiscoGitImportTest {
 	}
 	
 	protected void runImport() {
-		GitSourceControlSystem scs = new GitSourceControlSystem();
-		try {			
-			scs.createWorkingCopy(getWorkingCopy(), getCloneURL(), true);	
-		} catch (SourceControlException e) {
-			e.printStackTrace();
-			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-		}
-		
-		RepositoryModel repositoryModel = openRepositoryModel(true);
-		
-		try {
-			scs.importRevisions(repositoryModel);
-			IRepositoryModelVisitor visitor = createVisitor(scs, repositoryModel);
-			RepositoryModelTraversal.traverse(repositoryModel, visitor);
-			scs.close();
-			visitor.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-		}
-		
-		closeRepositoryModel(repositoryModel);
+		if (!isStandalone) {
+			GitSourceControlSystem scs = new GitSourceControlSystem();
+			try {			
+				scs.createWorkingCopy(getWorkingCopy(), getCloneURL(), true);	
+			} catch (SourceControlException e) {
+				e.printStackTrace();
+				Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+			}
+			
+			RepositoryModel repositoryModel = openRepositoryModel(true);
+			
+			try {
+				scs.importRevisions(repositoryModel);
+				IRepositoryModelVisitor visitor = createVisitor(scs, repositoryModel);
+				RepositoryModelTraversal.traverse(repositoryModel, visitor);
+				scs.close();
+				visitor.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+			}
+			
+			closeRepositoryModel(repositoryModel);
+		} 
 	}
 	
 	protected void assertMetaData(RepositoryModel repositoryModel) {

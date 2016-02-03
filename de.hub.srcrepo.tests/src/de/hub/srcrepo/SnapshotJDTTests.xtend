@@ -33,9 +33,15 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import static de.hub.srcrepo.metrics.ModiscoMetrics.*
+import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static org.junit.Assert.*
 import java.util.concurrent.TimeUnit
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.gmt.modisco.java.ClassDeclaration
+import org.eclipse.gmt.modisco.java.FieldDeclaration
+import org.eclipse.jdt.internal.core.JavaModel
+import org.eclipse.gmt.modisco.java.SingleVariableDeclaration
+import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
 
 class SnapshotJDTTests {
 	private static val saveCompilationUnitModel = true
@@ -250,20 +256,42 @@ class SnapshotJDTTests {
 		performTest("proxy", #[#{"A"->null, "B"->null}, #{"A"->"A", "B"->"B"}])
 	}
 	
-	@Test
-	public def void complexBindingsTest() {
+	private def createSingleCUSingeRevSnapshot(String cuName) {
+		return createSingleCUSingeRevSnapshot(cuName) []
+	}
+	
+	private def createSingleCUSingeRevSnapshot(String cuName, (CompilationUnitModel)=>void assertCum) {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
-		val cum = createCompilationUnitModel("ComplexBindingTest")
+		val cum = createCompilationUnitModel(cuName)
+		
 		assertFalse(cum.unresolvedLinks.empty)
-		assertEquals(2, cum.javaModel.ownedElements.size)
+		assertCum.apply(cum)	
 		
 		snapshot.start
 		snapshot.addCompilationUnitModel(cum)
 		snapshot.end
+		
 		val model = snapshot.model
 		assertEquals(0, model.unresolvedItems.size)
-		assertTrue(model.eAllContents.filter[it instanceof NamedElement && (it as NamedElement).name.startsWith("java")]
-			.map[it as NamedElement].forall[it.proxy])
-		assertTrue(weightedMethodsPerClass(model.compilationUnits.get(0).types.get(0)) == 3)
+		assertTrue(model.eAllContentsAsIterable
+			.typeSelect(NamedElement).filter[name != null && name.startsWith("java")].forall[
+				it.proxy || it.eContainmentFeature == JavaPackage.eINSTANCE.model_OrphanTypes
+			])
+			
+		return snapshot
+	}
+	
+	@Test
+	public def void complexBindingsTest() {
+		val snapshot = createSingleCUSingeRevSnapshot("ComplexBindingTest") [		
+			assertEquals(2, javaModel.ownedElements.size)	
+		]
+		assertTrue(weightedMethodsPerClass(snapshot.model.compilationUnits.get(0).types.get(0)) == 3)
+	}
+	
+	@Test
+	public def void fieldAccessTest() {
+		val snapshot = createSingleCUSingeRevSnapshot("FieldAccessTest")
+		assertNotNull(snapshot.model.eAllContentsAsIterable.typeSelect(VariableDeclarationFragment).findFirst[name=="out"])
 	}
 }

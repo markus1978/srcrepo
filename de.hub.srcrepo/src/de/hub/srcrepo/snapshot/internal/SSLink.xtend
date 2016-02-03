@@ -9,7 +9,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
-import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 
 class SSLink {
 	val ASTNode copiedSource
@@ -23,8 +22,6 @@ class SSLink {
 		this.placeHolder = placeHolder
 		replaceTarget(placeHolder)
 		Preconditions.checkState(!resolved)
-		
-		ModiscoIncrementalSnapshotImpl.debug("#new link: " + toString)
 	}
 	
 	def getCurrentTarget() {
@@ -54,7 +51,6 @@ class SSLink {
 		Preconditions.checkArgument(!resolvedTarget.isPersistent, "You can only resolve a link with a target from an snaptshot model.")
 		Preconditions.checkArgument(source.root == resolvedTarget.root, "Resolved target and source must be in the same model.")
 		
-		ModiscoIncrementalSnapshotImpl.debug("#resolve: ->" + (resolvedTarget as NamedElement).name)
 		replaceTarget(resolvedTarget)
 		return resolvedTarget
 	}

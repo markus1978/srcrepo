@@ -170,7 +170,7 @@ class OclExtensions {
 				}
 			}			
 		}
-	}
+	} 
 	
 	static def EObject eSelectContainer(EObject eObject, Functions.Function1<EObject, Boolean> function) {
 		return if (function.apply(eObject)) {
