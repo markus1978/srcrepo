@@ -9,6 +9,7 @@ import java.util.Arrays
 import java.util.Comparator
 import java.util.List
 import java.util.Map
+import java.util.concurrent.TimeUnit
 import org.apache.commons.exec.CommandLine
 import org.apache.commons.exec.DefaultExecutor
 import org.apache.commons.io.FileUtils
@@ -16,32 +17,33 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.Path
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.gmt.modisco.java.ClassDeclaration
 import org.eclipse.gmt.modisco.java.CompilationUnit
+import org.eclipse.gmt.modisco.java.ConstructorDeclaration
+import org.eclipse.gmt.modisco.java.FieldDeclaration
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.Package
+import org.eclipse.gmt.modisco.java.SingleVariableDeclaration
+import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.eclipse.jdt.core.ICompilationUnit
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
+import org.eclipse.jdt.internal.core.JavaModel
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage
 import org.junit.BeforeClass
 import org.junit.Test
 
 import static de.hub.srcrepo.metrics.ModiscoMetrics.*
-import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static org.junit.Assert.*
-import java.util.concurrent.TimeUnit
-import org.eclipse.emf.ecore.EClass
-import org.eclipse.gmt.modisco.java.ClassDeclaration
-import org.eclipse.gmt.modisco.java.FieldDeclaration
-import org.eclipse.jdt.internal.core.JavaModel
-import org.eclipse.gmt.modisco.java.SingleVariableDeclaration
-import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
+
+import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 class SnapshotJDTTests {
 	private static val saveCompilationUnitModel = true
@@ -264,7 +266,6 @@ class SnapshotJDTTests {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		val cum = createCompilationUnitModel(cuName)
 		
-		assertFalse(cum.unresolvedLinks.empty)
 		assertCum.apply(cum)	
 		
 		snapshot.start
@@ -280,6 +281,25 @@ class SnapshotJDTTests {
 			
 		return snapshot
 	}
+	
+	private def createSingleRevSnapshot(String packageName, List<String> cuNames) {
+		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
+		snapshot.start
+		cuNames.forEach[
+			val cum = (packageName + "/" + it).createCompilationUnitModel
+			snapshot.addCompilationUnitModel(cum)			
+		]	
+		snapshot.end
+		
+		val model = snapshot.model
+		assertEquals(0, model.unresolvedItems.size)
+		assertTrue(model.eAllContentsAsIterable
+			.typeSelect(NamedElement).filter[name != null && name.startsWith("java")].forall[
+				it.proxy || it.eContainmentFeature == JavaPackage.eINSTANCE.model_OrphanTypes
+			])
+			
+		return snapshot
+	}	
 	
 	@Test
 	public def void complexBindingsTest() {
@@ -298,5 +318,13 @@ class SnapshotJDTTests {
 	@Test
 	public def void fieldAccessRefsTest() {
 		performTest("fieldAccessRefs", #[#{"A"->null, "B"->null}, #{"A"->"A"}])
+	}
+	
+	@Test
+	public def void implicitConstructorCallTest() {
+		val model = createSingleRevSnapshot("implicitConstructorCall", #["A", "B"]).model
+		val cuB = model.compilationUnits.findFirst[name=="B.java"]
+		assertNotNull(cuB)
+		assertFalse(cuB.types.get(0).eAllContentsAsIterable.typeSelect(ConstructorDeclaration).empty)
 	}
 }

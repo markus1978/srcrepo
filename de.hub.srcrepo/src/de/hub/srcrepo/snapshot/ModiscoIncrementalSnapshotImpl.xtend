@@ -190,10 +190,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 	
 	override clear() {	
-		debug("#######################################")
-		debug("#######################################")
-		debug("#######################################")
-		debug("#######################################")
+		debug("# clear ###################################")
 		EcoreUtil.delete(model, true)
 		
 		currentCompilationUnits.clear
@@ -264,20 +261,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					// original child has a corresponding other child					
 					// merge existing child copy with new original child
 					if (!namedElementChild.externalTarget && copyChild.externalTarget) {
-						// replace the existing external child copy (i.e. proxy, unresolved, orphant) with a "real" copy of the new internal original
-						debug("    #merge(replace) " + copyChild.name)
-						Preconditions.checkState(copyChild.eContainmentFeature.many)
-						val setting = (copyChild.eContainer as InternalEObject).eSetting(copyChild.eContainmentFeature)
-						
-						// remove the old child copy based on its old original and corresponding compiliation unit model
-						val oldOriginalChild = copier.getLastOriginal(copyChild)
-						val oldCompilationUnitModel = oldOriginalChild.eSelectContainer[it instanceof CompilationUnitModel]
-						val oldSSCompilationUnitModel = currentCompilationUnitModels.get(oldCompilationUnitModel)
-						removeContents(copyChild, oldOriginalChild, oldSSCompilationUnitModel.originalReverseTargets) 
-						EcoreUtil.remove(copyChild)
-						
-						copyChild = copier.shallowCopy(namedElementChild) as NamedElement
-						(setting.get(false) as List<EObject>).add(copyChild)
+						// push attributes and other content from new internal target onto existing external target
+						debug("    #merge(new attribute values) " + copyChild.name)
+						copier.merge(copyChild, namedElementChild)																		
 						mergeContents(copyChild, namedElementChild, originalTargets, true)				
 					} else {
 						// use the existing target						
@@ -347,6 +333,19 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		
 		public def <T extends EObject> T getLastOriginal(T copy) {
 			return reverseMap.get(copy) as T
+		}
+		
+		def void merge(EObject copy, EObject original) {
+			if (copy != null) {
+				put(original, copy);
+				val eClass = original.eClass();
+				for (eAttribute : eClass.EAllAttributes.filter[changeable && !isDerived]) {
+					copy.eUnset(eAttribute);
+					copyAttribute(eAttribute, original, copy);
+				}
+	
+				copyProxyURI(original, copy);
+			}
 		}
 		
 		def <T extends EObject> T shallowCopy(T original) {
