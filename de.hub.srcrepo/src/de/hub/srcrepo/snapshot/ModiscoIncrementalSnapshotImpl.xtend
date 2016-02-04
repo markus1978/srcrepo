@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
@@ -67,7 +66,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	override addCompilationUnitModel(CompilationUnitModel model) {
-		Preconditions.checkArgument(model != null)
+		Preconditions.checkArgument(model != null, "Null model is not allowed.")
+		Preconditions.checkArgument(model.eAllContents.forall[it.eSelectContainer[it instanceof CompilationUnitModel] == model], "Containment relation is broken.")
 		val ssCompilationUnitModel = new SSCompilationUnitModel(metaModel, model)
 		newCompilationUnitModels += ssCompilationUnitModel
 		currentCompilationUnitModels.put(model, ssCompilationUnitModel)
@@ -141,7 +141,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		debug("  #add links")
 		newCompilationUnitModels.forEach [
 			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[ 
-				val link = new SSLink(it, copier.get(it.source) as ASTNode, metaModel.javaFactory.create(it.target.eClass) as NamedElement)
+				val link = new SSLink(it, copier.get(it.source) as ASTNode, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
 				debug("    #new link: " + link)
 				return link
 			]
@@ -238,12 +238,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		if (id == null) {
 			Preconditions.checkState(originalChild.name == null, "All NamedElements with name need to be targets.")
 			// unnamed named element, assume each container can only have one of those within same containment feature
-			val feature = originalChild.eContainmentFeature
+			val feature = copier.getTarget(originalChild.eContainmentFeature)
 			val value = if (feature.many) {
-				(copy.eGet(feature) as List<NamedElement>).findFirst[it.eClass == originalChild.eClass && name == null]
+				(copy.eGet(feature) as List<NamedElement>).findFirst[it.eClass == copier.getTarget(originalChild.eClass) && name == null]
 			} else {
 				val singelValue = copy.eGet(feature) as NamedElement
-				if (singelValue.eClass == originalChild.eClass && singelValue.name == null) singelValue else null					
+				if (singelValue.eClass == copier.getTarget(originalChild.eClass) && singelValue.name == null) singelValue else null					
 			}
 			return value
 		} else {
@@ -257,44 +257,47 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	 */
 	private def <T extends EObject> void mergeContents(T copy, T original,  Map<NamedElement, String> originalTargets, boolean addContents) {
 		Preconditions.checkArgument(copy.eClass.name == original.eClass.name)		
-		original.forEachChild[feature,child|
-			if (child.isTarget(originalTargets)) {
-				val namedElementChild = child as NamedElement
-				var copyChild = getCopyChild(copy, original, namedElementChild, originalTargets)			
+		original.forEachChild[originalFeature,originalChild|
+			val copyFeature = copier.getTarget(originalFeature)
+			if (originalChild.isTarget(originalTargets)) {
+				val originalNamedElementChild = originalChild as NamedElement
+				var copyChild = getCopyChild(copy, original, originalNamedElementChild, originalTargets)			
 				if (copyChild != null) {
 					// original child has a corresponding other child					
 					// merge existing child copy with new original child
-					if (!namedElementChild.externalTarget && copyChild.externalTarget) {
+					if (!originalNamedElementChild.externalTarget && copyChild.externalTarget) {
 						// push attributes and other content from new internal target onto existing external target
 						debug("    #merge(new attribute values) " + copyChild.name)
-						copier.merge(copyChild, namedElementChild)																		
-						mergeContents(copyChild, namedElementChild, originalTargets, true)				
+						copier.merge(copyChild, originalNamedElementChild)																		
+						mergeContents(copyChild, originalNamedElementChild, originalTargets, true)				
 					} else {
 						// use the existing target						
 						debug("    #merge " + copyChild.name)
-						copier.put(namedElementChild, copyChild)
-						mergeContents(copyChild, namedElementChild, originalTargets, false)
+						copier.put(originalNamedElementChild, copyChild)
+						mergeContents(copyChild, originalNamedElementChild, originalTargets, false)
 					}
 				} else {
 					// copy of the child does not already exist
-					debug("    #new " + namedElementChild.name)		
-					copyChild = copier.shallowCopy(child) as NamedElement
-					Preconditions.checkState(feature.many) 
-					(copy.eGet(feature) as List<EObject>).add(copyChild)					
-					mergeContents(copyChild, child, originalTargets, true)											
+					debug("    #new " + originalNamedElementChild.name)		
+					copyChild = copier.shallowCopy(originalChild) as NamedElement
+					Preconditions.checkState(copyFeature.many) 
+					(copy.eGet(copyFeature) as List<EObject>).add(copyChild)	
+					Preconditions.checkState(copyChild.eContainmentFeature == copyFeature)
+					Preconditions.checkState(copyChild.eContainer == copy)								
+					mergeContents(copyChild, originalChild, originalTargets, true)											
 				}
 				// update the copie's target map
-				val id = originalTargets.get(child)
+				val id = originalTargets.get(originalChild)
 				if (id != null) {
 					targets.put(id, copyChild)				
 				}
 			} else {
 				if (addContents) {					
-					val copyChild = copier.copy(child)
-					if (feature.many) {
-						(copy.eGet(feature) as List<EObject>).add(copyChild)
+					val copyChild = copier.copy(originalChild)
+					if (copyFeature.many) {
+						(copy.eGet(copyFeature) as List<EObject>).add(copyChild)
 					} else {
-						copy.eSet(feature, copyChild)
+						copy.eSet(copyFeature, copyChild)
 					}					
 				}	
 			}
@@ -344,7 +347,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				put(original, copy);
 				val eClass = original.eClass();
 				for (eAttribute : eClass.EAllAttributes.filter[changeable && !isDerived]) {
-					copy.eUnset(eAttribute);
+					copy.eUnset(getTarget(eAttribute));
 					copyAttribute(eAttribute, original, copy);
 				}
 	

@@ -10,6 +10,8 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
 
+import static extension de.hub.srcrepo.ocl.OclExtensions.*
+
 class SSLink {
 	val ASTNode copiedSource
 	val UnresolvedLink originalUnresolvedLink 	
@@ -49,7 +51,7 @@ class SSLink {
 	def resolve(NamedElement resolvedTarget) {
 		Preconditions.checkState(!isResolved, "You cannot resolve an resolved link.")
 		Preconditions.checkArgument(!resolvedTarget.isPersistent, "You can only resolve a link with a target from an snaptshot model.")
-		Preconditions.checkArgument(source.root == resolvedTarget.root, "Resolved target and source must be in the same model.")
+		Preconditions.checkArgument(source.eRoot == resolvedTarget.eRoot, "Resolved target and source must be in the same model.")
 		
 		replaceTarget(resolvedTarget)
 		return resolvedTarget
@@ -70,13 +72,7 @@ class SSLink {
 	}
 	
 	private def isPersistent(EObject obj) {	
-		return obj.root instanceof CompilationUnitModel	
-	}
-	
-	private def root(EObject obj) {
-		var root = obj
-		while (root.eContainer != null) root = root.eContainer
-		return root	
+		return obj.eRoot instanceof CompilationUnitModel	
 	}
 	
 	private def NamedElement replaceTarget(NamedElement target) {

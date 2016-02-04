@@ -208,4 +208,10 @@ class OclExtensions {
 			eObject.eContents.forEach[eTraverse(result, function)]
 		}
 	}
+	
+	static def eRoot(EObject obj) {
+		var root = obj
+		while (root.eContainer != null) root = root.eContainer
+		return root	
+	}
 }
