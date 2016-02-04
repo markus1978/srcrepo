@@ -5,7 +5,7 @@ import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import org.apache.commons.cli.CommandLine
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
+import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 class MetricsCommand extends AbstractRepositoryCommand {
 	
@@ -26,10 +26,7 @@ class MetricsCommand extends AbstractRepositoryCommand {
 //		]
 //		println("visited values " + count)
 		repo.traverse[rev, projectID, model|
-			println('''
-				«rev.name»
-					size: «model.eAllContents.size» 
-			''')
+			println('''%% «rev.name» cus: «model.compilationUnits.size» %%''')
 		]					
 	}
 }

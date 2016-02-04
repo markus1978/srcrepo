@@ -15,13 +15,14 @@ import static extension de.hub.srcrepo.ocl.OclExtensions.*
 class SSLink {
 	val ASTNode copiedSource
 	val UnresolvedLink originalUnresolvedLink 	
-
+	val String id
 	var NamedElement placeHolder = null
 
-	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, NamedElement placeHolder) {
+	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, String id, NamedElement placeHolder) {
 		this.originalUnresolvedLink = originalUnresolvedLink
 		this.copiedSource = copiedSource
 		this.placeHolder = placeHolder
+		this.id = id
 		replaceTarget(placeHolder)
 		Preconditions.checkState(!resolved)
 	}
@@ -45,7 +46,7 @@ class SSLink {
 	}
 	
 	def getId() {
-		return originalUnresolvedLink.id
+		return id
 	}
 
 	def resolve(NamedElement resolvedTarget) {

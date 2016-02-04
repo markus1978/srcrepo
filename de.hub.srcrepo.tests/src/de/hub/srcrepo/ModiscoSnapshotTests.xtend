@@ -25,6 +25,7 @@ import org.eclipse.gmt.modisco.java.Package
 import org.eclipse.gmt.modisco.java.VariableDeclarationFragment
 import org.eclipse.gmt.modisco.java.emf.JavaFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
+import org.eclipse.jdt.core.IClasspathEntry
 import org.eclipse.jdt.core.ICompilationUnit
 import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.jdt.core.JavaCore
@@ -45,7 +46,6 @@ class ModiscoSnapshotTests {
 	private var deleteModifier = 0
 	
 	private val javaFactory = JavaFactory.eINSTANCE
-	private val javaMetaModel = JavaPackage.eINSTANCE
 	private val repositoryModelFactory = RepositoryModelFactory.eINSTANCE
 	
 	private def deleted() {
@@ -59,7 +59,26 @@ class ModiscoSnapshotTests {
 	    JavaCapabilityConfigurationPage.createProject(project, description.getLocationURI(), null);
 	    val javaProject = JavaCore.create(project)
 	    
+	    // add src-testdata as source folder
+	    val entries = newArrayList(javaProject.getRawClasspath())
+	    if (!entries.exists[path.toString.endsWith("src-testdata")]) {
+		    val newEntry = JavaCore.newSourceEntry(new Path("/de.hub.srcrepo.tests/src-testdata"))
+			entries += newEntry
+		    val IClasspathEntry[] entryArray = entries
+		    javaProject.setRawClasspath(entryArray, null);		    
+	    }
+	    
 	    return javaProject
+	}
+	
+	private def void closeProject(IJavaProject javaProject) {
+		val entries = newArrayList(javaProject.getRawClasspath())
+		val testEntry = entries.findFirst[path.toString.endsWith("src-testdata")]
+	    if (testEntry != null) {
+			entries -= testEntry
+		    val IClasspathEntry[] entryArray = entries
+		    javaProject.setRawClasspath(entryArray, null);		    
+	    }
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String testCaseName, String revName, String compilationUnitName) {
@@ -91,16 +110,15 @@ class ModiscoSnapshotTests {
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String compilationUnitPath) {
-		val cumPath = '''src/de/hub/srcrepo/sstestdata/«compilationUnitPath».java'''.toString
+		val cumPath = '''src-testdata/de/hub/srcrepo/sstestdata/«compilationUnitPath».java'''.toString
 		if (ModiscoSnapshotTests.isStandalone) {
-			val xmiPath = "models/" + cumPath.replace("src/", "").replace(".java", ".xmi").trim()
+			val xmiPath = "testdata/models/" + cumPath.replace("src-testdata/", "").replace(".java", ".xmi").trim()
 			val rs = new ResourceSetImpl();
 			val xmiResource = rs.getResource(URI.createURI(xmiPath), true)
 			return xmiResource.contents.get(0) as CompilationUnitModel
 		} else {
 			val javaProject = openProject("/Users/markus/Documents/Projects/srcrepo-mars/03-git/srcrepo/de.hub.srcrepo.tests")
 			
-	
 			val resource = javaProject.getProject().findMember(cumPath)
 			val element = JavaCore.create(resource, javaProject)
 			val cu = element as ICompilationUnit
@@ -125,9 +143,10 @@ class ModiscoSnapshotTests {
 			}
 			
 			val cum = importJob.results.get(cu)
+			javaProject.closeProject
 			assertNotNull(cum)
 			
-			val xmiPath = javaProject.path.toOSString + "/models/" + cumPath.replace("src/", "").replace(".java", ".xmi")
+			val xmiPath = javaProject.path.toOSString + "/testdata/models/" + cumPath.replace("src-testdata/", "").replace(".java", ".xmi")
 			val rs = new ResourceSetImpl();
 			val xmiResource = rs.createResource(URI.createURI(xmiPath))
 			xmiResource.contents += cum
@@ -188,8 +207,8 @@ class ModiscoSnapshotTests {
 		try {	
  			assertTrue(EcoreUtil.equals(goal, result))	
  		} catch (Throwable e) {
- 			FileUtils.write(new File("models/goal.txt"), '''GOAL\n«EMFPrettyPrint.prettyPrint(goal)»''')
- 			FileUtils.write(new File("models/result.txt"), '''RESULT\n«EMFPrettyPrint.prettyPrint(result)»''')
+ 			FileUtils.write(new File("testdata/goal.txt"), '''GOAL\n«EMFPrettyPrint.prettyPrint(goal)»''')
+ 			FileUtils.write(new File("testdata/result.txt"), '''RESULT\n«EMFPrettyPrint.prettyPrint(result)»''')
  			throw e
  		}
 	}
@@ -282,7 +301,6 @@ class ModiscoSnapshotTests {
 		snapshot.end
 		
 		val model = snapshot.model
-		assertEquals(0, model.unresolvedItems.size)
 		assertTrue(model.eAllContentsAsIterable
 			.typeSelect(NamedElement).filter[name != null && name.startsWith("java")].forall[
 				it.proxy || it.eContainmentFeature == JavaPackage.eINSTANCE.model_OrphanTypes
@@ -316,5 +334,11 @@ class ModiscoSnapshotTests {
 		val cuB = model.compilationUnits.findFirst[name=="B.java"]
 		assertNotNull(cuB)
 		assertFalse(cuB.types.get(0).eAllContentsAsIterable.typeSelect(ConstructorDeclaration).empty)
+	}
+	
+	@Test
+	public def void unresolvedTest() {
+		val model = createSingleRevSnapshot("unresolved", #["A", "B"]).model
+		assertEquals(5, model.unresolvedItems.size)
 	}
 }

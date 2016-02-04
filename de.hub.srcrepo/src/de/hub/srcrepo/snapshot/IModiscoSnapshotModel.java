@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
-import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 
@@ -41,8 +40,6 @@ public interface IModiscoSnapshotModel {
 	public void end();
 
 	public Model getModel();
-
-	public JavaPackage getMetaModel();
 	
 	public Map<String, NamedElement> getTargets();
 

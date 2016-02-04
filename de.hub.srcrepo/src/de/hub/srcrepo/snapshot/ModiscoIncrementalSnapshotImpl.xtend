@@ -3,6 +3,7 @@ package de.hub.srcrepo.snapshot
 import com.google.common.base.Preconditions
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.Rev
+import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSLink
 import java.util.List
@@ -56,10 +57,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		copier = new SSCopier(metaModel)
 		model = metaModel.javaFactory.createModel
 	}
-
-	override getMetaModel() {
-		return metaModel
-	}
 	
 	override getTargets() {
 		return targets
@@ -68,9 +65,27 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	override addCompilationUnitModel(CompilationUnitModel model) {
 		Preconditions.checkArgument(model != null, "Null model is not allowed.")
 		Preconditions.checkArgument(model.eAllContents.forall[it.eSelectContainer[it instanceof CompilationUnitModel] == model], "Containment relation is broken.")
-		val ssCompilationUnitModel = new SSCompilationUnitModel(metaModel, model)
+		val extension ssCompilationUnitModel = new SSCompilationUnitModel(model)
 		newCompilationUnitModels += ssCompilationUnitModel
 		currentCompilationUnitModels.put(model, ssCompilationUnitModel)
+		
+		originalCompilationUnitModel.targets.forEach[
+			originalReverseTargets.put(target, id)
+		]
+		originalCompilationUnitModel.unresolvedLinks.forEach[
+			if (originalReverseTargets.get(it.target) == null) {
+				Preconditions.checkState(it.target instanceof UnresolvedItem)
+				originalReverseTargets.put(it.target, it.fullId)
+			}
+		]
+	}
+	
+	private def fullId(extension UnresolvedLink link) {
+		if (link.target instanceof UnresolvedItem) {
+			return target.eClass.name + ":" + id
+		} else {
+			return id
+		}
 	}
 
 	override removeCompilationUnitModel(CompilationUnitModel model) {
@@ -141,7 +156,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		debug("  #add links")
 		newCompilationUnitModels.forEach [
 			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[ 
-				val link = new SSLink(it, copier.get(it.source) as ASTNode, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
+				val link = new SSLink(it, copier.get(it.source) as ASTNode, it.fullId, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
 				debug("    #new link: " + link)
 				return link
 			]
@@ -248,7 +263,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			return value
 		} else {
 			// named element with target
-			return targets.get(id)
+			val result = targets.get(id)
+			Preconditions.checkState(result == null || result.eClass.name == originalChild.eClass.name)
+			return result
 		}		
 	}
 	

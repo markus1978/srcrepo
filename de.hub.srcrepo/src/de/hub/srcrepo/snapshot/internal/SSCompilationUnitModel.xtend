@@ -6,11 +6,9 @@ import java.util.List
 import java.util.Map
 import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.NamedElement
-import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 public class SSCompilationUnitModel {
 	
-	val JavaPackage metaModel
 	val CompilationUnitModel originalCompilationUnitModel;
 	var CompilationUnit copyCompilationUnit = null
 	
@@ -18,11 +16,8 @@ public class SSCompilationUnitModel {
 	val List<SSLink> incomingLinks = newArrayList
 	val Map<NamedElement, String> originalReverseTargetMap = newHashMap
 
-	new(JavaPackage metaModel, CompilationUnitModel originalCompilationUnitModel) {
-		this.metaModel = metaModel
+	new(CompilationUnitModel originalCompilationUnitModel) {
 		this.originalCompilationUnitModel = originalCompilationUnitModel
-
-		originalCompilationUnitModel.targets.forEach[originalReverseTargetMap.put(target, id)]
 	}
 
 	/**
