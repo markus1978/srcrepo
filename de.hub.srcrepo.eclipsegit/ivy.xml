@@ -27,4 +27,5 @@
 	<dependency org="org.jsoup" name="jsoup" rev="1.7.2"/>
 	<dependency org="org.json" name="json" rev="20151123"/>
 	<dependency org="com.mashape.unirest" name="unirest-java" rev="1.4.7"/>
+	<dependency org="de.vandermeer" name="asciitable" rev="0.2.4"/>
 </ivy-module>

@@ -312,11 +312,11 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			this.metaModel = metaModel
 		}
 	
-		override getTarget(EClass eClass) {
+		override getTarget(EClass eClass) { // TODO performance
 			return metaModel.getEClassifier(eClass.getName()) as EClass
 		}
 	
-		override getTarget(EStructuralFeature eStructuralFeature) {
+		override getTarget(EStructuralFeature eStructuralFeature) { // TODO performance
 			val eClass = eStructuralFeature.getEContainingClass();
 			return getTarget(eClass).getEStructuralFeature(eStructuralFeature.getName());
 		}

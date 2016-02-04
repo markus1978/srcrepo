@@ -74,7 +74,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				«statSummaryData(importStatJSON, "Revision checkout time", "3_checkoutTime")»,
 				«statSummaryData(importStatJSON, "Revision refresh time", "4_refreshTime")»,
 				«statSummaryData(importStatJSON, "Revision import time", "5_importTime")»,
-				«statSummaryData(importStatJSON, "Write execution times", "6_writeTime")»,
+				«statSummaryData(importStatJSON, "DataWriteET", "6_writeTime")»,
 				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
 				«IF withElementCount»					
 					«statSummaryData(dataStatJSON, traverseObjectsExecTimeStataTitle, "8_traverseTime")»,
@@ -120,6 +120,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 		options.addOption(Option.builder("w").longOpt("with-counting").desc("Also counts the number of elements in each repository. Takes a while.").build)
 		options.addOption(Option.builder("o").longOpt("output").desc("File name to store the ouput instead of printing it").hasArg.build)
 		options.addOption(Option.builder("v").longOpt("verbose").desc("Create additional output. Careful in conjunction with -o").build)
+		options.addOption(Option.builder("h").longOpt("human-readable").desc("Create human readable output instead of csv.").build)
 	}
 	
 	override protected run(CommandLine cl) {
@@ -134,7 +135,7 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 				«ENDFOR»
 			]
 		'''
-		val repositoryDataCSV = new JSONArray(repositoryDataJSON).toCSV
+		val repositoryDataCSV = if (cl.hasOption("h")) new JSONArray(repositoryDataJSON).toHumanReadable else new JSONArray(repositoryDataJSON).toCSV
 		
 		if (cl.hasOption("o")) {
 			val out = new File(cl.getOptionValue("o"))

@@ -10,6 +10,8 @@ import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
 import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.emffrag.EmffragSrcRepo
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+import de.vandermeer.asciitable.v2.V2_AsciiTable
+import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer
 import java.util.Map
 import java.util.Scanner
 import org.apache.commons.cli.CommandLine
@@ -20,6 +22,8 @@ import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
 import org.json.JSONArray
 import org.json.JSONObject
+import de.vandermeer.asciitable.v2.render.WidthLongestWord
+import de.vandermeer.asciitable.v2.render.WidthLongestLine
 
 abstract class AbstractSrcRepoCommand {
 
@@ -76,7 +80,8 @@ abstract class AbstractSrcRepoCommand {
 	protected def void after() {
 		fs.close()
 	}
-		protected def toCSV(JSONArray json) {
+	
+	protected def toCSV(JSONArray json) {
 		if (json.length > 0) {
 			val keys = json.getJSONObject(0).keySet.toList.sort
 			return '''
@@ -88,6 +93,24 @@ abstract class AbstractSrcRepoCommand {
 		} else {
 			return ''''''
 		}
+	}
+	
+	protected def toHumanReadable(JSONArray json) {
+		if (json.length > 0) {
+			val keys = json.getJSONObject(0).keySet.toList.sort
+			val header = keys.toArray
+			val data = json.toIterable.map[entry|keys.map[entry.get(it).toString].toArray]		
+			
+			val table = new V2_AsciiTable()
+			table.addRow(header.toArray)
+			table.addRule
+			data.forEach[table.addRow(it.toArray)]
+			val renderer = new V2_AsciiTableRenderer()
+			renderer.width =  new WidthLongestLine
+			return (renderer).render(table).toString			
+		} else {
+			return ""
+		}	
 	}
 	
 	protected def toIterable(JSONArray jsonArray) {

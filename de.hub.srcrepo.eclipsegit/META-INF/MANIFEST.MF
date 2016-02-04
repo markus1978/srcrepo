@@ -21,5 +21,8 @@ Bundle-ClassPath: lib/jars/jsoup-1.7.2.jar,
  lib/jars/httpmime-4.3.6.jar,
  lib/jars/json-20151123.jar,
  lib/jars/unirest-java-1.4.7.jar,
+ lib/jars/asciilist-0.0.2.jar,
+ lib/jars/asciitable-0.2.4.jar,
+ lib/jars/commons-lang3-3.4.jar,
  .
 

@@ -55,16 +55,17 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 	
 	protected abstract void skipError(String message, Exception e);
 	
-	protected void importCompilationUnit(ICompilationUnit compilationUnit) {		
+	protected boolean importCompilationUnit(ICompilationUnit compilationUnit) {		
 		try {
 			long fileSize = EFS.getStore(compilationUnit.getResource().getLocationURI()).fetchInfo().getLength();
 			if (fileSize > 300000) { // TODO makes this configurable, add functionality to detect generated files
 				skipWarning("Skipped compilation unit " + compilationUnit.getResource().getProjectRelativePath() +
 						" because it is awefully large (" + (fileSize/1024) + "kb) and probably generated.");
-				return;
+				return false;
 			}
 		} catch (Exception e) {
 			skipError("Could not estimate size of " + compilationUnit.getResource().getProjectRelativePath(), e);
+			return false;
 		}
 		
 		CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
@@ -129,7 +130,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 				skipError("Could not compile " + compilationUnit.getResource().getProjectRelativePath() +
 						" (is ignored) for unknown reasons: " + e.getMessage(), e);
 			}
-			return;
+			return false;
 		}							
 		
 		if (javaModel.getCompilationUnits().size() == 1) {
@@ -151,10 +152,12 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 			}
 			
 			results.put(compilationUnit, compilationUnitModel);
+			return true;
 		} else {
 			EcoreUtil.delete(compilationUnitModel);
 			EcoreUtil.delete(javaModel);
 			skipError("Sucessfully imported a compilation unit, but no model was created: " + compilationUnit, null);
+			return false;
 		}
 	}
 
@@ -164,7 +167,9 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 		SrcRepoActivator.INSTANCE.info("about to import " + compilationUnits.size() + " compilation units");
 		int count = 0;
 		for(ICompilationUnit compilationUnit: compilationUnits) {
-			importCompilationUnit(compilationUnit);
+			if (importCompilationUnit(compilationUnit)) {
+				count++;
+			}
 		}										
 			
 		SrcRepoActivator.INSTANCE.info("imported " + count + " compilation units");
