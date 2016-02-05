@@ -4,10 +4,12 @@ import com.google.common.base.Preconditions
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
+import de.hub.srcrepo.snapshot.internal.DebugAdapter
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSLink
 import java.util.List
 import java.util.Map
+import org.eclipse.emf.common.notify.Adapter
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -22,11 +24,15 @@ import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.Package
 import org.eclipse.gmt.modisco.java.Type
+import org.eclipse.gmt.modisco.java.TypeAccess
 import org.eclipse.gmt.modisco.java.UnresolvedItem
 import org.eclipse.gmt.modisco.java.VariableDeclaration
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
+import com.google.common.collect.Multimap
+import com.google.common.collect.ArrayListMultimap
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	
@@ -156,7 +162,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		debug("  #add links")
 		newCompilationUnitModels.forEach [
 			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[ 
-				val link = new SSLink(it, copier.get(it.source) as ASTNode, it.fullId, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
+				val sourceCopy = copier.get(it.source) as ASTNode
+				Preconditions.checkState(sourceCopy.mark != "Replaced")
+				val link = new SSLink(it, sourceCopy, it.fullId, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
 				debug("    #new link: " + link)
 				return link
 			]
@@ -314,6 +322,15 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					if (copyFeature.many) {
 						(copy.eGet(copyFeature) as List<EObject>).add(copyChild)
 					} else {
+						val existingCopyChild = copy.eGet(copyFeature) as EObject
+						if (existingCopyChild != null) {
+							existingCopyChild.mark = "Replaced"
+							copier.getLastOriginal(existingCopyChild).forEach[existingOriginalChild|
+								Preconditions.checkState(existingOriginalChild != null)
+								copier.put(existingOriginalChild, copyChild, true)							
+							]
+						}
+						copyChild.mark = if (existingCopyChild != null) "Replacement" else "New"						
 						copy.eSet(copyFeature, copyChild)
 					}					
 				}	
@@ -323,7 +340,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	
 	private static class SSCopier extends EcoreUtil.Copier {		
 		val JavaPackage metaModel
-		val Map<EObject,EObject> reverseMap = newHashMap
+		val Multimap<EObject,EObject> reverseMap = ArrayListMultimap.create
 		
 		new(JavaPackage metaModel) {
 			this.metaModel = metaModel
@@ -339,15 +356,20 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		}
 		
 		override put(EObject key, EObject value) {
+			return put(key, value, false)
+		}
+		
+		public def EObject put(EObject key, EObject value, boolean allowExistingValue) {
 			val result = super.put(key, value)
 			reverseMap.put(value, key)
-			Preconditions.checkArgument(result == null, "Cannot copy an element twice.")
+			Preconditions.checkArgument(allowExistingValue || result == null, "Cannot copy an element twice.")
 			return result
 		}
 		
 		override remove(Object key) {
 			val oldValue = super.remove(key)
-			if (oldValue != null) reverseMap.remove(oldValue)			
+			if (oldValue != null) reverseMap.remove(oldValue)
+			return oldValue			
 		}
 		
 		override clear() {
@@ -355,8 +377,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			reverseMap.clear
 		}
 		
-		public def <T extends EObject> T getLastOriginal(T copy) {
-			return reverseMap.get(copy) as T
+		public def <T extends EObject> List<T> getLastOriginal(T copy) {
+			return reverseMap.get(copy) as List<T>
 		}
 		
 		def void merge(EObject copy, EObject original) {

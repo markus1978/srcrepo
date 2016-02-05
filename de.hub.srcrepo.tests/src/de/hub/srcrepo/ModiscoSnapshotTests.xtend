@@ -339,6 +339,6 @@ class ModiscoSnapshotTests {
 	@Test
 	public def void unresolvedTest() {
 		val model = createSingleRevSnapshot("unresolved", #["A", "B"]).model
-		assertEquals(5, model.unresolvedItems.size)
+		assertEquals(15, model.unresolvedItems.size)
 	}
 }

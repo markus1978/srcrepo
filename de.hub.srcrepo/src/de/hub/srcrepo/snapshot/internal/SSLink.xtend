@@ -19,6 +19,13 @@ class SSLink {
 	var NamedElement placeHolder = null
 
 	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, String id, NamedElement placeHolder) {
+		if (copiedSource.eContainer == null) {
+			val container = originalUnresolvedLink.source.eContainer
+			println(container)
+			val cf = copiedSource.eContainingFeature
+			println(cf)
+		}
+		Preconditions.checkArgument(copiedSource.eContainer != null)
 		this.originalUnresolvedLink = originalUnresolvedLink
 		this.copiedSource = copiedSource
 		this.placeHolder = placeHolder
