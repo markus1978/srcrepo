@@ -137,7 +137,7 @@ public class MoDiscoGitImportTest {
 				IRepositoryModelVisitor visitor = createVisitor(scs, repositoryModel);
 				RepositoryModelTraversal.traverse(repositoryModel, visitor);
 				scs.close();
-				visitor.close();
+				visitor.close(repositoryModel);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());

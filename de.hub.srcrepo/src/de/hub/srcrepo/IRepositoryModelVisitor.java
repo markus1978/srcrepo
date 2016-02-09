@@ -1,6 +1,7 @@
 package de.hub.srcrepo;
 
 import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 
 public interface IRepositoryModelVisitor {
@@ -45,6 +46,6 @@ public interface IRepositoryModelVisitor {
 
 	public void onDeletedFile(Diff diff);
 	
-	public void close();
+	public void close(RepositoryModel repositoryModel);
 	
 }

@@ -140,7 +140,7 @@ public class RepositoryModelRevisionCheckoutVisitor implements IRepositoryModelV
 	}
 
 	@Override
-	public void close() {
+	public void close(RepositoryModel repositoryModel) {
 		
 	}
 }

@@ -26,7 +26,7 @@ import de.hub.srcrepo.repositorymodel.TraversalState;
 public class RepositoryModelTraversal {
 	
 	private final static TimeStatistic visitAllStat = 
-			new TimeStatistic(TimeUnit.MILLISECONDS)
+			new TimeStatistic(TimeUnit.MICROSECONDS)
 			.with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class)
 			.register(RepositoryModelTraversal.class, "Visit time");
 	

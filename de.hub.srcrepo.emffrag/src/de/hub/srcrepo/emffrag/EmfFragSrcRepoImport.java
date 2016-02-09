@@ -349,7 +349,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		try {
 			SrcRepoActivator.INSTANCE.info("Import complete. Saving and closing everything.");
 			config.scs.close();
-			sourceImportVisitor.close();
+			sourceImportVisitor.close(repositoryModel);
 		} catch (Exception e) {
 			SrcRepoActivator.INSTANCE.warning("Exception during cleanup and closing.", e);
 		} finally {

@@ -12,18 +12,13 @@ import de.hub.srcrepo.emffrag.EmffragSrcRepo
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.vandermeer.asciitable.v2.V2_AsciiTable
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer
-import java.util.Map
-import java.util.Scanner
+import de.vandermeer.asciitable.v2.render.WidthLongestLine
 import org.apache.commons.cli.CommandLine
-import org.apache.commons.cli.DefaultParser
-import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
 import org.json.JSONArray
 import org.json.JSONObject
-import de.vandermeer.asciitable.v2.render.WidthLongestWord
-import de.vandermeer.asciitable.v2.render.WidthLongestLine
 
 abstract class AbstractSrcRepoCommand {
 
@@ -129,85 +124,5 @@ abstract class AbstractSrcRepoCommand {
 				}
 			}			
 		}
-	}
-}
-
-public class SrcRepo {
-		
-	public static def void main(String[] argsVal) {
-		SrcRepoActivator.standalone
-		
-		val Map<String, AbstractSrcRepoCommand> commands = newHashMap(
-			"derive" -> new UpdateDirectoryDerivedFeaturesCommand,
-			"schedule" -> new ScheduleImportCommand,
-			"import" -> new ImportCommand,
-			"data" -> new ImportDataCommand,
-			"eclipse" -> new CreateEclipseRepositoriesCommand,
-			"github" -> new CreateGitHubUserRepositoriesCommand,
-			"ls" -> new ListCommand,
-			"rm" -> new RemoveCommand,
-			"par" -> new ParallelCommand,
-			"metrics" -> new MetricsCommand
-		)
-		
-		var args = argsVal
-		var continue = true
-		if (args.length < 1) {
-			System.out.println("Interactive mode. Enter your command and options ...")
-		}
-		
-		while (continue) {
-			args = if (args == null || args.length < 1) {	
-				print(">> ")	
-				val input = new Scanner(System.in).nextLine.trim
-				input.split(" ")	
-			} else {
-				continue = false
-				args
-			}
-			
-			if (args.length < 1) {
-				System.out.println("No command given. Usage: srcrepo <command> [options...]")
-				System.exit(1)
-			}
-			
-			val commandName = args.get(0)
-			val arguments = if (args.length > 1) args.subList(1, args.length) else newArrayList
-			
-			val command = commands.get(commandName)
-			if (command == null) {
-				if (commandName == "exit") {
-					continue = false
-				} else {
-					System.out.println("There is no command " + commandName)					
-				}			
-			} else {
-				val options = new Options
-				command.addOptions(options)
-				val clParser = new DefaultParser
-				val cl = try {
-					clParser.parse(options, arguments)
-				} catch (Exception e) {
-					println("Could not parse arguments: " + e.message)
-					println("Ussage: srcrepo <command> [options...]")
-					null
-				}
-				val clIsValid = cl != null && command.validateOptions(cl)
-				if (clIsValid) {
-					try {
-						command.init(cl)
-						command.run(cl)
-						command.after
-					} catch (Exception e) {
-						println("Could not execute command due to exception: " + e.message)
-						e.printStackTrace(System.out)
-					}	
-				} else {
-					new HelpFormatter().printHelp('''srcrepo «commandName» [options...]''', options);		
-				}				
-			}
-			
-			args = null
-		}	
 	}
 }

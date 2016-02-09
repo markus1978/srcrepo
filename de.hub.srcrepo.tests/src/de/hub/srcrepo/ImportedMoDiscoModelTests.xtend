@@ -13,16 +13,18 @@ import java.util.HashSet
 import java.util.Map
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.ocl.OclUtil.javaDiffs
-import org.junit.After
-import org.eclipse.emf.ecore.util.EcoreUtil
+import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
+import org.junit.BeforeClass
 
 class ImportedMoDiscoModelTests {
 	val uri = MoDiscoGitImportTest.testModelURI; 
@@ -30,6 +32,13 @@ class ImportedMoDiscoModelTests {
     
   	var Resource resource
   	var RepositoryModel repositoryModel
+	
+	@BeforeClass
+	public static def void standaloneSrcRepo() {
+		if (SrcRepoActivator.INSTANCE == null) {	
+			SrcRepoActivator.standalone();
+		}
+	}
 	
 	protected def openRepositoryModel() {
 		val rs = new ResourceSetImpl
@@ -63,14 +72,16 @@ class ImportedMoDiscoModelTests {
   	}
 
 	def testJavaModels((Model)=>void testModel) {
-    	RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-      		override def onRev(Rev rev, String projectID, Model javaModel) {
-	    		testModel.apply(javaModel);    
+    	val visitor = new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
+      		override def onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshots) {
+	    		snapshots.forEach[projectID,snapshot|testModel.apply(snapshot.model)]   
       		}
       		override def filter(Rev rev) {
       			!rev.getName().equals("879076c35867e58b2a95e17139729315acbc65fa") // there is a syntax error in this rev; this makes it ok to fail the tests.
       		}
-    	});
+    	}
+		RepositoryModelTraversal.traverse(repositoryModel, visitor);
+		visitor.close(repositoryModel)
   	}
   	
   	@Test def void testCompilationUnits() {
@@ -144,16 +155,18 @@ class ImportedMoDiscoModelTests {
 		val Multimap<String, String> visitedRevNames = HashMultimap.create();
 		val rootNames = new HashSet<String>();
 		val stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-			override onRev(Rev rev, String projectID, Model model) {				
-				try {
-					Assert.assertTrue("Revs should not be visited twice", visitedRevNames.put(projectID, rev.getName()));
-					
-					if (RepositoryModelUtil.isRoot(rev)) {
-						rootNames.add(rev.getName());
-					}									
-				} catch (Exception e) {
-					Assert.fail(e.getMessage());
-				}
+			override onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshots) {
+				snapshots.forEach[projectID, snapshot|				
+					try {
+						Assert.assertTrue("Revs should not be visited twice", visitedRevNames.put(projectID, rev.getName()));
+						
+						if (RepositoryModelUtil.isRoot(rev)) {
+							rootNames.add(rev.getName());
+						}									
+					} catch (Exception e) {
+						Assert.fail(e.getMessage());
+					}					
+				]
 			}
 		});				
 		
@@ -169,5 +182,22 @@ class ImportedMoDiscoModelTests {
 		
 		Assert.assertEquals("Branches and merges do not match.", stats.mergeCounter + stats.openBranchCounter, stats.branchCounter);
 		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), new HashSet<String>(visitedRevNames.values()).size());	
+  	}
+  	
+  	@Test def void testTraverseMetaData() {
+  		{
+	  		testMetrics()
+	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.TRAVERSE_METADATA_KEY]
+	  		Assert.assertNotNull(dataSet)
+	  		Assert.assertNotNull(dataSet.jsonData)
+	  		resource.save(null)
+	  		shutdown()	  	
+	  	}
+  		{
+  			init()
+	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.TRAVERSE_METADATA_KEY]
+	  		Assert.assertNotNull(dataSet)
+	  		Assert.assertNotNull(dataSet.jsonData)	
+	  	}
   	}
 }

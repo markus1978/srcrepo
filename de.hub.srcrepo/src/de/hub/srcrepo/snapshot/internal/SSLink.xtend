@@ -25,13 +25,13 @@ class SSLink {
 			val cf = copiedSource.eContainingFeature
 			println(cf)
 		}
-		Preconditions.checkArgument(copiedSource.eContainer != null)
+//		Preconditions.checkArgument(copiedSource.eContainer != null)
 		this.originalUnresolvedLink = originalUnresolvedLink
 		this.copiedSource = copiedSource
 		this.placeHolder = placeHolder
 		this.id = id
 		replaceTarget(placeHolder)
-		Preconditions.checkState(!resolved)
+//		Preconditions.checkState(!resolved)
 	}
 	
 	def getCurrentTarget() {
@@ -57,16 +57,16 @@ class SSLink {
 	}
 
 	def resolve(NamedElement resolvedTarget) {
-		Preconditions.checkState(!isResolved, "You cannot resolve an resolved link.")
-		Preconditions.checkArgument(!resolvedTarget.isPersistent, "You can only resolve a link with a target from an snaptshot model.")
-		Preconditions.checkArgument(source.eRoot == resolvedTarget.eRoot, "Resolved target and source must be in the same model.")
+//		Preconditions.checkState(!isResolved, "You cannot resolve an resolved link.")
+//		Preconditions.checkArgument(!resolvedTarget.isPersistent, "You can only resolve a link with a target from an snaptshot model.")
+//		Preconditions.checkArgument(source.eRoot == resolvedTarget.eRoot, "Resolved target and source must be in the same model.")
 		
 		replaceTarget(resolvedTarget)
 		return resolvedTarget
 	}
 	
 	def revert() {
-		Preconditions.checkState(isResolved, "Only resolved links can be reverted.")
+//		Preconditions.checkState(isResolved, "Only resolved links can be reverted.")
 		replaceTarget(placeHolder)
 	}
 	

@@ -354,7 +354,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				}		
 				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, false, config.stopAfterNumberOfRevs);
 				try {
-					sourceImportVisitor.close();
+					sourceImportVisitor.close(repositoryModel);
 				} catch (Exception e) {
 					SrcRepoActivator.INSTANCE.warning("Exception during cleanup and closing.", e);
 				}

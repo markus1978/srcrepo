@@ -7,6 +7,7 @@ import de.hub.jstattrack.services.BatchedPlot
 import de.hub.jstattrack.services.Histogram
 import de.hub.jstattrack.services.Summary
 import de.hub.jstattrack.services.WindowedPlot
+import de.hub.srcrepo.RevVisitor
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
@@ -23,8 +24,9 @@ import org.json.JSONArray
 
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import org.json.JSONObject
 
-class ImportDataCommand extends AbstractRepositoryCommand {
+class MetaDataCommand extends AbstractRepositoryCommand {
 	
 	private static val traverseObjectsExecTimeStataTitle = "Traverse execution time for a million objects"
 	
@@ -56,34 +58,52 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
 		val elementCountResult = if (withElementCount) { repo.countObjects }
 		val importStatJSON = new JSONArray(repo.importMetaData.statsAsJSON)
-		val dataStatJSON = Statistics.reportToJSON
-		data += '''
+		val traverseMetaDataSet = repo.getData(RevVisitor.TRAVERSE_METADATA_KEY)
+		val traverseStatJSON = if (traverseMetaDataSet?.jsonData != null) new JSONArray(traverseMetaDataSet.jsonData)
+		val currentStatDataJSON = Statistics.reportToJSON
+		
+		data += (if (cl.getOptionValue("ds", "import")=="import") '''
 			{
 				1_name : "«repo.qualifiedName»",
-				2_revCount : «repo.metaData.revCount»,
-				2_cuCount : «repo.metaData.cuCount»,
-				2_skippedCuCount : «repo.metaData.data.get("skippedCuCount")»,
-				2_revErrorCount : «repo.metaData.revsWithErrors»,
-				2_dbEntryCount : «repo.dataStoreMetaData.count»,
-				2_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
-				2_gitSize : «repo.metaData.size»,
+				1_revCount : «repo.metaData.revCount»,
+				1_cuCount : «repo.metaData.cuCount»,
+				1_skippedCuCount : «repo.metaData.data.get("skippedCuCount")»,
+				1_revErrorCount : «repo.metaData.revsWithErrors»,
+				1_dbEntryCount : «repo.dataStoreMetaData.count»,
+				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
+				1_gitSize : «repo.metaData.size»,
 				«IF withElementCount»
-					2_elementCount : «elementCountResult.get("count")»,
-					2_SLOC : «elementCountResult.get("ncss")»,
+					1_elementCount : «elementCountResult.get("count")»,
+					1_SLOC : «elementCountResult.get("ncss")»,
 				«ENDIF»
+				«statSummaryData(importStatJSON, "Visit time", "2_revVisitTime")»,
 				«statSummaryData(importStatJSON, "Revision checkout time", "3_checkoutTime")»,
 				«statSummaryData(importStatJSON, "Revision refresh time", "4_refreshTime")»,
 				«statSummaryData(importStatJSON, "Revision import time", "5_importTime")»,
 				«statSummaryData(importStatJSON, "DataWriteET", "6_writeTime")»,
 				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
 				«IF withElementCount»					
-					«statSummaryData(dataStatJSON, traverseObjectsExecTimeStataTitle, "8_traverseTime")»,
-					«statSummaryData(dataStatJSON, "FragLoadET", "9_fragLoadET")»,
-					«statSummaryData(dataStatJSON, "FragUnloadET", "10_fragUnloadET")»,
-					«statSummaryData(dataStatJSON, "DataReadET", "11_dataReadET")»,
+					«statSummaryData(currentStatDataJSON, traverseObjectsExecTimeStataTitle, "8_traverseTime")»,
+					«statSummaryData(currentStatDataJSON, "FragLoadET", "9_fragLoadET")»,
+					«statSummaryData(currentStatDataJSON, "FragUnloadET", "10_fragUnloadET")»,
+					«statSummaryData(currentStatDataJSON, "DataReadET", "11_dataReadET")»,
 				«ENDIF»
 			}
-		'''.toString
+		''' else '''
+			{
+				1_name : "«repo.qualifiedName»",
+				1_revCount : «repo.metaData.revCount»,
+				1_cuCount : «repo.metaData.cuCount»,
+				1_dbEntryCount : «repo.dataStoreMetaData.count»,
+				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
+				1_gitSize : «repo.metaData.size»,				
+				«statSummaryData(traverseStatJSON, "RevVisitET", "2_revVisitTime")»,
+				«statSummaryData(traverseStatJSON, "CUsLoadET", "3_cusLoadTime")»,
+				«statSummaryData(traverseStatJSON, "CUsVisitET", "4_cusVisitTime")»,
+				«statSummaryData(currentStatDataJSON, "FragLoadET", "5_fragLoadET")»,
+				«statSummaryData(currentStatDataJSON, "FragUnloadET", "6_fragUnloadET")»,
+			}
+		''').toString
 	}
 	
 	private def void countFObjects(EObject eObject, (EObject)=>void apply) {
@@ -121,6 +141,8 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 		options.addOption(Option.builder("o").longOpt("output").desc("File name to store the ouput instead of printing it").hasArg.build)
 		options.addOption(Option.builder("v").longOpt("verbose").desc("Create additional output. Careful in conjunction with -o").build)
 		options.addOption(Option.builder("h").longOpt("human-readable").desc("Create human readable output instead of csv.").build)
+		options.addOption(Option.builder("ds").longOpt("data-set").desc("The data set you wan: import(default),traverse").hasArg.build)
+		options.addOption(Option.builder("f").longOpt("filter").desc("Filter for specific stats").hasArg.build)
 	}
 	
 	override protected run(CommandLine cl) {
@@ -134,8 +156,16 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 					«repository»
 				«ENDFOR»
 			]
-		'''
-		val repositoryDataCSV = if (cl.hasOption("h")) new JSONArray(repositoryDataJSON).toHumanReadable else new JSONArray(repositoryDataJSON).toCSV
+		''' 
+		
+		val jsonData = new JSONArray(repositoryDataJSON)
+		if (cl.hasOption("f")) {
+			val filter = cl.getOptionValue("f")
+			jsonData.map[it as JSONObject].forEach[obj|
+				obj.keys.filter[!it.startsWith(filter + "_")].toList.forEach[obj.remove(it)]
+			]		
+		}
+		val repositoryDataCSV = if (cl.hasOption("h")) jsonData.toHumanReadable else jsonData.toCSV
 		
 		if (cl.hasOption("o")) {
 			val out = new File(cl.getOptionValue("o"))
@@ -147,5 +177,4 @@ class ImportDataCommand extends AbstractRepositoryCommand {
 			println(repositoryDataCSV)	
 		}
 	}
-
 }

@@ -24,5 +24,7 @@ Bundle-ClassPath: lib/jars/jsoup-1.7.2.jar,
  lib/jars/asciilist-0.0.2.jar,
  lib/jars/asciitable-0.2.4.jar,
  lib/jars/commons-lang3-3.4.jar,
+ lib/jars/jansi-1.11.jar,
+ lib/jars/jline-2.13.jar,
  .
 

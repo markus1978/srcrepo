@@ -312,6 +312,11 @@ class ModiscoMetrics {
 		return type.weightedMethodsPerClass[it.cyclomaticComplexity]
 	}
 
+	@Metric(name="wmc_hsv")
+	static def int weightedMethodPerClassWithHalsteadVolume(AbstractTypeDeclaration type) {
+		return type.weightedMethodsPerClass[it.halsteadValume]
+	}
+
 	public static def getMetricName(Method method) {
 		(method.annotations.findFirst[it instanceof Metric] as Metric).name
 	}

@@ -2,6 +2,7 @@ package de.hub.srcrepo.snapshot;
 
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
 
@@ -42,6 +43,8 @@ public interface IModiscoSnapshotModel {
 	public Model getModel();
 	
 	public Map<String, NamedElement> getTargets();
+	
+	public <T extends EObject> T getPersistedOriginal(T source);
 
 	public void clear();
 }
