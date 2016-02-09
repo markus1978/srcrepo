@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.EReference;
 import de.hub.srcrepo.repositorymodel.DataSet;
 import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
 import de.hub.srcrepo.repositorymodel.ImportMetaData;
-import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryElement;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -68,16 +67,6 @@ public class RepositoryModelUtil {
 	
 	public static boolean isRoot(Rev rev) {
 		return rev.getParentRelations().size() == 1 && rev.getParentRelations().get(0).getParent() == null;
-	}
-	
-	public static int parents(Rev rev) {
-		int result = 0;
-		for(ParentRelation parentRelation: rev.getParentRelations()) {
-			if (parentRelation.getParent() != null) {
-				result++;
-			}
-		}
-		return result;
 	}
 	
 	@SuppressWarnings("unchecked")

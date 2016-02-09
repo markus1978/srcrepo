@@ -7,20 +7,31 @@ import de.hub.srcrepo.repositorymodel.Rev;
 public interface IRepositoryModelVisitor {
 
 	/**
-	 * Is called when the currently visited branch ends or is merged into an
-	 * already visited branch and visiting is continued on the next (not yet
-	 * visited) branch. Note, this is also called in the beginning of a branch
-	 * with mergeRev==null.
+	 * Is called when the traversal detects a branch. The method is called for
+	 * each branch. Not that all other methods (e.g. onStartRev and
+	 * onCompleteRev) are still called for the newBranch revision and already
+	 * have been called for the commonParent.
 	 * 
-	 * @param mergeRev
-	 *            The already priorly visited revision that the currently visited
-	 *            branch is merged into, or null if the current branch has no
-	 *            more children (the branch ends, e.g. is HEAD).
-	 * @param branchRev
-	 *            The revision from which the next visited branch is branched
-	 *            from, or null if the next visited branch has no parents.
+	 * @param commonPreviousRev
+	 *            refers to the revision that all branches have as a common
+	 *            parent revision.
+	 * @param newBranchRev
+	 *            refers to the first revision on the branch.
 	 */
-	public void onMerge(Rev mergeRev, Rev branchRev);
+	public void onBranch(Rev commonPreviousRev, Rev newBranchRev);
+
+	/**
+	 * Is called when traversal detects a merge. The method is called for all
+	 * branches that are merged into another branch. It is not called for the
+	 * first branch that reaches the commonMergedRev.
+	 * 
+	 * @param commonMergedRev
+	 *            refers to the next common revision after merge.
+	 * @param lastBranchRev
+	 *            refers to the last revision on the individual branch.
+	 */
+	public void onMerge2(Rev commonMergedRev, Rev lastBranchRev);
+	
 
 	/**
 	 * Is called when a new commit is visited and before the diffs are visited.
@@ -45,7 +56,7 @@ public interface IRepositoryModelVisitor {
 	public void onModifiedFile(Diff diff);
 
 	public void onDeletedFile(Diff diff);
-	
+
 	public void close(RepositoryModel repositoryModel);
-	
+
 }

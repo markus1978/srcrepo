@@ -134,10 +134,15 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public void onMerge(Rev mergeRev, Rev branchRev) {
-		updateJavaProjectStructureForMerge = true;
+	public void onMerge2(Rev mergeRev, Rev branchRev) {
+		// nothing to do
 	}
 	
+	@Override
+	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {
+		updateJavaProjectStructureForMerge = true;
+	}
+
 	private boolean runJob(WorkspaceJob job) {
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.schedule();

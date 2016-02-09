@@ -1,6 +1,8 @@
 package de.hub.srcrepo.emffrag;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -10,6 +12,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
@@ -32,7 +35,6 @@ import de.hub.srcrepo.RepositoryModelRevisionCheckoutVisitor;
 import de.hub.srcrepo.RepositoryModelTraversal;
 import de.hub.srcrepo.SrcRepoActivator;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class EmfFragSrcRepoImport implements IApplication {
@@ -47,11 +49,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 		private final URI modelURI;
 		
 		private String repositoryURL = null; 
-		private boolean withUsages = false;
-		private int bulkInsertSize = 1000;
 		private int fragmentCacheSize = 100;
-		private boolean resume = false;
-		private int stopAfterNumberOfRevs = -1;
 		private boolean skipSourceCodeImport = false;
 		private boolean checkOutWithoutImport = false;
 		private boolean useFlatTraversal = false;
@@ -72,30 +70,10 @@ public class EmfFragSrcRepoImport implements IApplication {
 			return this;
 		}
 
-		public Configuration withUsages(boolean withUsages) {
-			this.withUsages = withUsages;
-			return this;
-		}
-
-		public Configuration bulkInsertSize(int bulkInsertSize) {
-			this.bulkInsertSize = bulkInsertSize;
-			return this;
-		}
-
 		public Configuration fragmentCacheSize(int fragmentCacheSize) {
 			this.fragmentCacheSize = fragmentCacheSize;
 			return this;
 		}
-
-		public Configuration resume(boolean resume) {
-			this.resume = resume;
-			return this;
-		}
-
-		public Configuration stopAfterNumberOfRevs(int stopAfterNumberOfRevs) {
-			this.stopAfterNumberOfRevs = stopAfterNumberOfRevs;
-			return this;
-		}	
 		
 		public Configuration skipSourceCodeImport() {
 			this.skipSourceCodeImport = true;
@@ -141,20 +119,6 @@ public class EmfFragSrcRepoImport implements IApplication {
 				desc("Number of cached fragments. Default is 1000.").
 				hasArg().argName("size").build());
 		options.addOption(Option.builder().
-				longOpt("bulk-insert").
-				desc("Number of bulk inserted key-value pairs. Default is 1000.").
-				hasArg().argName("size").build());
-		options.addOption(Option.builder().
-				longOpt("disable-usages").
-				desc("Disables the tracking of usagesXXX opposites.").build());
-		options.addOption(Option.builder().
-				longOpt("resume").
-				desc("Resume import if a prior aborted import is saved within an existing repository model.").build());
-		options.addOption(Option.builder().
-				longOpt("abort-after").
-				desc("Abort after a given number of revisions. The traversal is saved to resume later.").
-				hasArg().argName("number-of-revs").build());
-		options.addOption(Option.builder().
 				longOpt("checkout-without-import").
 				desc("Just checkout each rev, but do not import via MoDisco.").build());
 		options.addOption(Option.builder().
@@ -173,17 +137,11 @@ public class EmfFragSrcRepoImport implements IApplication {
 				(!cl.hasOption("log") || 
 						(Integer.parseInt(cl.getOptionValue("log")) >= 0 && 
 						 Integer.parseInt(cl.getOptionValue("log")) <=4)) &&
-				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0) &&
-				(!cl.hasOption("bulk-insert") || Integer.parseInt(cl.getOptionValue("bulk-insert")) > 0 ) &&
-				(!cl.hasOption("abort-after") || Integer.parseInt(cl.getOptionValue("abort-after")) > 0);
+				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0);
 	}
 	
 	private void printUsage() {
 		new HelpFormatter().printHelp("eclipse ... [options] working-copy-path data-base-uri", createOptions());
-	}
-	
-	public static RepositoryModelPackage createRepositoryModelPackage() {
-		return RepositoryModelPackage.eINSTANCE;
 	}
 
 	@Override
@@ -218,17 +176,9 @@ public class EmfFragSrcRepoImport implements IApplication {
 		if (commandLine.hasOption("clone")) {
 			config.repositoryURL(commandLine.getOptionValue("clone"));
 		}		
-		if (commandLine.hasOption("bulk-insert")) {
-			config.bulkInsertSize(Integer.parseInt(commandLine.getOptionValue("bulk-insert")));
-		}
 		if (commandLine.hasOption("fragments-cache")) {			
 			config.fragmentCacheSize(Integer.parseInt(commandLine.getOptionValue("fragments-cache")));
 		}
-		if (commandLine.hasOption("abort-after")) {
-			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
-		}
-		config.withUsages(commandLine.hasOption("enable-usages"));
-		config.resume(commandLine.hasOption("resume"));
 		if (commandLine.hasOption("checkout-without-import")) {
 			config.checkOutWithoutImport();
 		}
@@ -246,7 +196,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 	public static Fragmentation openFragmentation(Configuration config, boolean dropIfExists) {
 		IBaseDataStore baseDataStore = null;
 		if ("mongodb".equals(config.modelURI.scheme())) {
-			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), dropIfExists && !config.resume);
+			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), dropIfExists);
 			baseDataStore = mongoDbBaseDataStore;
 			
 		} else {
@@ -254,7 +204,10 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		IDataStore dataStore = new DataStoreImpl(baseDataStore, config.modelURI);
-		Fragmentation fragmentation = new FragmentationImpl(EmffragSrcRepo.packages, dataStore, config.fragmentCacheSize);
+		List<EPackage> packages = new ArrayList<EPackage>();
+		packages.add(JavaPackage.eINSTANCE);
+		packages.add(RepositoryModelPackage.eINSTANCE);
+		Fragmentation fragmentation = new FragmentationImpl(packages, dataStore, config.fragmentCacheSize);
 		return fragmentation;
 	}
 	
@@ -264,33 +217,18 @@ public class EmfFragSrcRepoImport implements IApplication {
 	}
 	
 	public static void importRepository(Configuration config) {
-		
-		boolean stop = config.stopAfterNumberOfRevs > 0;
-		
 		SrcRepoActivator.INSTANCE.useCGit = config.useCGit;
 
 		// create fragmentation
 		Fragmentation fragmentation = openFragmentation(config, true);
 				
 		// create necessary models
-		RepositoryModelPackage repositoryModelPackage = createRepositoryModelPackage();
-		JavaPackage javaModelPackage = EmffragSrcRepo.configureJavaPackage(config.withUsages);
+		RepositoryModelPackage repositoryModelPackage = RepositoryModelPackage.eINSTANCE;
+		JavaPackage javaModelPackage = JavaPackage.eINSTANCE;
 		RepositoryModel repositoryModel = null;
 		
-		if (!config.resume) {
-			repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();					
-		} else {
-			if (fragmentation.getRoot() == null) {
-				SrcRepoActivator.INSTANCE.error("No model found, I cannot resume import.");
-				return;
-			}
-			repositoryModel = (RepositoryModel) fragmentation.getRoot();
-			if (repositoryModel.getTraversals() == null) {
-				SrcRepoActivator.INSTANCE.info("No traversal present to resume,");
-				return;
-			}
-		}
-		
+
+		repositoryModel = repositoryModelPackage.getRepositoryModelFactory().createRepositoryModel();					
 		
 		// creating working copy
 		try {
@@ -305,17 +243,15 @@ public class EmfFragSrcRepoImport implements IApplication {
 		}
 		
 		// importing rev model
-		if (!config.resume) {
-			SrcRepoActivator.INSTANCE.info("Importing into " + config.modelURI + " from " +  config.workingDirectory + ".");
-			try {
-				config.scs.importRevisions(repositoryModel);
-			} catch (SourceControlException e) {
-				SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
-				return;
-			}
-			fragmentation.setRoot((FObject)repositoryModel);
-			repositoryModel = fragmentation.getRoot();
+		SrcRepoActivator.INSTANCE.info("Importing into " + config.modelURI + " from " +  config.workingDirectory + ".");
+		try {
+			config.scs.importRevisions(repositoryModel);
+		} catch (SourceControlException e) {
+			SrcRepoActivator.INSTANCE.error("Could not import the revision model.", e);
+			return;
 		}
+		fragmentation.setRoot((FObject)repositoryModel);
+		repositoryModel = fragmentation.getRoot();
 		
 		// importing source code
 		IRepositoryModelVisitor sourceImportVisitor = null;
@@ -329,20 +265,10 @@ public class EmfFragSrcRepoImport implements IApplication {
 			}
 		}
 		if (!config.skipSourceCodeImport) {		
-			if (config.resume) {
-				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor, repositoryModel.getTraversals(), true, true, stop ? config.stopAfterNumberOfRevs : -1);
+			if (config.useFlatTraversal) {
+				RepositoryModelFlatTraversal.traverse(repositoryModel, sourceImportVisitor);
 			} else {
-				if (stop) {
-					TraversalState traversalState = repositoryModelPackage.getRepositoryModelFactory().createTraversalState();
-					repositoryModel.setTraversals(traversalState);
-					RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  traversalState, false, false, config.stopAfterNumberOfRevs); // TODO save state configurable?	
-				} else {
-					if (config.useFlatTraversal) {
-						RepositoryModelFlatTraversal.traverse(repositoryModel, sourceImportVisitor);
-					} else {
-						RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, false, -1);
-					}
-				}
+				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor);
 			}
 		}
 		

@@ -5,6 +5,7 @@ package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -64,7 +65,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryElement()
 	 * @generated
 	 */
-	int REPOSITORY_ELEMENT = 17;
+	int REPOSITORY_ELEMENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -101,7 +102,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDirectoryElement()
 	 * @generated
 	 */
-	int DIRECTORY_ELEMENT = 15;
+	int DIRECTORY_ELEMENT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -231,22 +232,13 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int REPOSITORY_MODEL__ROOT_REVS = DIRECTORY_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Traversals</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPOSITORY_MODEL__TRAVERSALS = DIRECTORY_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
 	 * The number of structural features of the '<em>Repository Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPOSITORY_MODEL_FEATURE_COUNT = DIRECTORY_ELEMENT_FEATURE_COUNT + 4;
+	int REPOSITORY_MODEL_FEATURE_COUNT = DIRECTORY_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Repository Model</em>' class.
@@ -651,79 +643,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int JAVA_COMPILATION_UNIT_REF_OPERATION_COUNT = ABSTRACT_FILE_REF_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl <em>Traversal State</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl
-	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getTraversalState()
-	 * @generated
-	 */
-	int TRAVERSAL_STATE = 7;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE__NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Merges</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE__MERGES = 1;
-
-	/**
-	 * The feature id for the '<em><b>Open Branches</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE__OPEN_BRANCHES = 2;
-
-	/**
-	 * The feature id for the '<em><b>Completed Branches</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE__COMPLETED_BRANCHES = 3;
-
-	/**
-	 * The feature id for the '<em><b>Number Of Imported Revs</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS = 4;
-
-	/**
-	 * The number of structural features of the '<em>Traversal State</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE_FEATURE_COUNT = 5;
-
-	/**
-	 * The number of operations of the '<em>Traversal State</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TRAVERSAL_STATE_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl <em>Target</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -731,7 +650,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getTarget()
 	 * @generated
 	 */
-	int TARGET = 8;
+	int TARGET = 7;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -777,7 +696,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getCompilationUnitModel()
 	 * @generated
 	 */
-	int COMPILATION_UNIT_MODEL = 9;
+	int COMPILATION_UNIT_MODEL = 8;
 
 	/**
 	 * The feature id for the '<em><b>Compilation Unit</b></em>' reference.
@@ -850,7 +769,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportError()
 	 * @generated
 	 */
-	int IMPORT_ERROR = 10;
+	int IMPORT_ERROR = 9;
 
 	/**
 	 * The feature id for the '<em><b>Message</b></em>' attribute.
@@ -905,7 +824,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDataSet()
 	 * @generated
 	 */
-	int DATA_SET = 18;
+	int DATA_SET = 17;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -969,7 +888,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryMetaData()
 	 * @generated
 	 */
-	int REPOSITORY_META_DATA = 11;
+	int REPOSITORY_META_DATA = 10;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1105,7 +1024,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getRepositoryModelDirectory()
 	 * @generated
 	 */
-	int REPOSITORY_MODEL_DIRECTORY = 12;
+	int REPOSITORY_MODEL_DIRECTORY = 11;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1205,7 +1124,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getDataStoreMetaData()
 	 * @generated
 	 */
-	int DATA_STORE_META_DATA = 13;
+	int DATA_STORE_META_DATA = 12;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1278,7 +1197,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getMongoDBMetaData()
 	 * @generated
 	 */
-	int MONGO_DB_META_DATA = 14;
+	int MONGO_DB_META_DATA = 13;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1387,7 +1306,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getTaskData()
 	 * @generated
 	 */
-	int TASK_DATA = 19;
+	int TASK_DATA = 18;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1478,7 +1397,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getImportMetaData()
 	 * @generated
 	 */
-	int IMPORT_META_DATA = 16;
+	int IMPORT_META_DATA = 15;
 
 	/**
 	 * The feature id for the '<em><b>Data Sets</b></em>' containment reference list.
@@ -1605,7 +1524,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getUnresolvedLink()
 	 * @generated
 	 */
-	int UNRESOLVED_LINK = 20;
+	int UNRESOLVED_LINK = 19;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' reference.
@@ -1678,7 +1597,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getChangeType()
 	 * @generated
 	 */
-	int CHANGE_TYPE = 21;
+	int CHANGE_TYPE = 20;
 
 
 	/**
@@ -1689,7 +1608,7 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getEDataMap()
 	 * @generated
 	 */
-	int EDATA_MAP = 22;
+	int EDATA_MAP = 21;
 
 
 	/**
@@ -1734,17 +1653,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EReference getRepositoryModel_RootRevs();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals <em>Traversals</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Traversals</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.RepositoryModel#getTraversals()
-	 * @see #getRepositoryModel()
-	 * @generated
-	 */
-	EReference getRepositoryModel_Traversals();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Rev <em>Rev</em>}'.
@@ -2036,71 +1944,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EReference getJavaCompilationUnitRef_CompilationUnitModel();
-
-	/**
-	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.TraversalState <em>Traversal State</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Traversal State</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState
-	 * @generated
-	 */
-	EClass getTraversalState();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.TraversalState#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState#getName()
-	 * @see #getTraversalState()
-	 * @generated
-	 */
-	EAttribute getTraversalState_Name();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.TraversalState#getNumberOfImportedRevs <em>Number Of Imported Revs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Number Of Imported Revs</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState#getNumberOfImportedRevs()
-	 * @see #getTraversalState()
-	 * @generated
-	 */
-	EAttribute getTraversalState_NumberOfImportedRevs();
-
-	/**
-	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.TraversalState#getMerges <em>Merges</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Merges</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState#getMerges()
-	 * @see #getTraversalState()
-	 * @generated
-	 */
-	EReference getTraversalState_Merges();
-
-	/**
-	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.TraversalState#getOpenBranches <em>Open Branches</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Open Branches</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState#getOpenBranches()
-	 * @see #getTraversalState()
-	 * @generated
-	 */
-	EReference getTraversalState_OpenBranches();
-
-	/**
-	 * Returns the meta object for the reference list '{@link de.hub.srcrepo.repositorymodel.TraversalState#getCompletedBranches <em>Completed Branches</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Completed Branches</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState#getCompletedBranches()
-	 * @see #getTraversalState()
-	 * @generated
-	 */
-	EReference getTraversalState_CompletedBranches();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Target <em>Target</em>}'.
@@ -2817,14 +2660,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference REPOSITORY_MODEL__ROOT_REVS = eINSTANCE.getRepositoryModel_RootRevs();
 
 		/**
-		 * The meta object literal for the '<em><b>Traversals</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REPOSITORY_MODEL__TRAVERSALS = eINSTANCE.getRepositoryModel_Traversals();
-
-		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.RevImpl <em>Rev</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3051,56 +2886,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL = eINSTANCE.getJavaCompilationUnitRef_CompilationUnitModel();
-
-		/**
-		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl <em>Traversal State</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.TraversalStateImpl
-		 * @see de.hub.srcrepo.repositorymodel.emffrag.impl.RepositoryModelPackageImpl#getTraversalState()
-		 * @generated
-		 */
-		EClass TRAVERSAL_STATE = eINSTANCE.getTraversalState();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TRAVERSAL_STATE__NAME = eINSTANCE.getTraversalState_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Number Of Imported Revs</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS = eINSTANCE.getTraversalState_NumberOfImportedRevs();
-
-		/**
-		 * The meta object literal for the '<em><b>Merges</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TRAVERSAL_STATE__MERGES = eINSTANCE.getTraversalState_Merges();
-
-		/**
-		 * The meta object literal for the '<em><b>Open Branches</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TRAVERSAL_STATE__OPEN_BRANCHES = eINSTANCE.getTraversalState_OpenBranches();
-
-		/**
-		 * The meta object literal for the '<em><b>Completed Branches</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TRAVERSAL_STATE__COMPLETED_BRANCHES = eINSTANCE.getTraversalState_CompletedBranches();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl <em>Target</em>}' class.

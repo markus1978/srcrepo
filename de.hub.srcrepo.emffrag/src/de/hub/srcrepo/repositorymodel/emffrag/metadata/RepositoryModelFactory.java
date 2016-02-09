@@ -16,8 +16,8 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.UnresolvedLink;
+import org.eclipse.emf.ecore.EFactory;
 
 /**
  * <!-- begin-user-doc -->
@@ -89,15 +89,6 @@ public interface RepositoryModelFactory extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	JavaCompilationUnitRef createJavaCompilationUnitRef();
-
-	/**
-	 * Returns a new object of class '<em>Traversal State</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Traversal State</em>'.
-	 * @generated
-	 */
-	TraversalState createTraversalState();
 
 	/**
 	 * Returns a new object of class '<em>Target</em>'.

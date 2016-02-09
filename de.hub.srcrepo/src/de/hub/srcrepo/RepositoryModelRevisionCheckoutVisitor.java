@@ -33,10 +33,15 @@ public class RepositoryModelRevisionCheckoutVisitor implements IRepositoryModelV
 	}
 
 	@Override
-	public void onMerge(Rev mergeRev, Rev branchRev) {
+	public void onMerge2(Rev mergeRev, Rev branchRev) {
 		
 	}
 	
+	@Override
+	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {
+		
+	}
+
 	private void runJob(WorkspaceJob job) {
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.schedule();

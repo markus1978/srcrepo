@@ -94,10 +94,6 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 				return createJavaCompilationUnitRefAdapter();
 			}
 			@Override
-			public Adapter caseTraversalState(TraversalState object) {
-				return createTraversalStateAdapter();
-			}
-			@Override
 			public Adapter caseTarget(Target object) {
 				return createTargetAdapter();
 			}
@@ -264,20 +260,6 @@ public class RepositoryModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createJavaCompilationUnitRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.hub.srcrepo.repositorymodel.TraversalState <em>Traversal State</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.hub.srcrepo.repositorymodel.TraversalState
-	 * @generated
-	 */
-	public Adapter createTraversalStateAdapter() {
 		return null;
 	}
 

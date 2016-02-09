@@ -59,7 +59,7 @@ class SpecificRevFileTests extends AbstractDataStoreTests {
 		
 		val visitor = new MoDiscoRepositoryModelImportVisitor(scs, model, JavaPackage.eINSTANCE)
 		visitor.onStartRev(rev, 0)
-		visitor.onMerge(null, null) // causes refresh of workspace
+		visitor.onBranch(null, null) // causes refresh of workspace
 		visitor.onAddedFile(diff)
 		visitor.onCompleteRev(rev)
 		

@@ -27,7 +27,6 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -82,7 +81,6 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 			case RepositoryModelPackage.DIFF: return (EObject)createDiff();
 			case RepositoryModelPackage.PARENT_RELATION: return (EObject)createParentRelation();
 			case RepositoryModelPackage.JAVA_COMPILATION_UNIT_REF: return (EObject)createJavaCompilationUnitRef();
-			case RepositoryModelPackage.TRAVERSAL_STATE: return (EObject)createTraversalState();
 			case RepositoryModelPackage.TARGET: return (EObject)createTarget();
 			case RepositoryModelPackage.COMPILATION_UNIT_MODEL: return (EObject)createCompilationUnitModel();
 			case RepositoryModelPackage.IMPORT_ERROR: return (EObject)createImportError();
@@ -189,16 +187,6 @@ public class RepositoryModelFactoryImpl extends EFactoryImpl implements Reposito
 	public JavaCompilationUnitRef createJavaCompilationUnitRef() {
 		JavaCompilationUnitRefImpl javaCompilationUnitRef = new JavaCompilationUnitRefImpl();
 		return javaCompilationUnitRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TraversalState createTraversalState() {
-		TraversalStateImpl traversalState = new TraversalStateImpl();
-		return traversalState;
 	}
 
 	/**

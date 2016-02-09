@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
+import com.google.common.base.Preconditions;
+
 import de.hub.jstattrack.Statistics;
 import de.hub.jstattrack.TimeStatistic;
 import de.hub.jstattrack.TimeStatistic.Timer;
@@ -21,27 +23,33 @@ import de.hub.srcrepo.repositorymodel.Diff;
 import de.hub.srcrepo.repositorymodel.ParentRelation;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 
 public class RepositoryModelTraversal {
 	
-	private final static TimeStatistic visitAllStat = 
-			new TimeStatistic(TimeUnit.MICROSECONDS)
+	private class Branch {
+		private final Rev lastCommonRev;
+		private final Rev firstBranchRev;
+		public Branch(Rev lastCommonRev, Rev firstBranchRev) {
+			super();
+			this.lastCommonRev = lastCommonRev;
+			this.firstBranchRev = firstBranchRev;
+		}		
+	}
+	
+	private final static TimeStatistic visitAllStat = new TimeStatistic(TimeUnit.MICROSECONDS)
 			.with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class)
 			.register(RepositoryModelTraversal.class, "Visit time");
 	
-	private final static ValueStatistic usedMemoryStat = new ValueStatistic("b").with(BatchedPlot.class).register(RepositoryModelTraversal.class, "Used heap memory.");
+	private final static ValueStatistic usedMemoryStat = new ValueStatistic("b")
+			.with(BatchedPlot.class).register(RepositoryModelTraversal.class, "Used heap memory.");
 	
 	private final RepositoryModel repositoryModel;
 	private final IRepositoryModelVisitor visitor;
 	
-	private Stack<Rev> openBranches = new Stack<Rev>();
-	private Collection<Rev> completedBranches = new HashSet<Rev>();
-	private Collection<Rev> merges = new HashSet<Rev>();
-	private Rev lastImportedRev = null;
+	private Stack<Branch> openBranches = new Stack<Branch>();
+	private Collection<Rev> traversedRevs = new HashSet<Rev>();
 	
-	public RepositoryModelTraversal(RepositoryModel repositoryModel,
-			IRepositoryModelVisitor visitor) {
+	public RepositoryModelTraversal(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
 		super();
 		this.repositoryModel = repositoryModel;
 		this.visitor = visitor;
@@ -53,53 +61,49 @@ public class RepositoryModelTraversal {
 		public int importedRevsCounter = 0;
 		public int mergeCounter = 0;
 		public int branchCounter = 0;
-		public int openBranchCounter = 0;
 		
 		void reset() {
 			importedRevsCounter = 0;
 			mergeCounter = 0;
 			branchCounter = 0;
-			openBranchCounter = 0;
 		}
 	}
 
-	public Stats run(boolean resume, boolean save, TraversalState state, int numberOfRevsToImport) {			
+	public Stats run() {			
 		openBranches.clear();
-		completedBranches.clear();
-		merges.clear();
-		lastImportedRev = null;
+		traversedRevs.clear();
 		
 		int count = 0;
 		stats.reset();
-		stats.importedRevsCounter = state == null ? 0 : state.getNumberOfImportedRevs();
-		int maxRevCount = numberOfRevsToImport > 0 ? numberOfRevsToImport : Integer.MAX_VALUE;		
+		stats.importedRevsCounter = 0;		
 		
-		if (resume) {
-			openBranches.addAll(state.getOpenBranches());
-			completedBranches.addAll(state.getCompletedBranches());
-			stats.branchCounter = openBranches.size() + completedBranches.size();
-			merges.addAll(state.getMerges());
-			stats.mergeCounter = merges.size();
-		} else {
-			openBranches.addAll(repositoryModel.getRootRevs());
-			stats.branchCounter = repositoryModel.getRootRevs().size();
-		}
+		for (Rev rootRev: repositoryModel.getRootRevs()) {
+			openBranches.add(new Branch(null, rootRev));
+			stats.branchCounter++;
+		}		
 		
-		branchesLoop: while(!openBranches.isEmpty()) {			
-			Rev rev = openBranches.pop();
-			visitor.onMerge(lastImportedRev, rev);
+		while(!openBranches.isEmpty()) {			
+			Branch branch = openBranches.pop();
+			visitor.onBranch(branch.lastCommonRev, branch.firstBranchRev);
+			Rev rev = branch.firstBranchRev;	
+			Rev lastRev = branch.lastCommonRev;
+			
 			branchLoop: while(true) {
 				int children = rev.getChildRelations().size();
-				int parents = RepositoryModelUtil.parents(rev);
+				int parents = parentCount(rev);
 				
 				// is merge?
-				if (parents > 1 && !onMerge(rev)) {
-					stats.mergeCounter++;
+				if (parents > 1) {
+					if (traversedRevs.contains(rev)) {
+						stats.mergeCounter++;
+						visitor.onMerge2(rev, lastRev);
+					}
 					break branchLoop;	
 				}
 							
 				// import current rev
 				visitRev(rev, ++stats.importedRevsCounter);
+				traversedRevs.add(rev);
 				count++;
 				
 				// print performance data	
@@ -133,31 +137,19 @@ public class RepositoryModelTraversal {
 				if (children == 1) {
 					rev = rev.getChildRelations().get(0).getChild();
 				} else if (children > 1) {
-					rev = onBranch(rev);						
-				} else {
-					stats.openBranchCounter++;
-					rev = null;
-				}
-				
-				// abort and save?
-				if (count >= maxRevCount) {
-					if (save) {
-						state.getCompletedBranches().clear();
-						state.getCompletedBranches().addAll(completedBranches);
-						state.getMerges().clear();
-						state.getMerges().addAll(merges);
-						state.getOpenBranches().clear();
-						if (rev != null) {
-							state.getOpenBranches().add(rev);
+					Rev firstChildRev = rev.getChildRelations().get(0).getChild();
+					for (ParentRelation childRelation : rev.getChildRelations()) {
+						Rev childRev = childRelation.getChild();
+						if (childRev != firstChildRev) {
+							openBranches.add(new Branch(rev, childRev));
+						} else {
+							visitor.onBranch(rev, childRev);
 						}
-						state.getOpenBranches().addAll(openBranches);
-						state.setNumberOfImportedRevs(stats.importedRevsCounter);
+						stats.branchCounter++;
 					}
-					break branchesLoop;
-				}
-				
-				// is branch completed?
-				if (rev == null) {
+					rev = firstChildRev;
+				} else {
+					// branch completed
 					break branchLoop;
 				}
 			}						
@@ -165,7 +157,19 @@ public class RepositoryModelTraversal {
 		return stats;
 	}
 	
+	private int parentCount(Rev rev) {
+		int result = 0;
+		for(ParentRelation parentRelation: rev.getParentRelations()) {
+			if (parentRelation.getParent() != null) {
+				result++;
+			}
+		}
+		return result;
+	}
+	
+	
 	private void visitRev(Rev rev, int number) {
+		Preconditions.checkArgument(!traversedRevs.contains(rev));
 		Timer visitAllTimer = visitAllStat.timer();
 		visitor.onStartRev(rev, number);
 		
@@ -187,46 +191,8 @@ public class RepositoryModelTraversal {
 		visitor.onCompleteRev(rev);
 		visitAllTimer.track();
 	}	
-	
-	/**
-	 * @return the revision that import of current branch should be continued with
-	 */
-	private Rev onBranch(Rev branchingRev) {
-		Rev continueWith = null;
-		for (ParentRelation childRelation : branchingRev.getChildRelations()) {
-			Rev child = childRelation.getChild();
-			if (!completedBranches.contains(child)) {
-				if (continueWith == null) {
-					continueWith = child;
-				} else {
-					if (!openBranches.contains(child)) {
-						openBranches.push(child);
-						stats.branchCounter++;
-					}
-				}
-			}
-		}
-		return continueWith;
-	}
-	
-	/**
-	 * @return if import of this branch should continue
-	 */
-	private boolean onMerge(Rev mergingRev) {
-		if (!merges.contains(mergingRev)) {
-			merges.add(mergingRev);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor, TraversalState state, boolean resume, boolean saveSate, int stopAfterNumberOfRevs) {
-		return new RepositoryModelTraversal(repositoryModel, visitor).run(resume, saveSate, state, stopAfterNumberOfRevs);
-	}
 
 	public static Stats traverse(RepositoryModel repositoryModel, IRepositoryModelVisitor visitor) {
-		return traverse(repositoryModel, visitor, null, false, false, -1);		
-	}
-	
+		return new RepositoryModelTraversal(repositoryModel, visitor).run();
+	}	
 }

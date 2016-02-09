@@ -7,7 +7,12 @@ import de.hub.srcrepo.repositorymodel.Rev;
 public class EmptyRepositoryModelVisitor implements IRepositoryModelVisitor {
 
 	@Override
-	public void onMerge(Rev mergeRev, Rev branchRev) {
+	public void onMerge2(Rev mergeRev, Rev branchRev) {
+		
+	}
+
+	@Override
+	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {
 		
 	}
 

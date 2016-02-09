@@ -8,8 +8,8 @@ import de.hub.emffrag.FragmentationSet
 import de.hub.emffrag.datastore.DataStoreImpl
 import de.hub.emffrag.mongodb.EmfFragMongoDBActivator
 import de.hub.srcrepo.SrcRepoActivator
-import de.hub.srcrepo.emffrag.EmffragSrcRepo
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
 import de.vandermeer.asciitable.v2.V2_AsciiTable
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer
 import de.vandermeer.asciitable.v2.render.WidthLongestLine
@@ -17,6 +17,7 @@ import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -31,14 +32,14 @@ abstract class AbstractSrcRepoCommand {
 	protected var URI modelURI
 	
 	protected final def void init(CommandLine cl) {
-		EmffragSrcRepo.configureJavaPackage(cl.hasOption("enable-usages"))
-		EmfFragActivator::standalone(EmffragSrcRepo.packages)
+		val metaModels = newArrayList(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE)
+		EmfFragActivator::standalone(metaModels)
 		EmfFragActivator::instance.logInStandAlone = false;
 		EmfFragMongoDBActivator::standalone()
 		SrcRepoActivator::standalone
 
 		this.modelURI = URI.createURI(if (cl.hasOption("m")) cl.getOptionValue("m") else defaultModelURI)
-		fs = new FragmentationSet(EmffragSrcRepo.packages, [uri|DataStoreImpl::createDataStore(uri)], if (cl.hasOption("cache")) Integer.parseInt(cl.getOptionValue("cache")) else defaultCacheSize)		
+		fs = new FragmentationSet(metaModels, [uri|DataStoreImpl::createDataStore(uri)], if (cl.hasOption("cache")) Integer.parseInt(cl.getOptionValue("cache")) else defaultCacheSize)		
 		fragmentation = fs.getFragmentation(this.modelURI)		
 		val content = fragmentation.root
 		if (content instanceof RepositoryModelDirectory) {
@@ -52,7 +53,6 @@ abstract class AbstractSrcRepoCommand {
 		options.addOption(Option.builder().longOpt("log").desc("Prints log output.").build)
 		options.addOption(Option.builder("m").desc('''Uses the given model URI. Default is «defaultModelURI».''').longOpt("model").hasArg.build)
 		options.addOption(Option.builder().desc('''Uses the given fragmentation cache size. Default is «defaultCacheSize».''').longOpt("cache").hasArg.build)
-		options.addOption(Option.builder().longOpt("enable-usages").desc("Enables the usageInXXXX reference opposites in the modisco meta-model.").build)
 	}
 	
 	protected def checkIntArg(CommandLine cl, String name, int minimum) {

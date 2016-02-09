@@ -113,12 +113,6 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case RepositoryModelPackage.TRAVERSAL_STATE: {
-				TraversalState traversalState = (TraversalState)theEObject;
-				T result = caseTraversalState(traversalState);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case RepositoryModelPackage.TARGET: {
 				Target target = (Target)theEObject;
 				T result = caseTarget(target);
@@ -319,21 +313,6 @@ public class RepositoryModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseJavaCompilationUnitRef(JavaCompilationUnitRef object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Traversal State</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Traversal State</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTraversalState(TraversalState object) {
 		return null;
 	}
 

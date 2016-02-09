@@ -43,14 +43,16 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	}
 
 	@Override
-	public void onMerge(Rev mergeRev, Rev branchRev) {
-		super.onMerge(mergeRev, branchRev);
-		for(IModiscoSnapshotModel snapshot: snapshots.values()) {
-			snapshot.clear();
+	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {		
+		if (lastVisitedRev != newBranchRev) {
+			for(IModiscoSnapshotModel snapshot: snapshots.values()) {
+				snapshot.clear();
+			}
+			snapshots.clear();
+			contributingModels.clear();
 		}
-		snapshots.clear();
-		contributingModels.clear();
-	}	
+		super.onBranch(commonPreviousRev, newBranchRev);
+	}
 
 	@Override
 	public void onRev(Rev rev) {

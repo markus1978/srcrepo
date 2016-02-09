@@ -34,7 +34,6 @@ class ScheduleImportCommand extends AbstractRepositoryCommand {
 			importMetaData.importing = false				
 			importMetaData.scheduled = true
 			
-			it.traversals = null
 			it.rootRevs.clear
 			it.allRefs.clear
 			it.allRevs.clear

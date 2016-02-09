@@ -4,7 +4,10 @@ import static de.hub.srcrepo.RepositoryModelUtil.getDataStoreMetaData;
 import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.junit.Assert;
+
+import com.google.common.collect.Lists;
 
 import de.hub.emffrag.Fragmentation;
 import de.hub.emffrag.FragmentationImpl;
@@ -12,6 +15,7 @@ import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
@@ -40,7 +44,7 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 	@Override
 	protected void runImport() {
 		EmfFragSrcRepoImport.importRepository(prepareConfiguration());
-		FragmentationImpl fragmentation = new FragmentationImpl(EmffragSrcRepo.packages, MongoDBDataStore.createDataStore(testModelURI, false), 1);
+		FragmentationImpl fragmentation = new FragmentationImpl(Lists.newArrayList(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE), MongoDBDataStore.createDataStore(testModelURI, false), 1);
 		assertRepositoryModel(((RepositoryModel)fragmentation.getRoot()), 16);
 		fragmentation.close();
 	}

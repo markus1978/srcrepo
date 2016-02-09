@@ -180,7 +180,7 @@ class ImportedMoDiscoModelTests {
 			}
 		}
 		
-		Assert.assertEquals("Branches and merges do not match.", stats.mergeCounter + stats.openBranchCounter, stats.branchCounter);
+		Assert.assertEquals("Branches and merges do not match.", stats.mergeCounter, stats.branchCounter);
 		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), new HashSet<String>(visitedRevNames.values()).size());	
   	}
   	

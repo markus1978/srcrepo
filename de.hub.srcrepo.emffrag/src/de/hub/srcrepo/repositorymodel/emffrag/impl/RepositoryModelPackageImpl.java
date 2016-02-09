@@ -32,7 +32,6 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.TaskData;
-import de.hub.srcrepo.repositorymodel.TraversalState;
 import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
@@ -92,13 +91,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * @generated
 	 */
 	private EClass javaCompilationUnitRefEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass traversalStateEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -303,15 +295,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getRepositoryModel_RootRevs() {
 		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRepositoryModel_Traversals() {
-		return (EReference)repositoryModelEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -555,60 +538,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getJavaCompilationUnitRef_CompilationUnitModel() {
 		return (EReference)javaCompilationUnitRefEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getTraversalState() {
-		return traversalStateEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTraversalState_Name() {
-		return (EAttribute)traversalStateEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTraversalState_NumberOfImportedRevs() {
-		return (EAttribute)traversalStateEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTraversalState_Merges() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTraversalState_OpenBranches() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTraversalState_CompletedBranches() {
-		return (EReference)traversalStateEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1192,7 +1121,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REFS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ALL_REVS);
 		createEReference(repositoryModelEClass, REPOSITORY_MODEL__ROOT_REVS);
-		createEReference(repositoryModelEClass, REPOSITORY_MODEL__TRAVERSALS);
 
 		revEClass = createEClass(REV);
 		createEAttribute(revEClass, REV__AUTHOR);
@@ -1226,13 +1154,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		javaCompilationUnitRefEClass = createEClass(JAVA_COMPILATION_UNIT_REF);
 		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL);
-
-		traversalStateEClass = createEClass(TRAVERSAL_STATE);
-		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NAME);
-		createEReference(traversalStateEClass, TRAVERSAL_STATE__MERGES);
-		createEReference(traversalStateEClass, TRAVERSAL_STATE__OPEN_BRANCHES);
-		createEReference(traversalStateEClass, TRAVERSAL_STATE__COMPLETED_BRANCHES);
-		createEAttribute(traversalStateEClass, TRAVERSAL_STATE__NUMBER_OF_IMPORTED_REVS);
 
 		targetEClass = createEClass(TARGET);
 		createEAttribute(targetEClass, TARGET__ID);
@@ -1360,7 +1281,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getRepositoryModel_AllRefs(), this.getRef(), null, "allRefs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_AllRevs(), this.getRev(), null, "allRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRepositoryModel_RootRevs(), this.getRev(), null, "rootRevs", null, 0, -1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRepositoryModel_Traversals(), this.getTraversalState(), null, "traversals", null, 0, 1, RepositoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(revEClass, Rev.class, "Rev", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getRev_Author(), ecorePackage.getEString(), "author", null, 0, 1, Rev.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1394,13 +1314,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		initEClass(javaCompilationUnitRefEClass, JavaCompilationUnitRef.class, "JavaCompilationUnitRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJavaCompilationUnitRef_CompilationUnitModel(), this.getCompilationUnitModel(), null, "compilationUnitModel", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(traversalStateEClass, TraversalState.class, "TraversalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTraversalState_Name(), ecorePackage.getEString(), "name", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTraversalState_Merges(), this.getRev(), null, "merges", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTraversalState_OpenBranches(), this.getRev(), null, "openBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTraversalState_CompletedBranches(), this.getRev(), null, "completedBranches", null, 0, -1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTraversalState_NumberOfImportedRevs(), ecorePackage.getEInt(), "numberOfImportedRevs", null, 0, 1, TraversalState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(targetEClass, Target.class, "Target", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTarget_Id(), ecorePackage.getEString(), "id", null, 0, 1, Target.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1518,12 +1431,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		   source, 
 		   new String[] {
 			 "fragments", "true"
-		   });	
-		addAnnotation
-		  (getRepositoryModel_Traversals(), 
-		   source, 
-		   new String[] {
-			 "Fragmentation", "true"
 		   });	
 		addAnnotation
 		  (getJavaCompilationUnitRef_CompilationUnitModel(), 

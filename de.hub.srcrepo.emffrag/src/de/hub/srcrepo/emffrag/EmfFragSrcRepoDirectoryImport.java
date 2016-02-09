@@ -1,6 +1,7 @@
 package de.hub.srcrepo.emffrag;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -56,24 +58,16 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		private File workingcopies = new File("workingcopies");
 		private File locks = new File("locks");
 		
-		private boolean withUsages = false;
 		private int fragmentCacheSize = 100;
 		private boolean skipSourceCodeImport = false;
 		private boolean checkOutWithoutImport = false;
 		private boolean useCGit = false;
 		
 		private RepositoryModelVisitorFactory visitorFactory = null;
-
-		private int stopAfterNumberOfRevs = -1;
 		
 		public Configuration(ISourceControlSystem scs) {
 			super();
 			this.scs = scs;
-		}
-
-		public Configuration withUsages(boolean withUsages) {
-			this.withUsages = withUsages;
-			return this;
 		}
 
 		public Configuration fragmentCacheSize(int fragmentCacheSize) {
@@ -98,11 +92,6 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		
 		public Configuration repositoryName(String value) {
 			this.repositoryName = value;
-			return this;
-		}
-		
-		public Configuration stopAfterNumberOfRevs(int stopAfterNumberOfRevs) {
-			this.stopAfterNumberOfRevs  = stopAfterNumberOfRevs;
 			return this;
 		}	
 		
@@ -156,15 +145,8 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				desc("Number of cached fragments. Default is 100.").
 				hasArg().argName("size").build());
 		options.addOption(Option.builder().
-				longOpt("enable-usages").
-				desc("Enables the tracking of usagesXXX opposites, use with caution.").build());
-		options.addOption(Option.builder().
 				longOpt("use-c-git").
 				desc("Use regular git shell commands and not jGit.").build());
-		options.addOption(Option.builder().
-				longOpt("abort-after").
-				desc("Abort after a given number of revisions. The traversal is saved to resume later.").
-				hasArg().argName("number-of-revs").build());
 	
 		return options;
 	}
@@ -175,8 +157,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 				(!cl.hasOption("log") || 
 						(Integer.parseInt(cl.getOptionValue("log")) >= 0 && 
 						 Integer.parseInt(cl.getOptionValue("log")) <=4)) &&
-				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0) &&
-				(!cl.hasOption("abort-after") || Integer.parseInt(cl.getOptionValue("abort-after")) > 0);
+				(!cl.hasOption("fragments-cache") || Integer.parseInt(cl.getOptionValue("fragments-cache")) > 0);
 	}
 	
 	private void printUsage() {
@@ -229,10 +210,6 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 		if (commandLine.hasOption("fragments-cache")) {			
 			config.fragmentCacheSize(Integer.parseInt(commandLine.getOptionValue("fragments-cache")));
 		}		
-		if (commandLine.hasOption("abort-after")) {
-			config.stopAfterNumberOfRevs(Integer.parseInt(commandLine.getOptionValue("abort-after")));
-		}
-		config.withUsages(commandLine.hasOption("enable-usages"));
 		if (commandLine.hasOption("checkout-without-import")) {
 			config.checkOutWithoutImport();
 		}		
@@ -245,7 +222,10 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 	}
 	
 	public static FragmentationSet openFragmentationSet(Configuration config) {	
-		return new FragmentationSet(EmffragSrcRepo.packages, new IDataStore.IDataStoreFactory() {			
+		List<EPackage> packages = new ArrayList<EPackage>();
+		packages.add(JavaPackage.eINSTANCE);
+		packages.add(RepositoryModelPackage.eINSTANCE);
+		return new FragmentationSet(packages, new IDataStore.IDataStoreFactory() {			
 			@Override
 			public IDataStore createDataStore(URI uri) {
 				IBaseDataStore baseDataStore = null;
@@ -265,7 +245,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 	
 	public static void importRepository(Configuration config) {
 		// create necessary models
-		JavaPackage javaModelPackage = EmffragSrcRepo.configureJavaPackage(config.withUsages);
+		JavaPackage javaModelPackage = JavaPackage.eINSTANCE;
 		
 		SrcRepoActivator.INSTANCE.useCGit = config.useCGit;
 		RepositoryModel repositoryModel = null;
@@ -352,7 +332,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 						sourceImportVisitor = new EmffragMoDiscoImportRepositoryModelVisitor(config.scs, repositoryModel, javaModelPackage);
 					}
 				}		
-				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor,  null, false, false, config.stopAfterNumberOfRevs);
+				RepositoryModelTraversal.traverse(repositoryModel, sourceImportVisitor);
 				try {
 					sourceImportVisitor.close(repositoryModel);
 				} catch (Exception e) {
