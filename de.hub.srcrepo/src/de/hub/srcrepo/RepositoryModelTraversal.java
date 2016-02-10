@@ -69,7 +69,7 @@ public class RepositoryModelTraversal {
 		}
 	}
 
-	public Stats run() {			
+	public Stats run() {
 		openBranches.clear();
 		traversedRevs.clear();
 		
@@ -97,8 +97,8 @@ public class RepositoryModelTraversal {
 					if (traversedRevs.contains(rev)) {
 						stats.mergeCounter++;
 						visitor.onMerge2(rev, lastRev);
+						break branchLoop;	
 					}
-					break branchLoop;	
 				}
 							
 				// import current rev
@@ -134,6 +134,7 @@ public class RepositoryModelTraversal {
 				}
 				
 				// is branch or branch complete: determine next rev
+				lastRev = rev;
 				if (children == 1) {
 					rev = rev.getChildRelations().get(0).getChild();
 				} else if (children > 1) {

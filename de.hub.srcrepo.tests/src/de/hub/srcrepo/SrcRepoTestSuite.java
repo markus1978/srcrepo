@@ -7,8 +7,9 @@ import de.hub.srcrepo.metrics.ModiscoMetricsTests;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	TraverseTests.class,
 	ModiscoSnapshotTests.class,
-	MoDiscoGitImportTest.class, // order of tests is important: ImportedMoDiscoModelTests use the import of MoDiscoGitImportTest
+	MoDiscoGitImportTest.class,
 	ImportedMoDiscoModelTests.class,
 	ModiscoMetricsTests.class
 })

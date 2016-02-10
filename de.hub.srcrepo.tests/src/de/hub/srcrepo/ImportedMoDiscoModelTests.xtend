@@ -27,7 +27,7 @@ import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import org.junit.BeforeClass
 
 class ImportedMoDiscoModelTests {
-	val uri = MoDiscoGitImportTest.testModelURI; 
+	val uri = MoDiscoGitImportTest.testJavaModelURI; 
 	val PrintStream out = System.out;
     
   	var Resource resource

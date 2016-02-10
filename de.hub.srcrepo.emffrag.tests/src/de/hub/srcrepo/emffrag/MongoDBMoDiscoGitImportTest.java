@@ -4,18 +4,12 @@ import static de.hub.srcrepo.RepositoryModelUtil.getDataStoreMetaData;
 import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage;
 import org.junit.Assert;
 
-import com.google.common.collect.Lists;
-
 import de.hub.emffrag.Fragmentation;
-import de.hub.emffrag.FragmentationImpl;
-import de.hub.emffrag.mongodb.MongoDBDataStore;
 import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
-import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
@@ -23,17 +17,24 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 	
 	private Fragmentation fragmentation = null;
 	
-	@Override
-	protected URI getTestModelURI() {
-		return testModelURI;
-	}		
+	public final static URI testJavaModelURI = URI.createURI("mongodb://localhost/srcrepo.example.java");
+	public final static URI testGitModelURI = URI.createURI("mongodb://localhost/srcrepo.example.git");
 	
-	protected Configuration prepareConfiguration() {
+	@Override
+	protected URI getTestModelURI(TestModelKind kind) {
+		if (kind == TestModelKind.GIT) {
+			return testGitModelURI;
+		} else {
+			return testJavaModelURI;
+		}
+	}
+			
+	protected Configuration prepareConfiguration(TestModelKind kind) {
 		String repositoryURL = null;
 		if (!getWorkingCopy().exists() || !onlyCloneIfNecessary()) {
 			repositoryURL = getCloneURL();
 		}		
-		URI modelURI = getTestModelURI();
+		URI modelURI = getTestModelURI(kind);
 		
 		Configuration configuration = new EmfFragSrcRepoImport.GitConfiguration(getWorkingCopy(), modelURI).repositoryURL(repositoryURL);
 		configuration.useCGit();
@@ -42,22 +43,19 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 	}
 
 	@Override
-	protected void runImport() {
-		EmfFragSrcRepoImport.importRepository(prepareConfiguration());
-		FragmentationImpl fragmentation = new FragmentationImpl(Lists.newArrayList(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE), MongoDBDataStore.createDataStore(testModelURI, false), 1);
-		assertRepositoryModel(((RepositoryModel)fragmentation.getRoot()), 16);
-		fragmentation.close();
+	protected void importJavaFromModisco(RepositoryModel repositoryModel) {
+		EmfFragSrcRepoImport.importRepository(prepareConfiguration(TestModelKind.JAVA));
 	}
 
 	@Override
-	protected RepositoryModel openRepositoryModel(boolean dropExisting) {
-		fragmentation = EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(), dropExisting);
+	protected RepositoryModel openRepositoryModel(TestModelKind kind, boolean dropExisting) {
+		fragmentation = EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(kind), dropExisting);
 		return (RepositoryModel) fragmentation.getRoot();
 	}
 
 	@Override
-	protected void closeRepositoryModel(RepositoryModel model) {
-		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(), fragmentation);
+	protected void closeRepositoryModel(TestModelKind kind, RepositoryModel model) {
+		EmfFragSrcRepoImport.closeFragmentation(prepareConfiguration(TestModelKind.JAVA), fragmentation);
 	}
 
 	@Override

@@ -36,6 +36,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
 import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
@@ -45,13 +48,19 @@ import de.hub.srcrepo.repositorymodel.Rev;
 
 public class MoDiscoGitImportTest {
 	
-	public final static URI testModelURI = URI.createURI("testdata/models/example.java.xmi");
+	public enum TestModelKind { GIT, JAVA };
+	public final static URI testJavaModelURI = URI.createURI("testdata/models/example.java.xmi");
+	public final static URI testGitModelURI = URI.createURI("testdata/models/example.git.xmi");
 	public final static File workingCopy = new File(SrcRepoTestSuite.workingCopiesPrefix + "srcrepo.example.git");
 	
 	private static boolean isStandalone = false;
 	
-	protected URI getTestModelURI() {
-		return testModelURI;
+	protected URI getTestModelURI(TestModelKind kind) {
+		if (kind == TestModelKind.GIT) {
+			return testGitModelURI;
+		} else {
+			return testJavaModelURI;
+		}
 	}
 	
 	protected File getWorkingCopy() {
@@ -93,25 +102,25 @@ public class MoDiscoGitImportTest {
 		}
 	}
 	
-	protected RepositoryModel openRepositoryModel(boolean dropExisting) {
+	protected RepositoryModel openRepositoryModel(TestModelKind kind, boolean dropExisting) {
 		ResourceSet rs = new ResourceSetImpl();
 		Resource resource = null;
-		if (new File(getTestModelURI().toFileString()).exists()) {
-			resource = rs.getResource(getTestModelURI(), true);
+		if (new File(getTestModelURI(kind).toFileString()).exists()) {
+			resource = rs.getResource(getTestModelURI(kind), true);
 			if (dropExisting) {
 				resource.getContents().clear();
 				RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
 				resource.getContents().add(repositoryModel);
 			}
 		} else {
-			resource = rs.createResource(getTestModelURI());
+			resource = rs.createResource(getTestModelURI(kind));
 			RepositoryModel repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
 			resource.getContents().add(repositoryModel);
 		}
 		return (RepositoryModel)resource.getContents().get(0);
 	}
 	
-	protected void closeRepositoryModel(RepositoryModel model) {
+	protected void closeRepositoryModel(TestModelKind kind, RepositoryModel model) {
 		try {
 			model.eResource().save(null);
 		} catch (IOException e) {
@@ -120,30 +129,41 @@ public class MoDiscoGitImportTest {
 		}
 	}
 	
-	protected void runImport() {
+	protected GitSourceControlSystem openGitSrouceControlSystem() {
+		GitSourceControlSystem scs = new GitSourceControlSystem();
+		try {			
+			scs.createWorkingCopy(getWorkingCopy(), getCloneURL(), true);	
+		} catch (SourceControlException e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+		return scs;
+	}
+	
+	protected void importRepositoryModelFromGit(RepositoryModel repositoryModel) {	
+		try {
+			GitSourceControlSystem scs = openGitSrouceControlSystem();
+			scs.importRevisions(repositoryModel);			
+			scs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
+		}
+	}
+	
+	protected void importJavaFromModisco(RepositoryModel repositoryModel) {
 		if (!isStandalone) {
-			GitSourceControlSystem scs = new GitSourceControlSystem();
-			try {			
-				scs.createWorkingCopy(getWorkingCopy(), getCloneURL(), true);	
-			} catch (SourceControlException e) {
-				e.printStackTrace();
-				Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
-			}
-			
-			RepositoryModel repositoryModel = openRepositoryModel(true);
-			
 			try {
-				scs.importRevisions(repositoryModel);
-				IRepositoryModelVisitor visitor = createVisitor(scs, repositoryModel);
+				importRepositoryModelFromGit(repositoryModel);
+				GitSourceControlSystem scs = openGitSrouceControlSystem();
+				IRepositoryModelVisitor visitor = createModiscoRepositoryModelImportVisitor(scs, repositoryModel);
 				RepositoryModelTraversal.traverse(repositoryModel, visitor);
-				scs.close();
 				visitor.close(repositoryModel);
+				scs.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 				Assert.fail("Exception " + e.getClass() + ": " + e.getMessage());
 			}
-			
-			closeRepositoryModel(repositoryModel);
 		} 
 	}
 	
@@ -161,15 +181,26 @@ public class MoDiscoGitImportTest {
 	}
 	
 	@Test
-	public void modelImportTest() {	
+	public void gitImportTest() {
+		RepositoryModel repositoryModel = openRepositoryModel(TestModelKind.GIT, true);
+		importRepositoryModelFromGit(repositoryModel);
+
+		assertRepositoryModel(repositoryModel, 0);		
+		closeRepositoryModel(TestModelKind.GIT, repositoryModel);
+	}
+	
+	@Test
+	public void modiscoImportTest() {	
 		// run import
-		runImport();
+		RepositoryModel repositoryModel = openRepositoryModel(TestModelKind.JAVA, true);
+		importJavaFromModisco(repositoryModel);		
+		closeRepositoryModel(TestModelKind.JAVA, repositoryModel);
 		
 		// assert results
-		RepositoryModel repositoryModel = openRepositoryModel(false);
+		repositoryModel = openRepositoryModel(TestModelKind.JAVA, false);
 		assertMetaData(repositoryModel);
 		assertRepositoryModel(repositoryModel, 0);		
-		closeRepositoryModel(repositoryModel);
+		closeRepositoryModel(TestModelKind.JAVA, repositoryModel);
 	}
 
 	protected Collection<String> assertRepositoryModel(RepositoryModel repositoryModel, int minimumNumberOfRevs) {
@@ -199,10 +230,35 @@ public class MoDiscoGitImportTest {
 		}
 		Assert.assertTrue(count > minimumNumberOfRevs*2);
 		
+		// assert example branch and merge
+		RepositoryModelTraversal.traverse(repositoryModel, new EmptyRepositoryModelVisitor() {
+			@Override
+			public void onMerge2(Rev commonMergedRev, Rev lastBranchRev) {
+				super.onMerge2(commonMergedRev, lastBranchRev);
+				List<String> merges = Lists.newArrayList(
+					"879076c35867e58b2a95e17139729315acbc65fa",
+					"693dcde1333e7b3d537d529190ffde523642ca72"
+				);
+				Assert.assertTrue(merges.contains(lastBranchRev.getName()));
+			}
+
+			@Override
+			public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {				
+				super.onBranch(commonPreviousRev, newBranchRev);
+				if (commonPreviousRev != null) {
+					List<String> branches = Lists.newArrayList(
+						"879076c35867e58b2a95e17139729315acbc65fa",
+						"98f56da6e548af6d5660f0c42726a5cde17f23e3"
+					);
+					Assert.assertTrue(branches.contains(newBranchRev.getName()));
+				}
+			}			
+		});
+		
 		return revNames;
 	}
 
-	protected IRepositoryModelVisitor createVisitor(
+	protected IRepositoryModelVisitor createModiscoRepositoryModelImportVisitor(
 			GitSourceControlSystem scs, RepositoryModel repositoryModel) {
 		MoDiscoRepositoryModelImportVisitor visitor = new MoDiscoRepositoryModelImportVisitor(scs, repositoryModel, JavaPackage.eINSTANCE);
 		return visitor;
