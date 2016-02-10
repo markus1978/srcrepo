@@ -134,7 +134,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public void onMerge2(Rev mergeRev, Rev branchRev) {
+	public void onMerge(Rev mergeRev, Rev branchRev) {
 		// nothing to do
 	}
 	

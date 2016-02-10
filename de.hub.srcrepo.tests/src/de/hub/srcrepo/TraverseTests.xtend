@@ -30,7 +30,7 @@ class TraverseTests {
 			result.add('''%[«commonPreviousRev?.name»,«newBranchRev?.name»]''')
 		}
 
-		override onMerge2(Rev commonMergedRev, Rev lastBranchRev) {
+		override onMerge(Rev commonMergedRev, Rev lastBranchRev) {
 			result.add('''#[«lastBranchRev.name»,«commonMergedRev.name»]''')
 		}
 		

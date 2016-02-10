@@ -23,7 +23,7 @@ class MetricsCommand extends AbstractRepositoryCommand {
 	val format = new SimpleDateFormat("dd-MM-yyyy")
 	
 	val Map<EObject, Integer> values = newHashMap
-	val Map<Rev, Integer> data = newHashMap
+//	val Map<Rev, Integer> data = newHashMap
 	
 	static abstract class EmffragModiscoRevVisitor extends MoDiscoRevVisitor {
 		new() {
@@ -38,7 +38,7 @@ class MetricsCommand extends AbstractRepositoryCommand {
 	
 	private def <T extends NamedElement> int collect(Rev rev, IModiscoSnapshotModel snapshot, T container, String key, (T)=>int function) {
 		return if (!values.containsKey(container)) {
-			val original = snapshot.getPersistedOriginal(container)
+			snapshot.getPersistedOriginal(container)
 			val newValue = function.apply(container)
 			// TODO save			
 			values.put(container, newValue)

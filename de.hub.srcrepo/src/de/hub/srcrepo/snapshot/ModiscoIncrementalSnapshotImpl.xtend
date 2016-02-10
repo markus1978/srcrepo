@@ -1,10 +1,8 @@
 package de.hub.srcrepo.snapshot
 
-import com.google.common.base.Preconditions
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
-import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSLink
@@ -28,12 +26,12 @@ import org.eclipse.gmt.modisco.java.UnresolvedItem
 import org.eclipse.gmt.modisco.java.VariableDeclaration
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
+import static extension de.hub.srcrepo.SrcRepoActivator.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
+import de.hub.srcrepo.repositorymodel.Rev
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
-	
-	static val printDebug = false
 
 	val String projectID
 	val JavaPackage metaModel
@@ -70,8 +68,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	override addCompilationUnitModel(CompilationUnitModel model) {
-//		Preconditions.checkArgument(model != null, "Null model is not allowed.")
-//		Preconditions.checkArgument(model.eAllContents.forall[it.eSelectContainer[it instanceof CompilationUnitModel] == model], "Containment relation is broken.")
+		condition("Null model is not allowed.")[model != null]
+		condition("Containment relation is broken.")[
+			model.eAllContents.forall[
+				it.eSelectContainer[it instanceof CompilationUnitModel] == model
+			]
+		]
 		val extension ssCompilationUnitModel = new SSCompilationUnitModel(model)
 		newCompilationUnitModels += ssCompilationUnitModel
 		currentCompilationUnitModels.put(model, ssCompilationUnitModel)
@@ -81,7 +83,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		]
 		originalCompilationUnitModel.unresolvedLinks.forEach[
 			if (originalReverseTargets.get(it.target) == null) {
-//				Preconditions.checkState(it.target instanceof UnresolvedItem)
+				condition[it.target instanceof UnresolvedItem]
 				originalReverseTargets.put(it.target, it.fullId)
 			}
 		]
@@ -97,7 +99,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 	override removeCompilationUnitModel(CompilationUnitModel model) {
 		val oldCompilationUnitModel = currentCompilationUnitModels.remove(model)
-//		Preconditions.checkArgument(oldCompilationUnitModel != null)
+		condition[oldCompilationUnitModel != null]
 		oldCompilationUnitModels += oldCompilationUnitModel
 	}
 	
@@ -112,13 +114,19 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	private def computeSnapshot() {
-//		val rev = if (!newCompilationUnitModels.empty) newCompilationUnitModels.findFirst[true]
-//			.originalCompilationUnitModel
-//			.eSelectContainer[it instanceof Rev] as Rev
-//		val revName = if (rev != null) {
-//			'''«projectID»[«rev.name»]'''
-//		} else ""
-//		debug('''#compute«if (revName != null) " " + revName»''')
+		debug[
+			val rev = if (!newCompilationUnitModels.empty) { 
+				newCompilationUnitModels.findFirst[true]
+					.originalCompilationUnitModel
+					.eSelectContainer[it instanceof Rev] as Rev
+			}
+			val revName = if (rev != null) {
+				'''«projectID»[«rev.name»]'''
+			} else {
+				""				
+			}			
+			'''#compute«if (revName != null) " " + revName»'''
+		]
 		val List<SSLink> linksToResolve = newArrayList
 
 		// TODO
@@ -128,7 +136,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 		// 1. remove old CUs
 		oldCompilationUnitModels.forEach [
-//			debug('''  #remove: «it»''')
+			debug['''  #remove: «it»''']
 			
 			// 1.1. revert all links the exit the CU
 			it.outgoingLinks.forEach[revert]
@@ -151,7 +159,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		// 2 add new CUs
 		// 2.1. add containment for all CUs
 		newCompilationUnitModels.forEach [
-//			debug("  #add: " + it)
+			debug["  #add: " + it]
 			
 			mergeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets, true)
 			it.copyCompilationUnit = copier.get(it.getOriginalCompilationUnitModel.compilationUnit) as CompilationUnit
@@ -160,13 +168,13 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		// 2.2. add all references within new CUs
 		copier.copyReferences
 		// 2.3. collect all links added by the new CUs
-//		debug("  #add links")
+		debug["  #add links"]
 		newCompilationUnitModels.forEach [
 			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[ 
 				val sourceCopy = copier.get(it.source) as ASTNode
-//				Preconditions.checkState(sourceCopy.mark != "Replaced")
+				condition[sourceCopy.mark != "Replaced"]
 				val link = new SSLink(it, sourceCopy, it.fullId, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
-//				debug("    #new link: " + link)
+				debug["    #new link: " + link]
 				return link
 			]
 			linksToResolve += outgoingLinks
@@ -174,9 +182,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		copier.clear
 			
 		// 3. resolve all new and re-resolve all priorly reverted references
-//		debug("  #resolving links: ")
+		debug["  #resolving links: "]
 		linksToResolve.filter[!resolved].forEach[
-//			debug("    #" + it)
+			debug["    #" + it]
 			val resolvedTarget = targets.get(it.id)
 			if (resolvedTarget != null) {
 				it.resolve(resolvedTarget)
@@ -184,13 +192,13 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					val originalCompilationUnit = resolvedTarget.originalCompilationUnit
 					if (originalCompilationUnit != null) {
 						val cum = currentCompilationUnits.get(originalCompilationUnit)
-//						Preconditions.checkState(cum != null)
+						condition[cum != null]
 						cum.incomingLinks += it						
 					} // not all elements (e.g. packages) have a reference to a compilation unit
 					  // TODO what about merged elmenets?
 				}
 			} else {
-				Preconditions.checkState(false, "This should not happen.")
+				condition("This should not happen.")[false]
 			}
 		]
 	}
@@ -223,7 +231,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 	
 	override clear() {	
-//		debug("# clear ###################################")
+		debug["# clear ###################################"]
 		EcoreUtil.delete(model, true)
 		
 		currentCompilationUnits.clear
@@ -265,7 +273,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	private def NamedElement getCopyChild(EObject copy, EObject original, NamedElement originalChild, Map<NamedElement,String> ids) {
 		val id = ids.get(originalChild)
 		if (id == null) {
-//			Preconditions.checkState(originalChild.name == null, "All NamedElements with name need to be targets.")
+			condition("All NamedElements with name need to be targets.")[originalChild.name == null]
 			// unnamed named element, assume each container can only have one of those within same containment feature
 			val feature = copier.getTarget(originalChild.eContainmentFeature)
 			val value = if (feature.many) {
@@ -278,7 +286,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		} else {
 			// named element with target
 			val result = targets.get(id)
-//			Preconditions.checkState(result == null || result.eClass.name == originalChild.eClass.name)
+			condition[result == null || result.eClass.name == originalChild.eClass.name]
 			return result
 		}		
 	}
@@ -287,35 +295,37 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	 * Merges the contents of the given objects. NamedElements are merged based on their IDs. 
 	 */
 	private def <T extends EObject> void mergeContents(T copy, T original,  Map<NamedElement, String> originalTargets, boolean addContents) {
-//		Preconditions.checkArgument(copy.eClass.name == original.eClass.name)		
+		condition[copy.eClass.name == original.eClass.name]		
 		original.forEachChild[originalFeature,originalChild|
 			val copyFeature = copier.getTarget(originalFeature)
 			if (originalChild.isTarget(originalTargets)) {
 				val originalNamedElementChild = originalChild as NamedElement
-				var copyChild = getCopyChild(copy, original, originalNamedElementChild, originalTargets)			
-				if (copyChild != null) {
+				val existingCopyChild = getCopyChild(copy, original, originalNamedElementChild, originalTargets)			
+				val copyChild = if (existingCopyChild != null) {
 					// original child has a corresponding other child					
 					// merge existing child copy with new original child
-					if (!originalNamedElementChild.externalTarget && copyChild.externalTarget) {
+					if (!originalNamedElementChild.externalTarget && existingCopyChild.externalTarget) {
 						// push attributes and other content from new internal target onto existing external target
-//						debug("    #merge(new attribute values) " + copyChild.name)
-						copier.merge(copyChild, originalNamedElementChild)																		
-						mergeContents(copyChild, originalNamedElementChild, originalTargets, true)				
+						debug["    #merge(new attribute values) " + existingCopyChild.name]
+						copier.merge(existingCopyChild, originalNamedElementChild)																		
+						mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, true)				
 					} else {
 						// use the existing target						
-//						debug("    #merge " + copyChild.name)
-						copier.put(originalNamedElementChild, copyChild)
-						mergeContents(copyChild, originalNamedElementChild, originalTargets, false)
+						debug["    #merge " + existingCopyChild.name]
+						copier.put(originalNamedElementChild, existingCopyChild)
+						mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, false)
 					}
+					existingCopyChild
 				} else {
 					// copy of the child does not already exist
-//					debug("    #new " + originalNamedElementChild.name)		
-					copyChild = copier.shallowCopy(originalChild) as NamedElement
-//					Preconditions.checkState(copyFeature.many) 
-					(copy.eGet(copyFeature) as List<EObject>).add(copyChild)	
-//					Preconditions.checkState(copyChild.eContainmentFeature == copyFeature)
-//					Preconditions.checkState(copyChild.eContainer == copy)								
-					mergeContents(copyChild, originalChild, originalTargets, true)											
+					debug["    #new " + originalNamedElementChild.name]		
+					val newCopyChild = copier.shallowCopy(originalChild) as NamedElement
+					condition[copyFeature.many] 
+					(copy.eGet(copyFeature) as List<EObject>).add(newCopyChild)	
+					condition[newCopyChild.eContainmentFeature == copyFeature]
+					condition[newCopyChild.eContainer == copy]								
+					mergeContents(newCopyChild, originalChild, originalTargets, true)
+					newCopyChild											
 				}
 				// update the copie's target map
 				val id = originalTargets.get(originalChild)
@@ -330,13 +340,13 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					} else {
 						val existingCopyChild = copy.eGet(copyFeature) as EObject
 						if (existingCopyChild != null) {
-//							existingCopyChild.mark = "Replaced"
+							debug[existingCopyChild.mark = "Replaced"; null]
 							copier.getLastOriginal(existingCopyChild).forEach[existingOriginalChild|
-//								Preconditions.checkState(existingOriginalChild != null)
+								condition[existingOriginalChild != null]
 								copier.put(existingOriginalChild, copyChild, true)							
 							]
 						}
-//						copyChild.mark = if (existingCopyChild != null) "Replacement" else "New"						
+						debug[copyChild.mark = if (existingCopyChild != null) "Replacement" else "New"; null]						
 						copy.eSet(copyFeature, copyChild)
 					}					
 				}	
@@ -368,7 +378,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		public def EObject put(EObject key, EObject value, boolean allowExistingValue) {
 			val result = super.put(key, value)
 			reverseMap.put(value, key)
-//			Preconditions.checkArgument(allowExistingValue || result == null, "Cannot copy an element twice.")
+			condition("Cannot copy an element twice.")[allowExistingValue || result == null]
 			return result
 		}
 		
@@ -421,21 +431,21 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 	
 	private def <T extends EObject> void removeContents(T copy, T original, Map<NamedElement,String> originalTargets) {
-//		Preconditions.checkArgument(copy.eClass.name == original.eClass.name)				
+		condition[copy.eClass.name == original.eClass.name]				
 		
 		original.forEachChild[feature,child|
 			if (child.isTarget(originalTargets)) {
 				val namedElementChild = child as NamedElement
-				var copyChild = getCopyChild(copy, original, namedElementChild, originalTargets)			
-				if (copyChild != null) {
+				val existingCopyChild = getCopyChild(copy, original, namedElementChild, originalTargets)			
+				if (existingCopyChild != null) {
 					// copy of the child exist
-					removeContents(copyChild, namedElementChild, originalTargets)			
-					val delete = if (copyChild.externalTarget) {
-						if (copyChild.name == null) {
+					removeContents(existingCopyChild, namedElementChild, originalTargets)			
+					val delete = if (existingCopyChild.externalTarget) {
+						if (existingCopyChild.name == null) {
 							// unnamed container, e.g. FieldDeclaration with fragments
 							namedElementChild.eContents.empty
 						} else {
-							!copyChild.used							
+							!existingCopyChild.used							
 						}
 					} else if (namedElementChild instanceof Package) {
 						namedElementChild.eContents.empty
@@ -444,8 +454,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					}		
 					
 					if (delete) {
-//						debug("    #delete: " + copyChild.name)
-						EcoreUtil.delete(copyChild, true) // TODO performance
+						debug["    #delete: " + existingCopyChild.name]
+						EcoreUtil.delete(existingCopyChild, true) // TODO performance
 						val id = originalTargets.get(namedElementChild)
 						if (id != null) {
 							targets.remove(id)						
@@ -468,11 +478,5 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			default: 
 				throw new RuntimeException("unreachable " + it.eClass)
 		})
-	}
-	
-	public static def debug(String message) {
-		if (printDebug) {
-			println(message)			
-		}
 	}
 }

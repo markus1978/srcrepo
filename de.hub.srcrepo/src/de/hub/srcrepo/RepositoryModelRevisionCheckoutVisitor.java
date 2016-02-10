@@ -33,7 +33,7 @@ public class RepositoryModelRevisionCheckoutVisitor implements IRepositoryModelV
 	}
 
 	@Override
-	public void onMerge2(Rev mergeRev, Rev branchRev) {
+	public void onMerge(Rev mergeRev, Rev branchRev) {
 		
 	}
 	

@@ -30,7 +30,7 @@ public interface IRepositoryModelVisitor {
 	 * @param lastBranchRev
 	 *            refers to the last revision on the individual branch.
 	 */
-	public void onMerge2(Rev commonMergedRev, Rev lastBranchRev);
+	public void onMerge(Rev commonMergedRev, Rev lastBranchRev);
 	
 
 	/**

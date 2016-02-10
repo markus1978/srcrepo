@@ -65,7 +65,7 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	}
 
 	@Override
-	public void onMerge2(Rev commonMergedRev, Rev lastBranchRev) {
+	public void onMerge(Rev commonMergedRev, Rev lastBranchRev) {
 		// nothing to do
 	}
 

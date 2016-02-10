@@ -1,6 +1,5 @@
 package de.hub.srcrepo.snapshot.internal
 
-import com.google.common.base.Preconditions
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import java.util.List
@@ -11,6 +10,7 @@ import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import static extension de.hub.srcrepo.SrcRepoActivator.*
 
 class SSLink {
 	val ASTNode copiedSource
@@ -25,13 +25,13 @@ class SSLink {
 			val cf = copiedSource.eContainingFeature
 			println(cf)
 		}
-//		Preconditions.checkArgument(copiedSource.eContainer != null)
+		condition[copiedSource.eContainer != null]
 		this.originalUnresolvedLink = originalUnresolvedLink
 		this.copiedSource = copiedSource
 		this.placeHolder = placeHolder
 		this.id = id
 		replaceTarget(placeHolder)
-//		Preconditions.checkState(!resolved)
+		condition[!resolved]
 	}
 	
 	def getCurrentTarget() {
@@ -57,16 +57,16 @@ class SSLink {
 	}
 
 	def resolve(NamedElement resolvedTarget) {
-//		Preconditions.checkState(!isResolved, "You cannot resolve an resolved link.")
-//		Preconditions.checkArgument(!resolvedTarget.isPersistent, "You can only resolve a link with a target from an snaptshot model.")
-//		Preconditions.checkArgument(source.eRoot == resolvedTarget.eRoot, "Resolved target and source must be in the same model.")
+		condition("You cannot resolve an resolved link.")[!isResolved]
+		condition("You can only resolve a link with a target from an snaptshot model.")[!resolvedTarget.isPersistent]
+		condition("Resolved target and source must be in the same model.")[source.eRoot == resolvedTarget.eRoot]
 		
 		replaceTarget(resolvedTarget)
 		return resolvedTarget
 	}
 	
 	def revert() {
-//		Preconditions.checkState(isResolved, "Only resolved links can be reverted.")
+		condition("Only resolved links can be reverted.")[isResolved]
 		replaceTarget(placeHolder)
 	}
 	

@@ -96,7 +96,7 @@ public class RepositoryModelTraversal {
 				if (parents > 1) {
 					if (traversedRevs.contains(rev)) {
 						stats.mergeCounter++;
-						visitor.onMerge2(rev, lastRev);
+						visitor.onMerge(rev, lastRev);
 						break branchLoop;	
 					}
 				}

@@ -36,7 +36,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
 import de.hub.srcrepo.ISourceControlSystem.SourceControlException;
@@ -233,8 +232,8 @@ public class MoDiscoGitImportTest {
 		// assert example branch and merge
 		RepositoryModelTraversal.traverse(repositoryModel, new EmptyRepositoryModelVisitor() {
 			@Override
-			public void onMerge2(Rev commonMergedRev, Rev lastBranchRev) {
-				super.onMerge2(commonMergedRev, lastBranchRev);
+			public void onMerge(Rev commonMergedRev, Rev lastBranchRev) {
+				super.onMerge(commonMergedRev, lastBranchRev);
 				List<String> merges = Lists.newArrayList(
 					"879076c35867e58b2a95e17139729315acbc65fa",
 					"693dcde1333e7b3d537d529190ffde523642ca72"

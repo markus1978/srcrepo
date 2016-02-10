@@ -68,6 +68,7 @@ public class DataSetImpl extends RepositoryElementImpl implements DataSet {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Serializable> getData() {
 		return (Map<String, Serializable>)eGet(RepositoryModelPackage.Literals.DATA_SET__DATA, true);
 	}

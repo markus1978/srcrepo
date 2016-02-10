@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
+import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.osgi.framework.BundleContext;
 
 import de.hub.jstattrack.JStatTrackActivator;
@@ -18,6 +19,7 @@ public class SrcRepoActivator extends Plugin {
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
 	private boolean logInStandAlone = true;
+	private boolean isDebug = false;
 	public boolean useCGit = false;
 	
 	private void init() {
@@ -30,6 +32,27 @@ public class SrcRepoActivator extends Plugin {
 		super.start(context);
 		INSTANCE = this;
 		INSTANCE.init();
+	}
+	
+	public static void debug(Function0<String> message) {
+		if (INSTANCE.isDebug) {
+			String output = message.apply();
+			if (output != null) {
+				INSTANCE.debug(output);	
+			}			
+		}
+	}
+	
+	public static void condition(Function0<Boolean> condition) {
+		condition("Failed condition.", condition);
+	}
+	
+	public static void condition(String message, Function0<Boolean> condition) {
+		if (INSTANCE.isDebug) {
+			if (!condition.apply()) {
+				throw new IllegalArgumentException(message);
+			}
+		}
 	}
 
 	public void debug(String msg) {
