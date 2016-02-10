@@ -14,6 +14,9 @@ import static org.junit.Assert.*
 
 import static extension de.hub.srcrepo.RepositoryModelTraversal.*
 import org.junit.BeforeClass
+import org.eclipse.jgit.diff.DiffEntry.ChangeType
+import de.hub.srcrepo.repositorymodel.Diff
+import de.hub.srcrepo.repositorymodel.AbstractFileRef
 
 class TraverseTests {
 	
@@ -35,6 +38,27 @@ class TraverseTests {
 			result.add('''«rev.name»''')
 		}
 		
+		override onAddedFile(Diff diff) {
+			result.add('''!«diff.newPath»''')
+		}	
+	}
+	
+	val revVisitor = new AbstractRevVisitor {		
+		override protected addFile(String name, AbstractFileRef fileRef) {
+			result.add('''!«name»''')
+		}
+		
+		override protected clearFiles() {
+			result.add('''#''')
+		}
+		
+		override protected onRev(Rev rev) {
+			result.add(rev.name)
+		}
+		
+		override protected removeFile(String name) {
+			result.add('''?«name»''')
+		}
 	}
 	
 	protected def createFactory() {
@@ -56,6 +80,30 @@ class TraverseTests {
 		revisions.clear
 		result.clear
 	} 
+	
+	private def addFile(String rev, String parent, String file) {
+		val relation = rev.rev.parentRelations.findFirst[parent == null || it.parent.name == parent]
+		Preconditions.checkArgument(relation != null)
+		val diff = factory.createDiff
+		diff.newPath = file
+		diff.type = ChangeType.ADD
+		val fileRef = factory.createJavaCompilationUnitRef
+		fileRef.path = file
+		diff.file = fileRef
+		relation.diffs += diff
+	}
+	
+	private def deleteFile(String rev, String parent, String file) {
+		val relation = rev.rev.parentRelations.findFirst[parent == null || it.parent.name == parent]
+		Preconditions.checkArgument(relation != null)
+		val diff = factory.createDiff
+		diff.oldPath = file
+		diff.type = ChangeType.DELETE
+		val fileRef = factory.createJavaCompilationUnitRef
+		fileRef.path = file
+		diff.file = fileRef
+		relation.diffs += diff
+	}
 	
 	private def rev(String name) {
 		val existingRev = revisions.get(name)
@@ -141,5 +189,51 @@ class TraverseTests {
 		rootRev("1")
 		model.traverse(visitor)
 		assertEquals("%[,1]-1-2-%[2,3]-3-4-H-%[2,3B]-3B-#[3B,4]", result.join("-"))
+	}
+	
+	@Test
+	public def singleBranchFilesTest() {
+		relation(#["H", "2", "1"])
+		addFile("2", "1", "f1")
+		addFile("H", "2", "f2")
+		rootRev("1")
+		model.traverse(visitor)
+		assertEquals("%[,1]-1-2-!f1-H-!f2", result.join("-"))
+	}
+	
+	@Test
+	public def multiBranchFilesTest() {
+		relation(#["H", "2", "1"])
+		relation(#["3", "2"])
+		addFile("2", "1", "f1")
+		addFile("H", "2", "f2")
+		addFile("3", "2", "f3")
+		rootRev("1")
+		model.traverse(visitor)
+		assertEquals("%[,1]-1-2-!f1-%[2,H]-H-!f2-%[2,3]-3-!f3", result.join("-"))
+	}
+	
+	@Test
+	public def multiBranchFilesRevVisitorTest() {
+		relation(#["H", "2", "1"])
+		relation(#["3", "2"])
+		addFile("2", "1", "f1")
+		addFile("H", "2", "f2")
+		addFile("3", "2", "f3")
+		rootRev("1")
+		model.traverse(revVisitor)
+		assertEquals("#-1-!f1-2-!f2-H-#-!f1-!f3-3", result.join("-"))
+	}
+	
+	@Test
+	public def multiBranchDeleteFilesRevVisitorTest() {
+		relation(#["H", "2", "1"])
+		relation(#["3", "2"])
+		addFile("2", "1", "f1")
+		addFile("H", "2", "f2")
+		deleteFile("3", "2", "f1")
+		rootRev("1")
+		model.traverse(revVisitor)
+		assertEquals("#-1-!f1-2-!f2-H-#-!f1-?f1-3", result.join("-"))
 	}
 }

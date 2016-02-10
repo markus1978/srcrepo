@@ -71,10 +71,10 @@ class ImportedMoDiscoModelTests {
 	    Assert.assertEquals(javaDiffsWithCU, allJavaDiffs);
   	}
 
-	def testJavaModels((Model)=>void testModel) {
+	def testJavaModels((Rev,Model)=>void testModel) {
     	val visitor = new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
       		override def onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshots) {
-	    		snapshots.forEach[projectID,snapshot|testModel.apply(snapshot.model)]   
+	    		snapshots.forEach[projectID,snapshot|testModel.apply(rev,snapshot.model)]   
       		}
       		override def filter(Rev rev) {
       			!rev.getName().equals("879076c35867e58b2a95e17139729315acbc65fa") // there is a syntax error in this rev; this makes it ok to fail the tests.
@@ -85,17 +85,17 @@ class ImportedMoDiscoModelTests {
   	}
   	
   	@Test def void testCompilationUnits() {
-    	testJavaModels[javaModel |
+    	testJavaModels[rev,javaModel |
       		val typesInCUs = javaModel.getCompilationUnits().collectAll[types].size
       		val cus = javaModel.getCompilationUnits().size();
 
-			Assert.assertTrue(cus > 0);
+			Assert.assertTrue('''Rev «rev.name» has no CUs''', cus > 0);
 		    Assert.assertTrue(typesInCUs + ">=" + cus, typesInCUs >= cus);
     	]
   	}
   
   	@Test def void testPackageStructure() {
-    	testJavaModels[javaModel|
+    	testJavaModels[rev,javaModel|
       		val topLevelTypesInPackageStructure = javaModel.getOwnedElements().closure[ownedPackages].collectAll[ownedElements].filter[!proxy]
       		val cus = javaModel.getCompilationUnits();
       
@@ -105,15 +105,15 @@ class ImportedMoDiscoModelTests {
   	}	
   	
   	@Test def void testContents() {
-  		testJavaModels[			
-			it.eAllContents.forEach[
+  		testJavaModels[rev,javaModel|			
+			javaModel.eAllContents.forEach[
 				Assert.assertNotNull(it)
 			]			
   		]
   	}
   	
   	@Test def void testMetrics() {
-  		testJavaModels[model|
+  		testJavaModels[rev,model|
 			out.println("Primitives: " + OclUtil.countPrimitives(model));
 			out.println("Top level classes: " + OclUtil.countTopLevelClasses(model));
 			out.println("Methods: " + OclUtil.countMethodDeclarations(model));
@@ -180,7 +180,8 @@ class ImportedMoDiscoModelTests {
 			}
 		}
 		
-		Assert.assertEquals("Branches and merges do not match.", stats.mergeCounter, stats.branchCounter);
+		Assert.assertSame("Wrong number of merges.", 1, stats.mergeCounter)
+		Assert.assertSame("Wrong number of branches.", 3, stats.branchCounter) // one for the start, two for the actual branch (one for each path after branch)
 		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), new HashSet<String>(visitedRevNames.values()).size());	
   	}
   	

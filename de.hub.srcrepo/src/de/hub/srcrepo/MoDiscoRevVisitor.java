@@ -70,70 +70,72 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 			Preconditions.checkArgument(projectID != null);
 			Map<String,CompilationUnitModel> files = projectEntry.getValue();
 
-			IModiscoSnapshotModel snapshot = snapshots.get(projectID);
-			if (snapshot == null) {
-				snapshot = snapshotFactory.create(projectID);
-				snapshots.put(projectID, snapshot);
-			}
-			Map<String, CompilationUnitModel> contributingModels = this.contributingModels.get(projectID); // TODO use the snapshot for that
-			if (contributingModels == null) {
-				contributingModels = new HashMap<String, CompilationUnitModel>();
-				this.contributingModels.put(projectID, contributingModels);
-			}
-			
-			try {
-				snapshot.start();
-				int changedCUs = 0;
-				// merge the models from all compilation units
-				Collection<String> pathsInFiles = new HashSet<String>();
-				for (Entry<String, CompilationUnitModel> entry : files.entrySet()) {
-					String path = entry.getKey();
-					pathsInFiles.add(path);
-					
-					CompilationUnitModel newCUModel = entry.getValue();
-					CompilationUnitModel oldCUModel = contributingModels.get(path);
-		
-					if (newCUModel != oldCUModel) {
-						if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
-							if (oldCUModel != null) {
-								snapshot.removeCompilationUnitModel(oldCUModel);
-							} 
-							snapshot.addCompilationUnitModel(newCUModel);
-							contributingModels.put(path, newCUModel);
-							changedCUs++;
-						} else {
-							SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
-									newCUModel.getCompilationUnit().getOriginalFilePath() + 
-									" without a type (probably due to incorrect CU code), using older version of same CU.");
-						}
-					}			
+			if (!files.isEmpty()) {
+				IModiscoSnapshotModel snapshot = snapshots.get(projectID);
+				if (snapshot == null) {
+					snapshot = snapshotFactory.create(projectID);
+					snapshots.put(projectID, snapshot);
 				}
-				List<String> pathsToRemoveFromContributingModel = new ArrayList<String>(); 
-				for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
-					if (!pathsInFiles.contains(entry.getKey())) {
-						snapshot.removeCompilationUnitModel(entry.getValue());
-						pathsToRemoveFromContributingModel.add(entry.getKey());
-						changedCUs++;
-					}
+				Map<String, CompilationUnitModel> contributingModels = this.contributingModels.get(projectID); // TODO use the snapshot for that
+				if (contributingModels == null) {
+					contributingModels = new HashMap<String, CompilationUnitModel>();
+					this.contributingModels.put(projectID, contributingModels);
 				}
-				for (String pathToRemoveFromContributingModel: pathsToRemoveFromContributingModel) {
-					contributingModels.remove(pathToRemoveFromContributingModel);
-				}
-				snapshot.end();
-				if (changedCUs > 0) {
-					SrcRepoActivator.INSTANCE.info("Updated snapshot for " + projectID + ", number of changed CUs " + changedCUs);
-				}
-			} catch (Exception e) {
-				// something unexpected happend. Loose the failed snapshot and start from scratch
-				SrcRepoActivator.INSTANCE.warning("Could not update a snapshot; replaced snapshot with a fresh one.", e); 
 				
-				snapshot.clear();
-				snapshot = snapshotFactory.create(projectID);
-				snapshots.put(projectID, snapshot);
-				for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
+				try {
 					snapshot.start();
-					snapshot.addCompilationUnitModel(entry.getValue());
+					int changedCUs = 0;
+					// merge the models from all compilation units
+					Collection<String> pathsInFiles = new HashSet<String>();
+					for (Entry<String, CompilationUnitModel> entry : files.entrySet()) {
+						String path = entry.getKey();
+						pathsInFiles.add(path);
+						
+						CompilationUnitModel newCUModel = entry.getValue();
+						CompilationUnitModel oldCUModel = contributingModels.get(path);
+			
+						if (newCUModel != oldCUModel) {
+							if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
+								if (oldCUModel != null) {
+									snapshot.removeCompilationUnitModel(oldCUModel);
+								} 
+								snapshot.addCompilationUnitModel(newCUModel);
+								contributingModels.put(path, newCUModel);
+								changedCUs++;
+							} else {
+								SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
+										newCUModel.getCompilationUnit().getOriginalFilePath() + 
+										" without a type (probably due to incorrect CU code), using older version of same CU.");
+							}
+						}			
+					}
+					List<String> pathsToRemoveFromContributingModel = new ArrayList<String>(); 
+					for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
+						if (!pathsInFiles.contains(entry.getKey())) {
+							snapshot.removeCompilationUnitModel(entry.getValue());
+							pathsToRemoveFromContributingModel.add(entry.getKey());
+							changedCUs++;
+						}
+					}
+					for (String pathToRemoveFromContributingModel: pathsToRemoveFromContributingModel) {
+						contributingModels.remove(pathToRemoveFromContributingModel);
+					}
 					snapshot.end();
+					if (changedCUs > 0) {
+						SrcRepoActivator.INSTANCE.info("Updated snapshot for " + projectID + ", number of changed CUs " + changedCUs);
+					}
+				} catch (Exception e) {
+					// something unexpected happend. Loose the failed snapshot and start from scratch
+					SrcRepoActivator.INSTANCE.warning("Could not update a snapshot; replaced snapshot with a fresh one.", e); 
+					
+					snapshot.clear();
+					snapshot = snapshotFactory.create(projectID);
+					snapshots.put(projectID, snapshot);
+					for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
+						snapshot.start();
+						snapshot.addCompilationUnitModel(entry.getValue());
+						snapshot.end();
+					}
 				}
 			}
 		}
