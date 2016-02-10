@@ -1,14 +1,14 @@
 package de.hub.srcrepo
 
-import com.google.common.collect.HashMultimap
-import com.google.common.collect.Multimap
 import de.hub.srcrepo.ocl.OclUtil
 import de.hub.srcrepo.repositorymodel.AbstractFileRef
 import de.hub.srcrepo.repositorymodel.Diff
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.Rev
+import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import java.io.PrintStream
+import java.util.Collection
 import java.util.HashSet
 import java.util.Map
 import org.eclipse.emf.ecore.resource.Resource
@@ -19,12 +19,11 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.ocl.OclUtil.javaDiffs
-import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
-import org.junit.BeforeClass
 
 class ImportedMoDiscoModelTests {
 	val uri = MoDiscoGitImportTest.testJavaModelURI; 
@@ -48,6 +47,7 @@ class ImportedMoDiscoModelTests {
 	}
 	
 	protected def closeRepositoryModel(RepositoryModel repositoryModel) {
+		resource.save(null)
 		EcoreUtil.delete(resource.contents.get(0), true)
 	}
 
@@ -152,27 +152,25 @@ class ImportedMoDiscoModelTests {
 			Assert.assertTrue("Root revision isn't root.", RepositoryModelUtil.isRoot(root));
 		}
 		
-		val Multimap<String, String> visitedRevNames = HashMultimap.create();
+		val Collection<String> visitedRevNames = new HashSet<String>();
 		val rootNames = new HashSet<String>();
 		val stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
 			override onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshots) {
-				snapshots.forEach[projectID, snapshot|				
-					try {
-						Assert.assertTrue("Revs should not be visited twice", visitedRevNames.put(projectID, rev.getName()));
-						
-						if (RepositoryModelUtil.isRoot(rev)) {
-							rootNames.add(rev.getName());
-						}									
-					} catch (Exception e) {
-						Assert.fail(e.getMessage());
-					}					
-				]
+				try {
+					Assert.assertTrue("Revs should not be visited twice", visitedRevNames.add(rev.getName()));
+					
+					if (RepositoryModelUtil.isRoot(rev)) {
+						rootNames.add(rev.getName());
+					}									
+				} catch (Exception e) {
+					Assert.fail(e.getMessage());
+				}
 			}
 		});				
 		
 		val revNamesDiff = new HashSet<String>();
 		for(String name: revNames) {
-			if (!visitedRevNames.values().contains(name)) {
+			if (!visitedRevNames.contains(name)) {
 				revNamesDiff.add(name);
 				System.out.print("not visited: " + name);
 				val rev = RepositoryModelUtil.getRev(repositoryModel, name);
@@ -182,7 +180,7 @@ class ImportedMoDiscoModelTests {
 		
 		Assert.assertSame("Wrong number of merges.", 1, stats.mergeCounter)
 		Assert.assertSame("Wrong number of branches.", 3, stats.branchCounter) // one for the start, two for the actual branch (one for each path after branch)
-		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), new HashSet<String>(visitedRevNames.values()).size());	
+		Assert.assertEquals("Not all revisions are reached by traversal.", revNames.size(), visitedRevNames.size());	
   	}
   	
   	@Test def void testTraverseMetaData() {
@@ -191,7 +189,6 @@ class ImportedMoDiscoModelTests {
 	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.TRAVERSE_METADATA_KEY]
 	  		Assert.assertNotNull(dataSet)
 	  		Assert.assertNotNull(dataSet.jsonData)
-	  		resource.save(null)
 	  		shutdown()	  	
 	  	}
   		{

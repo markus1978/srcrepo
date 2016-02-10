@@ -10,13 +10,11 @@ import de.hub.srcrepo.ImportedMoDiscoModelTests
 import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
-import org.eclipse.emf.common.util.URI
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.junit.BeforeClass
 
 class MongoDBImportedMoDiscoModelTests extends ImportedMoDiscoModelTests {
-	public static URI testModelURI = URI.createURI("mongodb://localhost/srcrepo.example.gitmodel");
-
+	
 	private var Fragmentation fragmentation = null
 
 	@BeforeClass
@@ -26,6 +24,7 @@ class MongoDBImportedMoDiscoModelTests extends ImportedMoDiscoModelTests {
 	}
 
 	override openRepositoryModel() {
+		val testModelURI = MongoDBMoDiscoGitImportTest.testJavaModelURI
 		val baseDataStore = new MongoDBDataStore(testModelURI.authority(), testModelURI.path().substring(1), false);
 		val dataStore = new DataStoreImpl(baseDataStore, testModelURI);
 		fragmentation = new FragmentationImpl(Lists.newArrayList(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE), dataStore, 1)

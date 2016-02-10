@@ -46,8 +46,9 @@ class OclUtil {
 	}
 
 	static def javaDiffs(RepositoryModel sr) {
-		sr.allRevs.collectAll[parentRelations].collectAll[diffs]
-			.select[file != null && file instanceof JavaCompilationUnitRef]
+		sr.allRevs.collectAll[parentRelations].collectAll[diffs].select[
+				file != null && file instanceof JavaCompilationUnitRef
+			]
 	}
 
 	static def coutJavaDiffs(RepositoryModel sr) {

@@ -6,10 +6,12 @@ import static de.hub.srcrepo.RepositoryModelUtil.getMetaData;
 import org.eclipse.emf.common.util.URI;
 import org.junit.Assert;
 
+import de.hub.emffrag.FObject;
 import de.hub.emffrag.Fragmentation;
 import de.hub.srcrepo.MoDiscoGitImportTest;
 import de.hub.srcrepo.emffrag.EmfFragSrcRepoImport.Configuration;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory;
 
 public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {	
 	
@@ -44,13 +46,20 @@ public class MongoDBMoDiscoGitImportTest extends MoDiscoGitImportTest {
 
 	@Override
 	protected void importJavaFromModisco(RepositoryModel repositoryModel) {
+		closeRepositoryModel(TestModelKind.JAVA, repositoryModel);
 		EmfFragSrcRepoImport.importRepository(prepareConfiguration(TestModelKind.JAVA));
+		openRepositoryModel(TestModelKind.JAVA, false);
 	}
 
 	@Override
 	protected RepositoryModel openRepositoryModel(TestModelKind kind, boolean dropExisting) {
 		fragmentation = EmfFragSrcRepoImport.openFragmentation(prepareConfiguration(kind), dropExisting);
-		return (RepositoryModel) fragmentation.getRoot();
+		RepositoryModel repositoryModel = (RepositoryModel) fragmentation.getRoot();
+		if (repositoryModel == null && dropExisting) {
+			repositoryModel = RepositoryModelFactory.eINSTANCE.createRepositoryModel();
+			fragmentation.setRoot((FObject)repositoryModel);
+		}
+		return repositoryModel;
 	}
 
 	@Override
