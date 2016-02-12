@@ -59,14 +59,14 @@ class SSLink {
 	def resolve(NamedElement resolvedTarget) {
 		condition("You cannot resolve an resolved link.")[!isResolved]
 		condition("You can only resolve a link with a target from an snaptshot model.")[!resolvedTarget.isPersistent]
-		condition("Resolved target and source must be in the same model.")[source.eRoot == resolvedTarget.eRoot]
+		condition("Resolved target and source must be in the same model.")[source.eRoot == resolvedTarget.eRoot] // TODO zest
 		
 		replaceTarget(resolvedTarget)
 		return resolvedTarget
 	}
 	
 	def revert() {
-		condition("Only resolved links can be reverted.")[isResolved]
+		condition("Only resolved links can be reverted.")[isResolved] // TODO zest
 		replaceTarget(placeHolder)
 	}
 	

@@ -3,9 +3,12 @@ package de.hub.srcrepo.snapshot
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
+import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSLink
+import java.util.Collection
+import java.util.HashSet
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EClass
@@ -13,6 +16,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.gmt.modisco.java.AnnotationTypeMemberDeclaration
@@ -26,10 +30,10 @@ import org.eclipse.gmt.modisco.java.UnresolvedItem
 import org.eclipse.gmt.modisco.java.VariableDeclaration
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
-import static extension de.hub.srcrepo.SrcRepoActivator.*
+import static de.hub.srcrepo.SrcRepoActivator.*
+
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
-import de.hub.srcrepo.repositorymodel.Rev
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
@@ -129,47 +133,51 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		]
 		val List<SSLink> linksToResolve = newArrayList
 
-		// TODO
+		// TODO performance
 		// The current implementation removes unresolvedItems/orphanTypes/proxies 
 		// before they could be replaced by equal elements in an in CU. This is
 		// probably not very efficient.
 
 		// 1. remove old CUs
-		oldCompilationUnitModels.forEach [
+		val toDelete = new HashSet<EObject>
+		
+		// 1.1 remove the containment hierarchy
+		for(it:oldCompilationUnitModels) {
 			debug['''  #remove: «it»''']
-			
-			// 1.1. revert all links the exit the CU
-			it.outgoingLinks.forEach[revert]
-			// 1.2. revert all links that target the CU
+			removeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets, toDelete)
+			currentCompilationUnits.remove(getCopyCompilationUnit)
+			model.compilationUnits.remove(getCopyCompilationUnit)
+		}
+		deleteCrossReferences(toDelete, model)
+		
+		for(it:oldCompilationUnitModels) {
+			// 1.2. revert all links the exit the CU
+			for(it:it.outgoingLinks) {revert}
+			// 1.3. revert all links that target the CU
 			// replace all references that enter old CUs with place holders and 
 			// add them to the list of pending elements, since they need to be 
 			// resolved again. Ignoring unresolved references, which must be
 			// references that were delete one step before.
-			it.incomingLinks.filter[resolved].forEach [
-				it.revert
+			for(it:it.incomingLinks.filter[resolved && !toDelete.contains(it.source)]) {
+				it.revert				
 				linksToResolve += it				
-			]
-			
-			// 1.3 remove the containment hierarchy
-			removeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets)
-			currentCompilationUnits.remove(getCopyCompilationUnit)
-			model.compilationUnits.remove(getCopyCompilationUnit)			
-		]
+			}
+		}
 
 		// 2 add new CUs
 		// 2.1. add containment for all CUs
-		newCompilationUnitModels.forEach [
+		for(it:newCompilationUnitModels) {
 			debug["  #add: " + it]
 			
 			mergeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets, true)
 			it.copyCompilationUnit = copier.get(it.getOriginalCompilationUnitModel.compilationUnit) as CompilationUnit
 			currentCompilationUnits.put(it.getCopyCompilationUnit, it)	
-		]
+		}
 		// 2.2. add all references within new CUs
 		copier.copyReferences
 		// 2.3. collect all links added by the new CUs
 		debug["  #add links"]
-		newCompilationUnitModels.forEach [
+		for(it:newCompilationUnitModels) {
 			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[ 
 				val sourceCopy = copier.get(it.source) as ASTNode
 				condition[sourceCopy.mark != "Replaced"]
@@ -178,12 +186,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				return link
 			]
 			linksToResolve += outgoingLinks
-		]
+		}
 		copier.clear
 			
 		// 3. resolve all new and re-resolve all priorly reverted references
 		debug["  #resolving links: "]
-		linksToResolve.filter[!resolved].forEach[
+		for(it:linksToResolve.filter[!resolved]) {
 			debug["    #" + it]
 			val resolvedTarget = targets.get(it.id)
 			if (resolvedTarget != null) {
@@ -198,9 +206,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					  // TODO what about merged elmenets?
 				}
 			} else {
-				condition("This should not happen.")[false]
+				condition("This should not happen.")[false] // zest
 			}
-		]
+		}
 	}
 	
 	override start() {
@@ -341,10 +349,10 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 						val existingCopyChild = copy.eGet(copyFeature) as EObject
 						if (existingCopyChild != null) {
 							debug[existingCopyChild.mark = "Replaced"; null]
-							copier.getLastOriginal(existingCopyChild).forEach[existingOriginalChild|
+							for(existingOriginalChild:copier.getLastOriginal(existingCopyChild)) {
 								condition[existingOriginalChild != null]
 								copier.put(existingOriginalChild, copyChild, true)							
-							]
+							}
 						}
 						debug[copyChild.mark = if (existingCopyChild != null) "Replacement" else "New"; null]						
 						copy.eSet(copyFeature, copyChild)
@@ -355,20 +363,36 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	} 
 	
 	private static class SSCopier extends EcoreUtil.Copier {		
+		val Map<EClass, EClass> classCache = newHashMap
+		val Map<EStructuralFeature,EStructuralFeature> featureCache = newHashMap
+		
 		val JavaPackage metaModel
 		val Multimap<EObject,EObject> reverseMap = ArrayListMultimap.create
 		
 		new(JavaPackage metaModel) {
 			this.metaModel = metaModel
 		}
-	
-		override getTarget(EClass eClass) { // TODO performance
-			return metaModel.getEClassifier(eClass.getName()) as EClass
+		
+		private def <K,V> V access(Map<K,V> cache, K key, (K)=>V create) {
+			val existingValue = cache.get(key)
+			return if (existingValue == null) {
+				val newValue = create.apply(key)
+				cache.put(key, newValue)
+				newValue
+			} else {
+				existingValue
+			}
 		}
 	
-		override getTarget(EStructuralFeature eStructuralFeature) { // TODO performance
-			val eClass = eStructuralFeature.getEContainingClass();
-			return getTarget(eClass).getEStructuralFeature(eStructuralFeature.getName());
+		override getTarget(EClass eClass) {
+			return classCache.access(eClass)[metaModel.getEClassifier(eClass.getName()) as EClass]			
+		}
+	
+		override getTarget(EStructuralFeature eStructuralFeature) {
+			return featureCache.access(eStructuralFeature)[
+				val eClass = eStructuralFeature.getEContainingClass();
+				getTarget(eClass).getEStructuralFeature(eStructuralFeature.getName());	
+			]			
 		}
 		
 		override put(EObject key, EObject value) {
@@ -430,7 +454,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		}
 	}
 	
-	private def <T extends EObject> void removeContents(T copy, T original, Map<NamedElement,String> originalTargets) {
+	private def <T extends EObject> void removeContents(T copy, T original, Map<NamedElement,String> originalTargets, Collection<EObject> toDelete) {
 		condition[copy.eClass.name == original.eClass.name]				
 		
 		original.forEachChild[feature,child|
@@ -439,7 +463,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				val existingCopyChild = getCopyChild(copy, original, namedElementChild, originalTargets)			
 				if (existingCopyChild != null) {
 					// copy of the child exist
-					removeContents(existingCopyChild, namedElementChild, originalTargets)			
+					removeContents(existingCopyChild, namedElementChild, originalTargets, toDelete)			
 					val delete = if (existingCopyChild.externalTarget) {
 						if (existingCopyChild.name == null) {
 							// unnamed container, e.g. FieldDeclaration with fragments
@@ -455,7 +479,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					
 					if (delete) {
 						debug["    #delete: " + existingCopyChild.name]
-						EcoreUtil.delete(existingCopyChild, true) // TODO performance
+						deleteWithOutCrossReferences(existingCopyChild, toDelete)
 						val id = originalTargets.get(namedElementChild)
 						if (id != null) {
 							targets.remove(id)						
@@ -464,6 +488,36 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				} 
 			} 
 		]
+	}
+	
+	private def void deleteRecursive(EObject eObject, Collection<EObject> removed) {
+		for(child:eObject.eContents) {
+			deleteRecursive(child,removed)
+		}
+		for(feature:eObject.eClass.EAllReferences) {
+			if (feature.changeable && (feature.EOpposite == null || !feature.EOpposite.containment)) {
+				eObject.eUnset(feature)
+			}
+		}
+		removed.add(eObject)
+	}
+	
+	private def deleteWithOutCrossReferences(EObject eObject, Collection<EObject> removed) {
+		deleteRecursive(eObject, removed)
+		EcoreUtil.remove(eObject)
+	}
+	
+	private def deleteCrossReferences(Collection<EObject> eObjects, EObject rootEObject) {		
+		val usages = UsageCrossReferencer.findAll(eObjects, rootEObject)
+		for (entry:usages.entrySet) {
+			val deletedEObject = entry.getKey()
+			val settings = entry.getValue()
+			for (setting:settings) {
+				if (setting.getEStructuralFeature().isChangeable()) {
+					EcoreUtil.remove(setting, deletedEObject)
+				}
+			}
+		}
 	}
 	
 	private def isUsed(NamedElement it) {

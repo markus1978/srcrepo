@@ -20,7 +20,8 @@ class SrcRepoShell {
 			"ls" -> new ListCommand,
 			"rm" -> new RemoveCommand,
 			"par" -> new ParallelCommand,
-			"metrics" -> new MetricsCommand
+			"metrics" -> new MetricsCommand,
+			"drop" -> new DropCommand
 		)
 	
 	
