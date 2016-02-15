@@ -86,18 +86,18 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	private IPath absoluteWorkingDirectoryPath;
 	private Collection<String> javaLikeExtensions = new HashSet<String>();
 	
-	private static final TimeStatistic revCheckoutStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision checkout time");
-	private static final TimeStatistic revRefreshStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time");
-	private static final TimeStatistic revImportTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision import time");
-	private static final TimeStatistic revLOCTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision LOC time");
-	private static final ValueStatistic revImportSizeStat = new ValueStatistic("#").with(Summary.class).with(Histogram.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Imported Java diffs / revision");
+	public static final TimeStatistic revCheckoutETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision checkout time");
+	public static final TimeStatistic revRefreshStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time");
+	public static final TimeStatistic revImportTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision import time");
+	public static final TimeStatistic revLOCTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision LOC time");
+	public static final ValueStatistic revImportSizeStat = new ValueStatistic("#").with(Summary.class).with(Histogram.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Imported Java diffs / revision");
 	
-	private static final TimeStatistic revRefreshStructure = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (project structure)");
-	private static final TimeStatistic revGetCompilationUnits = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (gather CUs)");
-	private static final TimeStatistic revRefreshCompilationUnits = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (CUs)");
+	public static final TimeStatistic revRefreshStructure = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (project structure)");
+	public static final TimeStatistic revGetCompilationUnits = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (gather CUs)");
+	public static final TimeStatistic revRefreshCompilationUnits = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).with(WindowedPlot.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision refresh time (CUs)");
 	
-	private static final ValueStatistic revNumberOfRefreshedResourcesStat = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Refreshed resources per rev");
-	private static final ValueStatistic revNumberOfChangedProjectFiles = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision number of changed project files");
+	public static final ValueStatistic revNumberOfRefreshedResourcesStat = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).register(MoDiscoRepositoryModelImportVisitor.class, "Refreshed resources per rev");
+	public static final ValueStatistic revNumberOfChangedProjectFiles = new ValueStatistic("#").with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class).register(MoDiscoRepositoryModelImportVisitor.class, "Revision number of changed project files");
 	
 	private final RepositoryMetaData repositoryMetaData;
 	private final ImportMetaData importMetaData;
@@ -196,7 +196,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 		revNumberOfChangedProjectFiles.track(projectFileDiffs.size());
 		
 		boolean checkoutSuccessful = true;
-		Timer checkoutTimer = revCheckoutStat.timer();
+		Timer checkoutTimer = revCheckoutETStat.timer();
 		if (!potentialJavaDiffs.isEmpty() || !projectFileDiffs.isEmpty()) {
 			checkoutSuccessful = runJob(new CheckoutJob(rev.getName()));
 		}
@@ -332,7 +332,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 
 		@Override
 		public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {		
-			Timer revCheckoutTimer = revCheckoutStat.timer();
+			Timer revCheckoutTimer = revCheckoutETStat.timer();
 			try {				
 				sourceControlSystem.checkoutRevision(revName);				
 			} catch (SourceControlException e) {							

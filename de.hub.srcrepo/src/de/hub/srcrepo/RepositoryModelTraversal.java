@@ -36,11 +36,11 @@ public class RepositoryModelTraversal {
 		}		
 	}
 	
-	private final static TimeStatistic visitAllStat = new TimeStatistic(TimeUnit.MICROSECONDS)
+	public final static TimeStatistic visitFullETStat = new TimeStatistic(TimeUnit.MICROSECONDS)
 			.with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class)
 			.register(RepositoryModelTraversal.class, "Visit time");
 	
-	private final static ValueStatistic usedMemoryStat = new ValueStatistic("b")
+	public final static ValueStatistic usedMemoryStat = new ValueStatistic("b")
 			.with(BatchedPlot.class).register(RepositoryModelTraversal.class, "Used heap memory.");
 	
 	private final RepositoryModel repositoryModel;
@@ -171,7 +171,7 @@ public class RepositoryModelTraversal {
 	
 	private void visitRev(Rev rev, int number) {
 		Preconditions.checkArgument(!traversedRevs.contains(rev));
-		Timer visitAllTimer = visitAllStat.timer();
+		Timer visitAllTimer = visitFullETStat.timer();
 		visitor.onStartRev(rev, number);
 		
 		for (ParentRelation parentRelation: rev.getParentRelations()) {

@@ -1,5 +1,8 @@
 package de.hub.srcrepo.emffrag.commands
 
+import de.hub.emffrag.internal.FStoreFragmentation
+import de.hub.emffrag.mongodb.MongoDBDataStore
+import de.hub.jstattrack.AbstractStatistic
 import de.hub.jstattrack.Statistics
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.TimeStatistic.Timer
@@ -7,6 +10,8 @@ import de.hub.jstattrack.services.BatchedPlot
 import de.hub.jstattrack.services.Histogram
 import de.hub.jstattrack.services.Summary
 import de.hub.jstattrack.services.WindowedPlot
+import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor
+import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.RevVisitor
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
@@ -21,44 +26,37 @@ import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.ecore.EObject
 import org.json.JSONArray
+import org.json.JSONObject
 
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
-import org.json.JSONObject
+import de.hub.srcrepo.ProjectAwareRevVisitor
 
 class MetaDataCommand extends AbstractRepositoryCommand {
-	
-	private static val traverseObjectsExecTimeStataTitle = "Traverse execution time for a million objects"
-	
-	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, traverseObjectsExecTimeStataTitle);
+		
+	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, "Traverse execution time for a million objects");
 	private var withElementCount = false
 	private var CommandLine cl = null
 	private var List<String> data = newArrayList
 
-	private def statSummaryData(JSONArray jsonData, String statName, String key) {
-		for (stat:jsonData.toIterable) {
-			if (stat.getString("name").equals(statName)) {				
-				for (service: stat.getJSONArray("services").toIterable) {
-					if (service.getString("name").equals("Summary")) {
-						return '''
-							«FOR dataTuple:service.getJSONArray("data").toIterable SEPARATOR ", "»
-								«key»«dataTuple.getString("key").toFirstUpper» : «dataTuple.get("value").toString»
-							«ENDFOR»
-						'''
-					}	
-				}
-			}
+	private def statSummaryData(JSONArray jsonData, AbstractStatistic statDef, String key) {	
+		val serviceData = Statistics.getStatServiceDataFromJSONReport(statDef.id, Summary.serviceName, jsonData)
+		if (serviceData == null) {
+			throw new IllegalArgumentException("Could not find a statistic called " + statDef.id + ".")
+		} else {
+			return '''
+				«FOR dataTuple:serviceData.toIterable SEPARATOR ", "»
+					«key»«dataTuple.getString("key").toFirstUpper» : «dataTuple.get("value").toString»
+				«ENDFOR»
+			'''
 		}
-		throw new IllegalArgumentException("Could not find a statistic called " + statName + ".")
 	}
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
-		data.clear
-		
 		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
 		val elementCountResult = if (withElementCount) { repo.countObjects }
 		val importStatJSON = new JSONArray(repo.importMetaData.statsAsJSON)
-		val traverseMetaDataSet = repo.getData(RevVisitor.TRAVERSE_METADATA_KEY)
+		val traverseMetaDataSet = repo.getData(RevVisitor.traverseMetaData)
 		val traverseStatJSON = if (traverseMetaDataSet?.jsonData != null) new JSONArray(traverseMetaDataSet.jsonData)
 		val currentStatDataJSON = Statistics.reportToJSON
 		
@@ -76,17 +74,17 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 					1_elementCount : «elementCountResult.get("count")»,
 					1_SLOC : «elementCountResult.get("ncss")»,
 				«ENDIF»
-				«statSummaryData(importStatJSON, "Visit time", "2_revVisitTime")»,
-				«statSummaryData(importStatJSON, "Revision checkout time", "3_checkoutTime")»,
-				«statSummaryData(importStatJSON, "Revision refresh time", "4_refreshTime")»,
-				«statSummaryData(importStatJSON, "Revision import time", "5_importTime")»,
-				«statSummaryData(importStatJSON, "DataWriteET", "6_writeTime")»,
-				«statSummaryData(importStatJSON, "Revision LOC time", "7_locTime")»,
+				«statSummaryData(importStatJSON, RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
+				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revCheckoutETStat, "3_checkoutTime")»,
+				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revRefreshStat, "4_refreshTime")»,
+				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revImportTimeStat, "5_importTime")»,
+				«statSummaryData(importStatJSON, MongoDBDataStore.writeTimeStatistic, "6_writeTime")»,
+				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revLOCTimeStat, "7_locTime")»,
 				«IF withElementCount»					
-					«statSummaryData(currentStatDataJSON, traverseObjectsExecTimeStataTitle, "8_traverseTime")»,
-					«statSummaryData(currentStatDataJSON, "FragLoadET", "9_fragLoadET")»,
-					«statSummaryData(currentStatDataJSON, "FragUnloadET", "10_fragUnloadET")»,
-					«statSummaryData(currentStatDataJSON, "DataReadET", "11_dataReadET")»,
+					«statSummaryData(currentStatDataJSON, traverseOneKObjectsExecTimeStat, "8_traverseTime")»,
+					«statSummaryData(currentStatDataJSON, FStoreFragmentation.loadETStat, "9_fragLoadET")»,
+					«statSummaryData(currentStatDataJSON, FStoreFragmentation.unloadETStat, "10_fragUnloadET")»,
+					«statSummaryData(currentStatDataJSON, MongoDBDataStore.readTimeStatistic, "11_dataReadET")»,
 				«ENDIF»
 			}
 		''' else '''
@@ -97,11 +95,11 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 				1_dbEntryCount : «repo.dataStoreMetaData.count»,
 				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				1_gitSize : «repo.metaData.size»,				
-				«statSummaryData(traverseStatJSON, "RevVisitET", "2_revVisitTime")»,
-				«statSummaryData(traverseStatJSON, "CUsLoadET", "3_cusLoadTime")»,
-				«statSummaryData(traverseStatJSON, "CUsVisitET", "4_cusVisitTime")»,
-				«statSummaryData(currentStatDataJSON, "FragLoadET", "5_fragLoadET")»,
-				«statSummaryData(currentStatDataJSON, "FragUnloadET", "6_fragUnloadET")»,
+				«statSummaryData(traverseStatJSON, RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
+				«statSummaryData(traverseStatJSON, ProjectAwareRevVisitor.cusLoadETStat, "3_cusLoadTime")»,
+				«statSummaryData(traverseStatJSON, ProjectAwareRevVisitor.cusVisitETStat, "4_cusVisitTime")»,
+				«statSummaryData(currentStatDataJSON, FStoreFragmentation.loadETStat, "5_fragLoadET")»,
+				«statSummaryData(currentStatDataJSON, FStoreFragmentation.unloadETStat, "6_fragUnloadET")»,
 			}
 		''').toString
 	}
@@ -146,6 +144,7 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 	}
 	
 	override protected run(CommandLine cl) {
+		data.clear
 		this.cl = cl
 		withElementCount = cl.hasOption("w")
 		

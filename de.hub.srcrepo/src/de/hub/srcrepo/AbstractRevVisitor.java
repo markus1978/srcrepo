@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.base.Preconditions;
 
 import de.hub.jstattrack.Statistics;
+import de.hub.jstattrack.Statistics.UUID;
 import de.hub.jstattrack.TimeStatistic;
 import de.hub.jstattrack.TimeStatistic.Timer;
 import de.hub.jstattrack.services.BatchedPlot;
@@ -20,12 +21,14 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
 
 public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
-	public static final String TRAVERSE_METADATA_KEY = "TraverseMetaData";
+	public static final UUID revVisitET = Statistics.UUID(AbstractRevVisitor.class, "RevVisitET");
+	public static final String traverseMetaData = "TraverseMetaData";
+	
 	private Map<String, AbstractFileRef> files = new HashMap<String, AbstractFileRef>();
 	private Map<Rev, Map<String, AbstractFileRef>> branches = new HashMap<Rev, Map<String, AbstractFileRef>>();
 
 	private static final TimeStatistic revVisistETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class)
-			.with(BatchedPlot.class).register(AbstractRevVisitor.class, "RevVisitET");
+			.with(BatchedPlot.class).register(revVisitET);
 	private Timer revVisitETStatTimer = null;
 
 	protected Rev lastVisitedRev = null;
@@ -133,10 +136,10 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	public void close(RepositoryModel repositoryModel) {
 		RepositoryModelFactory factory = (RepositoryModelFactory) repositoryModel.eClass().getEPackage()
 				.getEFactoryInstance();
-		DataSet dataSet = RepositoryModelUtil.getData(repositoryModel, TRAVERSE_METADATA_KEY);
+		DataSet dataSet = RepositoryModelUtil.getData(repositoryModel, traverseMetaData);
 		if (dataSet == null) {
 			dataSet = factory.createDataSet();
-			dataSet.setName(TRAVERSE_METADATA_KEY);
+			dataSet.setName(traverseMetaData);
 			repositoryModel.getDataSets().add(dataSet);
 		}
 

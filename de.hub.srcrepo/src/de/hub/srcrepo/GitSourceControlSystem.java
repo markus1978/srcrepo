@@ -48,17 +48,16 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelFactory;
 import de.hub.srcrepo.repositorymodel.Rev;
 
 public class GitSourceControlSystem implements ISourceControlSystem {
-	
 	private final boolean isTryHard = false;
 	private Git git = null;
 	private DefaultExecutor executor = null;
 
 	private int importedRevCount = 0;
 	
-	private final TimeStatistic gitCleanStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT clean time");
-	private final TimeStatistic gitResetStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT reset time");
-	private final TimeStatistic gitCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT checkout time");
-	private final TimeStatistic gitCheckoutAllStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GIT checkout all (clean, reset, co) time");
+	private final TimeStatistic gitCleanStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GitCleanET");
+	private final TimeStatistic gitResetStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GitResetET");
+	private final TimeStatistic gitCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GitCheckoutET");
+	private final TimeStatistic gitCheckoutFullStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GitCheckoutFullET");
 
 	@Override
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {
@@ -299,7 +298,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 
 	@Override
 	public void checkoutRevision(String name) throws SourceControlException {
-		Timer checkoutAllTimer = gitCheckoutAllStat.timer();
+		Timer checkoutAllTimer = gitCheckoutFullStat.timer();
 		if (SrcRepoActivator.INSTANCE.useCGit) {
 			try {
 				if (executor == null) {

@@ -13,8 +13,8 @@ import com.google.common.base.Preconditions
 
 abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 	
-	private static final TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(ProjectAwareRevVisitor, "CUsLoadET");
-	private static final TimeStatistic cusVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(ProjectAwareRevVisitor, "CUsVisitET");		
+	public static final TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(ProjectAwareRevVisitor, "CUsLoadET");
+	public static final TimeStatistic cusVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(ProjectAwareRevVisitor, "CUsVisitET");		
 			
 	val Map<String, Map<String, CompilationUnitModel>> projectFiles = newHashMap()
 	val Map<String, String> pathToProject = newHashMap

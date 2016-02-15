@@ -186,14 +186,14 @@ class ImportedMoDiscoModelTests {
   	@Test def void testTraverseMetaData() {
   		{
 	  		testMetrics()
-	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.TRAVERSE_METADATA_KEY]
+	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.traverseMetaData]
 	  		Assert.assertNotNull(dataSet)
 	  		Assert.assertNotNull(dataSet.jsonData)
 	  		shutdown()	  	
 	  	}
   		{
   			init()
-	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.TRAVERSE_METADATA_KEY]
+	  		val dataSet = repositoryModel.dataSets.findFirst[name==RevVisitor.traverseMetaData]
 	  		Assert.assertNotNull(dataSet)
 	  		Assert.assertNotNull(dataSet.jsonData)	
 	  	}
