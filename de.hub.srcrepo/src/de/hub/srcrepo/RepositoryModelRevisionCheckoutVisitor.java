@@ -65,7 +65,7 @@ public class RepositoryModelRevisionCheckoutVisitor implements IRepositoryModelV
 	}
 
 	@Override
-	public boolean onStartRev(final Rev rev, int number) {		
+	public boolean onStartRev(final Rev rev, Rev traversalParentRev, int number) {		
 	
 		SrcRepoActivator.INSTANCE.info("Visit rev " + rev.getName() + " "   				
 				+ "(" + number + "/" + repositoryModel.getAllRevs().size() + ")");
@@ -84,7 +84,7 @@ public class RepositoryModelRevisionCheckoutVisitor implements IRepositoryModelV
 	}
 
 	@Override
-	public void onCompleteRev(Rev rev) {		
+	public void onCompleteRev(Rev rev, Rev traversalParentRev) {		
 		
 	}
 

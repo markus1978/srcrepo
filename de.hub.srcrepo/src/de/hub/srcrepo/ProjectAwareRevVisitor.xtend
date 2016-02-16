@@ -1,5 +1,6 @@
 package de.hub.srcrepo
 
+import com.google.common.base.Preconditions
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.services.BatchedPlot
 import de.hub.jstattrack.services.Summary
@@ -9,7 +10,6 @@ import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.Rev
 import java.util.Map
 import java.util.concurrent.TimeUnit
-import com.google.common.base.Preconditions
 
 abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 	
@@ -19,7 +19,7 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 	val Map<String, Map<String, CompilationUnitModel>> projectFiles = newHashMap()
 	val Map<String, String> pathToProject = newHashMap
 			
-	protected abstract def void onRev(Rev rev, Map<String, Map<String, CompilationUnitModel>> cus)
+	protected abstract def void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, CompilationUnitModel>> cus)
 	
 	private def loadCompilagtionUnitModel(JavaCompilationUnitRef fileRef) {
 		val timer = cusLoadETStat.timer
@@ -50,9 +50,9 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 		projectFiles.values.forEach[it.clear]
 	}
 	
-	override protected onRev(Rev rev) {
+	override protected onRev(Rev rev, Rev traversalParentRev) {
 		val timer = cusVisitETStat.timer
-		onRev(rev, projectFiles)
+		onRev(rev, traversalParentRev, projectFiles)
 		timer.track
 	}
 	

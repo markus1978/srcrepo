@@ -2,6 +2,7 @@ package de.hub.srcrepo;
 
 import java.util.Date;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EPackage;
@@ -100,7 +101,12 @@ public class SrcRepoActivator extends Plugin {
 		}
 		if (isStandAlone) {
 			if (logInStandAlone) {
-				System.out.println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "(null)") + (e != null ? ": " + e.getMessage() : ""));
+				if (e != null) {
+					String trace = ExceptionUtils.getStackTrace(e);
+					System.out.println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "") + "\n" + trace);
+				} else {
+					System.out.println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "(null)"));
+				}
 			}
 		}		
 	}

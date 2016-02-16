@@ -21,6 +21,7 @@ import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl;
 public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	
 	private int count = 0;
+	private boolean createNewSnapshot = false;
 	
 	private final IModiscoSnapshotModel.Factory snapshotFactory;
 	private final Map<String, IModiscoSnapshotModel> snapshots;
@@ -55,17 +56,17 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	}
 
 	@Override
-	public void onRev(Rev rev) {
+	public void onRev(Rev rev, Rev traversalParentRev) {
 		SrcRepoActivator.INSTANCE.info("Visiting revision: " + rev.getName() + "(" + (++count) + "/" + ((RepositoryModel)rev.eContainer()).getAllRevs().size() + ")");
-		super.onRev(rev);
+		super.onRev(rev, traversalParentRev);
 	}
 
 	@Override
-	protected final void onRev(Rev rev, Map<String, Map<String, CompilationUnitModel>> projectFiles) {
+	protected final void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, CompilationUnitModel>> projectFiles) {
 		if (!filter(rev)) {
 			return;
 		}
-		for(Map.Entry<String, Map<String, CompilationUnitModel>> projectEntry: projectFiles.entrySet()) {
+		ProjectLoop: for(Map.Entry<String, Map<String, CompilationUnitModel>> projectEntry: projectFiles.entrySet()) {
 			String projectID = projectEntry.getKey();
 			Preconditions.checkArgument(projectID != null);
 			Map<String,CompilationUnitModel> files = projectEntry.getValue();
@@ -84,6 +85,11 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 				
 				try {
 					snapshot.start();
+					// add contributing models in case we cleared the snapshot because of an error in a prior revision
+					for(CompilationUnitModel existingContributingModel:contributingModels.values()) {
+						snapshot.checkCompilationUnitModel(existingContributingModel);
+					}
+					
 					int changedCUs = 0;
 					// merge the models from all compilation units
 					Collection<String> pathsInFiles = new HashSet<String>();
@@ -124,28 +130,40 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 					if (changedCUs > 0) {
 						SrcRepoActivator.INSTANCE.info("Updated snapshot for " + projectID + ", number of changed CUs " + changedCUs);
 					}
-				} catch (Exception e) {
+				} catch (Exception incrementalException) {
 					// something unexpected happend. Loose the failed snapshot and start from scratch
-					SrcRepoActivator.INSTANCE.warning("Could not update a snapshot; replaced snapshot with a fresh one.", e); 
+					SrcRepoActivator.INSTANCE.warning("Could not update a snapshot; replaced snapshot with a fresh one.", incrementalException); 
 					
-					snapshot.clear();
-					snapshot = snapshotFactory.create(projectID);
-					snapshots.put(projectID, snapshot);
-					for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
-						snapshot.start();
-						snapshot.addCompilationUnitModel(entry.getValue());
-						snapshot.end();
+					try {
+						snapshot.clear();
+						snapshot = snapshotFactory.create(projectID);
+						snapshots.put(projectID, snapshot);
+						for (Entry<String, CompilationUnitModel> entry : contributingModels.entrySet()) {
+							snapshot.start();
+							snapshot.addCompilationUnitModel(entry.getValue());
+							snapshot.end();
+						}
+					} catch (Exception newException) {
+						SrcRepoActivator.INSTANCE.warning("Also could not create a fresh snapshot. Will try to create one for next revision.", newException);
+						snapshot.clear();
+						snapshot = snapshotFactory.create(projectID);
+						snapshots.put(projectID, snapshot);
+						continue ProjectLoop;
 					}
 				}
 			}
 		}
-		onRevWithSnapshot(rev, snapshots);
+		try {
+			onRevWithSnapshot(rev, traversalParentRev, snapshots);
+		} catch (Exception e) {
+			SrcRepoActivator.INSTANCE.error("Exception in visitor function.", e);
+		}
 	}
 
 	protected boolean filter(Rev rev) {
 		return true;
 	}
 
-	protected abstract void onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshot);
+	protected abstract void onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshot);
 
 }

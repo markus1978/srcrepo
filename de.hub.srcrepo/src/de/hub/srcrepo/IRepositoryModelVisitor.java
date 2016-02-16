@@ -38,14 +38,14 @@ public interface IRepositoryModelVisitor {
 	 * 
 	 * @return false if the current branch should not be visited further.
 	 */
-	public boolean onStartRev(Rev rev, int number);
+	public boolean onStartRev(Rev rev, Rev traversalParentRev, int number);
 
 	/**
 	 * Is called when the currently visited commit is left, i.e. all diffs have
 	 * been visited.
 	 * 
 	 */
-	public void onCompleteRev(Rev rev);
+	public void onCompleteRev(Rev rev, Rev traversalParentRev);
 
 	public void onCopiedFile(Diff diff);
 

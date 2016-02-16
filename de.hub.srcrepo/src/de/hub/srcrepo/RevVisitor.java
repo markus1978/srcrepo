@@ -9,7 +9,7 @@ import de.hub.srcrepo.repositorymodel.Rev;
 public abstract class RevVisitor extends AbstractRevVisitor {
 	public Map<String, AbstractFileRef> files = new HashMap<String, AbstractFileRef>();
 	
-	protected abstract void onRev(Rev rev, Map<String, AbstractFileRef> files);
+	protected abstract void onRev(Rev rev, Rev traversalParentRev, Map<String, AbstractFileRef> files);
 
 	@Override
 	protected void clearFiles() {
@@ -24,7 +24,7 @@ public abstract class RevVisitor extends AbstractRevVisitor {
 		files.remove(name);
 	}
 	@Override
-	protected void onRev(Rev rev) {
-		onRev(rev, files);
+	protected void onRev(Rev rev, Rev traversalParentRev) {
+		onRev(rev, traversalParentRev, files);
 	}
 }

@@ -89,6 +89,10 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 						NamedElement target = null;
 						target = getProxyElement(pe, model1);
 						if (target != null) {
+							// There is a bug in modisco. MethodDeclaration and AnnotationTypeMemberDeclarations
+							// are sometimes confused with each other (they probably have colliding ids). This
+							// causes a ClassCastException in internaly; affectTarget however will return normaly.
+							// Will later cause problems during traversal when resolution is repeated.
 							pe.affectTarget(target);
 							Preconditions.checkState(target instanceof UnresolvedItem || target.isProxy());
 							unresolvedLink.setTarget(target);
@@ -96,7 +100,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 								unresolvedLink.setFeatureIndex(((List<?>)source.eGet(feature)).indexOf(target));
 							} else {
 								unresolvedLink.setFeatureIndex(-1);
-							}							
+							}
 						} else {
 							// TODO maybe there is a regular case where this happen?
 							SrcRepoActivator.INSTANCE.warning("Found an element that could not be resolved, " + 

@@ -19,6 +19,12 @@ public interface IModiscoSnapshotModel {
 	 * for computing the next snapshot.
 	 */
 	public void start();
+	
+	/** 
+	 * Does the same as addCompilationUnitModel, but only if the model is not already
+	 * part of this snapshot.
+	 */
+	public void checkCompilationUnitModel(CompilationUnitModel model);
 
 	/**
 	 * Add a compilation unit model to the snapshot. The models are taken from a

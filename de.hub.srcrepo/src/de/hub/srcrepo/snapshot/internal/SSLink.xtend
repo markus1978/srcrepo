@@ -1,7 +1,6 @@
 package de.hub.srcrepo.snapshot.internal
 
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
-import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
@@ -9,51 +8,48 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.NamedElement
 
+import static de.hub.srcrepo.SrcRepoActivator.*
+
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
-import static extension de.hub.srcrepo.SrcRepoActivator.*
 
 class SSLink {
-	val ASTNode copiedSource
-	val UnresolvedLink originalUnresolvedLink 	
+	val ASTNode source
+	val EReference feature 	
+	val int featureIndex
 	val String id
+	
 	var NamedElement placeHolder = null
 
-	new(UnresolvedLink originalUnresolvedLink, ASTNode copiedSource, String id, NamedElement placeHolder) {
-		if (copiedSource.eContainer == null) {
-			val container = originalUnresolvedLink.source.eContainer
-			println(container)
-			val cf = copiedSource.eContainingFeature
-			println(cf)
-		}
-		condition[copiedSource.eContainer != null]
-		this.originalUnresolvedLink = originalUnresolvedLink
-		this.copiedSource = copiedSource
-		this.placeHolder = placeHolder
+	new(ASTNode source, EReference feature, int featureIndex, String id, NamedElement placeHolder) {
+		condition[source != null]
+		condition[source.eContainer != null]
+		this.source = source
+		this.feature = feature
+		this.featureIndex = featureIndex
 		this.id = id
+		this.placeHolder = placeHolder
 		replaceTarget(placeHolder)
-		condition[!resolved]
+	}
+	
+	def getId() {
+		return id
 	}
 	
 	def getCurrentTarget() {
 		val source = getSource()
-		val feature = source.eClass().getEStructuralFeature(originalUnresolvedLink.featureID) as EReference
 		if (feature.many) {
-			return (source.eGet(feature) as List<NamedElement>).get(originalUnresolvedLink.featureIndex)
+			return (source.eGet(feature) as List<NamedElement>).get(featureIndex)
 		} else {
 			return source.eGet(feature) as NamedElement
 		}
 	}
 	
 	def ASTNode getSource() {
-		copiedSource
+		source
 	}
 	
 	def isResolved() {
 		return currentTarget != placeHolder 
-	}
-	
-	def getId() {
-		return id
 	}
 
 	def resolve(NamedElement resolvedTarget) {
@@ -74,7 +70,7 @@ class SSLink {
 		val targetStr = if (resolved) {
 			'''«currentTarget.name»'''
 		} else {
-			'''<unresolved:«id»>'''
+			'''<unresolved>'''
 		}
 		return '''«source.eClass.name» -> «targetStr»'''
 	}
@@ -84,15 +80,14 @@ class SSLink {
 	}
 	
 	private def NamedElement replaceTarget(NamedElement target) {
-		val source = getSource()
-		val feature = source.eClass().getEStructuralFeature(originalUnresolvedLink.featureID) as EReference
+		val source = getSource() 
 
 		if (feature.isMany()) {			
 			val lst = source.eGet(feature) as EList<NamedElement>
 			if (target != null) {
-				return lst.set(originalUnresolvedLink.featureIndex, target)				
+				return lst.set(featureIndex, target)				
 			} else {
-				return lst.remove(originalUnresolvedLink.featureIndex)
+				return lst.remove(featureIndex)
 			}
 		} else {
 			val old = source.eGet(feature) as NamedElement

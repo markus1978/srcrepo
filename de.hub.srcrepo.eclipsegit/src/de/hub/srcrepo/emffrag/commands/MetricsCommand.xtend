@@ -17,18 +17,21 @@ import org.json.JSONObject
 
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import de.hub.jstattrack.TimeStatistic
+import java.util.concurrent.TimeUnit
+import de.hub.jstattrack.services.Summary
 
 class MetricsCommand extends AbstractRepositoryCommand {
+	public val TimeStatistic revETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).register(MetricsCommand, "RevET")
 	
 	val format = new SimpleDateFormat("dd-MM-yyyy")
 	
 	val Map<EObject, Integer> values = newHashMap
-//	val Map<Rev, Integer> data = newHashMap
 	
 	static abstract class EmffragModiscoRevVisitor extends MoDiscoRevVisitor {
 		new() {
 			super(JavaPackage.eINSTANCE);
-		}
+		}		
 	}
 	
 	private def traverse(RepositoryModel repo, EmffragModiscoRevVisitor visitor) {
@@ -40,7 +43,7 @@ class MetricsCommand extends AbstractRepositoryCommand {
 		return if (!values.containsKey(container)) {
 			snapshot.getPersistedOriginal(container)
 			val newValue = function.apply(container)
-			// TODO save			
+			// TODO save in model for later traversals; necessary provision in meta-model/emffrag is missing			
 			values.put(container, newValue)
 			newValue
 		} else {
@@ -48,19 +51,25 @@ class MetricsCommand extends AbstractRepositoryCommand {
 		}
 	}
 	
-//	var count = 0
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
 		val data = new JSONArray
-		repo.traverse[rev, snapshots|
+		repo.traverse[rev, traversalParentRev, snapshots|
+			val timer = revETStat.timer
 			val datum = new JSONObject
-			datum.put("1_time", format.format(rev.time))
-			datum.put("2_cus", snapshots.values.sum[model.compilationUnits.size])
-			datum.put("3_wmcHsv", snapshots.values.sum[snapshot|snapshot.model.compilationUnits.map[types.get(0)].sum[
+			datum.put("time", format.format(rev.time))
+			datum.put("rev", rev.name)
+			if (traversalParentRev != null) { 
+				datum.put("parent", traversalParentRev.name)				
+			} else {
+				datum.put("parent", "before_root")
+			} 
+			datum.put("cus", snapshots.values.sum[model.compilationUnits.size])
+			datum.put("wmcHsv", snapshots.values.sum[snapshot|snapshot.model.compilationUnits.filter[!types.empty].map[types.get(0)].sum[
 				collect(rev, snapshot, it, "wmc_hsv") [weightedMethodPerClassWithHalsteadVolume]
 			]])
 			data.put(datum)
+			timer.track
 		]
-		
 		println(data.toHumanReadable)
 	}
 }

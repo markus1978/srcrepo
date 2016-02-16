@@ -34,6 +34,8 @@ import static de.hub.srcrepo.SrcRepoActivator.*
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
+import de.hub.srcrepo.SrcRepoActivator
+import org.eclipse.core.runtime.Status
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
@@ -69,6 +71,12 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	
 	override <T extends EObject> getPersistedOriginal(T source) {
 		return copier.get(source) as T
+	}
+	
+	override checkCompilationUnitModel(CompilationUnitModel model) {
+		if (currentCompilationUnitModels.get(model) == null) {
+			addCompilationUnitModel(model)
+		}
 	}
 
 	override addCompilationUnitModel(CompilationUnitModel model) {
@@ -178,13 +186,23 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		// 2.3. collect all links added by the new CUs
 		debug["  #add links"]
 		for(it:newCompilationUnitModels) {
-			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[ 
-				val sourceCopy = copier.get(it.source) as ASTNode
+			outgoingLinks += originalCompilationUnitModel.unresolvedLinks.filter[copier.get(it.source) != null].map[originalUnresolvedLink| 
+				val sourceCopy = copier.get(originalUnresolvedLink.source) as ASTNode
 				condition[sourceCopy.mark != "Replaced"]
-				val link = new SSLink(it, sourceCopy, it.fullId, metaModel.javaFactory.create(copier.getTarget(it.target.eClass)) as NamedElement)
-				debug["    #new link: " + link]
-				return link
-			]
+				
+				val originalFeature = originalUnresolvedLink.source.eClass.getEStructuralFeature(originalUnresolvedLink.featureID)
+				val feature = copier.getTarget(originalFeature) as EReference
+				try {
+					val link = new SSLink(sourceCopy, feature, originalUnresolvedLink.featureIndex, originalUnresolvedLink.fullId, 
+							metaModel.javaFactory.create(copier.getTarget(originalUnresolvedLink.target.eClass)) as NamedElement)
+					debug["    #new link: " + link]
+					return link				
+				} catch (Exception e) {
+					// Bug in modisco causes targets with incompatible type. 
+					SrcRepoActivator.INSTANCE.warning("Have to ignore a link because modisco delivers incompatible target for it.")
+					return null
+				}
+			].filter[it != null]
 			linksToResolve += outgoingLinks
 		}
 		copier.clear

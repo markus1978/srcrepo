@@ -39,7 +39,7 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 
 	protected abstract void removeFile(String name);
 
-	protected abstract void onRev(Rev rev);
+	protected abstract void onRev(Rev rev, Rev traversalParentRev);
 
 	@Override
 	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {
@@ -73,14 +73,14 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	}
 
 	@Override
-	public boolean onStartRev(Rev rev, int number) {
+	public boolean onStartRev(Rev rev, Rev traversalParentRev, int number) {
 		revVisitETStatTimer = revVisistETStat.timer();
 		return false;
 	}
 
 	@Override
-	public void onCompleteRev(Rev rev) {
-		onRev(rev);
+	public void onCompleteRev(Rev rev, Rev traversalParentRev) {
+		onRev(rev, traversalParentRev);
 		lastVisitedRev = rev;
 		revVisitETStatTimer.track();
 	}

@@ -230,7 +230,7 @@ public class EmfFragSrcRepoDirectoryImport implements IApplication {
 			public IDataStore createDataStore(URI uri) {
 				IBaseDataStore baseDataStore = null;
 				if ("mongodb".equals(uri.scheme())) {
-					MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(uri.authority(), uri.path().substring(1), false);
+					MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(uri.authority(), uri.port(), uri.path().substring(1), false);
 					baseDataStore = mongoDbBaseDataStore;
 					
 				} else {

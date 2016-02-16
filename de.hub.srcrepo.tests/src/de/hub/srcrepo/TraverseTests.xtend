@@ -1,22 +1,22 @@
 package de.hub.srcrepo
 
 import com.google.common.base.Preconditions
+import de.hub.srcrepo.repositorymodel.AbstractFileRef
+import de.hub.srcrepo.repositorymodel.Diff
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
 import de.hub.srcrepo.repositorymodel.Rev
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.jgit.diff.DiffEntry.ChangeType
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 import static extension de.hub.srcrepo.RepositoryModelTraversal.*
-import org.junit.BeforeClass
-import org.eclipse.jgit.diff.DiffEntry.ChangeType
-import de.hub.srcrepo.repositorymodel.Diff
-import de.hub.srcrepo.repositorymodel.AbstractFileRef
 
 class TraverseTests {
 	
@@ -34,7 +34,7 @@ class TraverseTests {
 			result.add('''#[«lastBranchRev.name»,«commonMergedRev.name»]''')
 		}
 		
-		override onStartRev(Rev rev, int number) {
+		override onStartRev(Rev rev, Rev traversalParentRev, int number) {
 			result.add('''«rev.name»''')
 		}
 		
@@ -52,7 +52,7 @@ class TraverseTests {
 			result.add('''#''')
 		}
 		
-		override protected onRev(Rev rev) {
+		override protected onRev(Rev rev, Rev traversalParentRev) {
 			result.add(rev.name)
 		}
 		

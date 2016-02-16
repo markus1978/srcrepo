@@ -73,7 +73,7 @@ class ImportedMoDiscoModelTests {
 
 	def testJavaModels((Rev,Model)=>void testModel) {
     	val visitor = new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-      		override def onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshots) {
+      		override def onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshots) {
 	    		snapshots.forEach[projectID,snapshot|testModel.apply(rev,snapshot.model)]   
       		}
       		override def filter(Rev rev) {
@@ -128,7 +128,7 @@ class ImportedMoDiscoModelTests {
   	@Test def void testLOC() {
   		hasRevisionWithRequiredLOCMetric = false
   		RepositoryModelTraversal.traverse(repositoryModel, new RevVisitor()  {  			
-			override protected onRev(Rev rev, Map<String, AbstractFileRef> files) {
+			override protected onRev(Rev rev, Rev traversalParentRev, Map<String, AbstractFileRef> files) {
 				if (rev.name == "4e238b9752b33e18301bb0849ec9b5319a8cfa09") {
 					for (Diff diff: rev.getParentRelations().get(0).getDiffs()) {
 						if (diff.getFile() != null && diff.getFile() instanceof JavaCompilationUnitRef) {
@@ -155,7 +155,7 @@ class ImportedMoDiscoModelTests {
 		val Collection<String> visitedRevNames = new HashSet<String>();
 		val rootNames = new HashSet<String>();
 		val stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-			override onRevWithSnapshot(Rev rev, Map<String, IModiscoSnapshotModel> snapshots) {
+			override onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshots) {
 				try {
 					Assert.assertTrue("Revs should not be visited twice", visitedRevNames.add(rev.getName()));
 					

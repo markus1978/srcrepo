@@ -15,7 +15,7 @@ import static org.junit.Assert.*
 
 class RandomlyGeneratedModelTests extends AbstractDataStoreTests {
 	override createDataStore() {
-		return new MongoDBDataStore("localhost", "testmodel", true);	
+		return new MongoDBDataStore("localhost", null, "testmodel", true);	
 	}
 	
 	override protected cacheSize() {

@@ -102,7 +102,7 @@ public class RepositoryModelTraversal {
 				}
 							
 				// import current rev
-				visitRev(rev, ++stats.importedRevsCounter);
+				visitRev(rev, lastRev, ++stats.importedRevsCounter);
 				traversedRevs.add(rev);
 				count++;
 				
@@ -169,10 +169,10 @@ public class RepositoryModelTraversal {
 	}
 	
 	
-	private void visitRev(Rev rev, int number) {
+	private void visitRev(Rev rev, Rev traverseParentRev, int number) {
 		Preconditions.checkArgument(!traversedRevs.contains(rev));
 		Timer visitAllTimer = visitFullETStat.timer();
-		visitor.onStartRev(rev, number);
+		visitor.onStartRev(rev,traverseParentRev, number);
 		
 		for (ParentRelation parentRelation: rev.getParentRelations()) {
 			for (Diff diff : parentRelation.getDiffs()) {
@@ -189,7 +189,7 @@ public class RepositoryModelTraversal {
 				}
 			}
 		}
-		visitor.onCompleteRev(rev);
+		visitor.onCompleteRev(rev, traverseParentRev);
 		visitAllTimer.track();
 	}	
 

@@ -23,7 +23,7 @@ class SpecificRevFileTests extends AbstractDataStoreTests {
 	private val File workingCopy = new File("/Users/markus/Documents/Projects/srcrepo-mars/04-import/workingcopies/Eclipse_Foundation.cdo/");
 	
 	override createDataStore() {
-		return new MongoDBDataStore("localhost", "testmodel", true);	
+		return new MongoDBDataStore("localhost", null, "testmodel", true);	
 	}
 	
 	override protected cacheSize() {
@@ -58,10 +58,10 @@ class SpecificRevFileTests extends AbstractDataStoreTests {
 		assertNotNull(diff)
 		
 		val visitor = new MoDiscoRepositoryModelImportVisitor(scs, model, JavaPackage.eINSTANCE)
-		visitor.onStartRev(rev, 0)
+		visitor.onStartRev(rev, null, 0)
 		visitor.onBranch(null, null) // causes refresh of workspace
 		visitor.onAddedFile(diff)
-		visitor.onCompleteRev(rev)
+		visitor.onCompleteRev(rev, null)
 		
 		assertNotNull((diff.file as JavaCompilationUnitRef).compilationUnitModel)
 		

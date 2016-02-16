@@ -196,7 +196,7 @@ public class EmfFragSrcRepoImport implements IApplication {
 	public static Fragmentation openFragmentation(Configuration config, boolean dropIfExists) {
 		IBaseDataStore baseDataStore = null;
 		if ("mongodb".equals(config.modelURI.scheme())) {
-			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.path().substring(1), dropIfExists);
+			MongoDBDataStore mongoDbBaseDataStore = new MongoDBDataStore(config.modelURI.authority(), config.modelURI.port(), config.modelURI.path().substring(1), dropIfExists);
 			baseDataStore = mongoDbBaseDataStore;
 			
 		} else {

@@ -12,7 +12,7 @@ public class EmptyRepositoryModelVisitor implements IRepositoryModelVisitor {
 	}
 
 	@Override
-	public boolean onStartRev(Rev rev, int number) {
+	public boolean onStartRev(Rev rev, Rev traversalParentRev, int number) {
 		SrcRepoActivator.INSTANCE.info("Visit rev " + rev.getName() + " "   				
 				+ "(" + number + "/" + ((RepositoryModel)rev.eContainer()).getAllRevs().size() + "), " );
 		
@@ -23,7 +23,7 @@ public class EmptyRepositoryModelVisitor implements IRepositoryModelVisitor {
 	}
 
 	@Override
-	public void onCompleteRev(Rev rev) {
+	public void onCompleteRev(Rev rev, Rev traversalParentRev) {
 		
 	}
 

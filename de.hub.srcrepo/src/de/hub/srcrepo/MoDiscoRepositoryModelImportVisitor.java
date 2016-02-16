@@ -168,7 +168,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public boolean onStartRev(final Rev rev, int number) {		
+	public boolean onStartRev(final Rev rev, Rev traversalParentRev, int number) {		
 	
 		SrcRepoActivator.INSTANCE.info("Visit rev " + rev.getName() + " "   				
 				+ "(" + number + "/" + repositoryModel.getAllRevs().size() + "), " 
@@ -191,7 +191,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 
 	@Override
-	public void onCompleteRev(Rev rev) {
+	public void onCompleteRev(Rev rev, Rev traversalParentRev) {
 		
 		revNumberOfChangedProjectFiles.track(projectFileDiffs.size());
 		

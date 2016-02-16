@@ -25,7 +25,7 @@ class MongoDBImportedMoDiscoModelTests extends ImportedMoDiscoModelTests {
 
 	override openRepositoryModel() {
 		val testModelURI = MongoDBMoDiscoGitImportTest.testJavaModelURI
-		val baseDataStore = new MongoDBDataStore(testModelURI.authority(), testModelURI.path().substring(1), false);
+		val baseDataStore = new MongoDBDataStore(testModelURI.authority(), testModelURI.port(), testModelURI.path().substring(1), false);
 		val dataStore = new DataStoreImpl(baseDataStore, testModelURI);
 		fragmentation = new FragmentationImpl(Lists.newArrayList(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE), dataStore, 1)
 		return fragmentation.root as RepositoryModel

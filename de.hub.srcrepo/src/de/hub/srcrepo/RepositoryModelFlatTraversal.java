@@ -38,7 +38,7 @@ public class RepositoryModelFlatTraversal {
 	private void visitRev(Rev rev, int number) {
 		Timer visitAllTimer = visitAllStat.timer();
 		
-		visitor.onStartRev(rev, number);
+		visitor.onStartRev(rev, null, number);
 		
 		for (ParentRelation parentRelation: rev.getParentRelations()) {
 			for (Diff diff : parentRelation.getDiffs()) {
@@ -55,7 +55,7 @@ public class RepositoryModelFlatTraversal {
 				}
 			}
 		}
-		visitor.onCompleteRev(rev);
+		visitor.onCompleteRev(rev, null);
 		visitAllTimer.track();
 	}	
 
