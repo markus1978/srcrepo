@@ -17,6 +17,7 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  * </p>
  * <ul>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl#getCompilationUnitModel <em>Compilation Unit Model</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.JavaCompilationUnitRefImpl#getProjectID <em>Project ID</em>}</li>
  * </ul>
  *
  * @generated
@@ -57,6 +58,24 @@ public class JavaCompilationUnitRefImpl extends AbstractFileRefImpl implements J
 	 */
 	public void setCompilationUnitModel(CompilationUnitModel newCompilationUnitModel) {
 		eSet(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL, newCompilationUnitModel);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getProjectID() {
+		return (String)eGet(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__PROJECT_ID, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setProjectID(String newProjectID) {
+		eSet(RepositoryModelPackage.Literals.JAVA_COMPILATION_UNIT_REF__PROJECT_ID, newProjectID);
 	}
 
 } //JavaCompilationUnitRefImpl

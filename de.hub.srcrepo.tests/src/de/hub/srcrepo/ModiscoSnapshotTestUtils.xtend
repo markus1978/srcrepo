@@ -86,16 +86,18 @@ class ModiscoSnapshotTestUtils {
 				fail("Could not run import job successfully.")
 			}
 			
-			val cum = importJob.results.get(cu)
+			val importResult = importJob.results.get(cu)
 			javaProject.closeProject
-			assertNotNull(cum)
+			assertNotNull(importResult.model)
 			
-			val rs = new ResourceSetImpl();
-			val xmiResource = rs.createResource(URI.createURI(xmiPath))
-			xmiResource.contents += cum
-			xmiResource.save(null)			
+			if (xmiPath != null) {
+				val rs = new ResourceSetImpl();
+				val xmiResource = rs.createResource(URI.createFileURI(xmiPath))
+				xmiResource.contents += importResult.model
+				xmiResource.save(null)				
+			}			
 			
-			return cum
+			return importResult.model
 		}											
 	}
 }

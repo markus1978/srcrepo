@@ -11,6 +11,7 @@ import de.hub.jstattrack.services.Histogram
 import de.hub.jstattrack.services.Summary
 import de.hub.jstattrack.services.WindowedPlot
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor
+import de.hub.srcrepo.MoDiscoRevVisitor
 import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.RevVisitor
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
@@ -30,7 +31,6 @@ import org.json.JSONObject
 
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
-import de.hub.srcrepo.ProjectAwareRevVisitor
 
 class MetaDataCommand extends AbstractRepositoryCommand {
 		
@@ -96,8 +96,8 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				1_gitSize : «repo.metaData.size»,				
 				«statSummaryData(traverseStatJSON, RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
-				«statSummaryData(traverseStatJSON, ProjectAwareRevVisitor.cusLoadETStat, "3_cusLoadTime")»,
-				«statSummaryData(traverseStatJSON, ProjectAwareRevVisitor.cusVisitETStat, "4_cusVisitTime")»,
+				«statSummaryData(traverseStatJSON, MoDiscoRevVisitor.cusLoadETStat, "3_cusLoadTime")»,
+				«statSummaryData(traverseStatJSON, MoDiscoRevVisitor.revVisitETStat, "4_revVisitTime")»,
 				«statSummaryData(currentStatDataJSON, FStoreFragmentation.loadETStat, "5_fragLoadET")»,
 				«statSummaryData(currentStatDataJSON, FStoreFragmentation.unloadETStat, "6_fragUnloadET")»,
 			}

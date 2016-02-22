@@ -5,6 +5,7 @@ package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -624,13 +625,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL = ABSTRACT_FILE_REF_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Project ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JAVA_COMPILATION_UNIT_REF__PROJECT_ID = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Java Compilation Unit Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 1;
+	int JAVA_COMPILATION_UNIT_REF_FEATURE_COUNT = ABSTRACT_FILE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Java Compilation Unit Ref</em>' class.
@@ -734,22 +744,13 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS = 3;
 
 	/**
-	 * The feature id for the '<em><b>Project ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPILATION_UNIT_MODEL__PROJECT_ID = 4;
-
-	/**
 	 * The number of structural features of the '<em>Compilation Unit Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 5;
+	int COMPILATION_UNIT_MODEL_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Compilation Unit Model</em>' class.
@@ -1945,6 +1946,17 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getJavaCompilationUnitRef_CompilationUnitModel();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getProjectID <em>Project ID</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Project ID</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef#getProjectID()
+	 * @see #getJavaCompilationUnitRef()
+	 * @generated
+	 */
+	EAttribute getJavaCompilationUnitRef_ProjectID();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.Target <em>Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2029,17 +2041,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	 * @generated
 	 */
 	EReference getCompilationUnitModel_UnresolvedLinks();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProjectID <em>Project ID</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Project ID</em>'.
-	 * @see de.hub.srcrepo.repositorymodel.CompilationUnitModel#getProjectID()
-	 * @see #getCompilationUnitModel()
-	 * @generated
-	 */
-	EAttribute getCompilationUnitModel_ProjectID();
 
 	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ImportError <em>Import Error</em>}'.
@@ -2887,6 +2888,14 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		EReference JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL = eINSTANCE.getJavaCompilationUnitRef_CompilationUnitModel();
 
 		/**
+		 * The meta object literal for the '<em><b>Project ID</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute JAVA_COMPILATION_UNIT_REF__PROJECT_ID = eINSTANCE.getJavaCompilationUnitRef_ProjectID();
+
+		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.TargetImpl <em>Target</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2953,14 +2962,6 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS = eINSTANCE.getCompilationUnitModel_UnresolvedLinks();
-
-		/**
-		 * The meta object literal for the '<em><b>Project ID</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute COMPILATION_UNIT_MODEL__PROJECT_ID = eINSTANCE.getCompilationUnitModel_ProjectID();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ImportErrorImpl <em>Import Error</em>}' class.

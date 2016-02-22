@@ -157,6 +157,10 @@
   <children xmi:type="notation:Node" xmi:id="_Uv9c4L8hEeO0npvdkJs6ew" type="1001">
     <children xmi:type="notation:Node" xmi:id="_Uv-D8L8hEeO0npvdkJs6ew" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_Uv-D8b8hEeO0npvdkJs6ew" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_HZDeYMphEeWvL4jEvNnVjA" type="2001">
+        <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//JavaCompilationUnitRef/projectID"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_HZDeYcphEeWvL4jEvNnVjA"/>
+      </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_Uv-D8r8hEeO0npvdkJs6ew"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_Uv-D878hEeO0npvdkJs6ew"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_Uv-D9L8hEeO0npvdkJs6ew"/>
@@ -266,10 +270,6 @@
   <children xmi:type="notation:Node" xmi:id="_u_kdoMOxEeOGHL9BvZ3Z2g" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u_lEsMOxEeOGHL9BvZ3Z2g" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_u_lrwMOxEeOGHL9BvZ3Z2g" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_HZDeYMphEeWvL4jEvNnVjA" type="2001">
-        <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//CompilationUnitModel/projectID"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_HZDeYcphEeWvL4jEvNnVjA"/>
-      </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_u_lrwcOxEeOGHL9BvZ3Z2g"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_u_lrwsOxEeOGHL9BvZ3Z2g"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_u_lrw8OxEeOGHL9BvZ3Z2g"/>

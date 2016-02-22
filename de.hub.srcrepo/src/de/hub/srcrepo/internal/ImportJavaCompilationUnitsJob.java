@@ -22,6 +22,7 @@ import org.eclipse.gmt.modisco.java.NamedElement;
 import org.eclipse.gmt.modisco.java.UnresolvedItem;
 import org.eclipse.gmt.modisco.java.emf.JavaFactory;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.internal.ui.text.java.ImportCompletionProposal;
 import org.eclipse.modisco.java.discoverer.internal.io.java.JavaReader;
 import org.eclipse.modisco.java.discoverer.internal.io.java.binding.PendingElement;
 
@@ -40,7 +41,23 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 	private final JavaFactory javaFactory;
 	private final RepositoryModelFactory repositoryFactory;
 	
-	private final Map<ICompilationUnit, CompilationUnitModel> results = new HashMap<>();
+	private final Map<ICompilationUnit, ImportJavaCompilationUnitResult> results = new HashMap<>();
+	
+	public class ImportJavaCompilationUnitResult {
+		private final String projectID;
+		private final CompilationUnitModel model;
+		private ImportJavaCompilationUnitResult(String projectID, CompilationUnitModel model) {
+			super();
+			this.projectID = projectID;
+			this.model = model;
+		}
+		public String getProjectID() {
+			return projectID;
+		}
+		public CompilationUnitModel getModel() {
+			return model;
+		}		
+	}
 
 	public ImportJavaCompilationUnitsJob(Collection<ICompilationUnit> compilationUnits, 
 			JavaFactory javaFactory, 
@@ -69,7 +86,8 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 		}
 		
 		CompilationUnitModel compilationUnitModel = repositoryFactory.createCompilationUnitModel();
-		compilationUnitModel.setProjectID(compilationUnit.getJavaProject().getPath().toPortableString());
+		String projectID = compilationUnit.getJavaProject().getPath().toPortableString();
+		ImportJavaCompilationUnitResult result = new ImportJavaCompilationUnitResult(projectID, compilationUnitModel);
 		
 		SrcRepoBindingManager bindings = new SrcRepoBindingManager(javaFactory) {
 			@Override
@@ -155,7 +173,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 				compilationUnitModel.getTargets().add(targetModel);
 			}
 			
-			results.put(compilationUnit, compilationUnitModel);
+			results.put(compilationUnit, result);
 			return true;
 		} else {
 			EcoreUtil.delete(compilationUnitModel);
@@ -180,7 +198,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 		return Status.OK_STATUS;
 	}	
 	
-	public Map<ICompilationUnit, CompilationUnitModel> getResults() {
+	public Map<ICompilationUnit, ImportJavaCompilationUnitResult> getResults() {
 		return results;
 	}
 }

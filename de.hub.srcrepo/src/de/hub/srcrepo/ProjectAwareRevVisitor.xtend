@@ -1,32 +1,17 @@
 package de.hub.srcrepo
 
 import com.google.common.base.Preconditions
-import de.hub.jstattrack.TimeStatistic
-import de.hub.jstattrack.services.BatchedPlot
-import de.hub.jstattrack.services.Summary
 import de.hub.srcrepo.repositorymodel.AbstractFileRef
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.Rev
 import java.util.Map
-import java.util.concurrent.TimeUnit
 
 abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
-	
-	public static final TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(ProjectAwareRevVisitor, "CUsLoadET");
-	public static final TimeStatistic cusVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(ProjectAwareRevVisitor, "CUsVisitET");		
 			
-	val Map<String, Map<String, CompilationUnitModel>> projectFiles = newHashMap()
+	val Map<String, Map<String, JavaCompilationUnitRef>> projectFiles = newHashMap()
 	val Map<String, String> pathToProject = newHashMap
 			
-	protected abstract def void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, CompilationUnitModel>> cus)
-	
-	private def loadCompilagtionUnitModel(JavaCompilationUnitRef fileRef) {
-		val timer = cusLoadETStat.timer
-		val cum = fileRef.compilationUnitModel
-		timer.track
-		return cum
-	}
+	protected abstract def void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, JavaCompilationUnitRef>> cusRefs)
 	
 	private def projectFiles(String projectID) {
 		Preconditions.checkArgument(projectID != null)
@@ -40,9 +25,8 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 	
 	override protected addFile(String name, AbstractFileRef fileRef) {
 		if (fileRef instanceof JavaCompilationUnitRef) {
-			val compilationUnitModel = (fileRef as JavaCompilationUnitRef).loadCompilagtionUnitModel
-			projectFiles(compilationUnitModel.projectID).put(name, compilationUnitModel)
-			pathToProject.put(name, compilationUnitModel.projectID)
+			projectFiles(fileRef.projectID).put(name, fileRef as JavaCompilationUnitRef)
+			pathToProject.put(name, fileRef.projectID)
 		}
 	}
 	
@@ -51,9 +35,7 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 	}
 	
 	override protected onRev(Rev rev, Rev traversalParentRev) {
-		val timer = cusVisitETStat.timer
 		onRev(rev, traversalParentRev, projectFiles)
-		timer.track
 	}
 	
 	override protected removeFile(String name) {

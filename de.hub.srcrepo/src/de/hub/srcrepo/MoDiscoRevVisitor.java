@@ -7,12 +7,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
 
 import com.google.common.base.Preconditions;
 
+import de.hub.jstattrack.TimeStatistic;
+import de.hub.jstattrack.TimeStatistic.Timer;
+import de.hub.jstattrack.services.BatchedPlot;
+import de.hub.jstattrack.services.Summary;
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel;
@@ -20,8 +26,10 @@ import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl;
 
 public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	
+	public static final TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "CUsLoadET");
+	public static final TimeStatistic revVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "CUsVisitET");		
+	
 	private int count = 0;
-	private boolean createNewSnapshot = false;
 	
 	private final IModiscoSnapshotModel.Factory snapshotFactory;
 	private final Map<String, IModiscoSnapshotModel> snapshots;
@@ -41,6 +49,13 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 				return new ModiscoIncrementalSnapshotImpl(metaModel, projectID);
 			}
 		});
+	}
+	
+	private CompilationUnitModel loadCompilagtionUnitModel(JavaCompilationUnitRef fileRef) {
+		Timer timer = cusLoadETStat.timer();
+		CompilationUnitModel cum = fileRef.getCompilationUnitModel();
+		timer.track();
+		return cum;
 	}
 
 	@Override
@@ -62,14 +77,15 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	}
 
 	@Override
-	protected final void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, CompilationUnitModel>> projectFiles) {
+	protected final void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, JavaCompilationUnitRef>> projectFiles) {
+		Timer timer = revVisitETStat.timer();
 		if (!filter(rev)) {
 			return;
 		}
-		ProjectLoop: for(Map.Entry<String, Map<String, CompilationUnitModel>> projectEntry: projectFiles.entrySet()) {
+		ProjectLoop: for(Map.Entry<String, Map<String, JavaCompilationUnitRef>> projectEntry: projectFiles.entrySet()) {
 			String projectID = projectEntry.getKey();
 			Preconditions.checkArgument(projectID != null);
-			Map<String,CompilationUnitModel> files = projectEntry.getValue();
+			Map<String, JavaCompilationUnitRef> files = projectEntry.getValue();
 
 			if (!files.isEmpty()) {
 				IModiscoSnapshotModel snapshot = snapshots.get(projectID);
@@ -93,11 +109,11 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 					int changedCUs = 0;
 					// merge the models from all compilation units
 					Collection<String> pathsInFiles = new HashSet<String>();
-					for (Entry<String, CompilationUnitModel> entry : files.entrySet()) {
+					for (Entry<String, JavaCompilationUnitRef> entry : files.entrySet()) {
 						String path = entry.getKey();
 						pathsInFiles.add(path);
 						
-						CompilationUnitModel newCUModel = entry.getValue();
+						CompilationUnitModel newCUModel = loadCompilagtionUnitModel(entry.getValue());
 						CompilationUnitModel oldCUModel = contributingModels.get(path);
 			
 						if (newCUModel != oldCUModel) {
@@ -158,6 +174,7 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 		} catch (Exception e) {
 			SrcRepoActivator.INSTANCE.error("Exception in visitor function.", e);
 		}
+		timer.track();
 	}
 
 	protected boolean filter(Rev rev) {

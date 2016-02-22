@@ -545,6 +545,15 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getJavaCompilationUnitRef_ProjectID() {
+		return (EAttribute)javaCompilationUnitRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTarget() {
 		return targetEClass;
 	}
@@ -610,15 +619,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 */
 	public EReference getCompilationUnitModel_UnresolvedLinks() {
 		return (EReference)compilationUnitModelEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getCompilationUnitModel_ProjectID() {
-		return (EAttribute)compilationUnitModelEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1154,6 +1154,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		javaCompilationUnitRefEClass = createEClass(JAVA_COMPILATION_UNIT_REF);
 		createEReference(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__COMPILATION_UNIT_MODEL);
+		createEAttribute(javaCompilationUnitRefEClass, JAVA_COMPILATION_UNIT_REF__PROJECT_ID);
 
 		targetEClass = createEClass(TARGET);
 		createEAttribute(targetEClass, TARGET__ID);
@@ -1164,7 +1165,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__JAVA_MODEL);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__TARGETS);
 		createEReference(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__UNRESOLVED_LINKS);
-		createEAttribute(compilationUnitModelEClass, COMPILATION_UNIT_MODEL__PROJECT_ID);
 
 		importErrorEClass = createEClass(IMPORT_ERROR);
 		createEAttribute(importErrorEClass, IMPORT_ERROR__MESSAGE);
@@ -1314,6 +1314,7 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 
 		initEClass(javaCompilationUnitRefEClass, JavaCompilationUnitRef.class, "JavaCompilationUnitRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJavaCompilationUnitRef_CompilationUnitModel(), this.getCompilationUnitModel(), null, "compilationUnitModel", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getJavaCompilationUnitRef_ProjectID(), ecorePackage.getEString(), "projectID", null, 0, 1, JavaCompilationUnitRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(targetEClass, Target.class, "Target", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTarget_Id(), ecorePackage.getEString(), "id", null, 0, 1, Target.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1324,7 +1325,6 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEReference(getCompilationUnitModel_JavaModel(), theJavaPackage.getModel(), null, "javaModel", null, 0, 1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCompilationUnitModel_Targets(), this.getTarget(), null, "targets", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCompilationUnitModel_UnresolvedLinks(), this.getUnresolvedLink(), null, "unresolvedLinks", null, 0, -1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCompilationUnitModel_ProjectID(), ecorePackage.getEString(), "projectID", null, 0, 1, CompilationUnitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(importErrorEClass, ImportError.class, "ImportError", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportError_Message(), ecorePackage.getEString(), "message", null, 0, 1, ImportError.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

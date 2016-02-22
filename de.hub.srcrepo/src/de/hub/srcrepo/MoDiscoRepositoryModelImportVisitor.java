@@ -566,10 +566,12 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			
 			for (Map.Entry<ICompilationUnit, Diff> entry: javaDiffs.entrySet()) {
 				ICompilationUnit compilationUnit = entry.getKey();
-				CompilationUnitModel compilationUnitModel = getResults().get(compilationUnit);
+				ImportJavaCompilationUnitResult importResult = getResults().get(compilationUnit);
+				CompilationUnitModel compilationUnitModel = importResult.getModel();
 				if (compilationUnitModel != null) {
 					JavaCompilationUnitRef ref = repositoryFactory.createJavaCompilationUnitRef();					
 					ref.setCompilationUnitModel(compilationUnitModel);
+					ref.setProjectID(importResult.getProjectID());
 					
 					String scsPath = sourceControlSystem.getWorkingCopy().getAbsolutePath();					
 					IProject project = compilationUnit.getJavaProject().getProject();
