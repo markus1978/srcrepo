@@ -16,3 +16,4 @@ xtend-src/
 xtend-gen/
 gen-src/
 src-gen/
+hs_err*.log
