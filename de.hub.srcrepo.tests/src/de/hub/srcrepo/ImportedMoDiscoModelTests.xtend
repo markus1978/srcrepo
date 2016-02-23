@@ -8,6 +8,8 @@ import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import java.io.PrintStream
+import java.lang.ref.WeakReference
+import java.text.DecimalFormat
 import java.util.Collection
 import java.util.HashSet
 import java.util.Map
@@ -198,4 +200,42 @@ class ImportedMoDiscoModelTests {
 	  		Assert.assertNotNull(dataSet.jsonData)	
 	  	}
   	}
+  	
+  		private def static void gc() {
+		for (i:0..2) {
+			var obj = new Object();
+			val ref = new WeakReference<Object>(obj);
+			obj = null;
+			while (ref.get() != null) {
+				System.gc();
+			}
+			System.runFinalization();
+		}
+	}
+	
+	private def performMemoryTest(()=>void action) {
+		var long lastMemory = 0
+		var i = 0
+		while (true) {
+			i++
+			val startTime = System.currentTimeMillis
+			do {
+				action.apply
+			} while (System.currentTimeMillis - startTime < 1000)
+			
+			gc		
+			val memory = Runtime.runtime.freeMemory
+			println(new DecimalFormat("###,###,###,###").format(memory) + " " + i)
+			lastMemory = Runtime.runtime.freeMemory						
+		}	
+	}
+	
+//	@Test
+	public def void memoryTest() {
+		performMemoryTest[
+			testJavaModels[rev,javaModel|			
+
+			]			
+		]	
+	}
 }

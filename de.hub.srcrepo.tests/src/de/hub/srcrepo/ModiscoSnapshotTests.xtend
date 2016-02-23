@@ -27,6 +27,10 @@ import static de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static org.junit.Assert.*
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import java.lang.ref.WeakReference
+import org.junit.Assert
+import java.text.NumberFormat
+import java.text.DecimalFormat
 
 class ModiscoSnapshotTests {
 	private static var isStandalone = false
@@ -267,5 +271,5 @@ class ModiscoSnapshotTests {
 	public def void unresolvedTest() {
 		val model = createSingleRevSnapshot("unresolved", #["A", "B"]).model
 		assertEquals(15, model.unresolvedItems.size)
-	}
+	}	
 }

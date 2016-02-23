@@ -2,6 +2,7 @@ package de.hub.srcrepo.snapshot
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
+import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
 import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
@@ -34,8 +35,6 @@ import static de.hub.srcrepo.SrcRepoActivator.*
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
-import de.hub.srcrepo.SrcRepoActivator
-import org.eclipse.core.runtime.Status
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
@@ -119,13 +118,14 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		if (!oldCompilationUnitModels.empty || !newCompilationUnitModels.empty) {
 			computeSnapshot
 		}
+		return true
 	}
 
 	override getModel() {
 		return model
 	}
 
-	private def computeSnapshot() {
+	private def computeSnapshot() {		
 		debug[
 			val rev = if (!newCompilationUnitModels.empty) { 
 				newCompilationUnitModels.findFirst[true]
@@ -169,7 +169,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			for(it:it.incomingLinks.filter[resolved && !toDelete.contains(it.source)]) {
 				it.revert				
 				linksToResolve += it				
-			}
+			}			
 		}
 
 		// 2 add new CUs
@@ -179,7 +179,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			
 			mergeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets, true)
 			it.copyCompilationUnit = copier.get(it.getOriginalCompilationUnitModel.compilationUnit) as CompilationUnit
-			currentCompilationUnits.put(it.getCopyCompilationUnit, it)	
+			currentCompilationUnits.put(it.getCopyCompilationUnit, it)
 		}
 		// 2.2. add all references within new CUs
 		copier.copyReferences
@@ -199,7 +199,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					return link				
 				} catch (Exception e) {
 					// Bug in modisco causes targets with incompatible type. 
-					SrcRepoActivator.INSTANCE.warning("Have to ignore a link because modisco delivers incompatible target for it.")
+					SrcRepoActivator.INSTANCE.warning("Have to ignore a link because of unexpected exception.")
 					return null
 				}
 			].filter[it != null]
@@ -264,6 +264,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		targets.clear
 		newCompilationUnitModels.clear
 		oldCompilationUnitModels.clear
+		copier.clear
 	}
 
 	private def void forEachChild(EObject object, (EReference,EObject)=>void action) {
@@ -321,8 +322,10 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	 * Merges the contents of the given objects. NamedElements are merged based on their IDs. 
 	 */
 	private def <T extends EObject> void mergeContents(T copy, T original,  Map<NamedElement, String> originalTargets, boolean addContents) {
+		val theCopy = copy
+		val theOriginal = original
 		condition[copy.eClass.name == original.eClass.name]		
-		original.forEachChild[originalFeature,originalChild|
+		original.forEachChild[originalFeature,originalChild|	
 			val copyFeature = copier.getTarget(originalFeature)
 			if (originalChild.isTarget(originalTargets)) {
 				val originalNamedElementChild = originalChild as NamedElement
@@ -331,10 +334,16 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					// original child has a corresponding other child					
 					// merge existing child copy with new original child
 					if (!originalNamedElementChild.externalTarget && existingCopyChild.externalTarget) {
-						// push attributes and other content from new internal target onto existing external target
-						debug["    #merge(new attribute values) " + existingCopyChild.name]
-						copier.merge(existingCopyChild, originalNamedElementChild)																		
-						mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, true)				
+						// merge-with or replace the existing target
+						if (existingCopyChild.eClass != copier.getTarget(originalNamedElementChild.eClass)) {
+							// the new child original has a different type, how can this happen, if the old type was removed?
+							SrcRepoActivator.INSTANCE.warning('''Detected target with switching metatype, should not happen: «originalNamedElementChild.name» («originalNamedElementChild.eClass.name»->«existingCopyChild.eClass.name»).''')
+						} else {
+							// push attributes and other content from new internal target onto existing external target
+							debug["    #merge(new attribute values) " + existingCopyChild.name]
+							copier.merge(existingCopyChild, originalNamedElementChild)																		
+							mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, true)
+						}
 					} else {
 						// use the existing target						
 						debug["    #merge " + existingCopyChild.name]
@@ -344,7 +353,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 					existingCopyChild
 				} else {
 					// copy of the child does not already exist
-					debug["    #new " + originalNamedElementChild.name]		
+					debug["    #new " + originalNamedElementChild.name + "(" + originalNamedElementChild.eClass.name + ")"]		
 					val newCopyChild = copier.shallowCopy(originalChild) as NamedElement
 					condition[copyFeature.many] 
 					(copy.eGet(copyFeature) as List<EObject>).add(newCopyChild)	

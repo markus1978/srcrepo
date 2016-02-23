@@ -19,10 +19,10 @@ public interface IModiscoSnapshotModel {
 	 * for computing the next snapshot.
 	 */
 	public void start();
-	
-	/** 
-	 * Does the same as addCompilationUnitModel, but only if the model is not already
-	 * part of this snapshot.
+
+	/**
+	 * Does the same as addCompilationUnitModel, but only if the model is not
+	 * already part of this snapshot.
 	 */
 	public void checkCompilationUnitModel(CompilationUnitModel model);
 
@@ -43,13 +43,16 @@ public interface IModiscoSnapshotModel {
 	/**
 	 * End the current snapshot update. Needs to be called after all CUs for the
 	 * next snapshot are added and removed.
+	 * 
+	 * @returns false if there were errors during incremental snapshot creation.
+	 *          This is a suggestion to build a new snapshot, if possible.
 	 */
-	public void end();
+	public boolean end();
 
 	public Model getModel();
-	
+
 	public Map<String, NamedElement> getTargets();
-	
+
 	public <T extends EObject> T getPersistedOriginal(T source);
 
 	public void clear();

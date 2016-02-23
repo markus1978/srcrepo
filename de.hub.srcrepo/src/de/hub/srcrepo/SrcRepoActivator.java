@@ -19,8 +19,8 @@ public class SrcRepoActivator extends Plugin {
 
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
-	private boolean logInStandAlone = true;
-	private boolean isDebug = true;
+	private boolean logInStandAlone = false;
+	private boolean isDebug = false;
 	public boolean useCGit = false;
 	
 	private void init() {
@@ -49,7 +49,7 @@ public class SrcRepoActivator extends Plugin {
 	}
 	
 	public static void condition(String message, Function0<Boolean> condition) {
-		if (INSTANCE.isDebug && false) {
+		if (INSTANCE.isDebug) {
 			if (!condition.apply()) {
 				throw new IllegalArgumentException(message);
 			}
