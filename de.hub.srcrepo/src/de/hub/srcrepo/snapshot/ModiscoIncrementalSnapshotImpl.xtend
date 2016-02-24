@@ -69,7 +69,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 	
 	override <T extends EObject> getPersistedOriginal(T source) {
-		return copier.get(source) as T
+		throw new RuntimeException("not implemented")
 	}
 	
 	override checkCompilationUnitModel(CompilationUnitModel model) {
@@ -322,8 +322,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	 * Merges the contents of the given objects. NamedElements are merged based on their IDs. 
 	 */
 	private def <T extends EObject> void mergeContents(T copy, T original,  Map<NamedElement, String> originalTargets, boolean addContents) {
-		val theCopy = copy
-		val theOriginal = original
 		condition[copy.eClass.name == original.eClass.name]		
 		original.forEachChild[originalFeature,originalChild|	
 			val copyFeature = copier.getTarget(originalFeature)
@@ -478,7 +476,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	
 				return copy as T;
 			}
-		}
+		}		
 	}
 	
 	private def <T extends EObject> void removeContents(T copy, T original, Map<NamedElement,String> originalTargets, Collection<EObject> toDelete) {

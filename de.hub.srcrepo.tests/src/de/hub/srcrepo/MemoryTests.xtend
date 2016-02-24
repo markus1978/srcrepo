@@ -1,18 +1,34 @@
 package de.hub.srcrepo
 
+import de.hub.srcrepo.repositorymodel.Rev
+import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
+import java.util.Map
+import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.junit.Test
-import org.eclipse.gmt.modisco.java.emf.JavaFactory
-import de.hub.srcrepo.repositorymodel.RepositoryModelFactory
 
-class MemoryTests {
+import static extension de.hub.srcrepo.RepositoryModelTraversal.*
+
+class MemoryTests extends AbstractSingleRepositoryModelTests {
 	
-	@Test
-	public def traversal() {
-		
+	override protected getRepositoryModelURI() {
+		return MoDiscoGitImportTest.testJavaModelURI
 	}
 	
 	@Test
-	public def snapshot() {
-				
+	public def traversal() {
+		performMemoryTest(0)[
+			repositoryModel.traverse(new EmptyRepositoryModelVisitor())	
+		]	
+	}
+	
+	@Test
+	public def snapshot() {		
+		performMemoryTest(1) [
+			repositoryModel.traverse(new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {				
+				override protected onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshot) {
+					
+				}				
+			})
+		]
 	}
 }

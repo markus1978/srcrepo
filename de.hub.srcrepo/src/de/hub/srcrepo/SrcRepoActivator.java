@@ -19,7 +19,7 @@ public class SrcRepoActivator extends Plugin {
 
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
-	private boolean logInStandAlone = false;
+	private boolean logInStandAlone = true;
 	private boolean isDebug = false;
 	public boolean useCGit = false;
 	
