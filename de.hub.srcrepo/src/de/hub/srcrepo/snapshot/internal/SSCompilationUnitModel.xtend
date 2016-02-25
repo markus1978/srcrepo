@@ -6,6 +6,10 @@ import java.util.List
 import java.util.Map
 import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.NamedElement
+import org.eclipse.gmt.modisco.java.UnresolvedItem
+
+import static extension de.hub.srcrepo.snapshot.internal.SnapshotUtils.*
+import static de.hub.srcrepo.SrcRepoActivator.*
 
 public class SSCompilationUnitModel {
 	
@@ -14,12 +18,34 @@ public class SSCompilationUnitModel {
 	
 	val List<SSLink> outgoingLinks = newArrayList
 	val List<SSLink> incomingLinks = newArrayList
-	val Map<NamedElement, String> originalReverseTargetMap = newHashMap
+
+	var Map<NamedElement, String> ids = null
 
 	new(CompilationUnitModel originalCompilationUnitModel) {
-		this.originalCompilationUnitModel = originalCompilationUnitModel
+		this.originalCompilationUnitModel = originalCompilationUnitModel	
 	}
-
+	
+	
+	public def Map<NamedElement, String> getIds() {
+		if (ids == null) {
+			ids = newHashMap
+			originalCompilationUnitModel.targets.forEach[
+				ids.put(it.target, it.id)
+			]
+			originalCompilationUnitModel.unresolvedLinks.forEach[
+				if (ids.get(it.target) == null) {
+					condition[it.target instanceof UnresolvedItem]
+					ids.put(it.target, it.fullId)
+				}
+			]	
+		}
+		return ids
+	}
+		
+	public def clearIds() {
+		ids = null
+	} 
+	
 	/**
 	 * All pending elements that represent references that point towards elements in this CU.
 	 * This includes references sources within this very same CU.
@@ -30,10 +56,6 @@ public class SSCompilationUnitModel {
 	
 	def List<SSLink> getOutgoingLinks() {
 		return outgoingLinks
-	}
-	
-	def getOriginalReverseTargets() {
-		return originalReverseTargetMap
 	}
 	
 	def getOriginalCompilationUnitModel() {

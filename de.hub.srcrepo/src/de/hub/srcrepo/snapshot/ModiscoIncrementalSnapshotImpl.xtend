@@ -35,13 +35,15 @@ import static de.hub.srcrepo.SrcRepoActivator.*
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
+import static extension de.hub.srcrepo.snapshot.internal.SnapshotUtils.*
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 
 	val String projectID
 	val JavaPackage metaModel
-	val SSCopier copier
 	val Model model
+	
+	var SSCopier copier = null
 
 	/**
 	 * A map that connects all CompilationUnits in the model, with the SSCompilationUnitModel they are from. 
@@ -60,7 +62,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	new(JavaPackage metaModel, String projectID) {
 		this.projectID = projectID
 		this.metaModel = metaModel;
-		copier = new SSCopier(metaModel)
 		model = metaModel.javaFactory.createModel
 	}
 	
@@ -88,24 +89,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		val extension ssCompilationUnitModel = new SSCompilationUnitModel(model)
 		newCompilationUnitModels += ssCompilationUnitModel
 		currentCompilationUnitModels.put(model, ssCompilationUnitModel)
-		
-		originalCompilationUnitModel.targets.forEach[
-			originalReverseTargets.put(target, id)
-		]
-		originalCompilationUnitModel.unresolvedLinks.forEach[
-			if (originalReverseTargets.get(it.target) == null) {
-				condition[it.target instanceof UnresolvedItem]
-				originalReverseTargets.put(it.target, it.fullId)
-			}
-		]
-	}
-	
-	private def fullId(extension UnresolvedLink link) {
-		if (link.target instanceof UnresolvedItem) {
-			return target.eClass.name + ":" + id
-		} else {
-			return id
-		}
 	}
 
 	override removeCompilationUnitModel(CompilationUnitModel model) {
@@ -126,6 +109,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 
 	private def computeSnapshot() {		
+		copier = new SSCopier(metaModel)
 		debug[
 			val rev = if (!newCompilationUnitModels.empty) { 
 				newCompilationUnitModels.findFirst[true]
@@ -152,7 +136,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		// 1.1 remove the containment hierarchy
 		for(it:oldCompilationUnitModels) {
 			debug['''  #remove: «it»''']
-			removeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets, toDelete)
+			removeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.ids, toDelete)
 			currentCompilationUnits.remove(getCopyCompilationUnit)
 			model.compilationUnits.remove(getCopyCompilationUnit)
 		}
@@ -177,7 +161,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		for(it:newCompilationUnitModels) {
 			debug["  #add: " + it]
 			
-			mergeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.originalReverseTargets, true)
+			mergeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.ids, true)
 			it.copyCompilationUnit = copier.get(it.getOriginalCompilationUnitModel.compilationUnit) as CompilationUnit
 			currentCompilationUnits.put(it.getCopyCompilationUnit, it)
 		}
@@ -205,7 +189,11 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			].filter[it != null]
 			linksToResolve += outgoingLinks
 		}
-		copier.clear
+		
+		// remove all unnecessary data
+		newCompilationUnitModels.forEach[clearIds]
+		oldCompilationUnitModels.forEach[clearIds]
+		copier = null
 			
 		// 3. resolve all new and re-resolve all priorly reverted references
 		debug["  #resolving links: "]
@@ -264,7 +252,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		targets.clear
 		newCompilationUnitModels.clear
 		oldCompilationUnitModels.clear
-		copier.clear
 	}
 
 	private def void forEachChild(EObject object, (EReference,EObject)=>void action) {
@@ -388,8 +375,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	} 
 	
 	private static class SSCopier extends EcoreUtil.Copier {		
-		val Map<EClass, EClass> classCache = newHashMap
-		val Map<EStructuralFeature,EStructuralFeature> featureCache = newHashMap
+		static val Map<EClass, EClass> classCache = newHashMap
+		static val Map<EStructuralFeature,EStructuralFeature> featureCache = newHashMap
 		
 		val JavaPackage metaModel
 		val Multimap<EObject,EObject> reverseMap = ArrayListMultimap.create
@@ -398,7 +385,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			this.metaModel = metaModel
 		}
 		
-		private def <K,V> V access(Map<K,V> cache, K key, (K)=>V create) {
+		private static def <K,V> V access(Map<K,V> cache, K key, (K)=>V create) {
 			val existingValue = cache.get(key)
 			return if (existingValue == null) {
 				val newValue = create.apply(key)
@@ -435,11 +422,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			val oldValue = super.remove(key)
 			if (oldValue != null) reverseMap.remove(oldValue)
 			return oldValue			
-		}
-		
-		override clear() {
-			super.clear
-			reverseMap.clear
 		}
 		
 		public def <T extends EObject> List<T> getLastOriginal(T copy) {
