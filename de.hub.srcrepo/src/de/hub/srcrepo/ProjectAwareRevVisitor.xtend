@@ -7,7 +7,16 @@ import de.hub.srcrepo.repositorymodel.Rev
 import java.util.Map
 
 abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
-			
+	static class ProjectFile {
+		val JavaCompilationUnitRef ref;
+		val String projectID;
+
+		new(String projectID, JavaCompilationUnitRef ref) {
+			this.ref = ref
+			this.projectID = projectID
+		}
+	}
+		
 	val Map<String, Map<String, JavaCompilationUnitRef>> projectFiles = newHashMap()
 	val Map<String, String> pathToProject = newHashMap
 			
@@ -23,11 +32,18 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 		return existingFiles
 	}
 	
-	override protected addFile(String name, AbstractFileRef fileRef) {
-		if (fileRef instanceof JavaCompilationUnitRef) {
-			projectFiles(fileRef.projectID).put(name, fileRef as JavaCompilationUnitRef)
-			pathToProject.put(name, fileRef.projectID)
+	override protected getFile(AbstractFileRef fileRef) {
+		return if (fileRef instanceof JavaCompilationUnitRef) {
+			new ProjectFile(fileRef.projectID, fileRef)
+		} else {
+			null
 		}
+	}
+	
+	override protected addFile(String name, Object ref) {
+		val projectFile = ref as ProjectFile
+		projectFiles(projectFile.projectID).put(name, projectFile.ref)
+		pathToProject.put(name, projectFile.projectID)
 	}
 	
 	override protected clearFiles() {

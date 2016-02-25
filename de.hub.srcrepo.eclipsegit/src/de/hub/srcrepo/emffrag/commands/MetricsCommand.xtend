@@ -36,7 +36,7 @@ class MetricsCommand extends AbstractRepositoryCommand {
 	static abstract class EmffragModiscoRevVisitor extends MoDiscoRevVisitor {
 		new() {
 			super(JavaPackage.eINSTANCE);
-		}		
+		}
 	}
 	
 	private def traverse(RepositoryModel repo, EmffragModiscoRevVisitor visitor) {
@@ -69,7 +69,8 @@ class MetricsCommand extends AbstractRepositoryCommand {
 				return values.get(name) 
 			} else {
 				val newValue = function.apply(container)
-				values.put(name, newValue)
+				values.put(name, newValue) 
+				names.put(name, container)
 				return newValue
 			}			
 		} else {

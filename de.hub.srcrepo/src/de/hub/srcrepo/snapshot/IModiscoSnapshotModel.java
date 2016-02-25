@@ -29,6 +29,8 @@ public interface IModiscoSnapshotModel {
 	 */
 	public boolean rebuild();
 	
+	public void clear();
+	
 	public JavaCompilationUnitRef getContributingRef(String path);
 	
 	/**

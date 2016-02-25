@@ -268,7 +268,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		'''
 	}
 	
-	private def clear() {	
+	override clear() {	
 		debug["# clear ###################################"]
 		EcoreUtil.delete(model, true)
 		

@@ -24,8 +24,8 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	public static final UUID revVisitET = Statistics.UUID(AbstractRevVisitor.class, "RevVisitET");
 	public static final String traverseMetaData = "TraverseMetaData";
 	
-	private Map<String, AbstractFileRef> files = new HashMap<String, AbstractFileRef>();
-	private Map<Rev, Map<String, AbstractFileRef>> branches = new HashMap<Rev, Map<String, AbstractFileRef>>();
+	private Map<String, Object> files = new HashMap<String, Object>();
+	private Map<Rev, Map<String, Object>> branches = new HashMap<Rev, Map<String, Object>>();
 
 	private static final TimeStatistic revVisistETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class)
 			.with(BatchedPlot.class).register(revVisitET);
@@ -35,11 +35,13 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 
 	protected abstract void clearFiles();
 
-	protected abstract void addFile(String name, AbstractFileRef fileRef);
+	protected abstract void addFile(String name, Object file);
 
 	protected abstract void removeFile(String name);
 
 	protected abstract void onRev(Rev rev, Rev traversalParentRev);
+	
+	protected abstract Object getFile(AbstractFileRef fileRef);
 
 	@Override
 	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {
@@ -48,19 +50,19 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 			files.clear();
 			clearFiles();
 		} else {
-			Map<String, AbstractFileRef> oldFiles = branches.get(commonPreviousRev);
+			Map<String, Object> oldFiles = branches.get(commonPreviousRev);
 			if (oldFiles == null) {
 				// first time on a branch, the commonPreviousRev should be the
 				// last visited revison, can keep all files and should save them for
 				// traversal of other branches.
 				Preconditions.checkArgument(commonPreviousRev == lastVisitedRev);
-				branches.put(commonPreviousRev, new HashMap<String, AbstractFileRef>(files));
+				branches.put(commonPreviousRev, new HashMap<String, Object>(files));
 			} else {
 				// real branch, load the files from the last common revision
 				files.clear();
 				clearFiles();
 				files.putAll(oldFiles);
-				for (Entry<String, AbstractFileRef> entry : oldFiles.entrySet()) {
+				for (Entry<String, Object> entry : oldFiles.entrySet()) {
 					addFile(entry.getKey(), entry.getValue());
 				}
 			}
@@ -87,38 +89,48 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 
 	@Override
 	public void onCopiedFile(Diff diff) {
-		AbstractFileRef file = diff.getFile();
-		if (file != null) {
-			files.put(diff.getNewPath(), file);
-			addFile(diff.getNewPath(), file);
+		AbstractFileRef ref = diff.getFile();
+		if (ref != null) {
+			Object file = getFile(ref);
+			if (file != null) {
+				files.put(diff.getNewPath(), file);
+				addFile(diff.getNewPath(), file);
+			}
 		}
 	}
 
 	@Override
 	public void onRenamedFile(Diff diff) {
-		AbstractFileRef file = diff.getFile();
+		AbstractFileRef ref = diff.getFile();
 		removeFile(diff.getOldPath());
-		if (file != null) {
-			files.put(diff.getNewPath(), file);
-			addFile(diff.getNewPath(), file);
+		if (ref != null) {
+			Object file = getFile(ref);
+			if (file != null) {
+				files.put(diff.getNewPath(), file);
+				addFile(diff.getNewPath(), file);
+			}
 		}
 	}
 
 	@Override
 	public void onAddedFile(Diff diff) {
-		AbstractFileRef file = diff.getFile();
-		if (file != null) {
-			files.put(diff.getNewPath(), file);
-			addFile(diff.getNewPath(), file);
+		AbstractFileRef ref = diff.getFile();
+		if (ref != null) {
+			Object file = getFile(ref);
+			if (file != null) {
+				files.put(diff.getNewPath(), file);
+				addFile(diff.getNewPath(), file);
+			}
 		}
 	}
 
 	@Override
 	public void onModifiedFile(Diff diff) {
-		AbstractFileRef file = diff.getFile();
-		if (!diff.getNewPath().equals(diff.getOldPath())) {
-			files.remove(diff.getOldPath());
-			removeFile(diff.getOldPath());
+		AbstractFileRef ref = diff.getFile();
+		files.remove(diff.getOldPath());
+		removeFile(diff.getOldPath());
+		if (ref != null) {
+			Object file = getFile(ref);
 			if (file != null) {
 				files.put(diff.getNewPath(), file);
 				addFile(diff.getNewPath(), file);

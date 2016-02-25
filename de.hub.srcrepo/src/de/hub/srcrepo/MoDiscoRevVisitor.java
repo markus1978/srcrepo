@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +58,24 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 		if (!filter(rev)) {
 			return;
 		}
-		// TODO remove snapshots for removed projects!
+
+		// remove projects that do not longer exist
+		List<String> projectsToRemove = null;
+		for(String projectID: snapshots.keySet()) {
+			if (projectFiles.get(projectID)==null){
+				if (projectsToRemove == null) {
+					projectsToRemove = new ArrayList<String>();
+				}
+				projectsToRemove.add(projectID);
+			}
+		}
+		if (projectsToRemove != null) {
+			for (String projectID: projectsToRemove) {
+				snapshots.remove(projectID).clear();
+			}
+		}
+		
+		// update projects
 		ProjectLoop: for(String projectID: projectFiles.keySet()) {			
 			Preconditions.checkArgument(projectID != null);
 			Map<String,JavaCompilationUnitRef> files = projectFiles.get(projectID);

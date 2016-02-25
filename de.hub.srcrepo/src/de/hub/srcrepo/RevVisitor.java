@@ -12,12 +12,17 @@ public abstract class RevVisitor extends AbstractRevVisitor {
 	protected abstract void onRev(Rev rev, Rev traversalParentRev, Map<String, AbstractFileRef> files);
 
 	@Override
+	protected Object getFile(AbstractFileRef fileRef) {
+		return fileRef;
+	}
+	
+	@Override
 	protected void clearFiles() {
 		files.clear();
 	}
 	@Override
-	protected void addFile(String name, AbstractFileRef fileRef) {
-		files.put(name,  fileRef);
+	protected void addFile(String name, Object fileRef) {
+		files.put(name,  (AbstractFileRef)fileRef);
 	}
 	@Override
 	protected void removeFile(String name) {

@@ -43,8 +43,13 @@ class TraverseTests {
 		}	
 	}
 	
-	val revVisitor = new AbstractRevVisitor {		
-		override protected addFile(String name, AbstractFileRef fileRef) {
+	val revVisitor = new AbstractRevVisitor {	
+		
+		override protected getFile(AbstractFileRef fileRef) {
+			return fileRef
+		}
+		
+		override protected addFile(String name, Object fileRef) {
 			result.add('''!«name»''')
 		}
 		
