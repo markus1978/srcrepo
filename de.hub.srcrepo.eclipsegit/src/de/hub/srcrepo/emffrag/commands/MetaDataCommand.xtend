@@ -31,6 +31,7 @@ import org.json.JSONObject
 
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
+import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 
 class MetaDataCommand extends AbstractRepositoryCommand {
 		
@@ -96,7 +97,7 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				1_gitSize : «repo.metaData.size»,				
 				«statSummaryData(traverseStatJSON, RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
-				«statSummaryData(traverseStatJSON, MoDiscoRevVisitor.cusLoadETStat, "3_cusLoadTime")»,
+				«statSummaryData(traverseStatJSON, ModiscoIncrementalSnapshotImpl.cusLoadETStat, "3_cusLoadTime")»,
 				«statSummaryData(traverseStatJSON, MoDiscoRevVisitor.revVisitETStat, "4_revVisitTime")»,
 				«statSummaryData(currentStatDataJSON, FStoreFragmentation.loadETStat, "5_fragLoadET")»,
 				«statSummaryData(currentStatDataJSON, FStoreFragmentation.unloadETStat, "6_fragUnloadET")»,

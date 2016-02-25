@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.gmt.modisco.java.emf.JavaPackage;
@@ -17,7 +15,6 @@ import de.hub.jstattrack.TimeStatistic;
 import de.hub.jstattrack.TimeStatistic.Timer;
 import de.hub.jstattrack.services.BatchedPlot;
 import de.hub.jstattrack.services.Summary;
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
@@ -26,21 +23,17 @@ import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl;
 
 public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	
-	public static final TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "CUsLoadET");
 	public static final TimeStatistic revVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "CUsVisitET");		
 	
 	private int count = 0;
 	
 	private final IModiscoSnapshotModel.Factory snapshotFactory;
 	private final Map<String, IModiscoSnapshotModel> snapshots;
-	
-	private final Map<String, Map<String, JavaCompilationUnitRef>> contributingRefs;
 
 	public MoDiscoRevVisitor(IModiscoSnapshotModel.Factory snapshotFactory) {
 		super();
 		this.snapshotFactory = snapshotFactory;
 		snapshots = new HashMap<String, IModiscoSnapshotModel>();
-		contributingRefs = new HashMap<String, Map<String, JavaCompilationUnitRef>>();
 	}
 	
 	public MoDiscoRevVisitor(JavaPackage metaModel) {
@@ -51,29 +44,6 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 			}
 		});
 	}
-	
-	private CompilationUnitModel loadCompilagtionUnitModel(JavaCompilationUnitRef fileRef) {
-		if (fileRef != null) {
-			Timer timer = cusLoadETStat.timer();
-			CompilationUnitModel cum = fileRef.getCompilationUnitModel();
-			timer.track();
-			return cum;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {		
-		if (lastVisitedRev != newBranchRev) {
-			for(IModiscoSnapshotModel snapshot: snapshots.values()) {
-				snapshot.clear();
-			}
-			snapshots.clear();
-			contributingRefs.clear();
-		}
-		super.onBranch(commonPreviousRev, newBranchRev);
-	}
 
 	@Override
 	public void onRev(Rev rev, Rev traversalParentRev) {
@@ -82,26 +52,21 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	}
 
 	@Override
-	protected final void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, JavaCompilationUnitRef>> projectFiles) {		
+	protected final void onRev(Rev rev, Rev traversalParentRev, Map<String,Map<String,JavaCompilationUnitRef>> projectFiles) {		
 		Timer timer = revVisitETStat.timer();
 		if (!filter(rev)) {
 			return;
 		}
-		ProjectLoop: for(Map.Entry<String, Map<String, JavaCompilationUnitRef>> projectEntry: projectFiles.entrySet()) {
-			String projectID = projectEntry.getKey();
+		// TODO remove snapshots for removed projects!
+		ProjectLoop: for(String projectID: projectFiles.keySet()) {			
 			Preconditions.checkArgument(projectID != null);
-			Map<String, JavaCompilationUnitRef> files = projectEntry.getValue();
+			Map<String,JavaCompilationUnitRef> files = projectFiles.get(projectID);
 
 			if (!files.isEmpty()) {
 				IModiscoSnapshotModel snapshot = snapshots.get(projectID);
 				if (snapshot == null) {
 					snapshot = snapshotFactory.create(projectID);
 					snapshots.put(projectID, snapshot);
-				}
-				Map<String, JavaCompilationUnitRef> contributingRefs = this.contributingRefs.get(projectID); // TODO use the snapshot for that
-				if (contributingRefs == null) {
-					contributingRefs= new HashMap<String, JavaCompilationUnitRef>();
-					this.contributingRefs.put(projectID, contributingRefs);
 				}
 				
 				boolean reBuildSnapshot = false;
@@ -110,54 +75,35 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 					try {
 						updateSnapshot = false;
 						
-						snapshot.start();
 						// add contributing models in case we cleared the snapshot because of an error in a prior revision
 						if (reBuildSnapshot) {
-							for(JavaCompilationUnitRef existingContributingRef:contributingRefs.values()) {
-								snapshot.checkCompilationUnitModel(loadCompilagtionUnitModel(existingContributingRef));
-							}
+							snapshot.rebuild();
 						}
 						
+						snapshot.start();						
 						int changedCUs = 0;
 						// merge the models from all compilation units
 						Collection<String> pathsInFiles = new HashSet<String>();
-						for (Entry<String, JavaCompilationUnitRef> entry : files.entrySet()) {
+						for (Map.Entry<String, JavaCompilationUnitRef> entry : files.entrySet()) {
 							String path = entry.getKey();
 							pathsInFiles.add(path);
 							
 							JavaCompilationUnitRef newRef = entry.getValue();
-							JavaCompilationUnitRef oldRef = contributingRefs.get(path);
+							JavaCompilationUnitRef oldRef = snapshot.getContributingRef(path);
 							
-							if (newRef != oldRef) {
-								CompilationUnitModel newCUModel = loadCompilagtionUnitModel(newRef);
-								CompilationUnitModel oldCUModel = loadCompilagtionUnitModel(oldRef);
-				
-								if (newCUModel != oldCUModel) {
-									if (!newCUModel.getCompilationUnit().getTypes().isEmpty()) { // keep the old one, if the new one is obviously errornous
-										if (oldCUModel != null) {
-											snapshot.removeCompilationUnitModel(oldCUModel);
-										} 
-										snapshot.addCompilationUnitModel(newCUModel);
-										contributingRefs.put(path, newRef);
-										changedCUs++;
-									} else {
-										SrcRepoActivator.INSTANCE.warning("Discovered a CU model " + 
-												newCUModel.getCompilationUnit().getOriginalFilePath() + 
-												" without a type (probably due to incorrect CU code), using older version of same CU.");
-									}
-								}
+							if (newRef != oldRef) {												
+								if (oldRef != null) {
+									snapshot.removeCompilationUnitModel(path, oldRef);
+								} 
+								snapshot.addCompilationUnitModel(path, newRef);
+								changedCUs++;															
 							}
-						}
-						List<String> pathsToRemoveFromContributingModel = new ArrayList<String>(); 
-						for (Entry<String, JavaCompilationUnitRef> entry : contributingRefs.entrySet()) {
-							if (!pathsInFiles.contains(entry.getKey())) {
-								snapshot.removeCompilationUnitModel(loadCompilagtionUnitModel(entry.getValue()));
-								pathsToRemoveFromContributingModel.add(entry.getKey());
+						} 
+						for (String path : new ArrayList<String>(snapshot.getContributingRefs())) {
+							if (!pathsInFiles.contains(path)) {
+								snapshot.removeCompilationUnitModel(path, snapshot.getContributingRef(path));
 								changedCUs++;
 							}
-						}
-						for (String pathToRemoveFromContributingModel: pathsToRemoveFromContributingModel) {
-							contributingRefs.remove(pathToRemoveFromContributingModel);
 						}
 						if (!snapshot.end()) {
 							throw new RuntimeException("try again.");
@@ -169,22 +115,12 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 						// something unexpected happend. Loose the failed snapshot and start from scratch
 						SrcRepoActivator.INSTANCE.warning("Could not update a snapshot; replaced snapshot with a fresh one.", incrementalException); 
 						
-						try {
-							snapshot.clear();
-							snapshot = snapshotFactory.create(projectID);
-							snapshots.put(projectID, snapshot);
-							for (Entry<String, JavaCompilationUnitRef> entry : contributingRefs.entrySet()) {
-								snapshot.start();
-								snapshot.addCompilationUnitModel(loadCompilagtionUnitModel(entry.getValue()));
-								if (!snapshot.end()) {
-									SrcRepoActivator.INSTANCE.warning("There were also warnings creating the snapshots, Ill continue anyways.");
-								}
-							}
+						try {							
+							if (!snapshot.rebuild()) {
+								SrcRepoActivator.INSTANCE.warning("There were also warnings creating the snapshots, Ill continue anyways.");
+							}							
 						} catch (Exception newException) {
-							SrcRepoActivator.INSTANCE.warning("Also could not create a fresh snapshot. Will try to create one for next revision.", newException);
-							snapshot.clear();
-							snapshot = snapshotFactory.create(projectID);
-							snapshots.put(projectID, snapshot);
+							SrcRepoActivator.INSTANCE.warning("Also could not create a fresh snapshot. Will try to create one for next revision.", newException);							
 							if (!reBuildSnapshot) {
 								reBuildSnapshot = true;
 							}

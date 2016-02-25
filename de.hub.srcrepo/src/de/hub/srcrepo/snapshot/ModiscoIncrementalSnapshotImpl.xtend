@@ -2,16 +2,20 @@ package de.hub.srcrepo.snapshot
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
+import de.hub.jstattrack.TimeStatistic
+import de.hub.jstattrack.services.BatchedPlot
+import de.hub.jstattrack.services.Summary
 import de.hub.srcrepo.SrcRepoActivator
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.Rev
-import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSLink
 import java.util.Collection
 import java.util.HashSet
 import java.util.List
 import java.util.Map
+import java.util.concurrent.TimeUnit
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -36,8 +40,22 @@ import static de.hub.srcrepo.SrcRepoActivator.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
 import static extension de.hub.srcrepo.snapshot.internal.SnapshotUtils.*
+import java.util.HashMap
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
+
+	public static val TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "CUsLoadET");
+	
+	private def loadCompilationUnitModel(JavaCompilationUnitRef fileRef) {
+		if (fileRef != null) {
+			val timer = cusLoadETStat.timer
+			val cum = fileRef.getCompilationUnitModel();
+			timer.track();
+			return cum;
+		} else {
+			return null;
+		}
+	}
 
 	val String projectID
 	val JavaPackage metaModel
@@ -52,7 +70,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	
 	val Map<CompilationUnit, SSCompilationUnitModel> currentCompilationUnitCopies = newHashMap
 	
-	val Map<CompilationUnitModel, SSCompilationUnitModel> currentCompilationUnitModels = newHashMap	
+	val Map<JavaCompilationUnitRef, SSCompilationUnitModel> currentCompilationUnitModels = newHashMap	
+	val Map<String, JavaCompilationUnitRef> currentRefs = newHashMap
 	val List<SSCompilationUnitModel> newCompilationUnitModels = newArrayList
 	val List<SSCompilationUnitModel> oldCompilationUnitModels = newArrayList
 
@@ -66,6 +85,14 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		model = metaModel.javaFactory.createModel
 	}
 	
+	override getContributingRef(String path) {
+		return currentRefs.get(path)
+	}
+	
+	override getContributingRefs() {
+		return currentRefs.keySet
+	}
+	
 	override getTargets() {
 		return targets
 	}
@@ -73,29 +100,25 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	override <T extends EObject> getPersistedOriginal(T source) {
 		throw new RuntimeException("not implemented")
 	}
-	
-	override checkCompilationUnitModel(CompilationUnitModel model) {
-		if (currentCompilationUnitModels.get(model) == null) {
-			addCompilationUnitModel(model)
-		}
-	}
 
-	override addCompilationUnitModel(CompilationUnitModel model) {
+	override addCompilationUnitModel(String path, JavaCompilationUnitRef ref) {
 		condition("Null model is not allowed.")[model != null]
 		condition("Containment relation is broken.")[
 			model.eAllContents.forall[
 				it.eSelectContainer[it instanceof CompilationUnitModel] == model
 			]
 		]
-		val extension ssCompilationUnitModel = new SSCompilationUnitModel(model)
+		val extension ssCompilationUnitModel = new SSCompilationUnitModel(ref.loadCompilationUnitModel)
 		newCompilationUnitModels += ssCompilationUnitModel
-		currentCompilationUnitModels.put(model, ssCompilationUnitModel)
+		currentCompilationUnitModels.put(ref, ssCompilationUnitModel)
+		currentRefs.put(path, ref)
 	}
 
-	override removeCompilationUnitModel(CompilationUnitModel model) {
-		val oldCompilationUnitModel = currentCompilationUnitModels.remove(model)
+	override removeCompilationUnitModel(String path, JavaCompilationUnitRef ref) {
+		val oldCompilationUnitModel = currentCompilationUnitModels.remove(ref)
 		condition[oldCompilationUnitModel != null]
 		oldCompilationUnitModels += oldCompilationUnitModel
+		currentRefs.remove(path)
 	}
 	
 	override end() {
@@ -245,14 +268,23 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		'''
 	}
 	
-	override clear() {	
+	private def clear() {	
 		debug["# clear ###################################"]
 		EcoreUtil.delete(model, true)
 		
+		currentRefs.clear
 		currentCompilationUnitCopies.clear
 		targets.clear
 		newCompilationUnitModels.clear
 		oldCompilationUnitModels.clear
+	}
+	
+	override rebuild() {
+		val Map<String, JavaCompilationUnitRef> currentRefs = new HashMap<String,JavaCompilationUnitRef>(currentRefs)
+		clear
+		start
+		currentRefs.entrySet.forEach[addCompilationUnitModel(it.key, it.value)]
+		end		
 	}
 
 	private def void forEachChild(EObject object, (EReference,EObject)=>void action) {
@@ -540,5 +572,5 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			default: 
 				throw new RuntimeException("unreachable " + it.eClass)
 		})
-	}
+	}	
 }

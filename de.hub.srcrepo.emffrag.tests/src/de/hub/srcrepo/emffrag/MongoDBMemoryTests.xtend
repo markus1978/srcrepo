@@ -61,7 +61,7 @@ class MongoDBMemoryTests extends MemoryTests {
 		val fs = new FragmentationSet(
 			#[JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE], 
 			[uri|DataStoreImpl::createDataStore(uri)], 
-			1)		
+			50)		
 		fragmentation = fs.getFragmentation(repositoryModelURI)
 		return fragmentation.root as RepositoryModel
 	}

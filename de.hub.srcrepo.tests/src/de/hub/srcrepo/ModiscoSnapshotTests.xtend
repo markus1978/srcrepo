@@ -27,6 +27,7 @@ import static de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static org.junit.Assert.*
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 
 class ModiscoSnapshotTests {
 	private static var isStandalone = false
@@ -42,6 +43,13 @@ class ModiscoSnapshotTests {
 	
 	private def deleted() {
 		return deleted + (deleteModifier++)
+	}
+	
+	private def JavaCompilationUnitRef createRef(String testCaseName, String revName, String compilationUnitName) {
+		val cum = createCompilationUnitModel(testCaseName, revName, compilationUnitName)
+		val ref = repositoryModelFactory.createJavaCompilationUnitRef
+		ref.compilationUnitModel = cum
+		return ref
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String testCaseName, String revName, String compilationUnitName) {
@@ -70,6 +78,13 @@ class ModiscoSnapshotTests {
 			ModiscoSnapshotTests.isStandalone = true
 			SrcRepoActivator.standalone
 		}
+	}
+	
+	private def JavaCompilationUnitRef createRef(String compilationUnitPath) {
+		val cum = createCompilationUnitModel(compilationUnitPath)
+		val ref = repositoryModelFactory.createJavaCompilationUnitRef
+		ref.compilationUnitModel = cum
+		return ref
 	}
 	
 	private def CompilationUnitModel createCompilationUnitModel(String compilationUnitPath) {
@@ -102,16 +117,16 @@ class ModiscoSnapshotTests {
 	}
 	
 	private def void performTest(String testName, List<Map<String, String>> revsData) {		
-		val currentCUMs = newHashMap
+		val currentRefs = newHashMap
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		for (index:1..revsData.size) {
 			snapshot.start
 			val revData = revsData.get(index-1)
-			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCompilationUnitModel(currentCUMs.remove(it))] // remove changed & deleted
+			revData.values.filter[it != null].toList.sort.forEach[snapshot.removeCompilationUnitModel('''«testName»/r«index»/«it»''', currentRefs.remove(it))] // remove changed & deleted
 			revData.keySet.filter[!it.startsWith(deleted)].toList.sort.forEach[ // add new & changed
-				val cum = createCompilationUnitModel(testName, '''r«index»''', it)
-				currentCUMs.put(it, cum)
-				snapshot.addCompilationUnitModel(cum)
+				val ref = createRef(testName, '''r«index»''', it)
+				currentRefs.put(it, ref)
+				snapshot.addCompilationUnitModel('''«testName»/r«index»/«it»''', ref)
 			]
 			snapshot.end
 			assertNotNull(snapshot.model)
@@ -119,9 +134,9 @@ class ModiscoSnapshotTests {
 		
 		val goalSnapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		goalSnapshot.start
-		currentCUMs.keySet.toList.sort.forEach[
-			val goalCum = createCompilationUnitModel(testName, goalRev, it)
-			goalSnapshot.addCompilationUnitModel(goalCum)
+		currentRefs.keySet.toList.sort.forEach[
+			val goalRef = createRef(testName, goalRev, it)
+			goalSnapshot.addCompilationUnitModel('''«testName»/goal''', goalRef)
 		]		
  		goalSnapshot.end
  		
@@ -200,12 +215,12 @@ class ModiscoSnapshotTests {
 	
 	private def createSingleCUSingeRevSnapshot(String cuName, (CompilationUnitModel)=>void assertCum) {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
-		val cum = createCompilationUnitModel(cuName)
+		val ref = createRef(cuName)
 		
-		assertCum.apply(cum)	
+		assertCum.apply(ref.compilationUnitModel)	
 		
 		snapshot.start
-		snapshot.addCompilationUnitModel(cum)
+		snapshot.addCompilationUnitModel("cuName", ref)
 		snapshot.end
 		
 		val model = snapshot.model
@@ -222,8 +237,9 @@ class ModiscoSnapshotTests {
 		val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE)
 		snapshot.start
 		cuNames.forEach[
-			val cum = (packageName + "/" + it).createCompilationUnitModel
-			snapshot.addCompilationUnitModel(cum)			
+			val name = (packageName + "/" + it)
+			val ref = name.createRef
+			snapshot.addCompilationUnitModel(name, ref)			
 		]	
 		snapshot.end
 		

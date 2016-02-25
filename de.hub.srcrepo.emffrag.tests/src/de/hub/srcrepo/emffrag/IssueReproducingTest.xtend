@@ -51,7 +51,7 @@ class IssueReproducingTest {
 					val snapshot = new ModiscoIncrementalSnapshotImpl(JavaPackage.eINSTANCE, "nop")
 					snapshot.start
 					projectFiles.values.forEach[
-						snapshot.addCompilationUnitModel(it.compilationUnitModel)
+						snapshot.addCompilationUnitModel(it.path, it)
 					]
 					snapshot.end					
 				]

@@ -1,12 +1,13 @@
 package de.hub.srcrepo.snapshot;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmt.modisco.java.Model;
 import org.eclipse.gmt.modisco.java.NamedElement;
 
-import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 
 public interface IModiscoSnapshotModel {
 
@@ -21,24 +22,33 @@ public interface IModiscoSnapshotModel {
 	public void start();
 
 	/**
-	 * Does the same as addCompilationUnitModel, but only if the model is not
-	 * already part of this snapshot.
+	 * Clears the snapshot and rebuilds it with its current contributing refs.
+	 * 
+	 * @returns false if there were errors during incremental snapshot creation.
+	 *          This is a suggestion to build a new snapshot, if possible.
 	 */
-	public void checkCompilationUnitModel(CompilationUnitModel model);
+	public boolean rebuild();
+	
+	public JavaCompilationUnitRef getContributingRef(String path);
+	
+	/**
+	 * @return the paths of all contributing refs
+	 */
+	public Collection<String> getContributingRefs();
 
 	/**
 	 * Add a compilation unit model to the snapshot. The models are taken from a
 	 * persistent repository model to the snapshot. Changes to compilation units
 	 * need to be implemented as remove/add pairs.
 	 */
-	public void addCompilationUnitModel(CompilationUnitModel model);
+	public void addCompilationUnitModel(String path, JavaCompilationUnitRef ref);
 
 	/**
 	 * Remove an old compilation unit model from the snapshot. The models are
 	 * taken from a persistent repository model to the snapshot. Changes to
 	 * compilation units need to be implemented as remove/add pairs.
 	 */
-	public void removeCompilationUnitModel(CompilationUnitModel model);
+	public void removeCompilationUnitModel(String path, JavaCompilationUnitRef ref);
 
 	/**
 	 * End the current snapshot update. Needs to be called after all CUs for the
@@ -53,7 +63,5 @@ public interface IModiscoSnapshotModel {
 
 	public Map<String, NamedElement> getTargets();
 
-	public <T extends EObject> T getPersistedOriginal(T source);
-
-	public void clear();
+	public <T extends EObject> T getPersistedOriginal(T source); // TODO
 }
