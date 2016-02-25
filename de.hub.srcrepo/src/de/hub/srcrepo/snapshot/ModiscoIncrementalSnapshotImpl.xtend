@@ -169,7 +169,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			for(it:it.incomingLinks.filter[resolved && !toDelete.contains(it.source)]) {
 				it.revert				
 				linksToResolve += it				
-			}			
+			}
 		}
 
 		// 2 add new CUs
