@@ -92,7 +92,7 @@ class MongoDBMemoryTests extends MemoryTests {
 					i = i + 1
 					println('''«i» «rev.name» CUs: «snapshot.values.sum[it.model.compilationUnits.size]»''')
 					if (i % 1000 == 0) {
-						heapdump('''testdata/«i»dump''')
+						heapdump('''testdata/«i»dump2.hprof''')
 						println('''#################  «i» dump #####################''')
 					}
 				}				

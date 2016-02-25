@@ -49,7 +49,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	 * A map that connects all CompilationUnits in the model, with the SSCompilationUnitModel they are from. 
 	 */
 	val Map<String, NamedElement> targets = newHashMap
-	val Map<CompilationUnit, SSCompilationUnitModel> currentCompilationUnits = newHashMap
+	
+	val Map<CompilationUnit, SSCompilationUnitModel> currentCompilationUnitCopies = newHashMap
 	
 	val Map<CompilationUnitModel, SSCompilationUnitModel> currentCompilationUnitModels = newHashMap	
 	val List<SSCompilationUnitModel> newCompilationUnitModels = newArrayList
@@ -137,7 +138,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		for(it:oldCompilationUnitModels) {
 			debug['''  #remove: «it»''']
 			removeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.ids, toDelete)
-			currentCompilationUnits.remove(getCopyCompilationUnit)
+			currentCompilationUnitCopies.remove(getCopyCompilationUnit)
 			model.compilationUnits.remove(getCopyCompilationUnit)
 		}
 		deleteCrossReferences(toDelete, model)
@@ -163,7 +164,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			
 			mergeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.ids, true)
 			it.copyCompilationUnit = copier.get(it.getOriginalCompilationUnitModel.compilationUnit) as CompilationUnit
-			currentCompilationUnits.put(it.getCopyCompilationUnit, it)
+			currentCompilationUnitCopies.put(it.getCopyCompilationUnit, it)
 		}
 		// 2.2. add all references within new CUs
 		copier.copyReferences
@@ -205,7 +206,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				if (!resolvedTarget.proxy) {					
 					val originalCompilationUnit = resolvedTarget.originalCompilationUnit
 					if (originalCompilationUnit != null) {
-						val cum = currentCompilationUnits.get(originalCompilationUnit)
+						val cum = currentCompilationUnitCopies.get(originalCompilationUnit)
 						condition[cum != null]
 						cum.incomingLinks += it						
 					} // not all elements (e.g. packages) have a reference to a compilation unit
@@ -226,7 +227,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		return '''
 			snapshot {
 				current: [
-					«FOR cu:currentCompilationUnits.values»
+					«FOR cu:currentCompilationUnitCopies.values»
 						«cu»
 					«ENDFOR»
 				]
@@ -248,7 +249,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		debug["# clear ###################################"]
 		EcoreUtil.delete(model, true)
 		
-		currentCompilationUnits.clear
+		currentCompilationUnitCopies.clear
 		targets.clear
 		newCompilationUnitModels.clear
 		oldCompilationUnitModels.clear
