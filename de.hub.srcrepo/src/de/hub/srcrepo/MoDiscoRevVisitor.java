@@ -19,28 +19,30 @@ import de.hub.jstattrack.services.Summary;
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 import de.hub.srcrepo.repositorymodel.RepositoryModel;
 import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.snapshot.IModiscoIncrementalSnapshotModel;
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel;
 import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl;
 
 public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 	
-	public static final TimeStatistic revVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "CUsVisitET");		
+	public static final TimeStatistic revVisitETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "revSnapshotsVisitET");
+	public static final TimeStatistic revUDFETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class).with(BatchedPlot.class).register(MoDiscoRevVisitor.class, "revSnapshotUDFET");
 	
 	private int count = 0;
 	
-	private final IModiscoSnapshotModel.Factory snapshotFactory;
-	private final Map<String, IModiscoSnapshotModel> snapshots;
+	private final IModiscoIncrementalSnapshotModel.Factory snapshotFactory;
+	private final Map<String, IModiscoIncrementalSnapshotModel> snapshots;
 
-	public MoDiscoRevVisitor(IModiscoSnapshotModel.Factory snapshotFactory) {
+	public MoDiscoRevVisitor(IModiscoIncrementalSnapshotModel.Factory snapshotFactory) {
 		super();
 		this.snapshotFactory = snapshotFactory;
-		snapshots = new HashMap<String, IModiscoSnapshotModel>();
+		snapshots = new HashMap<String, IModiscoIncrementalSnapshotModel>();
 	}
 	
 	public MoDiscoRevVisitor(JavaPackage metaModel) {
-		this(new IModiscoSnapshotModel.Factory() {			
+		this(new IModiscoIncrementalSnapshotModel.Factory() {			
 			@Override
-			public IModiscoSnapshotModel create(String projectID) {
+			public IModiscoIncrementalSnapshotModel create(String projectID) {
 				return new ModiscoIncrementalSnapshotImpl(metaModel, projectID);
 			}
 		});
@@ -81,7 +83,7 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 			Map<String,JavaCompilationUnitRef> files = projectFiles.get(projectID);
 
 			if (!files.isEmpty()) {
-				IModiscoSnapshotModel snapshot = snapshots.get(projectID);
+				IModiscoIncrementalSnapshotModel snapshot = snapshots.get(projectID);
 				if (snapshot == null) {
 					snapshot = snapshotFactory.create(projectID);
 					snapshots.put(projectID, snapshot);
@@ -128,6 +130,13 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 						}
 						if (changedCUs > 0) {
 							SrcRepoActivator.INSTANCE.info("Updated snapshot for " + projectID + ", number of changed CUs " + changedCUs);
+							Timer udfTimer = revUDFETStat.timer();
+							try {								
+								onRev(rev, projectID, snapshot);
+							} catch (Exception e) {
+								SrcRepoActivator.INSTANCE.error("Exception in visitor UDF.", e);
+							}
+							udfTimer.track();
 						}
 					} catch (Exception incrementalException) {
 						// something unexpected happend. Loose the failed snapshot and start from scratch
@@ -146,14 +155,16 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 						}
 					}
 					reBuildSnapshot = false;
-				}
+				}				
 			}
 		}
-		try {
-			onRevWithSnapshot(rev, traversalParentRev, snapshots);
+		Timer udfTimer = revUDFETStat.timer();
+		try {					
+			onRevWithSnapshots(rev, traversalParentRev, snapshots);					
 		} catch (Exception e) {
-			SrcRepoActivator.INSTANCE.error("Exception in visitor function.", e);
+			SrcRepoActivator.INSTANCE.error("Exception in visitor UDF.", e);
 		}
+		udfTimer.track();
 		timer.track();
 	}
 
@@ -161,6 +172,10 @@ public abstract class MoDiscoRevVisitor extends ProjectAwareRevVisitor {
 		return true;
 	}
 
-	protected abstract void onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshot);
+	protected abstract void onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot);
+	
+	protected void onRevWithSnapshots(Rev rev, Rev traversalParentRev, Map<String, ? extends IModiscoSnapshotModel> snapshot) {
+		
+	}
 
 }

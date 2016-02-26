@@ -41,8 +41,10 @@ import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
 import static extension de.hub.srcrepo.snapshot.internal.SnapshotUtils.*
 import java.util.HashMap
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 
-class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
+class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel {
 
 	public static val TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "CUsLoadET");
 	
@@ -66,7 +68,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	/**
 	 * A map that connects all CompilationUnits in the model, with the SSCompilationUnitModel they are from. 
 	 */
-	val Map<String, NamedElement> targets = newHashMap
+	val BiMap<String, NamedElement> targets = HashBiMap.create
 	
 	val Map<CompilationUnit, SSCompilationUnitModel> currentCompilationUnitCopies = newHashMap
 	
@@ -74,6 +76,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	val Map<String, JavaCompilationUnitRef> currentRefs = newHashMap
 	val List<SSCompilationUnitModel> newCompilationUnitModels = newArrayList
 	val List<SSCompilationUnitModel> oldCompilationUnitModels = newArrayList
+	
+	var modCount = 0
 
 	new(JavaPackage metaModel) {
 		this(metaModel, "<default>")
@@ -85,6 +89,22 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		model = metaModel.javaFactory.createModel
 	}
 	
+	override getModCount() {
+		return modCount
+	}
+	
+	override getRev(CompilationUnit cu) {
+		return currentCompilationUnitCopies.get(cu)?.rev
+	}
+	
+	override getId(NamedElement named) {
+		return targets.inverse.get(named)
+	}
+	
+	override getTarget(String id) {
+		return targets.get(id)
+	}
+	
 	override getContributingRef(String path) {
 		return currentRefs.get(path)
 	}
@@ -93,14 +113,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		return currentRefs.keySet
 	}
 	
-	override getTargets() {
-		return targets
-	}
-	
-	override <T extends EObject> getPersistedOriginal(T source) {
-		throw new RuntimeException("not implemented")
-	}
-
 	override addCompilationUnitModel(String path, JavaCompilationUnitRef ref) {
 		condition("Null model is not allowed.")[model != null]
 		condition("Containment relation is broken.")[
@@ -108,7 +120,9 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 				it.eSelectContainer[it instanceof CompilationUnitModel] == model
 			]
 		]
-		val extension ssCompilationUnitModel = new SSCompilationUnitModel(ref.loadCompilationUnitModel)
+		
+		val rev = ref?.eContainer?.eContainer?.eContainer as Rev
+		val extension ssCompilationUnitModel = new SSCompilationUnitModel(rev?.name, ref.loadCompilationUnitModel)
 		newCompilationUnitModels += ssCompilationUnitModel
 		currentCompilationUnitModels.put(ref, ssCompilationUnitModel)
 		currentRefs.put(path, ref)
@@ -122,7 +136,15 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 	}
 	
 	override end() {
-		if (!oldCompilationUnitModels.empty || !newCompilationUnitModels.empty) {
+		modCount++
+		
+//		if (oldCompilationUnitModels.size + newCompilationUnitModels.size > contributingRefs.size) {
+//			val Map<String, JavaCompilationUnitRef> currentRefs = new HashMap<String,JavaCompilationUnitRef>(currentRefs)
+//			clear
+//			currentRefs.entrySet.forEach[addCompilationUnitModel(it.key, it.value)]
+//		} 
+//		
+		if (!oldCompilationUnitModels.empty || !newCompilationUnitModels.empty) {			
 			computeSnapshot
 		}
 		return true
@@ -268,7 +290,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 		'''
 	}
 	
-	override clear() {	
+	override clear() {
+		modCount++	
 		debug["# clear ###################################"]
 		EcoreUtil.delete(model, true)
 		
@@ -572,5 +595,5 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoSnapshotModel {
 			default: 
 				throw new RuntimeException("unreachable " + it.eClass)
 		})
-	}	
+	}
 }

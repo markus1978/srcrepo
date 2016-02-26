@@ -30,13 +30,23 @@ class MetricsCommand extends AbstractRepositoryCommand {
 	
 	val format = new SimpleDateFormat("dd-MM-yyyy")
 	
-	val Map<String, Integer> values = newHashMap
-	val Map<String, NamedElement> names = newHashMap
+	val Map<NamedElementUUID, Integer> values = newHashMap
+	val Map<IModiscoSnapshotModel, Pair<Integer, Integer>> snapshotValues = newHashMap
 	
 	static abstract class EmffragModiscoRevVisitor extends MoDiscoRevVisitor {
 		new() {
 			super(JavaPackage.eINSTANCE);
 		}
+		
+		override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+			
+		}
+		
+		override protected onRevWithSnapshots(Rev rev, Rev traversalParentRev, Map<String, ? extends IModiscoSnapshotModel> snapshots) {
+			onRevWithSnapshotsCustom(rev, traversalParentRev, snapshots as Map<String, IModiscoSnapshotModel>)
+		}
+		
+		abstract def void onRevWithSnapshotsCustom(Rev rev, Rev parent, Map<String, IModiscoSnapshotModel> snapshots);
 	}
 	
 	private def traverse(RepositoryModel repo, EmffragModiscoRevVisitor visitor) {
@@ -60,25 +70,32 @@ class MetricsCommand extends AbstractRepositoryCommand {
 		return builder.toString
 	}
 	
-	private def <T extends NamedElement> int collect(Rev rev, IModiscoSnapshotModel snapshot, T container, String key, (T)=>int function) {
-		// TODO save in model for later traversals; necessary provision in meta-model/emffrag is missing
-		val name = container.qualifiedName
-		val existing = names.get(name)
+	private def <T extends NamedElement> int collect(String projectID, IModiscoSnapshotModel snapshot, T container, (T)=>int function) {
+		val uuid = new NamedElementUUID(snapshot.getRev(container.originalCompilationUnit), projectID, snapshot.getId(container))
+		
+		val existing = values.get(uuid)
 		if (existing != null) {
-			if (existing == container) {
-				return values.get(name) 
-			} else {
-				val newValue = function.apply(container)
-				values.put(name, newValue) 
-				names.put(name, container)
-				return newValue
-			}			
+			return existing
 		} else {
-			val newValue = function.apply(container)
-			names.put(name, container)	
-			values.put(name, newValue)
-			return newValue			
+			val value = function.apply(container)
+			values.put(uuid, value)
+			return value
 		}
+	}
+	
+	private def <T extends NamedElement> int collect(Map<String,IModiscoSnapshotModel> snapshots, (String,IModiscoSnapshotModel)=>int function) {
+		snapshots.entrySet.sum[
+			val projectID = it.key
+			val snapshot = it.value
+			val existingSnapshotValue = snapshotValues.get(snapshot)
+			if (existingSnapshotValue == null || existingSnapshotValue.key != snapshot.modCount) {
+				val value = function.apply(projectID, snapshot)
+				snapshotValues.put(snapshot, snapshot.modCount -> value)
+				return value
+			} else {
+				return existingSnapshotValue.value
+			}
+		]		
 	}
 	
 	override protected addOptions(Options options) {
@@ -99,9 +116,11 @@ class MetricsCommand extends AbstractRepositoryCommand {
 				datum.put("parent", "before_root")
 			} 
 			datum.put("cus", snapshots.values.sum[model.compilationUnits.size])
-			datum.put("wmcHsv", snapshots.values.sum[snapshot|snapshot.model.compilationUnits.filter[!types.empty].map[types.get(0)].sum[
-				collect(rev, snapshot, it, "wmc_hsv") [weightedMethodPerClassWithHalsteadVolume]
-			]])
+			datum.put("wmcHsv", snapshots.collect[projectID,snapshot|
+				snapshot.model.compilationUnits.filter[!types.empty].map[types.get(0)].sum[
+					collect(projectID, snapshot, it) [weightedMethodPerClassWithHalsteadVolume]
+				]
+			])			
 			data.put(datum)
 			timer.track
 		]
@@ -114,7 +133,6 @@ class MetricsCommand extends AbstractRepositoryCommand {
 		} else {
 			if (cl.hasOption("v")) { println('''The results...''') }				
 		}
-		println(data.toCSV)
-		println(Statistics.reportToString)		
+		println(data.toCSV)		
 	}
 }

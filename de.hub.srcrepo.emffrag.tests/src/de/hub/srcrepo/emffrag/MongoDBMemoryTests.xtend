@@ -15,15 +15,15 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import java.io.File
 import java.lang.management.ManagementFactory
-import java.util.Map
 import org.eclipse.emf.common.util.URI
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 
+import static de.hub.srcrepo.emffrag.MongoDBMemoryTests.*
+
 import static extension de.hub.srcrepo.RepositoryModelTraversal.*
-import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 class MongoDBMemoryTests extends MemoryTests {
 	
@@ -88,9 +88,8 @@ class MongoDBMemoryTests extends MemoryTests {
 					println('''##BRANCH «lastBranchRev?.name»->«commonMergedRev?.name»''')
 				}
 								
-				override protected onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshot) {
+				override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
 					i = i + 1
-					println('''«i» «rev.name» CUs: «snapshot.values.sum[it.model.compilationUnits.size]»''')
 					if (i % 1000 == 0) {
 						heapdump('''testdata/«i»dump2.hprof''')
 						println('''#################  «i» dump #####################''')

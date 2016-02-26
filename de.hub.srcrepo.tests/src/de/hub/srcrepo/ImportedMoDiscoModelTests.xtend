@@ -39,8 +39,8 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
 
 	def testJavaModels((Rev,Model)=>void testModel) {
     	val visitor = new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-      		override def onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshots) {
-	    		snapshots.forEach[projectID,snapshot|testModel.apply(rev,snapshot.model)]   
+      		override def onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+	    		testModel.apply(rev,snapshot.model)  
       		}
       		override def filter(Rev rev) {
       			!rev.getName().equals("879076c35867e58b2a95e17139729315acbc65fa") // there is a syntax error in this rev; this makes it ok to fail the tests.
@@ -121,7 +121,7 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
 		val Collection<String> visitedRevNames = new HashSet<String>();
 		val rootNames = new HashSet<String>();
 		val stats = RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-			override onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshots) {
+			override onRevWithSnapshots(Rev rev, Rev parent, Map<String, ? extends IModiscoSnapshotModel> snapshots) {
 				try {
 					Assert.assertTrue("Revs should not be visited twice", visitedRevNames.add(rev.getName()));
 					
@@ -132,6 +132,10 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
 					Assert.fail(e.getMessage());
 				}
 			}
+			
+			override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+
+			}			
 		});				
 		
 		val revNamesDiff = new HashSet<String>();

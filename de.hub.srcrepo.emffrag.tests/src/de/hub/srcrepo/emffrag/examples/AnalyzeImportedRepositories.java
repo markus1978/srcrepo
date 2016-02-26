@@ -1,7 +1,5 @@
 package de.hub.srcrepo.emffrag.examples;
 
-import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,7 +30,7 @@ public class AnalyzeImportedRepositories {
 		RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(org.eclipse.gmt.modisco.java.emf.JavaPackage.eINSTANCE) {
 				int i = 0;
 				@Override
-				protected void onRevWithSnapshot(Rev rev, Rev traversalParentRev, Map<String, IModiscoSnapshotModel> snapshot) {
+				protected void onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
 					System.out.println("#" + i++);
 				}		      		    
 		});

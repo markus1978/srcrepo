@@ -20,11 +20,17 @@ public class SSCompilationUnitModel {
 	val List<SSLink> incomingLinks = newArrayList
 
 	var Map<NamedElement, String> ids = null
+	
+	val String rev
 
-	new(CompilationUnitModel originalCompilationUnitModel) {
+	new(String rev, CompilationUnitModel originalCompilationUnitModel) {
+		this.rev = rev
 		this.originalCompilationUnitModel = originalCompilationUnitModel	
 	}
 	
+	public def getRev() {
+		return rev
+	}
 	
 	public def Map<NamedElement, String> getIds() {
 		if (ids == null) {
