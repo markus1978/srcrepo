@@ -140,7 +140,7 @@ public abstract class ImportJavaCompilationUnitsJob extends WorkspaceJob {
 			// We need to try to resolve the bindings. This will save performance, when snapshots are merged,
 			// and more importantly, it will create bindings that result in proxy elements, which will
 			// be added to the targets of the binding manager. Those targets are also placed in the java model.
-			//bindings.resolveBindings(javaModel);
+			// bindings.resolveBindings(javaModel);
 			javaReader.terminate(new NullProgressMonitor());
 		} catch (Exception e) {
 			if (e.getClass().getName().endsWith("AbortCompilation")) {
