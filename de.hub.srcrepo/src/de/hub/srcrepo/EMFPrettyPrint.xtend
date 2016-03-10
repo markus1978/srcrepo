@@ -6,54 +6,82 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature
 
 class EMFPrettyPrint {
+
+	val (EObject,EStructuralFeature,Object)=>String additionalValueSerialization
 	
-	static def signature(EObject eObject) {
-		return '''«eObject.name»[«eObject.eClass.name»]'''
+	private new((EObject,EStructuralFeature,Object)=>String additionalValueSerialization) {
+		this.additionalValueSerialization = additionalValueSerialization
 	}
 	
 	public static def String prettyPrint(EObject eObject) {
+		val pretterPrinter = new EMFPrettyPrint[null]
+		return pretterPrinter.prettyPrintObject(eObject)
+	}
+	
+	public static def String prettyPrint(EObject eObject, (EObject,EStructuralFeature,Object)=>String additionalValueSerialization) {
+		val pretterPrinter = new EMFPrettyPrint(additionalValueSerialization)
+		return pretterPrinter.prettyPrintObject(eObject)
+	}
+	
+	private def String prettyPrintObject(EObject eObject) {
 		val features = eObject.eClass.EAllStructuralFeatures
 			.filter[!isDerived && !isTransient && !isVolatile]
 			.filter[eObject.eIsSet(it)]		
 			.filter[eObject.eGet(it) != eObject.eContainer]	
 			.filter[it.name != "name"].toList
+			
+		val ext = additionalValueSerialization.apply(eObject, null, null)
+		val signature = '''«eObject.signature»«IF (ext!=null)» («ext»)«ENDIF»'''
 		return if (features.empty) {
 			eObject.signature
 		} else {
 			'''
-				«eObject.name» [«eObject.eClass.name»] {
+				«signature» {
 					«FOR feature:features»
-						«prettyPrint(eObject,feature)»
+						«prettyPrintFeature(eObject,feature)»
 					«ENDFOR»
 				}
 			'''.toString.replace("\t", "  ")
 		}	
 	}
 	
-	private static def prettyPrint(EObject eObject, EStructuralFeature feature) {
+		
+	public static def signature(EObject eObject) {
+		return '''«eObject.name»«IF (eObject.name != "")» «ENDIF»[«eObject.eClass.name»]'''
+	}
+	
+	private def prettyPrintFeature(EObject eObject, EStructuralFeature feature) {
 		if (feature.many) {
 			'''
 				«feature.name» = [
 					«FOR value: eObject.eGet(feature) as List<?>»
-						«prettyPrintValue(value, feature)»
+						«prettyPrintValue(eObject, value, feature)»
 					«ENDFOR»
 				]
 			'''
 		} else {
-			'''«feature.name» = «eObject.eGet(feature)?.prettyPrintValue(feature)»'''
+			'''«feature.name» = «prettyPrintValue(eObject, eObject.eGet(feature), feature)»'''
 		}
 	}
 	
-	private static def prettyPrintValue(Object object, EStructuralFeature feature) {
-		return switch (object) {
+	private def prettyPrintValue(EObject container, Object object, EStructuralFeature feature) {
+		if (object == null) {
+			return null
+		}
+		
+		val value = switch (object) {
 			EObject: if ((feature as EReference).containment) {
-					prettyPrint(object)
+					prettyPrintObject(object)
 				} else {
 					'''ref<«object.signature»>'''
 				}
 			String: object.normalize
 			default: object.toString
 		}
+		
+		val ext = additionalValueSerialization.apply(container, feature, object)
+		
+		return value + if (ext != null) ''' («ext»)''' else ""
 	}
 	
 	public static def name(EObject eObject) {
