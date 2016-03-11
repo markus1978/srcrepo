@@ -18,6 +18,8 @@ import de.hub.emfcompress.ObjectDelta
 import de.hub.emfcompress.SettingDelta
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
+import de.hub.emfcompress.EmfCompressFactory
+import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 class EmfCompressTests extends AbstractSingleRepositoryModelTests { 
     
@@ -41,7 +43,7 @@ class EmfCompressTests extends AbstractSingleRepositoryModelTests {
     		val revised = helloWorldCURefs.get(i).compilationUnitModel
     		println("%%%% " + revised)
     		
-    		val delta = new Comparer(new SrcRepoComparerConfiguration() {						
+    		val delta = new Comparer(new SrcRepoComparerConfiguration(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) {						
 				override protected id(TypeAccess typeAccess, boolean forOriginal) {
 					val model = if (forOriginal) original else revised
 					val type = typeAccess.type
@@ -54,7 +56,7 @@ class EmfCompressTests extends AbstractSingleRepositoryModelTests {
     		}).compare(original, revised)
     		
     		val patched = EcoreUtil.copy(original)
-    		val patcher = new Patcher()
+    		val patcher = new Patcher(EmfCompressFactory.eINSTANCE)
     		patcher.patch(patched, delta)
     		try {
     			assertEmfEquals(patched, revised, original)    		

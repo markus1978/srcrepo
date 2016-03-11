@@ -2,16 +2,28 @@ package de.hub.srcrepo.compress
 
 import de.hub.emfcompress.ComparerConfiguration
 import de.hub.srcrepo.repositorymodel.CompilationUnitModel
+import de.hub.srcrepo.repositorymodel.RepositoryModelPackage
 import de.hub.srcrepo.repositorymodel.Target
-import de.hub.srcrepo.repositorymodel.UnresolvedLink
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
+import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.TypeAccess
+import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 abstract class SrcRepoComparerConfiguration implements ComparerConfiguration {
+
+	val RepositoryModelPackage repositoryMetaModel
+	val JavaPackage javaMetaModel
+	
+	new(JavaPackage javaMetaModel, RepositoryModelPackage repositoryModelPackage) {
+		this.javaMetaModel = javaMetaModel
+		this.repositoryMetaModel = repositoryModelPackage
+	}
 
 	protected abstract def String id(TypeAccess typeAccess, boolean original)
 	
@@ -19,25 +31,17 @@ abstract class SrcRepoComparerConfiguration implements ComparerConfiguration {
 		return false
 	}
 	
-	override compareWithMatch(EObject original, EObject revised) {
-		if (original.eClass == revised.eClass) {
-			return original instanceof NamedElement ||
-				original instanceof UnresolvedLink ||
-				original instanceof Target ||
-				original instanceof Model
-		} else {
-			return false
-		}
+	override compareWithMatch(EClass eClass, EReference reference) {
+		return 
+			reference == javaMetaModel.model_CompilationUnits ||
+			reference == repositoryMetaModel.compilationUnitModel_Targets ||
+			reference == repositoryMetaModel.compilationUnitModel_JavaModel ||
+			(reference.EType as EClass).EAllSuperTypes.contains(javaMetaModel.namedElement)		
 	}
 	
 	override match(EObject original, EObject revised, (EObject,EObject)=>boolean match) {
 		return switch original {
-			UnresolvedLink: {
-				val revisedLink = revised as UnresolvedLink
-				return original.id == revisedLink.id &&
-					original.featureID == revisedLink.featureID &&
-					match.apply(original.source,revisedLink.source)
-			}
+			CompilationUnit: original.name == (revised as CompilationUnit).name
 			Target: original.id == (revised as Target).id
 			Model: true
 			CompilationUnitModel: true
