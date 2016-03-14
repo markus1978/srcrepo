@@ -39,7 +39,7 @@ abstract class SrcRepoComparerConfiguration implements ComparerConfiguration {
 			(reference.EType as EClass).EAllSuperTypes.contains(javaMetaModel.namedElement)		
 	}
 	
-	override match(EObject original, EObject revised, (EObject,EObject)=>boolean match) {
+	override match(EObject original, EObject revised) {
 		return switch original {
 			CompilationUnit: original.name == (revised as CompilationUnit).name
 			Target: original.id == (revised as Target).id

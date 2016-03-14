@@ -16,7 +16,8 @@ Require-Bundle: de.hub.srcrepo;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.jdt.core;bundle-version="3.11.0",
  org.eclipse.core.resources;bundle-version="3.10.0",
  org.eclipse.core.runtime;bundle-version="3.11.0",
- org.eclipse.modisco.java.discoverer;bundle-version="0.13.0"
+ org.eclipse.modisco.java.discoverer;bundle-version="0.13.0",
+ de.hub.jstattrack;bundle-version="1.0.0"
 Export-Package: de.hub.srcrepo
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/jars/commons-io-2.4.jar,

@@ -2,7 +2,6 @@ package de.hub.srcrepo.emffrag.commands
 
 import de.hub.emffrag.internal.FStoreFragmentation
 import de.hub.emffrag.mongodb.MongoDBDataStore
-import de.hub.jstattrack.AbstractStatistic
 import de.hub.jstattrack.Statistics
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.TimeStatistic.Timer
@@ -18,6 +17,7 @@ import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 import java.io.File
 import java.io.PrintWriter
 import java.util.List
@@ -29,9 +29,9 @@ import org.eclipse.emf.ecore.EObject
 import org.json.JSONArray
 import org.json.JSONObject
 
+import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
-import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 
 class MetaDataCommand extends AbstractRepositoryCommand {
 		
@@ -39,19 +39,6 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 	private var withElementCount = false
 	private var CommandLine cl = null
 	private var List<String> data = newArrayList
-
-	private def statSummaryData(JSONArray jsonData, AbstractStatistic statDef, String key) {	
-		val serviceData = Statistics.getStatServiceDataFromJSONReport(statDef.id, Summary.serviceName, jsonData)
-		if (serviceData == null) {
-			throw new IllegalArgumentException("Could not find a statistic called " + statDef.id + ".")
-		} else {
-			return '''
-				«FOR dataTuple:serviceData.toIterable SEPARATOR ", "»
-					«key»«dataTuple.getString("key").toFirstUpper» : «dataTuple.get("value").toString»
-				«ENDFOR»
-			'''
-		}
-	}
 	
 	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
 		if (cl.hasOption("v")) { println("Aquire data for " + repo.qualifiedName) }
@@ -75,17 +62,17 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 					1_elementCount : «elementCountResult.get("count")»,
 					1_SLOC : «elementCountResult.get("ncss")»,
 				«ENDIF»
-				«statSummaryData(importStatJSON, RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
-				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revCheckoutETStat, "3_checkoutTime")»,
-				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revRefreshStat, "4_refreshTime")»,
-				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revImportTimeStat, "5_importTime")»,
-				«statSummaryData(importStatJSON, MongoDBDataStore.writeTimeStatistic, "6_writeTime")»,
-				«statSummaryData(importStatJSON, MoDiscoRepositoryModelImportVisitor.revLOCTimeStat, "7_locTime")»,
+				«importStatJSON.summaryDatumJSONStr(RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
+				«importStatJSON.summaryDatumJSONStr(MoDiscoRepositoryModelImportVisitor.revCheckoutETStat, "3_checkoutTime")»,
+				«importStatJSON.summaryDatumJSONStr(MoDiscoRepositoryModelImportVisitor.revRefreshStat, "4_refreshTime")»,
+				«importStatJSON.summaryDatumJSONStr(MoDiscoRepositoryModelImportVisitor.revImportTimeStat, "5_importTime")»,
+				«importStatJSON.summaryDatumJSONStr(MongoDBDataStore.writeTimeStatistic, "6_writeTime")»,
+				«importStatJSON.summaryDatumJSONStr(MoDiscoRepositoryModelImportVisitor.revLOCTimeStat, "7_locTime")»,
 				«IF withElementCount»					
-					«statSummaryData(currentStatDataJSON, traverseOneKObjectsExecTimeStat, "8_traverseTime")»,
-					«statSummaryData(currentStatDataJSON, FStoreFragmentation.loadETStat, "9_fragLoadET")»,
-					«statSummaryData(currentStatDataJSON, FStoreFragmentation.unloadETStat, "10_fragUnloadET")»,
-					«statSummaryData(currentStatDataJSON, MongoDBDataStore.readTimeStatistic, "11_dataReadET")»,
+					«currentStatDataJSON.summaryDatumJSONStr(traverseOneKObjectsExecTimeStat, "8_traverseTime")»,
+					«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.loadETStat, "9_fragLoadET")»,
+					«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.unloadETStat, "10_fragUnloadET")»,
+					«currentStatDataJSON.summaryDatumJSONStr(MongoDBDataStore.readTimeStatistic, "11_dataReadET")»,
 				«ENDIF»
 			}
 		''' else '''
@@ -96,11 +83,11 @@ class MetaDataCommand extends AbstractRepositoryCommand {
 				1_dbEntryCount : «repo.dataStoreMetaData.count»,
 				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				1_gitSize : «repo.metaData.size»,				
-				«statSummaryData(traverseStatJSON, RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
-				«statSummaryData(traverseStatJSON, ModiscoIncrementalSnapshotImpl.cusLoadETStat, "3_cusLoadTime")»,
-				«statSummaryData(traverseStatJSON, MoDiscoRevVisitor.revVisitETStat, "4_revVisitTime")»,
-				«statSummaryData(currentStatDataJSON, FStoreFragmentation.loadETStat, "5_fragLoadET")»,
-				«statSummaryData(currentStatDataJSON, FStoreFragmentation.unloadETStat, "6_fragUnloadET")»,
+				«traverseStatJSON.summaryDatumJSONStr(RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
+				«traverseStatJSON.summaryDatumJSONStr(ModiscoIncrementalSnapshotImpl.cusLoadETStat, "3_cusLoadTime")»,
+				«traverseStatJSON.summaryDatumJSONStr(MoDiscoRevVisitor.revVisitETStat, "4_revVisitTime")»,
+				«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.loadETStat, "5_fragLoadET")»,
+				«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.unloadETStat, "6_fragUnloadET")»,
 			}
 		''').toString
 	}

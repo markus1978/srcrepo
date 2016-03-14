@@ -21,9 +21,9 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.json.JSONArray
 import org.json.JSONObject
 
+import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
-import de.hub.jstattrack.Statistics
 
 class MetricsCommand extends AbstractRepositoryCommand {
 	public val TimeStatistic revETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).register(MetricsCommand, "RevET")

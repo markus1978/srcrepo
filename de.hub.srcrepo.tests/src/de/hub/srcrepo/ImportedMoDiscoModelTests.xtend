@@ -17,6 +17,10 @@ import org.junit.Test
 
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.ocl.OclUtil.javaDiffs
+import de.hub.srcrepo.compress.CompressionMeasureVisitor
+import de.hub.srcrepo.repositorymodel.RepositoryModelPackage
+import de.hub.jstattrack.Statistics
+import static extension de.hub.jstattrack.StatisticsUtil.*
 
 class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests { 
 	val PrintStream out = System.out;
@@ -168,5 +172,17 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
 	  		Assert.assertNotNull(dataSet)
 	  		Assert.assertNotNull(dataSet.jsonData)	
 	  	}
+  	}
+  	
+  	@Test
+  	def void testCompressMeasure() {
+  		val visitor = new CompressionMeasureVisitor(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE)
+  		RepositoryModelTraversal.traverse(repositoryModel, visitor)
+  		println(Statistics.reportToJSON.toSummaryData(#[
+  			CompressionMeasureVisitor.compressETStat -> "CompressET",
+  			CompressionMeasureVisitor.patchETState -> "PatchET",
+  			CompressionMeasureVisitor.compressSizeStat -> "CompressedSize",
+  			CompressionMeasureVisitor.originalSizeStat -> "OriginalSize"
+  		]).toHumanReadable)
   	}
 }
