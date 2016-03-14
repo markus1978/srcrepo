@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.hub.srcrepo.emffrag/compress-src" modelPluginID="de.hub.srcrepo.emffrag"
+    modelName="Compress" modelPluginClass="" rootExtendsInterface="de.hub.emffrag.FObject"
+    rootExtendsClass="de.hub.emffrag.FObjectImpl" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>compress.ecore</foreignModel>
+  <genPackages prefix="EmfCompress" basePackage="de.hub" disposableProviderFactory="true"
+      metaDataPackageSuffix="emffrag.meta" classPackageSuffix="emffrag.impl" utilityPackageSuffix="emffrag.util"
+      providerPackageSuffix="emffrag.provider" presentationPackageSuffix="emffrag.presentation"
+      testsPackageSuffix="emffrag.tests" ecorePackage="compress.ecore#/">
+    <genClasses ecoreClass="compress.ecore#//ObjectDelta">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//ObjectDelta/settingDeltas"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compress.ecore#//ObjectDelta/originalClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compress.ecore#//ObjectDelta/originalIndex"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//ObjectDelta/originalProxy"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//SettingDelta">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//SettingDelta/valueDeltas"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compress.ecore#//SettingDelta/featureID"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//SettingDelta/matchedObjects"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="compress.ecore#//ValuesDelta">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compress.ecore#//ValuesDelta/originalStart"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compress.ecore#//ValuesDelta/originalEnd"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//DataValuesDelta">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compress.ecore#//DataValuesDelta/revisedValues"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//ContainedObjectsDelta">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//ContainedObjectsDelta/revisedObjectContainments"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//ReferencedObjectsDelta">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//ReferencedObjectsDelta/revisedObjectReferences"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//OriginalObjectReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compress.ecore#//OriginalObjectReference/originalObject"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//RevisedObjectReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compress.ecore#//RevisedObjectReference/revisedObject"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="compress.ecore#//ObjectReference"/>
+    <genClasses image="false" ecoreClass="compress.ecore#//ObjectContainment"/>
+    <genClasses ecoreClass="compress.ecore#//OriginalObjectContainment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference compress.ecore#//OriginalObjectContainment/originalObject"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//RevisedObjectContainment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//RevisedObjectContainment/revisedObject"/>
+    </genClasses>
+    <genClasses ecoreClass="compress.ecore#//Trash">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compress.ecore#//Trash/contents"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

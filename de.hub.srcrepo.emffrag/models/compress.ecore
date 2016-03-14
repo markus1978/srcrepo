@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="emfcompress" nsURI="http://de.hub/EmfCompress/1.0/emffrag" nsPrefix="ec">
+  <eClassifiers xsi:type="ecore:EClass" name="ObjectDelta">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="settingDeltas" upperBound="-1"
+        eType="#//SettingDelta" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originalClass" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="originalIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originalProxy" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SettingDelta">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="valueDeltas" upperBound="-1"
+        eType="#//ValuesDelta" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="featureID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="matchedObjects" upperBound="-1"
+        eType="#//ObjectDelta" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValuesDelta" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="originalStart" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="originalEnd" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataValuesDelta" eSuperTypes="#//ValuesDelta">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="revisedValues" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContainedObjectsDelta" eSuperTypes="#//ValuesDelta">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="revisedObjectContainments"
+        upperBound="-1" eType="#//ObjectContainment" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferencedObjectsDelta" eSuperTypes="#//ValuesDelta">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="revisedObjectReferences"
+        upperBound="-1" eType="#//ObjectReference" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OriginalObjectReference" eSuperTypes="#//ObjectReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originalObject" eType="#//ObjectDelta"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RevisedObjectReference" eSuperTypes="#//ObjectReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="revisedObject" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ObjectReference" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ObjectContainment" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OriginalObjectContainment" eSuperTypes="#//ObjectContainment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originalObject" eType="#//ObjectDelta"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RevisedObjectContainment" eSuperTypes="#//ObjectContainment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="revisedObject" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Trash">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

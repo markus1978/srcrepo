@@ -63,4 +63,12 @@
             genModel="models/RepositoryModel.genmodel"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated compress -->
+      <package
+            uri="http://de.hub/EmfCompress/1.0/emffrag"
+            class="de.hub.emfcompress.emffrag.meta.EmfCompressPackage"
+            genModel="models/compress.genmodel"/>
+   </extension>
+
 </plugin>

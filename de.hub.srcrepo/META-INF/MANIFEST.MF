@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.hub.srcrepo.SrcRepoActivator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- de.hub.jstattrack;bundle-version="1.0.0",
+ de.hub.jstattrack;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.emf;bundle-version="2.6.0";visibility:=reexport,
  org.eclipse.gmt.modisco.java;bundle-version="0.13.0";visibility:=reexport,
  org.eclipse.jgit;bundle-version="4.0.0";visibility:=reexport,

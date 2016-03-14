@@ -44,7 +44,10 @@ Export-Package: com.google.common.annotations,
  org.apache.commons.exec.util,
  org.eclipse.gmt.modisco.java.emffrag.impl,
  org.eclipse.gmt.modisco.java.emffrag.metadata,
- org.eclipse.gmt.modisco.java.emffrag.util
+ org.eclipse.gmt.modisco.java.emffrag.util,
+ de.hub.emfcompress.emffrag.impl,
+ de.hub.emfcompress.emffrag.meta,
+ de.hub.emfcompress.emffrag.util
 Bundle-ClassPath: .,
  lib/jars/commons-exec-1.3.jar,
  lib/jars/commons-cli-1.3.1.jar,
