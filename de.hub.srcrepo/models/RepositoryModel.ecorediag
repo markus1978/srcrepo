@@ -79,6 +79,14 @@
         <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//Diff/type"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_HpsbUXW4EeKR-9B7069x7A"/>
       </children>
+      <children xmi:type="notation:Node" xmi:id="_nWZI0OqOEeWcAbxHwc7LOw" type="2001">
+        <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//Diff/linesAdded"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_nWZI0eqOEeWcAbxHwc7LOw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_oiaQAOqOEeWcAbxHwc7LOw" type="2001">
+        <element xmi:type="ecore:EAttribute" href="RepositoryModel.ecore#//Diff/linesRemoved"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_oiaQAeqOEeWcAbxHwc7LOw"/>
+      </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_6xCG0nW3EeKR-9B7069x7A"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_6xCG03W3EeKR-9B7069x7A"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_6xCG1HW3EeKR-9B7069x7A"/>
@@ -90,7 +98,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_6xBfwXW3EeKR-9B7069x7A" fontColor="4210752" fontName="Lucida Grande" fontHeight="10" fillColor="13420443" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="RepositoryModel.ecore#//Diff"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_6xBfwnW3EeKR-9B7069x7A" x="1091" y="838"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_6xBfwnW3EeKR-9B7069x7A" x="1089" y="810"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_qYct0HXCEeKYFuf7SMCHWg" type="1004">
     <children xmi:type="notation:Node" xmi:id="_qYd78HXCEeKYFuf7SMCHWg" type="4008"/>
@@ -152,7 +160,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_n3sKQr72EeOX27MA2SaD1Q" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13420443" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="RepositoryModel.ecore#//AbstractFileRef"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_n3sKQ772EeOX27MA2SaD1Q" x="1361" y="865"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_n3sKQ772EeOX27MA2SaD1Q" x="1359" y="837"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_Uv9c4L8hEeO0npvdkJs6ew" type="1001">
     <children xmi:type="notation:Node" xmi:id="_Uv-D8L8hEeO0npvdkJs6ew" type="4001"/>

@@ -17,7 +17,6 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
 import de.hub.srcrepo.repositorymodel.Rev;
 import de.hub.srcrepo.repositorymodel.Target;
 import de.hub.srcrepo.repositorymodel.UnresolvedLink;
-import org.eclipse.emf.ecore.EFactory;
 
 /**
  * <!-- begin-user-doc -->

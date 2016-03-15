@@ -32,7 +32,7 @@ abstract class SrcRepoComparerConfiguration implements ComparerConfiguration {
 	}
 	
 	override compareWithMatch(EClass eClass, EReference reference) {
-		return 
+		return
 			reference == javaMetaModel.model_CompilationUnits ||
 			reference == repositoryMetaModel.compilationUnitModel_Targets ||
 			reference == repositoryMetaModel.compilationUnitModel_JavaModel ||
@@ -64,7 +64,11 @@ abstract class SrcRepoComparerConfiguration implements ComparerConfiguration {
 				}
 			}
 			NamedElement: {
-				original.name == (revised as NamedElement).name
+				if (original.name == null || (revised as NamedElement).name == null) {
+					false
+				} else {
+					original.name == (revised as NamedElement).name				
+				}
 			}
 			default: throw new RuntimeException("unreachable")
 		}

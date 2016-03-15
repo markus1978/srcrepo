@@ -1,6 +1,5 @@
 package de.hub.srcrepo
 
-import de.hub.jstattrack.Statistics
 import de.hub.srcrepo.compress.CompressionMeasureVisitor
 import de.hub.srcrepo.ocl.OclUtil
 import de.hub.srcrepo.repositorymodel.AbstractFileRef
@@ -17,7 +16,6 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.junit.Assert
 import org.junit.Test
 
-import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.ocl.OclUtil.javaDiffs
 
@@ -176,11 +174,5 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
   	@Test
   	def void testCompressMeasure() {
   		RepositoryModelTraversal.traverse(repositoryModel, new CompressionMeasureVisitor)
-  		println(Statistics.reportToJSON.toSummaryData(#[
-  			CompressionMeasureVisitor.compressETStat -> "CompressET",
-  			CompressionMeasureVisitor.patchETState -> "PatchET",
-  			CompressionMeasureVisitor.compressSizeStat -> "CompressedSize",
-  			CompressionMeasureVisitor.originalSizeStat -> "OriginalSize"
-  		]).toHumanReadable)
   	}
 }

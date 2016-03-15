@@ -21,6 +21,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.LockFailedException;
 import org.eclipse.jgit.lib.AnyObjectId;
@@ -29,6 +30,8 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.patch.FileHeader;
+import org.eclipse.jgit.patch.HunkHeader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -59,6 +62,8 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 	private final TimeStatistic gitCheckoutStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GitCheckoutET");
 	private final TimeStatistic gitCheckoutFullStat = new TimeStatistic(TimeUnit.MILLISECONDS).with(Summary.class).with(BatchedPlot.class).register(GitSourceControlSystem.class, "GitCheckoutFullET");
 
+	private DiffFormatter df = null;
+	
 	@Override
 	public void createWorkingCopy(File target, String url, boolean onlyIfNecessary) throws SourceControlException {
 		CloneCommand cloneCommand = new CloneCommand();
@@ -130,12 +135,30 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		childModel.getParentRelations().add(parentRelationModel);
 		parentRelationModel.setParent(parentModel);		
 		for (DiffEntry diffEntry : diffs) {
+			int linesAdded = 0;
+			int linesRemoved = 0;
+			try {
+				FileHeader fileHeader = df.toFileHeader(diffEntry);
+				for(HunkHeader hunk: fileHeader.getHunks()) {
+					for(Edit edit: hunk.toEditList()) {
+						linesAdded += edit.getEndB() - edit.getEndB();
+						linesRemoved += edit.getEndA() - edit.getBeginA();
+					}					
+				}
+			} catch (Exception e) {
+				linesAdded = -1;
+				linesRemoved = -1;
+				SrcRepoActivator.INSTANCE.warning("Could not determine added/removed lines for " + diffEntry, e);
+			}
+			
 			Diff diffModel = null;
 			String path = diffEntry.getNewPath();			
 			diffModel = factory.createDiff();
 			diffModel.setNewPath(path);
 			diffModel.setOldPath(diffEntry.getOldPath());
 			diffModel.setType(diffEntry.getChangeType());
+			diffModel.setLinesAdded(linesAdded);
+			diffModel.setLinesRemoved(linesRemoved);
 			parentRelationModel.getDiffs().add(diffModel);
 		}
 	}
@@ -208,7 +231,8 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 		RevWalk walk = new RevWalk(jGitRepository);
 		
 		ObjectReader objectReader = walk.getObjectReader();
-		DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+		df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+		df.setContext(0);
 		df.setRepository(git.getRepository());
 		df.setDiffComparator(RawTextComparator.DEFAULT);
 		df.setDetectRenames(true);

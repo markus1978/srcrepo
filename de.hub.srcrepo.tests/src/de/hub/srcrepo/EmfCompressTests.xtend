@@ -41,29 +41,29 @@ class EmfCompressTests extends AbstractSingleRepositoryModelTests {
     	
     	for(i:1..<helloWorldCURefs.size) {    		
     		val revised = helloWorldCURefs.get(i).compilationUnitModel
-    		println("%%%% " + revised)
-    		
-    		val delta = new Comparer(new SrcRepoComparerConfiguration(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) {						
-				override protected id(TypeAccess typeAccess, boolean forOriginal) {
-					val model = if (forOriginal) original else revised
-					val type = typeAccess.type
-					return if (type == null) {
-						model.unresolvedLinks.findFirst[source==typeAccess].id
-					} else {
-						model.targets.findFirst[target == type].id
-					}
-				}    			
-    		}).compare(original, revised)
-    		
-    		val patched = EcoreUtil.copy(original)
-    		val patcher = new Patcher(EmfCompressFactory.eINSTANCE)
-    		patcher.patch(patched, delta)
-    		try {
-    			assertEmfEquals(patched, revised, original)    		
-    		} catch (Throwable e) {
-    			println(prettyPrint(delta, patcher))
-    			throw e
-    		}
+			if (revised != null) {
+	    		val delta = new Comparer(new SrcRepoComparerConfiguration(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) {						
+					override protected id(TypeAccess typeAccess, boolean forOriginal) {
+						val model = if (forOriginal) original else revised
+						val type = typeAccess.type
+						return if (type == null) {
+							model.unresolvedLinks.findFirst[source==typeAccess].id
+						} else {
+							model.targets.findFirst[target == type].id
+						}
+					}    			
+	    		}).compare(original, revised)
+	    		
+	    		val patched = EcoreUtil.copy(original)
+	    		val patcher = new Patcher(EmfCompressFactory.eINSTANCE)
+	    		patcher.patch(patched, delta)
+	    		try {
+	    			assertEmfEquals(patched, revised, original)    		
+	    		} catch (Throwable e) {
+	    			println(prettyPrint(delta, patcher))
+	    			throw e
+	    		}	    		
+	    	}
     	}
   	}
   	

@@ -2,11 +2,31 @@
  */
 package de.hub.srcrepo.repositorymodel.emffrag.util;
 
-import de.hub.srcrepo.repositorymodel.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
+
+import de.hub.srcrepo.repositorymodel.AbstractFileRef;
+import de.hub.srcrepo.repositorymodel.CompilationUnitModel;
+import de.hub.srcrepo.repositorymodel.DataSet;
+import de.hub.srcrepo.repositorymodel.DataStoreMetaData;
+import de.hub.srcrepo.repositorymodel.Diff;
+import de.hub.srcrepo.repositorymodel.DirectoryElement;
+import de.hub.srcrepo.repositorymodel.ImportError;
+import de.hub.srcrepo.repositorymodel.ImportMetaData;
+import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
+import de.hub.srcrepo.repositorymodel.MongoDBMetaData;
+import de.hub.srcrepo.repositorymodel.ParentRelation;
+import de.hub.srcrepo.repositorymodel.Ref;
+import de.hub.srcrepo.repositorymodel.RepositoryElement;
+import de.hub.srcrepo.repositorymodel.RepositoryMetaData;
+import de.hub.srcrepo.repositorymodel.RepositoryModel;
+import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory;
+import de.hub.srcrepo.repositorymodel.Rev;
+import de.hub.srcrepo.repositorymodel.Target;
+import de.hub.srcrepo.repositorymodel.TaskData;
+import de.hub.srcrepo.repositorymodel.UnresolvedLink;
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
 
 /**

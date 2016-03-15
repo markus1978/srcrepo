@@ -21,7 +21,8 @@ class SrcRepoShell {
 			"rm" -> new RemoveCommand,
 			"par" -> new ParallelCommand,
 			"metrics" -> new MetricsCommand,
-			"drop" -> new DropCommand
+			"drop" -> new DropCommand,
+			"compress" -> new CompressMeasureCommand
 		)
 	
 	

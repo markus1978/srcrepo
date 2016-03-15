@@ -5,7 +5,6 @@ package de.hub.srcrepo.repositorymodel.emffrag.metadata;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 /**
@@ -469,13 +468,31 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	int DIFF__FILE = 3;
 
 	/**
+	 * The feature id for the '<em><b>Lines Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__LINES_ADDED = 4;
+
+	/**
+	 * The feature id for the '<em><b>Lines Removed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF__LINES_REMOVED = 5;
+
+	/**
 	 * The number of structural features of the '<em>Diff</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_FEATURE_COUNT = 4;
+	int DIFF_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Diff</em>' class.
@@ -1861,6 +1878,28 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 	EReference getDiff_File();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.Diff#getLinesAdded <em>Lines Added</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Lines Added</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.Diff#getLinesAdded()
+	 * @see #getDiff()
+	 * @generated
+	 */
+	EAttribute getDiff_LinesAdded();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.hub.srcrepo.repositorymodel.Diff#getLinesRemoved <em>Lines Removed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Lines Removed</em>'.
+	 * @see de.hub.srcrepo.repositorymodel.Diff#getLinesRemoved()
+	 * @see #getDiff()
+	 * @generated
+	 */
+	EAttribute getDiff_LinesRemoved();
+
+	/**
 	 * Returns the meta object for class '{@link de.hub.srcrepo.repositorymodel.ParentRelation <em>Parent Relation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2816,6 +2855,22 @@ public interface RepositoryModelPackage extends de.hub.srcrepo.repositorymodel.R
 		 * @generated
 		 */
 		EReference DIFF__FILE = eINSTANCE.getDiff_File();
+
+		/**
+		 * The meta object literal for the '<em><b>Lines Added</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF__LINES_ADDED = eINSTANCE.getDiff_LinesAdded();
+
+		/**
+		 * The meta object literal for the '<em><b>Lines Removed</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF__LINES_REMOVED = eINSTANCE.getDiff_LinesRemoved();
 
 		/**
 		 * The meta object literal for the '{@link de.hub.srcrepo.repositorymodel.emffrag.impl.ParentRelationImpl <em>Parent Relation</em>}' class.

@@ -43,6 +43,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="file" eType="#//AbstractFileRef"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linesAdded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linesRemoved" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ChangeType" instanceClassName="org.eclipse.jgit.diff.DiffEntry.ChangeType"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParentRelation">

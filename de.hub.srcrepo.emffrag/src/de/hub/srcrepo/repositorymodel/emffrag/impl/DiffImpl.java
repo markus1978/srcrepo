@@ -30,6 +30,8 @@ import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage;
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getType <em>Type</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getOldPath <em>Old Path</em>}</li>
  *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getFile <em>File</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getLinesAdded <em>Lines Added</em>}</li>
+ *   <li>{@link de.hub.srcrepo.repositorymodel.emffrag.impl.DiffImpl#getLinesRemoved <em>Lines Removed</em>}</li>
  * </ul>
  *
  * @generated
@@ -153,6 +155,42 @@ public class DiffImpl extends FObjectImpl implements Diff {
 	 */
 	public void setFile(AbstractFileRef newFile) {
 		eSet(RepositoryModelPackage.Literals.DIFF__FILE, newFile);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getLinesAdded() {
+		return (Integer)eGet(RepositoryModelPackage.Literals.DIFF__LINES_ADDED, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLinesAdded(int newLinesAdded) {
+		eSet(RepositoryModelPackage.Literals.DIFF__LINES_ADDED, newLinesAdded);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getLinesRemoved() {
+		return (Integer)eGet(RepositoryModelPackage.Literals.DIFF__LINES_REMOVED, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLinesRemoved(int newLinesRemoved) {
+		eSet(RepositoryModelPackage.Literals.DIFF__LINES_REMOVED, newLinesRemoved);
 	}
 
 } //DiffImpl

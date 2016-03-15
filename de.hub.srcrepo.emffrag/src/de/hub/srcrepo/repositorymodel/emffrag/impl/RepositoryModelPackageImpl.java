@@ -473,6 +473,24 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDiff_LinesAdded() {
+		return (EAttribute)diffEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiff_LinesRemoved() {
+		return (EAttribute)diffEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getParentRelation() {
 		return parentRelationEClass;
 	}
@@ -1143,6 +1161,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		createEAttribute(diffEClass, DIFF__TYPE);
 		createEAttribute(diffEClass, DIFF__OLD_PATH);
 		createEReference(diffEClass, DIFF__FILE);
+		createEAttribute(diffEClass, DIFF__LINES_ADDED);
+		createEAttribute(diffEClass, DIFF__LINES_REMOVED);
 
 		parentRelationEClass = createEClass(PARENT_RELATION);
 		createEReference(parentRelationEClass, PARENT_RELATION__DIFFS);
@@ -1303,6 +1323,8 @@ public class RepositoryModelPackageImpl extends EPackageImpl implements Reposito
 		initEAttribute(getDiff_Type(), this.getChangeType(), "type", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiff_OldPath(), ecorePackage.getEString(), "oldPath", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiff_File(), this.getAbstractFileRef(), null, "file", null, 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiff_LinesAdded(), ecorePackage.getEInt(), "linesAdded", "-1", 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiff_LinesRemoved(), ecorePackage.getEInt(), "linesRemoved", "-1", 0, 1, Diff.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parentRelationEClass, ParentRelation.class, "ParentRelation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParentRelation_Diffs(), this.getDiff(), null, "diffs", null, 0, -1, ParentRelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -28,6 +28,7 @@
       <plugin id="com.google.guava"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
+      <plugin id="de.hub.emfcompress"/>
       <plugin id="de.hub.emffrag.mongodb"/>
       <plugin id="de.hub.emffrag4"/>
       <plugin id="de.hub.jstattrack"/>

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -603,6 +604,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 			for(Diff diff: javaDiffs.values()) {
 				try {
 					File file =  new File(absoluteScsPath + diff.getFile().getPath());
+					int lines = FileUtils.readLines(file).size();
 					long fileSize = EFS.getStore(file.toURI()).fetchInfo().getLength();
 					Javancss ncss = new Javancss(file);	
 					DataSet dataSet = repositoryFactory.createDataSet();
@@ -618,6 +620,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 						dataSet.getData().put("ncss", ncss.getNcss());
 						dataSet.getData().put("comments", ncss.getJdcl() + ncss.getSl() + ncss.getMl());
 						dataSet.getData().put("filesize",  fileSize);
+						dataSet.getData().put("lines", lines);
 					}
 				} catch (Exception e) {
 					SrcRepoActivator.INSTANCE.error("Exception during counting LOC-metrics: " + e.getMessage());		
