@@ -17,7 +17,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelPackage;
 
 public class SrcRepoActivator extends Plugin {
 
-	public static final String commit = "$Id$";
+	public static final String commit = "$git$";
 	
 	public static SrcRepoActivator INSTANCE;
 	private boolean isStandAlone = false;
