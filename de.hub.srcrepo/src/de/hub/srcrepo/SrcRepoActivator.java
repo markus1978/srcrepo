@@ -1,6 +1,8 @@
 package de.hub.srcrepo;
 
+import java.io.PrintStream;
 import java.util.Date;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.Plugin;
@@ -20,6 +22,14 @@ public class SrcRepoActivator extends Plugin {
 	public static final String commit = "$git$";
 	
 	public static SrcRepoActivator INSTANCE;
+	
+	public Supplier<PrintStream> logOutSupplier = new Supplier<PrintStream>() {
+		@Override
+		public PrintStream get() {
+			return System.out;
+		}
+	};
+	
 	private boolean isStandAlone = false;
 	private boolean logInStandAlone = true;
 	private boolean isDebug = false;
@@ -105,9 +115,9 @@ public class SrcRepoActivator extends Plugin {
 			if (logInStandAlone) {
 				if (e != null) {
 					String trace = ExceptionUtils.getStackTrace(e);
-					System.out.println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "") + "\n" + trace);
+					logOutSupplier.get().println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "") + "\n" + trace);
 				} else {
-					System.out.println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "(null)"));
+					logOutSupplier.get().println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "(null)"));
 				}
 			}
 		}		

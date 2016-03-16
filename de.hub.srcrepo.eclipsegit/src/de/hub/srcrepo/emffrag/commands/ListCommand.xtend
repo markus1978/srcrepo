@@ -4,14 +4,13 @@ import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import java.text.DecimalFormat
-import org.apache.commons.cli.CommandLine
 
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
 class ListCommand extends AbstractRepositoryCommand {
 	
-	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
+	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model) {
 		val countFormat = new DecimalFormat("#,###,###,###")
 		val size = if (model.dataStoreMetaData instanceof MongoDBMetaData) {
 			countFormat.format((model.dataStoreMetaData as MongoDBMetaData).storeSize / 1000000) + "MB"

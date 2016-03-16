@@ -9,7 +9,6 @@ import java.util.List
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 
@@ -58,18 +57,18 @@ class ImportCommand extends AbstractRepositoryCommand {
 	
 	var ExecutorService executor = null
 	
-	override protected run(CommandLine cl) {					
+	override protected run() {					
 		val importerCount = Integer.parseInt(cl.getOptionValue("i", "5"))
 		for (i:0..importerCount) ports += 8080 + i
 		executor = Executors::newFixedThreadPool(importerCount)
 		
-		super.run(cl)
+		super.run()
 		
 		executor.shutdown()
 		executor.awaitTermination(10, TimeUnit::DAYS)
 	}
 	
-	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
+	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model) {
 		executor.submit[
 			model.runImport
 		]

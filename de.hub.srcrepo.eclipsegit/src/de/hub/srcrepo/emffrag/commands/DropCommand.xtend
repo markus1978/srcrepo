@@ -1,13 +1,12 @@
 package de.hub.srcrepo.emffrag.commands
 
 import de.hub.emffrag.mongodb.MongoDBDataStore
-import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 
 class DropCommand extends AbstractSrcRepoCommand {
 	
-	override protected run(CommandLine cl) {
+	override protected run() {
 		if (cl.hasOption("really-sure")) {
 			fs.close
 			MongoDBDataStore.dropDatabase(modelURI)

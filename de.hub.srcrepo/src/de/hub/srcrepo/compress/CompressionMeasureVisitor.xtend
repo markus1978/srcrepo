@@ -4,7 +4,6 @@ import de.hub.emfcompress.Comparer
 import de.hub.emfcompress.EmfCompressPackage
 import de.hub.emfcompress.Patcher
 import de.hub.jstattrack.AbstractStatistic
-import de.hub.jstattrack.Statistics
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.ValueStatistic
 import de.hub.jstattrack.services.Summary
@@ -17,7 +16,6 @@ import de.hub.srcrepo.repositorymodel.Diff
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage
 import de.hub.srcrepo.repositorymodel.Rev
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.Arrays
 import java.util.Comparator
@@ -26,11 +24,9 @@ import java.util.Map
 import java.util.concurrent.TimeUnit
 import org.apache.commons.io.FileUtils
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.InternalEObject
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl.EObjectOutputStream
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl.EObjectOutputStream.Check
-import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.gmt.modisco.java.Model
 import org.eclipse.gmt.modisco.java.NamedElement
 import org.eclipse.gmt.modisco.java.Package
@@ -39,7 +35,6 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static de.hub.srcrepo.compress.CompressionMeasureVisitor.*
 
-import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.EMFPrettyPrint.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 
@@ -66,11 +61,9 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 	public static val matchedLines = vs("MatchedLineCount")
 	public static val matchedObjects = vs("MatchedObjectsCount")
 	public static val addedLines = vs("AddedLines")
-	public static val deltaObjects = vs("DeltaObjectCount")
 	public static val deltaSize = vs("DeltaSize")
 	
 	public static val uncompressedLines = vs("UCLineCount")
-	public static val uncompressedObjects = vs("UCObjectCount")
 	public static val uncompressedSize = vs("UCSize")
 	
 	val extension Copier copier = new Copier(#[RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE, EmfCompressPackage.eINSTANCE])
@@ -98,24 +91,31 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 		return fileRef
 	}
 	
-	var i = 0
+	private def int toInt(Object o) {
+		if (o != null) {
+			o as Integer
+		} else {
+			-1
+		}
+	}
 	
 	override protected onRev(Rev rev, Rev traversalParentRev) {
 		var compressedFiles = 0
 		for (newRef:newRefs) {
 			val newCURef = currentRefs.get(newRef)
-			if (newCURef.compilationUnitModel != null) {				
+			if (newCURef.compilationUnitModel != null) {	
+				count = 0			
 				val newCUSize = newCURef.compilationUnitModel.size
-				val newCULines = newCURef.getData("LOC-metrics").data.get("lines") as Integer
-				val newCUObjects = newCURef.compilationUnitModel.count 
+				val newCUCount = count
+				val newCULines = newCURef.getData("LOC-metrics").data.get("lines").toInt
 				
 				fullLines.track(newCULines)
-				fullObjects.track(newCUObjects)
+				fullObjects.track(newCUCount)
 				fullSize.track(newCUSize)
 				
 				val parentCURef = parentRefs.get(newCURef)
 				if (parentCURef != null && parentCURef.compilationUnitModel != null) {
-					val parentCULines = parentCURef.getData("LOC-metrics").data.get("lines") as Integer
+					val parentCULines = parentCURef.getData("LOC-metrics").data.get("lines").toInt
 					
 					val original = parentCURef.compilationUnitModel.copyWithReferences.normalize
 					val revised = newCURef.compilationUnitModel.copyWithReferences.normalize
@@ -136,16 +136,14 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 						val delta = comparer.compare(original, revised)
 						compressTimer.track
 	
-						deltaObjects.track(delta.count)
 						deltaSize.track(delta.size)					
 																
 						compressedFiles += 1
 					
 						try {
-							val patched = EcoreUtil.copy(original)
 							val patchTimer = patchETState.timer
 							val patcher = new Patcher
-							patcher.patch(patched, delta)
+							patcher.patch(original, delta)
 							patchTimer.track										
 						} catch (Exception e) {
 							SrcRepoActivator.INSTANCE.error('''Exception on patching «rev.name»/«newCURef.path»''', e)
@@ -153,11 +151,17 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 							FileUtils.write(new File("testdata/revised.txt"), '''REVISED\n«revised.prettyPrint»''')
 							FileUtils.write(new File("testdata/delta.txt"), '''REVISED\n«delta.prettyPrint»''')
 							SrcRepoActivator.INSTANCE.error('''Exception on comparing «rev.name»/«newCURef.path»''', e)
-						}				
+						} finally {
+							delta?.delete
+							
+						}
 					} catch (Exception e) {
 						FileUtils.write(new File("testdata/original.txt"), '''ORIG\n«original.prettyPrint»''')
 						FileUtils.write(new File("testdata/revised.txt"), '''REVISED\n«revised.prettyPrint»''')
 						SrcRepoActivator.INSTANCE.error('''Exception on comparing «rev.name»/«newCURef.path»''', e)
+					} finally {
+						original?.delete
+						revised?.delete
 					}	
 						
 					matchedObjects.track(comparer.size)
@@ -165,18 +169,12 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 					addedLines.track((parentCURef.eContainer as Diff).linesAdded)			
 				} else {
 					uncompressedLines.track(newCULines)
-					uncompressedObjects.track(newCUObjects)
 					uncompressedSize.track(newCUSize)				
 				}				
 			}
 		}
-		SrcRepoActivator.INSTANCE.info('''Compressed «compressedFiles» CUs in «rev.name»''')		
+		SrcRepoActivator.INSTANCE.info('''Compressed «compressedFiles» CUs in «rev.revInfo»''')		
 		newRefs.clear
-		
-		if (i != 0 && i%100 == 0) {
-			println(Statistics.reportToJSON.toSummaryData(statNames).toHumanReadable)
-		}
-		i++
 	}
 	
 	private def <T> void sortComposite(EList<T> list, Comparator<T> cmp) {
@@ -211,27 +209,46 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 		return model
 	}
 	
-	override protected removeFile(String name) {
-//		currentRefs.remove(name)
-	}
-	
-	private def int size(EObject eObject) {
-		val baos = new ByteArrayOutputStream		
-		val oos = new EObjectOutputStream(baos, null)
-		oos.saveEObject(eObject as InternalEObject, Check.CONTAINER)
-		oos.flush
-		baos.close
-		return baos.size 
-	}
-	
-	private def int count(EObject eObject) {
-		var size = 1
-		val it = eObject.eAllContents
-		while (it.hasNext) {
-			it.next
-			size += 1
+	private def void delete(EObject eObject) {
+		eObject.eContents.forEach[it.delete]
+		for(reference:eObject.eClass.EAllReferences.filter[!derived && (EOpposite == null || !EOpposite.containment)]) {
+			eObject.eUnset(reference)
 		}
-		
+	}
+	
+	override protected removeFile(String name) {
+
+	}
+	
+//	private def int size(EObject eObject) {
+//		val baos = new ByteArrayOutputStream		
+//		val oos = new EObjectOutputStream(baos, null)
+//		oos.saveEObject(eObject as InternalEObject, Check.CONTAINER)
+//		oos.flush
+//		baos.close
+//		return baos.size 
+//	}
+
+	var int count = 0
+	
+	private def int size(EObject eObject) {		
+		var size = 0
+		count++
+		for(feature:eObject.eClass.EAllStructuralFeatures) {
+			if (!feature.derived && !feature.transient && (
+					feature instanceof EAttribute || 
+					(feature as EReference).EOpposite == null || 
+					!(feature as EReference).EOpposite.containment
+			)) {
+				if (feature.many) {
+					size += (eObject.eGet(feature) as List<Object>).size*2	
+				} else {
+					val value = eObject.eGet(feature)
+					size += if (value instanceof String) value.length else 2 
+				}
+			}
+		}
+		size += eObject.eContents.fold(0)[r,e|r + e.size]
 		return size
 	}
 }

@@ -141,7 +141,7 @@ public class GitSourceControlSystem implements ISourceControlSystem {
 				FileHeader fileHeader = df.toFileHeader(diffEntry);
 				for(HunkHeader hunk: fileHeader.getHunks()) {
 					for(Edit edit: hunk.toEditList()) {
-						linesAdded += edit.getEndB() - edit.getEndB();
+						linesAdded += edit.getEndB() - edit.getBeginB();
 						linesRemoved += edit.getEndA() - edit.getBeginA();
 					}					
 				}

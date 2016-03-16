@@ -1,5 +1,6 @@
 package de.hub.srcrepo.emffrag.commands
 
+import de.hub.emffrag.FObject
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
@@ -8,15 +9,13 @@ import java.util.List
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.regex.Pattern
-import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
 import org.jsoup.Jsoup
 
-import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
-import de.hub.emffrag.FObject
+import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
 class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 	
@@ -157,7 +156,7 @@ class CreateEclipseRepositoriesCommand extends AbstractSrcRepoCommand {
 		options.addOption(Option.builder("u").longOpt("url").desc("The git.eclipse.org url. Default is https://git.eclipse.org/c/.").hasArg.build)
 	}
 	
-	override protected run(CommandLine cl) {
+	override protected run() {
 		createRepositoryModelDirectory(cl.getOptionValue("u", "https://git.eclipse.org/c/"))
 	}
 	

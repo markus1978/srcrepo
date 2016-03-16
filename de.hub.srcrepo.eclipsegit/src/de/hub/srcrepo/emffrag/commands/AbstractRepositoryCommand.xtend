@@ -1,19 +1,19 @@
 package de.hub.srcrepo.emffrag.commands
 
-import org.apache.commons.cli.Options
-import org.apache.commons.cli.Option
-import org.apache.commons.cli.CommandLine
-import java.util.regex.Pattern
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
-import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import java.util.regex.Pattern
+import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
+
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
+import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 	
-	abstract protected def void runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl)
+	abstract protected def void runOnRepository(RepositoryModelDirectory directory, RepositoryModel model)
 	
-	private def patternForOption(CommandLine cl, String optionName) {
+	private def patternForOption(String optionName) {
 		if (cl.hasOption(optionName)) {
 			try {
 				Pattern.compile(cl.getOptionValue(optionName))
@@ -27,9 +27,9 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 		}
 	}
 	
-	override protected run(CommandLine cl) {
-		val repositoryPattern = cl.patternForOption("r")
-		val directoryPattern = cl.patternForOption("d")
+	override protected run() {
+		val repositoryPattern = patternForOption("r")
+		val directoryPattern = patternForOption("d")
 		
 		if (directory == null) {
 			println("There is no directory to list repos from.")
@@ -56,7 +56,7 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 				(imd.scheduled || !cl.hasOption("s")) &&
 				((!imd.imported && !imd.scheduled && !imd.importing) || !cl.hasOption("x"))
 			if (goodStatus) {
-				runOnRepository(entry.key, entry.value, cl)
+				runOnRepository(entry.key, entry.value)
 			}
 		]			
 	}

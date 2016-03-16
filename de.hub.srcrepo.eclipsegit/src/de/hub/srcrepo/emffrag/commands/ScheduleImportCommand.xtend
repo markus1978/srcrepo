@@ -2,7 +2,6 @@ package de.hub.srcrepo.emffrag.commands
 
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
-import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 
@@ -15,7 +14,7 @@ class ScheduleImportCommand extends AbstractRepositoryCommand {
 		options.addOption(Option.builder("f").longOpt("force").desc("Try to clear the repository and schedule it no matter its current status.").build)
 	}
 	
-	override protected def void runOnRepository(RepositoryModelDirectory directory, RepositoryModel it, CommandLine cl) {
+	override protected def void runOnRepository(RepositoryModelDirectory directory, RepositoryModel it) {
 		val importMetaData = it.importMetaData
 		if (!importMetaData.imported && !importMetaData.importing && !importMetaData.scheduled) {
 			System.out.println("Schedule " + it.name)				

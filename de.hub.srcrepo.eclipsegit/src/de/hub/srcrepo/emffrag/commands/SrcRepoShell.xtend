@@ -48,11 +48,12 @@ class SrcRepoShell {
 				println("Usage: srcrepo <command> [options...]")
 				null
 			}
-			val clIsValid = cl != null && command.validateOptions(cl)
+			command.cl = cl
+			val clIsValid = cl != null && command.validateOptions()
 			if (clIsValid) {
 				try {
-					command.init(cl)
-					command.run(cl)
+					command.init()
+					command.run()
 					command.after
 				} catch (Exception e) {
 					println("Could not execute command due to exception: " + e.message)

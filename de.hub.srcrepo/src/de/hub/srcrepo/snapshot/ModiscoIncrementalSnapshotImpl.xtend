@@ -47,6 +47,7 @@ import com.google.common.collect.HashBiMap
 class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel {
 
 	public static val TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "CUsLoadET");
+	public static val TimeStatistic computeSnapshotETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "ComputeSnapshotET");
 	
 	private def loadCompilationUnitModel(JavaCompilationUnitRef fileRef) {
 		if (fileRef != null) {
@@ -155,6 +156,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 	}
 
 	private def computeSnapshot() {		
+		val computeSnapshotTimer = computeSnapshotETStat.timer
 		copier = new SSCopier(metaModel)
 		debug[
 			val rev = if (!newCompilationUnitModels.empty) { 
@@ -261,6 +263,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 				condition("This should not happen.")[false] // zest
 			}
 		}
+		
+		computeSnapshotTimer.track
 	}
 	
 	override start() {

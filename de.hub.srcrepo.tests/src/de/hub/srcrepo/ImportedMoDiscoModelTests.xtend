@@ -71,6 +71,24 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
     	]
   	}	
   	
+  	var addedLines = 0
+  	var removedLines = 0
+  	
+  	@Test def void testAddedRemovedLines() {		
+  		RepositoryModelTraversal.traverse(repositoryModel, new RevVisitor() {					
+			override protected onRev(Rev rev, Rev traversalParentRev, Map<String, AbstractFileRef> files) {
+				for(file: files.values) {
+					addedLines += (file.eContainer as Diff).linesAdded
+					removedLines += (file.eContainer as Diff).linesRemoved					
+				}
+			}  			
+  		})
+  		
+  		Assert.assertTrue(addedLines > 0)
+  		Assert.assertTrue(removedLines > 0)
+  		Assert.assertTrue(addedLines > removedLines)  	
+  	}
+  	
   	@Test def void testContents() {
   		testJavaModels[rev,javaModel|			
 			javaModel.eAllContents.forEach[

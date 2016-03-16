@@ -1,19 +1,17 @@
 package de.hub.srcrepo.emffrag.commands
 
-import de.hub.jstattrack.TimeStatistic
-import de.hub.jstattrack.services.Summary
+import de.hub.emffrag.internal.FStoreFragmentation
+import de.hub.emffrag.mongodb.MongoDBDataStore
+import de.hub.jstattrack.Statistics
 import de.hub.srcrepo.MoDiscoRevVisitor
 import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
-import java.io.File
-import java.io.PrintWriter
+import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 import java.text.SimpleDateFormat
 import java.util.Map
-import java.util.concurrent.TimeUnit
-import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.gmt.modisco.java.NamedElement
@@ -25,9 +23,7 @@ import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
-class MetricsCommand extends AbstractRepositoryCommand {
-	public val TimeStatistic revETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).register(MetricsCommand, "RevET")
-	
+class MetricsCommand extends AbstractParallelCommand {
 	val format = new SimpleDateFormat("dd-MM-yyyy")
 	
 	val Map<NamedElementUUID, Integer> values = newHashMap
@@ -103,36 +99,53 @@ class MetricsCommand extends AbstractRepositoryCommand {
 		options.addOption(Option.builder("o").longOpt("output").desc("File name to store the ouput instead of printing it").hasArg.build)
 	}
 	
-	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel repo, CommandLine cl) {
-		val data = new JSONArray
-		repo.traverse[rev, traversalParentRev, snapshots|
-			val timer = revETStat.timer
-			val datum = new JSONObject
-			datum.put("time", format.format(rev.time))
-			datum.put("rev", rev.name)
-			if (traversalParentRev != null) { 
-				datum.put("parent", traversalParentRev.name)				
+	override protected run(RepositoryModelDirectory directory, RepositoryModel repo) {
+		{
+			// metrics data
+			val data = new JSONArray
+			repo.traverse[rev, traversalParentRev, snapshots|
+				val datum = new JSONObject
+				datum.put("time", format.format(rev.time))
+				datum.put("rev", rev.name)
+				if (traversalParentRev != null) { 
+					datum.put("parent", traversalParentRev.name)				
+				} else {
+					datum.put("parent", "before_root")
+				} 
+				datum.put("cus", snapshots.values.sum[model.compilationUnits.size])
+				datum.put("wmcHsv", snapshots.collect[projectID,snapshot|
+					snapshot.model.compilationUnits.filter[!types.empty].map[types.get(0)].sum[
+						collect(projectID, snapshot, it) [weightedMethodPerClassWithHalsteadVolume]
+					]
+				])			
+				data.put(datum)
+			]
+			
+			if (cl.hasOption("h")) {
+				out.println(data.toHumanReadable)
 			} else {
-				datum.put("parent", "before_root")
-			} 
-			datum.put("cus", snapshots.values.sum[model.compilationUnits.size])
-			datum.put("wmcHsv", snapshots.collect[projectID,snapshot|
-				snapshot.model.compilationUnits.filter[!types.empty].map[types.get(0)].sum[
-					collect(projectID, snapshot, it) [weightedMethodPerClassWithHalsteadVolume]
-				]
-			])			
-			data.put(datum)
-			timer.track
-		]
-		
-		if (cl.hasOption("o")) {
-			val out = new File(cl.getOptionValue("o"))
-			val printer = new PrintWriter(out)
-			printer.println(data.toCSV)
-			printer.close
-		} else {
-			if (cl.hasOption("v")) { println('''The results...''') }				
-		}
-		println(data.toCSV)		
+				printHeader(data.toCSVHeader)
+				out.println(data.toCSV(false))
+			}
+		}	
+		{
+			// statistics data
+			val data = Statistics.reportToJSON.toSummaryData(#[
+				RepositoryModelTraversal.visitFullETStat -> "FullVisitET",
+				FStoreFragmentation.loadETStat -> "FragLoadET",
+				FStoreFragmentation.unloadETStat -> "FragUnloadET",
+				MongoDBDataStore.readTimeStatistic -> "DataReadET",
+				ModiscoIncrementalSnapshotImpl.computeSnapshotETStat -> "ComputeSSET",
+				ModiscoIncrementalSnapshotImpl.cusLoadETStat -> "LoadCUModelET",
+				MoDiscoRevVisitor.revUDFETStat -> "MetricsET"
+			], cl.hasOption("h")).toArray
+			
+			if (cl.hasOption("h")) {
+				auxOut("stats").println(data.toHumanReadable)
+			} else {				
+				printHeader(auxOut("stats"), data.toCSVHeader)
+				auxOut("stats").println(data.toCSV(false))		
+			}
+		}		
 	}
 }

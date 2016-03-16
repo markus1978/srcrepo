@@ -24,6 +24,8 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	public static final UUID revVisitET = Statistics.UUID(AbstractRevVisitor.class, "RevVisitET");
 	public static final String traverseMetaData = "TraverseMetaData";
 	
+	private int i = 0;
+	
 	private Map<String, Object> files = new HashMap<String, Object>();
 	private Map<Rev, Map<String, Object>> branches = new HashMap<Rev, Map<String, Object>>();
 
@@ -42,7 +44,11 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	protected abstract void onRev(Rev rev, Rev traversalParentRev);
 	
 	protected abstract Object getFile(AbstractFileRef fileRef);
-
+	
+	protected String revInfo(Rev rev) {
+		return rev.getName() + " (" + i++ + "/" + ((RepositoryModel)rev.eContainer()).getAllRevs().size() + ")"; 
+	}
+ 
 	@Override
 	public void onBranch(Rev commonPreviousRev, Rev newBranchRev) {
 		if (commonPreviousRev == null) {
@@ -82,7 +88,11 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 
 	@Override
 	public void onCompleteRev(Rev rev, Rev traversalParentRev) {
-		onRev(rev, traversalParentRev);
+		try {
+			onRev(rev, traversalParentRev);
+		} catch (Exception e) {
+			SrcRepoActivator.INSTANCE.error("Error in visiting rev: " + rev.getName(), e);
+		}
 		lastVisitedRev = rev;
 		revVisitETStatTimer.track();
 	}

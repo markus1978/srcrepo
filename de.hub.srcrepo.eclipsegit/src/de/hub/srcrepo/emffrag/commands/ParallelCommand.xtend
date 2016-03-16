@@ -80,7 +80,7 @@ class ParallelCommand extends AbstractRepositoryCommand {
 	
 	var ExecutorService executor = null
 	
-	override protected run(CommandLine cl) {	
+	override protected run() {	
 		this.cl = cl				
 		
 		if (cl.hasOption("o")) {
@@ -91,7 +91,7 @@ class ParallelCommand extends AbstractRepositoryCommand {
 		val importerCount = Integer.parseInt(cl.getOptionValue("instances", "5"))
 		executor = Executors::newFixedThreadPool(importerCount)
 		
-		super.run(cl)
+		super.run()
 		
 		executor.shutdown()
 		executor.awaitTermination(10, TimeUnit::DAYS)
@@ -101,7 +101,7 @@ class ParallelCommand extends AbstractRepositoryCommand {
 		}
 	}
 	
-	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model, CommandLine cl) {
+	override protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model) {
 		executor.submit[
 			model.runImport
 		]

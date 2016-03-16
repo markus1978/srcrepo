@@ -24,7 +24,17 @@ abstract class AbstractSrcRepoCommand {
 	protected var RepositoryModelDirectory directory
 	protected var URI modelURI
 	
-	protected final def void init(CommandLine cl) {
+	private var CommandLine cl = null
+	
+	public def void setCl(CommandLine cl) {
+		this.cl = cl
+	}
+	
+	public def getCl() {
+		return cl
+	}
+	
+	protected final def void init() {
 		val metaModels = newArrayList(RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE)
 		EmfFragActivator::standalone(metaModels)
 		EmfFragActivator::instance.logInStandAlone = false;
@@ -48,7 +58,7 @@ abstract class AbstractSrcRepoCommand {
 		options.addOption(Option.builder().desc('''Uses the given fragmentation cache size. Default is «defaultCacheSize».''').longOpt("cache").hasArg.build)
 	}
 	
-	protected def checkIntArg(CommandLine cl, String name, int minimum) {
+	protected def checkIntArg(String name, int minimum) {
 		if (cl.hasOption(name)) {
 			try {
 				return Integer.parseInt(cl.getOptionValue(name)) > minimum
@@ -59,11 +69,11 @@ abstract class AbstractSrcRepoCommand {
 		return true
 	}
 	
-	protected def validateOptions(CommandLine cl) {
-		return checkIntArg(cl, "cache", 0)
+	protected def validateOptions() {
+		return checkIntArg("cache", 0)
 	}
 				
-	protected abstract def void run(CommandLine cl)
+	protected abstract def void run()
 		
 	protected def void after() {
 		fs.close()

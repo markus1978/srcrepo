@@ -3,7 +3,6 @@ package de.hub.srcrepo.emffrag.commands
 import com.mashape.unirest.http.Unirest
 import de.hub.emffrag.FObject
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelFactory
-import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.eclipse.emf.common.util.URI
@@ -53,7 +52,7 @@ class CreateGitHubUserRepositoriesCommand extends AbstractSrcRepoCommand {
 		options.addOption(Option.builder("u").longOpt("user").desc("The git hub user to retrive repos from. Default is 'eclipse'").hasArg.build)
 	}
 	
-	override protected run(CommandLine cl) {
+	override protected run() {
 		createRepositoryModelDirectory(cl.getOptionValue("u", "eclipse"))
 	}
 	
