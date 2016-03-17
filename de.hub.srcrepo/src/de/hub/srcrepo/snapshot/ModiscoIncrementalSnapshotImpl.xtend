@@ -43,10 +43,17 @@ import static extension de.hub.srcrepo.snapshot.internal.SnapshotUtils.*
 import java.util.HashMap
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
+import de.hub.jstattrack.ValueStatistic
+import de.hub.jstattrack.services.Histogram
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel {
 
+	public static val ValueStatistic snapshotSizeStat = new ValueStatistic().with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "SnapshotSize");
+	public static val ValueStatistic snapshotDeltaSizeStat = new ValueStatistic().with(Summary).with(BatchedPlot).with(Histogram).register(IModiscoSnapshotModel, "SnapshotDeltaSize");
 	public static val TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "CUsLoadET");
+	public static val TimeStatistic removeCUsETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "removeCUsET");
+	public static val TimeStatistic addCUsETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "addCUsET");
+	public static val TimeStatistic resolveETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "resolveET");
 	public static val TimeStatistic computeSnapshotETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "ComputeSnapshotET");
 	
 	private def loadCompilationUnitModel(JavaCompilationUnitRef fileRef) {
@@ -156,6 +163,8 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 	}
 
 	private def computeSnapshot() {		
+		snapshotSizeStat.track(currentRefs.size)
+		snapshotDeltaSizeStat.track(newCompilationUnitModels.size + oldCompilationUnitModels.size)
 		val computeSnapshotTimer = computeSnapshotETStat.timer
 		copier = new SSCopier(metaModel)
 		debug[
@@ -176,9 +185,10 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		// TODO performance
 		// The current implementation removes unresolvedItems/orphanTypes/proxies 
 		// before they could be replaced by equal elements in an in CU. This is
-		// probably not very efficient.
+		// probably not very efficient. This will be solved, when we use delta CU models in the feature.
 
 		// 1. remove old CUs
+		val removeTimer = removeCUsETStat.timer
 		val toDelete = new HashSet<EObject>
 		
 		// 1.1 remove the containment hierarchy
@@ -203,8 +213,10 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 				linksToResolve += it				
 			}
 		}
+		removeTimer.track
 
 		// 2 add new CUs
+		val addTimer = addCUsETStat.timer
 		// 2.1. add containment for all CUs
 		for(it:newCompilationUnitModels) {
 			debug["  #add: " + it]
@@ -242,8 +254,10 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		newCompilationUnitModels.forEach[clearIds]
 		oldCompilationUnitModels.forEach[clearIds]
 		copier = null
+		addTimer.track
 			
 		// 3. resolve all new and re-resolve all priorly reverted references
+		val resolveTimer = resolveETStat.timer
 		debug["  #resolving links: "]
 		for(it:linksToResolve.filter[!resolved]) {
 			debug["    #" + it]
@@ -263,6 +277,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 				condition("This should not happen.")[false] // zest
 			}
 		}
+		resolveTimer.track
 		
 		computeSnapshotTimer.track
 	}

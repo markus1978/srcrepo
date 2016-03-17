@@ -23,7 +23,7 @@ import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
-class MetricsCommand extends AbstractParallelCommand {
+class MetricsCommand extends AbstractDataCommand {
 	val format = new SimpleDateFormat("dd-MM-yyyy")
 	
 	val Map<NamedElementUUID, Integer> values = newHashMap
@@ -122,15 +122,15 @@ class MetricsCommand extends AbstractParallelCommand {
 			]
 			
 			if (cl.hasOption("h")) {
-				out.println(data.toHumanReadable)
+				auxOut('''«repo.name»-data''').println(data.toHumanReadable)
 			} else {
-				printHeader(data.toCSVHeader)
-				out.println(data.toCSV(false))
+				printHeader(auxOut('''«repo.name»-data'''), data.toCSVHeader)
+				auxOut('''«repo.name»-data''').println(data.toCSV(false))
 			}
 		}	
 		{
 			// statistics data
-			val data = Statistics.reportToJSON.toSummaryData(#[
+			val data = Statistics.reportToJSON.toSummaryData(repo.name, #[
 				RepositoryModelTraversal.visitFullETStat -> "FullVisitET",
 				FStoreFragmentation.loadETStat -> "FragLoadET",
 				FStoreFragmentation.unloadETStat -> "FragUnloadET",
@@ -141,10 +141,10 @@ class MetricsCommand extends AbstractParallelCommand {
 			], cl.hasOption("h")).toArray
 			
 			if (cl.hasOption("h")) {
-				auxOut("stats").println(data.toHumanReadable)
+				out.println(data.toHumanReadable)
 			} else {				
-				printHeader(auxOut("stats"), data.toCSVHeader)
-				auxOut("stats").println(data.toCSV(false))		
+				printHeader(data.toCSVHeader)
+				out.println(data.toCSV(false))		
 			}
 		}		
 	}

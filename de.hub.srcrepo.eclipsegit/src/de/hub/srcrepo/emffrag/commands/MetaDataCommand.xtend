@@ -30,7 +30,7 @@ import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.repositorymodel.util.RepositoryModelUtils.*
 
-class MetaDataCommand extends AbstractParallelCommand {
+class MetaDataCommand extends AbstractDataCommand {
 		
 	private var TimeStatistic traverseOneKObjectsExecTimeStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(typeof(Summary)).with(typeof(Histogram)).with(typeof(BatchedPlot)).with(typeof(WindowedPlot)).register(this.class, "Traverse execution time for a million objects");
 	

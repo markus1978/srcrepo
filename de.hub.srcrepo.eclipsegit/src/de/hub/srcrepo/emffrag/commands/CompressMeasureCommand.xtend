@@ -9,7 +9,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 
 import static extension de.hub.jstattrack.StatisticsUtil.*
 
-class CompressMeasureCommand extends AbstractParallelCommand {
+class CompressMeasureCommand extends AbstractDataCommand {
 	
 	private def traverse(RepositoryModel repo, IRepositoryModelVisitor visitor) {
 		RepositoryModelTraversal.traverse(repo, visitor)
@@ -19,7 +19,7 @@ class CompressMeasureCommand extends AbstractParallelCommand {
 	override protected run(RepositoryModelDirectory directory, RepositoryModel repo) {
 		repo.traverse(new CompressionMeasureVisitor)
 	
-		val data = Statistics.reportToJSON.toSummaryData(CompressionMeasureVisitor.statNames, cl.hasOption("h")).toArray
+		val data = Statistics.reportToJSON.toSummaryData(repo.name, CompressionMeasureVisitor.statNames, cl.hasOption("h")).toArray
 			
 		if (cl.hasOption("h")) {
 			out.println(data.toHumanReadable)

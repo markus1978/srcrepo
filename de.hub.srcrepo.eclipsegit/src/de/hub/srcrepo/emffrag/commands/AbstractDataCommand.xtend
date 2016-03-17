@@ -12,7 +12,6 @@ import java.io.PrintStream
 import java.text.DateFormat
 import java.util.Date
 import java.util.Map
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -21,11 +20,12 @@ import java.util.regex.Pattern
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 
-abstract class AbstractParallelCommand extends AbstractRepositoryCommand {
+abstract class AbstractDataCommand extends AbstractRepositoryCommand {
 	
 	protected var PrintStream out = null
 		
-	val Map<Thread, PrintStream> logOuts = new ConcurrentHashMap
+	var PrintStream logOut = null
+	var outExisted = false
 	val logFileNames = newHashSet
 	private val Supplier<PrintStream> logOutSupplier = [ getLogOut() ] 
 	
@@ -49,10 +49,8 @@ abstract class AbstractParallelCommand extends AbstractRepositoryCommand {
 		super.addOptions(options)
 		options.addOption(Option.builder().longOpt("name").desc("Name of the run.").hasArg.build)
 		options.addOption(Option.builder().longOpt("description").desc("Description of the run.").hasArg.build)
-		options.addOption(Option.builder("a").longOpt("append").desc("Append output to existing file.").build)
 		options.addOption(Option.builder("o").longOpt("output").desc("File used to store results.").hasArg.build)
 		options.addOption(Option.builder().longOpt("log-dir").desc("Directory used to put log files.").hasArg.build)
-		options.addOption(Option.builder("p").longOpt("parallel").desc("Number of repositories that can be process in parallel. Default is one.").hasArg.build)
 		options.addOption(Option.builder("h").longOpt("human-readable").desc("Create human readable output instead of csv.").build)		
 	}
 	
@@ -61,19 +59,20 @@ abstract class AbstractParallelCommand extends AbstractRepositoryCommand {
 	override protected run() {
 		headerPrinted.clear
 		logFileNames.clear
-		logOuts.clear
 		
+		outExisted = false
 		if (cl.hasOption("o")) {
 			val file = new File(cl.getOptionValue("o"))
+			outExisted = file.exists
 			file.absoluteFile.parentFile.mkdirs
-			val os = new FileOutputStream(file, cl.hasOption("a"))
+			val os = new FileOutputStream(file, true)
 			out = new PrintStream(os)
 		} else {
 			out = System.out
 		}
 		
 		val metaDataStr = metadata(cl.getOptionValue("name"), cl.getOptionValue("description"))
-		if (!cl.hasOption("a")) {
+		if (!outExisted) {
 			out.println(metaDataStr)
 		}
 		
@@ -102,34 +101,31 @@ abstract class AbstractParallelCommand extends AbstractRepositoryCommand {
 	}
 	
 	protected def PrintStream getLogOut() {
-		return logOuts.get(Thread.currentThread)?:System.out
+		return logOut
 	}
 	
 	override final protected runOnRepository(RepositoryModelDirectory directory, RepositoryModel model) {
-		executor.submit[
-			val logOut = if (cl.hasOption("log-dir")) {
-				var logFileName = model.name
-				while (logFileNames.contains(logFileName)) {
-					logFileName = logFileName.unique
-				}
-				logFileNames += logFileName
-				logFileName = logFileName + ".log"
-				
-				val file = new File(cl.getOptionValue("log-dir") + "/" + logFileName)
-				file.absoluteFile.parentFile.mkdirs
-				new PrintStream(new FileOutputStream(file, false))
-			} else {
-				System.out
-			}	
+		logOut = if (cl.hasOption("log-dir")) {
+			var logFileName = model.name
+			while (logFileNames.contains(logFileName)) {
+				logFileName = logFileName.unique
+			}
+			logFileNames += logFileName
+			logFileName = logFileName + ".log"
 			
-			logOuts.put(Thread.currentThread, logOut)			
-			run(directory, model)
-					
-			if (logOut != System.out) {
-				logOut.close
-			}	
-			void
-		]
+			val file = new File(cl.getOptionValue("log-dir") + "/" + logFileName)
+			file.absoluteFile.parentFile.mkdirs
+			new PrintStream(new FileOutputStream(file, false))
+		} else {
+			System.out
+		}	
+		
+				
+		run(directory, model)
+				
+		if (logOut != System.out) {
+			logOut.close
+		}	
 	}
 	
 	protected def auxOut(String name) {
@@ -146,7 +142,7 @@ abstract class AbstractParallelCommand extends AbstractRepositoryCommand {
 				}
 				val file = new File(fileName)
 				file.absoluteFile.parentFile.mkdirs
-				val os = new FileOutputStream(file, cl.hasOption("a"))
+				val os = new FileOutputStream(file, true)
 				out = new PrintStream(os)
 			} else {
 				out = System.out
@@ -161,7 +157,7 @@ abstract class AbstractParallelCommand extends AbstractRepositoryCommand {
 	}
 	
 	protected synchronized def void printHeader(PrintStream out, String headerStr) {		
-		if (!cl.hasOption("a")) {
+		if (!outExisted) {
 			val printed = headerPrinted.get(out)?:false
 			if (!printed) {
 				out.println(headerStr)
