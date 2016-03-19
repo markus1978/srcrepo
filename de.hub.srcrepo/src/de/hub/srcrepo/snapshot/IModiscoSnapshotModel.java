@@ -13,6 +13,4 @@ public interface IModiscoSnapshotModel {
 	public NamedElement getTarget(String id);
 	
 	public Model getModel();
-	
-	public int getModCount();
 }

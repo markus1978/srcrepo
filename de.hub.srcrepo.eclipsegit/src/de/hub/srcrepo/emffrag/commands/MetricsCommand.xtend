@@ -3,95 +3,150 @@ package de.hub.srcrepo.emffrag.commands
 import de.hub.emffrag.internal.FStoreFragmentation
 import de.hub.emffrag.mongodb.MongoDBDataStore
 import de.hub.jstattrack.Statistics
+import de.hub.srcrepo.IRepositoryModelVisitor
+import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor
 import de.hub.srcrepo.MoDiscoRevVisitor
 import de.hub.srcrepo.RepositoryModelTraversal
+import de.hub.srcrepo.emffrag.commands.MetricsCommand.Metric
+import de.hub.srcrepo.emffrag.commands.MetricsCommand.MetricsModiscoRevVisitor
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
 import de.hub.srcrepo.repositorymodel.Rev
+import de.hub.srcrepo.snapshot.IModiscoIncrementalSnapshotModel
 import de.hub.srcrepo.snapshot.IModiscoSnapshotModel
 import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 import java.text.SimpleDateFormat
+import java.util.List
 import java.util.Map
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
-import org.eclipse.gmt.modisco.java.NamedElement
+import org.eclipse.gmt.modisco.java.CompilationUnit
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 import org.json.JSONArray
 import org.json.JSONObject
 
 import static extension de.hub.jstattrack.StatisticsUtil.*
+import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 class MetricsCommand extends AbstractDataCommand {
-	val format = new SimpleDateFormat("dd-MM-yyyy")
+		
+	private static class DoubleMap<E> {
+		val Map<E,Double> values = newHashMap()
+		def get(E key) {
+			values.get(key)?:0.0			
+		}
+		def put(E key, double value) {
+			values.put(key, value)
+		}
+		def sum() {
+			var sum = 0.0
+			for(value:values.values) {
+				sum += value
+			}
+			sum
+		}
+	}	
+		
+	private abstract static class Metric {
+		private val values = new DoubleMap<IModiscoSnapshotModel>
+		val String name
+		private val Map<String, Double> cachedValues = newHashMap
+		
+		new(String name) {
+			this.name = name
+		}
+		def void clear(IModiscoSnapshotModel ss) {
+			values.put(ss, 0.0)
+			cachedValues.clear
+		}
+		def double calc(IModiscoIncrementalSnapshotModel snapshot, String path) {
+			calc(snapshot.getCompilationUnit(path))
+		}
+		def double calc(CompilationUnit cu) {
+			throw new RuntimeException("Needs to be overriden.")
+		}
+		def void add(IModiscoIncrementalSnapshotModel snapshot, String path) {
+			val increment = calc(snapshot, path)
+			values.put(snapshot, values.get(snapshot) + increment)
+			cachedValues.put(path,increment)
+		}			
+		def void remove(IModiscoIncrementalSnapshotModel snapshot, String path) {
+			val existing = cachedValues.remove(path)
+			val increment = if (existing != null) {
+				existing
+			} else {
+				calc(snapshot, path)
+			}
+			values.put(snapshot, values.get(snapshot) - increment)
+		}
+		
+		def getValue() {
+			values.sum
+		}
+	}
 	
-	val Map<NamedElementUUID, Integer> values = newHashMap
-	val Map<IModiscoSnapshotModel, Pair<Integer, Integer>> snapshotValues = newHashMap
-	
-	static abstract class EmffragModiscoRevVisitor extends MoDiscoRevVisitor {
+	private abstract static class MetricsModiscoRevVisitor extends MoDiscoRevVisitor {		
+		val format = new SimpleDateFormat("dd-MM-yyyy")		
+		val List<Metric> metrics = newArrayList
+		var IModiscoIncrementalSnapshotModel incrementalSnapshot = null
+			
 		new() {
 			super(JavaPackage.eINSTANCE);
 		}
 		
-		override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
-			
+		def addMetric(Metric metric) {
+			metrics += metric
+		}
+		
+		def addMetric(String name, (CompilationUnit)=>double calculate) {
+			metrics+= new Metric(name) {				
+				override calc(CompilationUnit cu) {
+					calculate.apply(cu)
+				}
+			}	
+		}
+		
+		override protected onRev(Rev rev, Rev traversalParentRev, String projectID, IModiscoSnapshotModel snapshot) {
+			incrementalSnapshot = snapshot as IModiscoIncrementalSnapshotModel
+			if (!incrementalSnapshot.incremental) { 
+				metrics.forEach[clear(incrementalSnapshot)]				
+			} 
+			for (removedRef:incrementalSnapshot.removedRefs) {
+				metrics.forEach[remove(incrementalSnapshot, removedRef)]					
+			}
+			for (addedRef:incrementalSnapshot.addedRefs) {
+				metrics.forEach[add(incrementalSnapshot, addedRef)]
+			}
 		}
 		
 		override protected onRevWithSnapshots(Rev rev, Rev traversalParentRev, Map<String, ? extends IModiscoSnapshotModel> snapshots) {
-			onRevWithSnapshotsCustom(rev, traversalParentRev, snapshots as Map<String, IModiscoSnapshotModel>)
+			val datum = new JSONObject
+			datum.put("time", format.format(rev.time))
+			datum.put("rev", rev.name)
+			if (traversalParentRev != null) { 
+				datum.put("parent", traversalParentRev.name)				
+			} else {
+				datum.put("parent", "before_root")
+			} 
+			for (metric:metrics) {
+				datum.put(metric.name, metric.value)
+			}		
+			datum.print
+			println("#### " + snapshots.values.fold(0)[r,e|(e as IModiscoIncrementalSnapshotModel).contributingRefs.size + r])
+			for (path:snapshots.values.map[(it as IModiscoIncrementalSnapshotModel).contributingRefs].flatten) {
+				println("  " + path)
+			}
+			println("####")
 		}
 		
-		abstract def void onRevWithSnapshotsCustom(Rev rev, Rev parent, Map<String, IModiscoSnapshotModel> snapshots);
+		abstract def void print(JSONObject datum);
 	}
 	
-	private def traverse(RepositoryModel repo, EmffragModiscoRevVisitor visitor) {
+	private def traverse(RepositoryModel repo, IRepositoryModelVisitor visitor) {
 		RepositoryModelTraversal.traverse(repo, visitor)
 		visitor.close(repo)
-	}
-	
-	private def qualifiedName(NamedElement namedElement) {
-		var named = namedElement
-		val builder = new StringBuilder
-		while (named != null) {
-			builder.append(named.name)
-			builder.append(".")
-			val container = named.eContainer
-			if (container instanceof NamedElement) {
-				named = container as NamedElement
-			} else {
-				named = null
-			}
-		}
-		return builder.toString
-	}
-	
-	private def <T extends NamedElement> int collect(String projectID, IModiscoSnapshotModel snapshot, T container, (T)=>int function) {
-		val uuid = new NamedElementUUID(snapshot.getRev(container.originalCompilationUnit), projectID, snapshot.getId(container))
-		
-		val existing = values.get(uuid)
-		if (existing != null) {
-			return existing
-		} else {
-			val value = function.apply(container)
-			values.put(uuid, value)
-			return value
-		}
-	}
-	
-	private def <T extends NamedElement> int collect(Map<String,IModiscoSnapshotModel> snapshots, (String,IModiscoSnapshotModel)=>int function) {
-		snapshots.entrySet.sum[
-			val projectID = it.key
-			val snapshot = it.value
-			val existingSnapshotValue = snapshotValues.get(snapshot)
-			if (existingSnapshotValue == null || existingSnapshotValue.key != snapshot.modCount) {
-				val value = function.apply(projectID, snapshot)
-				snapshotValues.put(snapshot, snapshot.modCount -> value)
-				return value
-			} else {
-				return existingSnapshotValue.value
-			}
-		]		
 	}
 	
 	override protected addOptions(Options options) {
@@ -100,52 +155,61 @@ class MetricsCommand extends AbstractDataCommand {
 	}
 	
 	override protected run(RepositoryModelDirectory directory, RepositoryModel repo) {
-		{
-			// metrics data
-			val data = new JSONArray
-			repo.traverse[rev, traversalParentRev, snapshots|
-				val datum = new JSONObject
-				datum.put("time", format.format(rev.time))
-				datum.put("rev", rev.name)
-				if (traversalParentRev != null) { 
-					datum.put("parent", traversalParentRev.name)				
+		val visitor = new MetricsModiscoRevVisitor() {			
+			override print(JSONObject datum) {
+				// metrics data		
+				val data = new JSONArray
+				data.put(datum)	
+				if (cl.hasOption("h")) {
+					auxOut('''«repo.name»-data''').println(data.toHumanReadable)
 				} else {
-					datum.put("parent", "before_root")
-				} 
-				datum.put("cus", snapshots.values.sum[model.compilationUnits.size])
-				datum.put("wmcHsv", snapshots.collect[projectID,snapshot|
-					snapshot.model.compilationUnits.filter[!types.empty].map[types.get(0)].sum[
-						collect(projectID, snapshot, it) [weightedMethodPerClassWithHalsteadVolume]
-					]
-				])			
-				data.put(datum)
-			]
-			
-			if (cl.hasOption("h")) {
-				auxOut('''«repo.name»-data''').println(data.toHumanReadable)
-			} else {
-				printHeader(auxOut('''«repo.name»-data'''), data.toCSVHeader)
-				auxOut('''«repo.name»-data''').println(data.toCSV(false))
-			}
-		}	
-		{
-			// statistics data
-			val data = Statistics.reportToJSON.toSummaryData(repo.name, #[
-				RepositoryModelTraversal.visitFullETStat -> "FullVisitET",
-				FStoreFragmentation.loadETStat -> "FragLoadET",
-				FStoreFragmentation.unloadETStat -> "FragUnloadET",
-				MongoDBDataStore.readTimeStatistic -> "DataReadET",
-				ModiscoIncrementalSnapshotImpl.computeSnapshotETStat -> "ComputeSSET",
-				ModiscoIncrementalSnapshotImpl.cusLoadETStat -> "LoadCUModelET",
-				MoDiscoRevVisitor.revUDFETStat -> "MetricsET"
-			], cl.hasOption("h")).toArray
-			
-			if (cl.hasOption("h")) {
-				out.println(data.toHumanReadable)
-			} else {				
-				printHeader(data.toCSVHeader)
-				out.println(data.toCSV(false))		
-			}
+					printHeader(auxOut('''«repo.name»-data'''), data.toCSVHeader)
+					auxOut('''«repo.name»-data''').println(data.toCSV(false))
+				}
+			}			
+		}
+		visitor.addMetric("cus", [1 as double])
+		visitor.addMetric("wmcHal", [types.get(0).weightedMethodPerClassWithHalsteadVolume as double])
+		visitor.addMetric("wmc1", [types.get(0).weightedMethodsPerClass as double])
+		visitor.addMetric(new Metric("loc") {			
+			override calc(IModiscoIncrementalSnapshotModel snapshot, String path) {
+				val ref = snapshot.getContributingRef(path)
+				val data = ref.getData(MoDiscoRepositoryModelImportVisitor.locMetricsDataSet).data.get("ncss") as Integer
+				if (data == null) {
+					0.0
+				} else {
+					data as double
+				}
+			}			
+		})
+		
+		repo.traverse(visitor)	
+		
+		// statistics data
+		val data = Statistics.reportToJSON.toSummaryData(repo.name, #[
+			RepositoryModelTraversal.visitFullETStat -> "FullVisitET",
+			FStoreFragmentation.loadETStat -> "FragLoadET",
+			FStoreFragmentation.unloadETStat -> "FragUnloadET",
+			MongoDBDataStore.readTimeStatistic -> "DataReadET",
+			MoDiscoRevVisitor.revChangedCUCountStat -> "RevChangedCUCount",
+			MoDiscoRevVisitor.revCUCountStat -> "RevCUCount",
+			MoDiscoRevVisitor.revSnapshotCountStat -> "RevSSCount",
+			MoDiscoRevVisitor.revUDFETStat -> "RevUDFET",
+			MoDiscoRevVisitor.revComputeSSETStat -> "RevComputeSSET",
+			ModiscoIncrementalSnapshotImpl.computeSnapshotETStat -> "ComputeSSET",
+			ModiscoIncrementalSnapshotImpl.addCUsETStat -> "AddCUsET",
+			ModiscoIncrementalSnapshotImpl.removeCUsETStat -> "RemoveCUsET",
+			ModiscoIncrementalSnapshotImpl.removeCUsCompositeETStat -> "RemoveCUsCompositionET",
+			ModiscoIncrementalSnapshotImpl.removeCUsReferencesETStat -> "RemoveCUsReferenceET",
+			ModiscoIncrementalSnapshotImpl.resolveETStat -> "ResolveReferenceET",
+			ModiscoIncrementalSnapshotImpl.cusLoadETStat -> "LoadCUModelET"
+		], cl.hasOption("h")).toArray
+		
+		if (cl.hasOption("h")) {
+			out.println(data.toHumanReadable)
+		} else {				
+			printHeader(data.toCSVHeader)
+			out.println(data.toCSV(false))		
 		}		
 	}
 }

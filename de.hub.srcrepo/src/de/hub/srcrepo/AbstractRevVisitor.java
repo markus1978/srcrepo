@@ -29,7 +29,7 @@ public abstract class AbstractRevVisitor implements IRepositoryModelVisitor {
 	private Map<String, Object> files = new HashMap<String, Object>();
 	private Map<Rev, Map<String, Object>> branches = new HashMap<Rev, Map<String, Object>>();
 
-	private static final TimeStatistic revVisistETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class)
+	public static final TimeStatistic revVisistETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary.class)
 			.with(BatchedPlot.class).register(revVisitET);
 	private Timer revVisitETStatTimer = null;
 

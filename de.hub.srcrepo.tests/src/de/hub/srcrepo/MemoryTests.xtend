@@ -24,7 +24,7 @@ class MemoryTests extends AbstractSingleRepositoryModelTests {
 	public def snapshot() {		
 		performMemoryTest(1) [
 			repositoryModel.traverse(new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {				
-				override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+				override protected onRev(Rev rev, Rev parent, String projectID, IModiscoSnapshotModel snapshot) {
 					
 				}				
 			})

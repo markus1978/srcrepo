@@ -63,7 +63,8 @@ import de.hub.srcrepo.repositorymodel.Rev;
 import javancss.Javancss;
 
 public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisitor {
-
+	public static final String locMetricsDataSet = "LOC-metrics";
+	
 	protected final ISourceControlSystem sourceControlSystem;
 	protected final JavaFactory javaFactory;
 	protected final JavaPackage javaPackage;
@@ -589,7 +590,6 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 	}
 	
 	private class GetLOCCount extends WorkspaceJob {
-		
 		private final Map<ICompilationUnit, Diff> javaDiffs;	
 
 		public GetLOCCount(Map<ICompilationUnit, Diff> javaDiffs) {
@@ -610,7 +610,7 @@ public class MoDiscoRepositoryModelImportVisitor implements IRepositoryModelVisi
 					DataSet dataSet = repositoryFactory.createDataSet();
 					dataSet.setData(new HashMap<String,Serializable>());
 					diff.getFile().getDataSets().add(dataSet);
-					dataSet.setName("LOC-metrics");
+					dataSet.setName(locMetricsDataSet);
 					
 					if (ncss.getLastError() != null) {
 						SrcRepoActivator.INSTANCE.error("Error during counting LOC-metrics.", (Exception)ncss.getLastError());
