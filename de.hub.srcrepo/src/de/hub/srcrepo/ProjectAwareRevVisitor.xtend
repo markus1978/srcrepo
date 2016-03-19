@@ -19,6 +19,7 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 		
 	val Map<String, Map<String, JavaCompilationUnitRef>> projectFiles = newHashMap()
 	val Map<String, String> pathToProject = newHashMap
+	var revWithClear = false
 			
 	protected abstract def void onRev(Rev rev, Rev traversalParentRev, Map<String, Map<String, JavaCompilationUnitRef>> cusRefs)
 	
@@ -48,16 +49,31 @@ abstract class ProjectAwareRevVisitor extends AbstractRevVisitor {
 	
 	override protected clearFiles() {
 		projectFiles.values.forEach[it.clear]
+		pathToProject.clear
+		revWithClear = true
 	}
 	
 	override protected onRev(Rev rev, Rev traversalParentRev) {
+		val it = projectFiles.entrySet.iterator
+		if (revWithClear) {
+			while (it.hasNext) {
+				if (it.next.value.empty) {
+					it.remove
+				}
+			}
+			revWithClear = false		
+		}
 		onRev(rev, traversalParentRev, projectFiles)
 	}
 	
 	override protected removeFile(String name) {
 		val projectID = pathToProject.get(name)
 		if (projectID != null) {
-			projectFiles(projectID).remove(name)		
+			val files = projectFiles(projectID)
+			files.remove(name)
+			if (files.empty) {
+				projectFiles.remove(projectID)
+			}
 		}
 	}	
 }

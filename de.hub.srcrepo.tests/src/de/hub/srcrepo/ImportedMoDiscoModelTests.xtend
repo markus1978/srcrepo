@@ -53,6 +53,8 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
   	
   	@Test def void testCompilationUnits() {
     	testJavaModels[rev,javaModel |
+    		javaModel.compilationUnits.forEach[println(it.name)]
+    		
       		val typesInCUs = javaModel.getCompilationUnits().collectAll[types].size
       		val cus = javaModel.getCompilationUnits().size();
 

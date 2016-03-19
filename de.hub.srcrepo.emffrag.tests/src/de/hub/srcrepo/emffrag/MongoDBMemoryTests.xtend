@@ -88,7 +88,7 @@ class MongoDBMemoryTests extends MemoryTests {
 					println('''##BRANCH «lastBranchRev?.name»->«commonMergedRev?.name»''')
 				}
 								
-				override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+				override protected onRev(Rev rev, Rev parent, String projectID, IModiscoSnapshotModel snapshot) {
 					i = i + 1
 					if (i % 1000 == 0) {
 						heapdump('''testdata/«i»dump2.hprof''')

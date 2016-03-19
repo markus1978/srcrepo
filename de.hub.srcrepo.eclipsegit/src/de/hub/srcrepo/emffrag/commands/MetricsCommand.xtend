@@ -28,7 +28,6 @@ import org.json.JSONObject
 import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
-import static extension de.hub.srcrepo.ocl.OclExtensions.*
 
 class MetricsCommand extends AbstractDataCommand {
 		
@@ -39,13 +38,6 @@ class MetricsCommand extends AbstractDataCommand {
 		}
 		def put(E key, double value) {
 			values.put(key, value)
-		}
-		def sum() {
-			var sum = 0.0
-			for(value:values.values) {
-				sum += value
-			}
-			sum
 		}
 	}	
 		
@@ -82,12 +74,13 @@ class MetricsCommand extends AbstractDataCommand {
 			values.put(snapshot, values.get(snapshot) - increment)
 		}
 		
-		def getValue() {
-			values.sum
+		def getValue(Iterable<? extends IModiscoSnapshotModel> snapshots) {
+			snapshots.fold(0.0)[r,t|r + values.get(t)]
 		}
 	}
 	
-	private abstract static class MetricsModiscoRevVisitor extends MoDiscoRevVisitor {		
+	private abstract static class MetricsModiscoRevVisitor extends MoDiscoRevVisitor {
+		
 		val format = new SimpleDateFormat("dd-MM-yyyy")		
 		val List<Metric> metrics = newArrayList
 		var IModiscoIncrementalSnapshotModel incrementalSnapshot = null
@@ -111,10 +104,10 @@ class MetricsCommand extends AbstractDataCommand {
 		override protected onRev(Rev rev, Rev traversalParentRev, String projectID, IModiscoSnapshotModel snapshot) {
 			incrementalSnapshot = snapshot as IModiscoIncrementalSnapshotModel
 			if (!incrementalSnapshot.incremental) { 
-				metrics.forEach[clear(incrementalSnapshot)]				
+				metrics.forEach[clear(incrementalSnapshot)]
 			} 
 			for (removedRef:incrementalSnapshot.removedRefs) {
-				metrics.forEach[remove(incrementalSnapshot, removedRef)]					
+				metrics.forEach[remove(incrementalSnapshot, removedRef)]
 			}
 			for (addedRef:incrementalSnapshot.addedRefs) {
 				metrics.forEach[add(incrementalSnapshot, addedRef)]
@@ -131,14 +124,9 @@ class MetricsCommand extends AbstractDataCommand {
 				datum.put("parent", "before_root")
 			} 
 			for (metric:metrics) {
-				datum.put(metric.name, metric.value)
+				datum.put(metric.name, metric.getValue(snapshots.values))
 			}		
 			datum.print
-			println("#### " + snapshots.values.fold(0)[r,e|(e as IModiscoIncrementalSnapshotModel).contributingRefs.size + r])
-			for (path:snapshots.values.map[(it as IModiscoIncrementalSnapshotModel).contributingRefs].flatten) {
-				println("  " + path)
-			}
-			println("####")
 		}
 		
 		abstract def void print(JSONObject datum);
