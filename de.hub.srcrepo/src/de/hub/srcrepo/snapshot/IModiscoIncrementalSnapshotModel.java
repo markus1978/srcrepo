@@ -2,6 +2,8 @@ package de.hub.srcrepo.snapshot;
 
 import java.util.Collection;
 
+import org.eclipse.gmt.modisco.java.CompilationUnit;
+
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef;
 
 public interface IModiscoIncrementalSnapshotModel extends IModiscoSnapshotModel {
@@ -24,7 +26,7 @@ public interface IModiscoIncrementalSnapshotModel extends IModiscoSnapshotModel 
 	public boolean rebuild();
 	
 	public void clear();
-	
+		
 	public JavaCompilationUnitRef getContributingRef(String path);
 	
 	/**
@@ -45,6 +47,11 @@ public interface IModiscoIncrementalSnapshotModel extends IModiscoSnapshotModel 
 	 * compilation units need to be implemented as remove/add pairs.
 	 */
 	public void removeCompilationUnitModel(String path, JavaCompilationUnitRef ref);
+	
+	public boolean isIncremental();
+	public Collection<String> addedRefs();
+	public Collection<String> removedRefs();
+	public CompilationUnit getCompilationUnit(String path);
 
 	/**
 	 * End the current snapshot update. Needs to be called after all CUs for the

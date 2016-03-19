@@ -10,14 +10,12 @@ import de.hub.jstattrack.services.Histogram
 import de.hub.jstattrack.services.Summary
 import de.hub.jstattrack.services.WindowedPlot
 import de.hub.srcrepo.MoDiscoRepositoryModelImportVisitor
-import de.hub.srcrepo.MoDiscoRevVisitor
 import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.RevVisitor
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.MongoDBMetaData
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
-import de.hub.srcrepo.snapshot.ModiscoIncrementalSnapshotImpl
 import java.util.List
 import java.util.concurrent.TimeUnit
 import org.apache.commons.cli.Option
@@ -85,10 +83,8 @@ class MetaDataCommand extends AbstractDataCommand {
 				1_dbSize : «(repo.dataStoreMetaData as MongoDBMetaData).storeSize»,
 				1_gitSize : «repo.metaData.size»,				
 				«traverseStatJSON.summaryDatumJSONStr(RepositoryModelTraversal.visitFullETStat, "2_revVisitTime")»,
-				«traverseStatJSON.summaryDatumJSONStr(ModiscoIncrementalSnapshotImpl.cusLoadETStat, "3_cusLoadTime")»,
-				«traverseStatJSON.summaryDatumJSONStr(MoDiscoRevVisitor.revVisitETStat, "4_revVisitTime")»,
-				«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.loadETStat, "5_fragLoadET")»,
-				«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.unloadETStat, "6_fragUnloadET")»,
+				«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.loadETStat, "3_fragLoadET")»,
+				«currentStatDataJSON.summaryDatumJSONStr(FStoreFragmentation.unloadETStat, "4_fragUnloadET")»,
 			}
 		''').toString
 		

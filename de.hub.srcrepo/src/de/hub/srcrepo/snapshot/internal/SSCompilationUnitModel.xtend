@@ -22,10 +22,16 @@ public class SSCompilationUnitModel {
 	var Map<NamedElement, String> ids = null
 	
 	val String rev
+	val String path
 
-	new(String rev, CompilationUnitModel originalCompilationUnitModel) {
+	new(String rev, String path, CompilationUnitModel originalCompilationUnitModel) {
 		this.rev = rev
+		this.path = path
 		this.originalCompilationUnitModel = originalCompilationUnitModel	
+	}
+	
+	public def getPath() {
+		return path
 	}
 	
 	public def getRev() {

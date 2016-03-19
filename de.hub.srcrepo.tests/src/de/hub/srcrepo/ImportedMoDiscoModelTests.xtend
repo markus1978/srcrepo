@@ -40,7 +40,7 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
 
 	def testJavaModels((Rev,Model)=>void testModel) {
     	val visitor = new MoDiscoRevVisitor(JavaPackage.eINSTANCE) {
-      		override def onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+      		override def onRev(Rev rev, Rev parent, String projectID, IModiscoSnapshotModel snapshot) {
 	    		testModel.apply(rev,snapshot.model)  
       		}
       		override def filter(Rev rev) {
@@ -53,6 +53,8 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
   	
   	@Test def void testCompilationUnits() {
     	testJavaModels[rev,javaModel |
+    		javaModel.compilationUnits.forEach[println(it.name)]
+    		
       		val typesInCUs = javaModel.getCompilationUnits().collectAll[types].size
       		val cus = javaModel.getCompilationUnits().size();
 
@@ -152,7 +154,7 @@ class ImportedMoDiscoModelTests extends AbstractSingleRepositoryModelTests {
 				}
 			}
 			
-			override protected onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
+			override protected onRev(Rev rev, Rev parent, String projectID, IModiscoSnapshotModel snapshot) {
 
 			}			
 		});				

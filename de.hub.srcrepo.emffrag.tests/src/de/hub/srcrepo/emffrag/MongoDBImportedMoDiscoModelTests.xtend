@@ -1,23 +1,17 @@
 package de.hub.srcrepo.emffrag
 
 import com.google.common.collect.Lists
-import de.hub.emfcompress.emffrag.meta.EmfCompressPackage
 import de.hub.emffrag.EmfFragActivator
 import de.hub.emffrag.Fragmentation
 import de.hub.emffrag.FragmentationImpl
 import de.hub.emffrag.datastore.DataStoreImpl
 import de.hub.emffrag.mongodb.MongoDBDataStore
-import de.hub.jstattrack.Statistics
 import de.hub.srcrepo.ImportedMoDiscoModelTests
-import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.SrcRepoActivator
-import de.hub.srcrepo.compress.CompressionMeasureVisitor
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.emffrag.metadata.RepositoryModelPackage
 import org.eclipse.gmt.modisco.java.emffrag.metadata.JavaPackage
 import org.junit.BeforeClass
-
-import static extension de.hub.jstattrack.StatisticsUtil.*
 
 class MongoDBImportedMoDiscoModelTests extends ImportedMoDiscoModelTests {
 	

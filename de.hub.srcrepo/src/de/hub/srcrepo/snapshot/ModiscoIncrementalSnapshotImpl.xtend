@@ -1,6 +1,8 @@
 package de.hub.srcrepo.snapshot
 
 import com.google.common.collect.ArrayListMultimap
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import com.google.common.collect.Multimap
 import de.hub.jstattrack.TimeStatistic
 import de.hub.jstattrack.services.BatchedPlot
@@ -12,6 +14,7 @@ import de.hub.srcrepo.repositorymodel.Rev
 import de.hub.srcrepo.snapshot.internal.SSCompilationUnitModel
 import de.hub.srcrepo.snapshot.internal.SSLink
 import java.util.Collection
+import java.util.HashMap
 import java.util.HashSet
 import java.util.List
 import java.util.Map
@@ -21,7 +24,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer
 import org.eclipse.gmt.modisco.java.ASTNode
 import org.eclipse.gmt.modisco.java.AbstractMethodDeclaration
 import org.eclipse.gmt.modisco.java.AnnotationTypeMemberDeclaration
@@ -40,21 +42,17 @@ import static de.hub.srcrepo.SrcRepoActivator.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
 import static extension de.hub.srcrepo.snapshot.internal.DebugAdapter.*
 import static extension de.hub.srcrepo.snapshot.internal.SnapshotUtils.*
-import java.util.HashMap
-import com.google.common.collect.BiMap
-import com.google.common.collect.HashBiMap
-import de.hub.jstattrack.ValueStatistic
-import de.hub.jstattrack.services.Histogram
 
 class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel {
-
-	public static val ValueStatistic snapshotSizeStat = new ValueStatistic().with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "SnapshotSize");
-	public static val ValueStatistic snapshotDeltaSizeStat = new ValueStatistic().with(Summary).with(BatchedPlot).with(Histogram).register(IModiscoSnapshotModel, "SnapshotDeltaSize");
+	
 	public static val TimeStatistic cusLoadETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "CUsLoadET");
 	public static val TimeStatistic removeCUsETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "removeCUsET");
+	public static val TimeStatistic removeCUsCompositeETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "removeCUsCompositeET");
+	public static val TimeStatistic removeCUsReferencesETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "removeCUsReferencesET");
 	public static val TimeStatistic addCUsETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "addCUsET");
 	public static val TimeStatistic resolveETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "resolveET");
 	public static val TimeStatistic computeSnapshotETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "ComputeSnapshotET");
+	public static val TimeStatistic rebuildETStat = new TimeStatistic(TimeUnit.MICROSECONDS).with(Summary).with(BatchedPlot).register(IModiscoSnapshotModel, "RebuildSnapshotET");
 	
 	private def loadCompilationUnitModel(JavaCompilationUnitRef fileRef) {
 		if (fileRef != null) {
@@ -70,6 +68,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 	val String projectID
 	val JavaPackage metaModel
 	val Model model
+	var incremental = true
 	
 	var SSCopier copier = null
 
@@ -84,8 +83,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 	val Map<String, JavaCompilationUnitRef> currentRefs = newHashMap
 	val List<SSCompilationUnitModel> newCompilationUnitModels = newArrayList
 	val List<SSCompilationUnitModel> oldCompilationUnitModels = newArrayList
-	
-	var modCount = 0
 
 	new(JavaPackage metaModel) {
 		this(metaModel, "<default>")
@@ -95,10 +92,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		this.projectID = projectID
 		this.metaModel = metaModel;
 		model = metaModel.javaFactory.createModel
-	}
-	
-	override getModCount() {
-		return modCount
 	}
 	
 	override getRev(CompilationUnit cu) {
@@ -130,7 +123,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		]
 		
 		val rev = ref?.eContainer?.eContainer?.eContainer as Rev
-		val extension ssCompilationUnitModel = new SSCompilationUnitModel(rev?.name, ref.loadCompilationUnitModel)
+		val extension ssCompilationUnitModel = new SSCompilationUnitModel(rev?.name, path, ref.loadCompilationUnitModel)
 		newCompilationUnitModels += ssCompilationUnitModel
 		currentCompilationUnitModels.put(ref, ssCompilationUnitModel)
 		currentRefs.put(path, ref)
@@ -143,18 +136,11 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		currentRefs.remove(path)
 	}
 	
-	override end() {
-		modCount++
-		
-//		if (oldCompilationUnitModels.size + newCompilationUnitModels.size > contributingRefs.size) {
-//			val Map<String, JavaCompilationUnitRef> currentRefs = new HashMap<String,JavaCompilationUnitRef>(currentRefs)
-//			clear
-//			currentRefs.entrySet.forEach[addCompilationUnitModel(it.key, it.value)]
-//		} 
-//		
+	override end() {		
 		if (!oldCompilationUnitModels.empty || !newCompilationUnitModels.empty) {			
 			computeSnapshot
 		}
+		incremental = true
 		return true
 	}
 
@@ -162,9 +148,7 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		return model
 	}
 
-	private def computeSnapshot() {		
-		snapshotSizeStat.track(currentRefs.size)
-		snapshotDeltaSizeStat.track(newCompilationUnitModels.size + oldCompilationUnitModels.size)
+	private def computeSnapshot() {
 		val computeSnapshotTimer = computeSnapshotETStat.timer
 		copier = new SSCopier(metaModel)
 		debug[
@@ -192,13 +176,17 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		val toDelete = new HashSet<EObject>
 		
 		// 1.1 remove the containment hierarchy
+		val removeCompositeTimer = removeCUsCompositeETStat.timer
 		for(it:oldCompilationUnitModels) {
 			debug['''  #remove: «it»''']
 			removeContents(model, it.getOriginalCompilationUnitModel.javaModel, it.ids, toDelete)
 			currentCompilationUnitCopies.remove(getCopyCompilationUnit)
 			model.compilationUnits.remove(getCopyCompilationUnit)
 		}
+		removeCompositeTimer.track
+		val removeReferencesTimer = removeCUsReferencesETStat.timer
 		deleteCrossReferences(toDelete, model)
+		removeReferencesTimer.track
 		
 		for(it:oldCompilationUnitModels) {
 			// 1.2. revert all links the exit the CU
@@ -310,7 +298,6 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 	}
 	
 	override clear() {
-		modCount++	
 		debug["# clear ###################################"]
 		EcoreUtil.delete(model, true)
 		
@@ -322,11 +309,15 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 	}
 	
 	override rebuild() {
+		val timer = rebuildETStat.timer
 		val Map<String, JavaCompilationUnitRef> currentRefs = new HashMap<String,JavaCompilationUnitRef>(currentRefs)
 		clear
 		start
 		currentRefs.entrySet.forEach[addCompilationUnitModel(it.key, it.value)]
-		end		
+		val result = end		
+		timer.track
+		incremental = false
+		result
 	}
 
 	private def void forEachChild(EObject object, (EReference,EObject)=>void action) {
@@ -589,17 +580,30 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 		EcoreUtil.remove(eObject)
 	}
 	
-	private def deleteCrossReferences(Collection<EObject> eObjects, EObject rootEObject) {		
-		val usages = UsageCrossReferencer.findAll(eObjects, rootEObject)
-		for (entry:usages.entrySet) {
-			val deletedEObject = entry.getKey()
-			val settings = entry.getValue()
-			for (setting:settings) {
-				if (setting.getEStructuralFeature().isChangeable()) {
-					EcoreUtil.remove(setting, deletedEObject)
+	private def deleteCrossReferences(Collection<EObject> eObjects, EObject rootEObject) {	
+		
+		// This implementation is very expensive, linear to the size of the WHOLE snapshot!
+		// Is this UsageCrossReferencer based implementation necessary? MoDisco keeps opposites
+		// for all references (does it not?)	
+//		val usages = UsageCrossReferencer.findAll(eObjects, rootEObject)
+//		for (entry:usages.entrySet) {
+//			val deletedEObject = entry.getKey()
+//			val settings = entry.getValue()
+//			for (setting:settings) {
+//				if (setting.getEStructuralFeature().isChangeable()) {
+//					EcoreUtil.remove(setting, deletedEObject)
+//				}
+//			}
+//		}
+
+		for(eObject:eObjects) {
+			for(reference:eObject.eClass.EAllReferences) {
+				if (!reference.containment && reference.changeable && (reference.EOpposite == null || !reference.EOpposite.containment)) {
+					eObject.eUnset(reference)	
 				}
 			}
-		}
+			EcoreUtil.remove(eObject)
+		}		
 	}
 	
 	private def isUsed(NamedElement it) {
@@ -615,4 +619,21 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 				throw new RuntimeException("unreachable " + it.eClass)
 		})
 	}
+	
+	override addedRefs() {
+		newCompilationUnitModels.map[path]
+	}
+	
+	override getCompilationUnit(String path) {
+		currentCompilationUnitModels.get(getContributingRef(path))?.copyCompilationUnit
+	}
+	
+	override isIncremental() {
+		return incremental
+	}
+	
+	override removedRefs() {
+		oldCompilationUnitModels.map[path]
+	}
+	
 }

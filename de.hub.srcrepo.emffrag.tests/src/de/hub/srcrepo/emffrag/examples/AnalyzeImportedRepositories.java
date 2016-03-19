@@ -21,18 +21,18 @@ public class AnalyzeImportedRepositories {
 	public static void main(String[] args) {
 		EmfFragActivator.standalone(EcorePackage.eINSTANCE, RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE);
 		SrcRepoActivator.standalone();
-		
+
 		URI repositoryURI = URI.createURI("mongodb://jupiter.informatik.hu-berlin.de/org.eclipse.emf.java.bin");
 		ResourceSet rs = new ResourceSetImpl();
 		Resource resource = rs.getResource(repositoryURI, true);
 		RepositoryModel repositoryModel = (RepositoryModel)resource.getContents().get(0);
-		
+
 		RepositoryModelTraversal.traverse(repositoryModel, new MoDiscoRevVisitor(org.eclipse.gmt.modisco.java.emf.JavaPackage.eINSTANCE) {
-				int i = 0;
-				@Override
-				protected void onRev(Rev rev, String projectID, IModiscoSnapshotModel snapshot) {
-					System.out.println("#" + i++);
-				}		      		    
+			int i = 0;
+			@Override
+			protected void onRev(Rev rev, Rev parent, String projectID, IModiscoSnapshotModel snapshot) {
+				System.out.println("#" + i++);
+			}
 		});
 	}
 }
