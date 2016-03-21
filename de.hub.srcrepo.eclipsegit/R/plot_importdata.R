@@ -1,5 +1,5 @@
-setwd("/Users/markus/Documents/Projects/srcrepo-mars/07-jupiter/08-data")
-import_data <- read.csv(file="importdata-new-clean.csv", head=TRUE, sep=",")
+setwd("/Users/markus/Documents/Projects/srcrepo-mars/07-jupiter/08-data/old")
+import_data <- read.csv(file="importdata-first-clean.csv", head=TRUE, sep=",")
 
 import_data <- import_data[with(import_data, order(-X2_dbSize)),]
 import_data <- head(import_data, 10)

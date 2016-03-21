@@ -1,7 +1,9 @@
 package de.hub.srcrepo.compress
 
 import de.hub.emfcompress.Comparer
+import de.hub.emfcompress.ComparerConfiguration
 import de.hub.emfcompress.EmfCompressPackage
+import de.hub.emfcompress.ObjectDelta
 import de.hub.emfcompress.Patcher
 import de.hub.jstattrack.AbstractStatistic
 import de.hub.jstattrack.TimeStatistic
@@ -16,13 +18,11 @@ import de.hub.srcrepo.repositorymodel.Diff
 import de.hub.srcrepo.repositorymodel.JavaCompilationUnitRef
 import de.hub.srcrepo.repositorymodel.RepositoryModelPackage
 import de.hub.srcrepo.repositorymodel.Rev
-import java.io.File
 import java.util.Arrays
 import java.util.Comparator
 import java.util.List
 import java.util.Map
 import java.util.concurrent.TimeUnit
-import org.apache.commons.io.FileUtils
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
@@ -33,24 +33,52 @@ import org.eclipse.gmt.modisco.java.Package
 import org.eclipse.gmt.modisco.java.TypeAccess
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
-import static de.hub.srcrepo.compress.CompressionMeasureVisitor.*
-
-import static extension de.hub.srcrepo.EMFPrettyPrint.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 
 class CompressionMeasureVisitor extends AbstractRevVisitor {
 	
-	public static val TimeStatistic compressETStat = new TimeStatistic(TimeUnit.NANOSECONDS).with(Summary).register(CompressionMeasureVisitor, "CompressET")
-	public static val TimeStatistic patchETState = new TimeStatistic(TimeUnit.NANOSECONDS).with(Summary).register(CompressionMeasureVisitor, "PatchET")
-	
 	public static List<Pair<AbstractStatistic, String>> statNames = newArrayList
+	
+	private static val List<Pair<String, (JavaPackage,RepositoryModelPackage, (TypeAccess,Boolean)=>String)=>ComparerConfiguration>> configurations = #[
+		"NamedElement" -> [j,r,id| new SrcRepoComparerConfiguration(j,r) {			
+			override protected id(TypeAccess typeAccess, boolean original) {
+				return id.apply(typeAccess, original)
+			}			
+		}],
+		"MetaClass" -> [j,r,id| new SrcRepoComparerConfigurationFullMetaClass(j,r) {			
+			override protected id(TypeAccess typeAccess, boolean original) {
+				return id.apply(typeAccess, original)
+			}			
+		}],
+		"Heuristics" -> [j,r,id| new SrcRepoComparerConfigurationFullHeuristics(j,r) {			
+			override protected id(TypeAccess typeAccess, boolean original) {
+				return id.apply(typeAccess, original)
+			}			
+		}]	
+	]
+	
+	public static val compressETStat = configurationBasedTS("CompressET")
+	public static val patchETState = configurationBasedTS("PatchET")
+	
 	private static def vs(String name) {
-		if (statNames.empty) {
-			statNames += (compressETStat as AbstractStatistic) -> "CompressET"
-			statNames += (patchETState as AbstractStatistic) -> "PatchET"
-		}
 		val result = new ValueStatistic().with(Summary).register(CompressionMeasureVisitor, name) as ValueStatistic
 		statNames += (result as AbstractStatistic) -> name
+		return result
+	}
+	private static def Map<String,ValueStatistic> configurationBasedVS(String name) {
+		configurationBasedStat(name)[new ValueStatistic().with(Summary).register(CompressionMeasureVisitor, it)]
+	}
+	private static def Map<String,TimeStatistic> configurationBasedTS(String name) {
+		configurationBasedStat(name)[new TimeStatistic(TimeUnit.NANOSECONDS).with(Summary).register(CompressionMeasureVisitor, it)]
+	}
+	private static def <T> Map<String,T> configurationBasedStat(String name, (String)=>AbstractStatistic factory) {
+		val result = newHashMap
+		for(configuration:configurations) {
+			val fullName = name + configuration.key.toFirstUpper
+			val stat =  (factory.apply(fullName)) as T
+			result.put(configuration.key, stat)
+			statNames += (stat as AbstractStatistic) -> fullName
+		}
 		return result
 	}
 	
@@ -59,12 +87,18 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 	public static val fullSize = vs("FullSize")
 	
 	public static val matchedLines = vs("MatchedLineCount")
-	public static val matchedObjects = vs("MatchedObjectsCount")
+	public static val matchedObjects = configurationBasedVS("MatchedObjectsCount")
 	public static val addedLines = vs("AddedLines")
-	public static val deltaSize = vs("DeltaSize")
+	public static val removedLines = vs("RemovedLines")
+	public static val deltaSize = configurationBasedVS("DeltaSize")
+	public static val deltaObjects = configurationBasedVS("DeltaObjectCount")
+	public static val failedCompares = configurationBasedVS("FailedCompared")
+	public static val failedPatches = configurationBasedVS("FailedPatches")
 	
+	public static val compressedRevisions = vs("CompressedRevisions")
 	public static val uncompressedLines = vs("UCLineCount")
 	public static val uncompressedSize = vs("UCSize")
+	public static val uncompressedObjects = vs("UCObjectCount")
 	
 	val extension Copier copier = new Copier(#[RepositoryModelPackage.eINSTANCE, JavaPackage.eINSTANCE, EmfCompressPackage.eINSTANCE])
 	
@@ -116,60 +150,76 @@ class CompressionMeasureVisitor extends AbstractRevVisitor {
 				val parentCURef = parentRefs.get(newCURef)
 				if (parentCURef != null && parentCURef.compilationUnitModel != null) {
 					val parentCULines = parentCURef.getData("LOC-metrics").data.get("lines").toInt
-					
-					val original = parentCURef.compilationUnitModel.copyWithReferences.normalize
-					val revised = newCURef.compilationUnitModel.copyWithReferences.normalize
-					val comparer = new Comparer(new SrcRepoComparerConfiguration(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) {						
-						override protected id(TypeAccess typeAccess, boolean forOriginal) {
-							val model = if (forOriginal) original else revised
-							val type = typeAccess.type
-							return if (type == null) {
-								model.unresolvedLinks.findFirst[source==typeAccess]?.id
-							} else {
-								model.targets.findFirst[target == type]?.id
-							}
-						}    			
-		    		})		
-					try {					
-						val compressTimer = compressETStat.timer
-									
-						val delta = comparer.compare(original, revised)
-						compressTimer.track
-	
-						deltaSize.track(delta.size)					
-																
-						compressedFiles += 1
-					
-						try {
-							val patchTimer = patchETState.timer
-							val patcher = new Patcher
-							patcher.patch(original, delta)
-							patchTimer.track										
-						} catch (Exception e) {
-							SrcRepoActivator.INSTANCE.error('''Exception on patching «rev.name»/«newCURef.path»''', e)
-							FileUtils.write(new File("testdata/original.txt"), '''ORIG\n«original.prettyPrint»''')
-							FileUtils.write(new File("testdata/revised.txt"), '''REVISED\n«revised.prettyPrint»''')
-							FileUtils.write(new File("testdata/delta.txt"), '''REVISED\n«delta.prettyPrint»''')
-							SrcRepoActivator.INSTANCE.error('''Exception on comparing «rev.name»/«newCURef.path»''', e)
-						} finally {
-							delta?.delete
-							
-						}
-					} catch (Exception e) {
-						FileUtils.write(new File("testdata/original.txt"), '''ORIG\n«original.prettyPrint»''')
-						FileUtils.write(new File("testdata/revised.txt"), '''REVISED\n«revised.prettyPrint»''')
-						SrcRepoActivator.INSTANCE.error('''Exception on comparing «rev.name»/«newCURef.path»''', e)
-					} finally {
-						original?.delete
-						revised?.delete
-					}	
-						
-					matchedObjects.track(comparer.size)
 					matchedLines.track(parentCULines - (parentCURef.eContainer as Diff).linesRemoved)
-					addedLines.track((parentCURef.eContainer as Diff).linesAdded)			
+					addedLines.track((parentCURef.eContainer as Diff).linesAdded)
+					removedLines.track((parentCURef.eContainer as Diff).linesRemoved)	
+					
+					for (configuration: configurations) {	
+						try {				
+							val original = parentCURef.compilationUnitModel.copyWithReferences.normalize
+							val revised = newCURef.compilationUnitModel.copyWithReferences.normalize
+							val comparerConfiguration = configuration.value.apply(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) [typeAccess,forOriginal|
+								val model = if (forOriginal) original else revised
+								val type = typeAccess.type
+								return if (type == null) {
+									model.unresolvedLinks.findFirst[source==typeAccess]?.id
+								} else {
+									model.targets.findFirst[target == type]?.id
+								}
+							]
+							val comparer = new Comparer(comparerConfiguration)
+							val compressTimer = compressETStat.get(configuration.key).timer
+							var ObjectDelta delta = null
+							try {															
+								delta = comparer.compare(original, revised)
+								compressTimer.track
+							} catch (Exception e) {
+								SrcRepoActivator.INSTANCE.error('''Exception on comparing («configuration.key») «rev.name»/«newCURef.path»''', e)
+							} finally {
+								compressTimer.track
+							}
+							
+							if (delta != null) {
+								matchedObjects.get(configuration.key).track(comparer.size)				
+								
+								count = 0
+								deltaSize.get(configuration.key).track(delta.size)
+								deltaObjects.get(configuration.key).track(count)					
+																		
+								compressedFiles += 1
+							
+								val patchTimer = patchETState.get(configuration.key).timer
+								try {
+									val patcher = new Patcher
+									patcher.patch(original, delta)	
+									failedPatches.get(configuration.key).track(0)															
+								} catch (Exception e) {
+									SrcRepoActivator.INSTANCE.error('''Exception on patching («configuration.key») «rev.name»/«newCURef.path»''', e)
+									failedPatches.get(configuration.key).track(1)							
+								} 
+								patchTimer.track
+								failedCompares.get(configuration.key).track(0)
+								compressedRevisions.track(1)
+							} else {
+								failedCompares.get(configuration.key).track(1)
+								compressedRevisions.track(0)
+								uncompressedLines.track(newCULines)
+								uncompressedSize.track(newCUSize)
+								uncompressedObjects.track(newCUCount)
+							} 
+							
+							delta?.delete
+							original?.delete
+							revised?.delete						
+						} catch (Exception e) {
+							SrcRepoActivator.INSTANCE.error('''Exception on measuring «configuration.key» for «rev.name»/«newCURef.path»''', e)
+						}																	
+					}		
 				} else {
+					compressedRevisions.track(0)
 					uncompressedLines.track(newCULines)
-					uncompressedSize.track(newCUSize)				
+					uncompressedSize.track(newCUSize)
+					uncompressedObjects.track(newCUCount)				
 				}				
 			}
 		}
