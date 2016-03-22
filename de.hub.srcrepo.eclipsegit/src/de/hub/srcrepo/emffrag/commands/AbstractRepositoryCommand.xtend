@@ -50,6 +50,16 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 				].map[model| subdirectory->model]
 			].toList
 			
+		if (cl.hasOption("largest")) {
+			repositories.sort[one,two|
+				two.value.metaData.size.compareTo(one.value.metaData.size)
+			]
+			val count = Integer.parseInt(cl.getOptionValue("largest"))
+			while(repositories.size > count) {
+				repositories.remove(repositories.size - 1)	
+			}
+		}
+		
 		repositories.forEach[entry|
 			val imd = entry.value.importMetaData
 			val goodStatus = (imd.imported || !cl.hasOption("i")) &&
@@ -67,6 +77,7 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 		options.addOption(Option.builder("d").longOpt("directories").desc("Matches repositories.").hasArg.build)
 		options.addOption(Option.builder("i").longOpt("imported").desc("Matches imported only.").build)
 		options.addOption(Option.builder("s").longOpt("scheduled").desc("Matches scheduled for import only.").build)
-		options.addOption(Option.builder("x").longOpt("listed-only").desc("Matches listed only repositories only.").build)				
+		options.addOption(Option.builder("x").longOpt("listed-only").desc("Matches listed only repositories only.").build)
+		options.addOption(Option.builder().longOpt("largest").desc("Schedules the largest X repos that are not already installed or scheduled.").hasArg.build)				
 	}
 }
