@@ -1,5 +1,5 @@
 setwd("/Users/markus/Documents/Projects/srcrepo-mars/07-jupiter/08-data")
-experiment_id = "16-03-19-testdrive-2"
+experiment_id = "16-03-21-testdrive-2-compress"
 data_file <- paste(c(experiment_id, "/data/compress.csv"), collapse="")
 import_data <- read.csv(file=data_file, head=TRUE, sep=",",comment.char="#")
 
@@ -27,6 +27,7 @@ plotCompressData = function(name, unit, full, uc, delta) {
 
 G=1/1000000000
 M=1/1000000
+plotCompressData("Size", "GB", import_data$FullSizeSum*G, import_data$UCSizeSum*G, import_data$DeltaSizeMetaClassSum*G)
 plotCompressData("Size", "GB", import_data$FullSizeSum*G, import_data$UCSizeSum*G, import_data$DeltaSizeHeuristicsSum*G)
 plotCompressData("Size", "GB", import_data$FullSizeSum*G, import_data$UCSizeSum*G, import_data$DeltaSizeNamedElementSum*G)
 plotCompressData("Lines", "MLOC", import_data$FullLineCountSum*M, import_data$UCLineCountSum*M, import_data$AddedLinesSum*M)

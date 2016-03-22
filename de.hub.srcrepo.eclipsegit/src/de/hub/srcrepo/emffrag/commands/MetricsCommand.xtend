@@ -28,8 +28,11 @@ import org.json.JSONObject
 import static extension de.hub.jstattrack.StatisticsUtil.*
 import static extension de.hub.srcrepo.RepositoryModelUtil.*
 import static extension de.hub.srcrepo.metrics.ModiscoMetrics.*
+import de.hub.srcrepo.SrcRepoActivator
 
 class MetricsCommand extends AbstractDataCommand {
+	
+	static var errors = 0
 		
 	private static class DoubleMap<E> {
 		val Map<E,Double> values = newHashMap()
@@ -54,7 +57,14 @@ class MetricsCommand extends AbstractDataCommand {
 			cachedValues.clear
 		}
 		def double calc(IModiscoIncrementalSnapshotModel snapshot, String path) {
-			calc(snapshot.getCompilationUnit(path))
+			val cu = snapshot.getCompilationUnit(path)
+			if (cu != null && !cu.types.empty) {
+				calc(cu)				
+			} else {
+				SrcRepoActivator.INSTANCE.warning("Tried to visit non existing or empty CU at path " + path)
+				errors++
+				0.0
+			}
 		}
 		def double calc(CompilationUnit cu) {
 			throw new RuntimeException("Needs to be overriden.")
@@ -162,11 +172,19 @@ class MetricsCommand extends AbstractDataCommand {
 		visitor.addMetric(new Metric("loc") {			
 			override calc(IModiscoIncrementalSnapshotModel snapshot, String path) {
 				val ref = snapshot.getContributingRef(path)
-				val data = ref.getData(MoDiscoRepositoryModelImportVisitor.locMetricsDataSet).data.get("ncss") as Integer
-				if (data == null) {
-					0.0
+				if (ref != null) {
+					val data = ref.getData(MoDiscoRepositoryModelImportVisitor.locMetricsDataSet).data.get("ncss") as Integer
+					if (data == null) {
+						SrcRepoActivator.INSTANCE.warning("CU ref without LOC data for path " + path)
+						errors++
+						0.0
+					} else {
+						data as double
+					}				
 				} else {
-					data as double
+					SrcRepoActivator.INSTANCE.warning("Unexpected missing  CU ref for path " + path)
+					errors++
+					0.0
 				}
 			}			
 		})
@@ -174,7 +192,7 @@ class MetricsCommand extends AbstractDataCommand {
 		repo.traverse(visitor)	
 		
 		// statistics data
-		val data = Statistics.reportToJSON.toSummaryData(repo.name, #[
+		val dataObject = Statistics.reportToJSON.toSummaryData(repo.name, #[
 			RepositoryModelTraversal.visitFullETStat -> "FullVisitET",
 			FStoreFragmentation.loadETStat -> "FragLoadET",
 			FStoreFragmentation.unloadETStat -> "FragUnloadET",
@@ -191,7 +209,9 @@ class MetricsCommand extends AbstractDataCommand {
 			ModiscoIncrementalSnapshotImpl.removeCUsReferencesETStat -> "RemoveCUsReferenceET",
 			ModiscoIncrementalSnapshotImpl.resolveETStat -> "ResolveReferenceET",
 			ModiscoIncrementalSnapshotImpl.cusLoadETStat -> "LoadCUModelET"
-		], cl.hasOption("h")).toArray
+		], cl.hasOption("h"))
+		dataObject.put("errors", errors)
+		val data = dataObject.toArray
 		
 		if (cl.hasOption("h")) {
 			out.println(data.toHumanReadable)
