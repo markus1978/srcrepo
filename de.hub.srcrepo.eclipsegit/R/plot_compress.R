@@ -18,6 +18,31 @@ shorten = function(name) {
   } 
 }
 
+plotET = function(bar_title, unit, one, two) {
+  bar_data <- cbind(rbind(one,0), rbind(0, two))
+  bar_data <- bar_data[,rebind_5]
+  bar_names <- sub("", "", import_data$name)
+  bar_names <- lapply(bar_names, shorten)
+  bar_lengend <- c("Named", "MetaClass")
+  barplot(
+    bar_data,
+    names = rbind(bar_names, vector(mode="character",length=length(bar_names))),
+    main=bar_title,
+    ylab=unit,las=2,
+    legend = bar_lengend,
+    col = rainbow(2, s = 0.65),
+    args.legend = list(x = "topright", cex = 1),
+    space=c(.75,0)
+  )
+}
+
+hour= 1/3600000000000
+m = 1/60000000000
+attach(mtcars)
+layout(matrix(c(1,2), 1, 2, byrow = TRUE))
+plotET("Compare Execution Time", "hours", import_data$CompressETNamedElementSum*hour, import_data$CompressETMetaClassSum*hour)
+plotET("Patch Execution Time", "minutes", import_data$PatchETNamedElementSum*m, import_data$PatchETMetaClassSum*m)
+
 plotCompressData = function(bar_title, unit, full, uc, delta) {
   bar_data <- cbind(rbind(full, 0, 0), rbind(0, uc, delta))
   bar_data <- bar_data[,rebind_5]
@@ -40,11 +65,11 @@ G=1/1000000000
 M=1/1000000
 attach(mtcars)
 layout(matrix(c(1,2,3,4,5,6), 2, 3, byrow = TRUE))
-plotCompressData("Size - NamedElement-only Matcher", "GB", import_data$FullSizeSum*G, import_data$UCSizeSum*G, import_data$DeltaSizeNamedElementSum*G)
+plotCompressData("Size - Named-only Matcher", "GB", import_data$FullSizeSum*G, import_data$UCSizeSum*G, import_data$DeltaSizeNamedElementSum*G)
 plotCompressData("Size - Meta Class Matcher", "GB", import_data$FullSizeSum*G, import_data$UCSizeSum*G, import_data$DeltaSizeMetaClassSum*G)
 plotCompressData("Lines", "MLines", import_data$FullLineCountSum*M, import_data$UCLineCountSum*M, (import_data$AddedLinesSum+import_data$RemovedLinesSum)*M)
 
-plotCompressData("All vs Matched - NamedElement-only Matcher", "MObjects", import_data$FullObjectCountSum*M, import_data$UCObjectCountSum*M, import_data$MatchedObjectsCountNamedElementSum*M)
+plotCompressData("All vs Matched - Named-only Matcher", "MObjects", import_data$FullObjectCountSum*M, import_data$UCObjectCountSum*M, import_data$MatchedObjectsCountNamedElementSum*M)
 plotCompressData("All vs Matched - Meta Class Matcher", "MObjects", import_data$FullObjectCountSum*M, import_data$UCObjectCountSum*M, import_data$MatchedObjectsCountMetaClassSum*M)
 plotCompressData("All vs Matched Lines", "MLines", import_data$FullLineCountSum*M, import_data$UCLineCountSum*M, import_data$MatchedLineCountSum*M)
 

@@ -20,6 +20,7 @@ import de.hub.srcrepo.repositorymodel.RepositoryModelPackage
 import de.hub.srcrepo.repositorymodel.UnresolvedLink
 import de.hub.emfcompress.EmfCompressFactory
 import org.eclipse.gmt.modisco.java.emf.JavaPackage
+import de.hub.srcrepo.compress.SrcRepoComparerConfigurationFullMetaClass
 
 class EmfCompressTests extends AbstractSingleRepositoryModelTests { 
     
@@ -42,7 +43,7 @@ class EmfCompressTests extends AbstractSingleRepositoryModelTests {
     	for(i:1..<helloWorldCURefs.size) {    		
     		val revised = helloWorldCURefs.get(i).compilationUnitModel
 			if (revised != null) {
-	    		val delta = new Comparer(new SrcRepoComparerConfiguration(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) {						
+	    		val delta = new Comparer(new SrcRepoComparerConfigurationFullMetaClass(JavaPackage.eINSTANCE, RepositoryModelPackage.eINSTANCE) {						
 					override protected id(TypeAccess typeAccess, boolean forOriginal) {
 						val model = if (forOriginal) original else revised
 						val type = typeAccess.type
