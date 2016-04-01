@@ -256,8 +256,11 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 					val originalCompilationUnit = resolvedTarget.originalCompilationUnit
 					if (originalCompilationUnit != null) {
 						val cum = currentCompilationUnitCopies.get(originalCompilationUnit)
-						condition[cum != null]
-						cum.incomingLinks += it						
+						if (cum != null) {
+							cum.incomingLinks += it
+						} else {
+							condition("This is not supposed to happen.")[false]
+						}
 					} // not all elements (e.g. packages) have a reference to a compilation unit
 					  // TODO what about merged elmenets?
 				}
@@ -389,19 +392,39 @@ class ModiscoIncrementalSnapshotImpl implements IModiscoIncrementalSnapshotModel
 						if (existingCopyChild.eClass != copier.getTarget(originalNamedElementChild.eClass)) {
 							// the new child original has a different type, how can this happen, if the old type was removed?
 							SrcRepoActivator.INSTANCE.warning('''Detected target with switching metatype, should not happen: «originalNamedElementChild.name» («originalNamedElementChild.eClass.name»->«existingCopyChild.eClass.name»).''')
+							// delete existing copy child
+							EcoreUtil.delete(existingCopyChild, true)
+							// add new one
+							val newCopyChild = copier.shallowCopy(originalChild) as NamedElement
+							(copy.eGet(copyFeature) as List<EObject>).add(newCopyChild)								
+							mergeContents(newCopyChild, originalChild, originalTargets, true)
+							newCopyChild
 						} else {
 							// push attributes and other content from new internal target onto existing external target
 							debug["    #merge(new attribute values) " + existingCopyChild.name]
 							copier.merge(existingCopyChild, originalNamedElementChild)																		
 							mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, true)
+							existingCopyChild
 						}
 					} else {
 						// use the existing target						
 						debug["    #merge " + existingCopyChild.name]
-						copier.put(originalNamedElementChild, existingCopyChild)
-						mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, false)
+						if (existingCopyChild.eClass.name != originalNamedElementChild.eClass.name) {
+							// the new child original has a different type, how can this happen, if the old type was removed?
+							SrcRepoActivator.INSTANCE.warning('''Detected target with switching metatype, should not happen: «originalNamedElementChild.name» («originalNamedElementChild.eClass.name»->«existingCopyChild.eClass.name»).''')
+							// delete existing copy child
+							EcoreUtil.delete(existingCopyChild, true)
+							// add new one
+							val newCopyChild = copier.shallowCopy(originalChild) as NamedElement
+							(copy.eGet(copyFeature) as List<EObject>).add(newCopyChild)								
+							mergeContents(newCopyChild, originalChild, originalTargets, true)
+							newCopyChild	
+						} else {
+							copier.put(originalNamedElementChild, existingCopyChild)
+							mergeContents(existingCopyChild, originalNamedElementChild, originalTargets, false)
+							existingCopyChild							
+						}
 					}
-					existingCopyChild
 				} else {
 					// copy of the child does not already exist
 					debug["    #new " + originalNamedElementChild.name + "(" + originalNamedElementChild.eClass.name + ")"]		

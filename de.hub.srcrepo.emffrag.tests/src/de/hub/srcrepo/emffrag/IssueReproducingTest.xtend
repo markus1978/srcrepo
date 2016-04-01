@@ -18,7 +18,8 @@ import org.junit.Test
 class IssueReproducingTest {
 	private var i = 0
 	
-	private val revision = "e851c9031fc69c8db557d8b6979ffcfff8f0c444"	
+	private val revision = "136dfb9d17f0245c22df6200
+ 50cfda0d9fd2b35bb"	
 //	private val cuName = "ImportRootsAction"
 	private val testModelURI = URI.createURI("mongodb://localhost/EclipseAtGitHub.cdo")
 

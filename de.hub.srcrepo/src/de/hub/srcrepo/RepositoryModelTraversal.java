@@ -107,7 +107,7 @@ public class RepositoryModelTraversal {
 				count++;
 				
 				// print performance data	
-				if (count % 50 == 0 && count != 0) {
+				if (count % 1000 == 0 && count != 0) {
 					// run gc, after that measure memory
 					for (int i = 0; i < 2; i++) {
 						Object obj = new Object();

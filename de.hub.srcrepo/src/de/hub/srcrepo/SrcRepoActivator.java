@@ -115,6 +115,10 @@ public class SrcRepoActivator extends Plugin {
 			if (logInStandAlone) {
 				if (e != null) {
 					String trace = ExceptionUtils.getStackTrace(e);
+					if (trace.trim().equals("NullPointerException")) {
+						System.out.println("####"); 
+						// TODO debug
+					}
 					logOutSupplier.get().println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "") + "\n" + trace);
 				} else {
 					logOutSupplier.get().println(new Date(System.currentTimeMillis()).toString() + " LOG(" + level + "): " + (msg != null ? msg : "(null)"));
