@@ -54,10 +54,26 @@ abstract class AbstractRepositoryCommand extends AbstractSrcRepoCommand {
 			repositories.sort[one,two|
 				two.value.metaData.size.compareTo(one.value.metaData.size)
 			]
-			val count = Integer.parseInt(cl.getOptionValue("largest"))
-			while(repositories.size > count) {
-				repositories.remove(repositories.size - 1)	
+			val largestOption = cl.getOptionValue("largest")
+			val largestOptionSplit = largestOption.split("-")
+			if (largestOptionSplit.length == 1) {
+				val count = Integer.parseInt(largestOptionSplit.get(0))
+				while(repositories.size > count) {
+					repositories.remove(repositories.size - 1)	
+				}	
+			} else if (largestOptionSplit.length == 2) {
+				val start = Integer.parseInt(largestOptionSplit.get(0))
+				val end = Integer.parseInt(largestOptionSplit.get(1))
+				for (i:0..<start) {
+					repositories.remove(0)
+				}
+				while (repositories.size > (end - start)) {
+					repositories.remove(repositories.size - 1)
+				}
+			} else {
+				throw new RuntimeException("Wrong --largest arg.")
 			}
+			
 		}
 		
 		repositories.forEach[entry|
