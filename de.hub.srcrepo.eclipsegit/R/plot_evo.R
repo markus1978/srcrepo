@@ -32,11 +32,11 @@ x = x[seq(0,length(x), 20)]
 hal = hal[seq(0,length(hal), 20)]
 
 setwd("/Users/markus/Documents/Forschung/Paper/papers/Models2016/sources/figures/")
-pdf("evo_example.pdf", width=5.5, height=5.5)
+pdf("evo_example.pdf", width=5.5, height=4)
 heading = paste("type=",opts[i]) 
 plot(x, hal, type="n",xlab="time (years)", 
      ylab=expression(WMC~with~Halstead~length~(x~10^{6})), 
-     main="WMC weighted with Halstead length (CDT)."
+    # main="WMC weighted with Halstead length (CDT)."
 ) 
 lines(x, hal, type=opts[i], cex=0.5)
 dev.off()
