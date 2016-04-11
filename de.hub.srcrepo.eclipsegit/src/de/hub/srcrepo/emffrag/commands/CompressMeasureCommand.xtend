@@ -6,8 +6,13 @@ import de.hub.srcrepo.RepositoryModelTraversal
 import de.hub.srcrepo.compress.CompressionMeasureVisitor
 import de.hub.srcrepo.repositorymodel.RepositoryModel
 import de.hub.srcrepo.repositorymodel.RepositoryModelDirectory
+import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
 
 import static extension de.hub.jstattrack.StatisticsUtil.*
+import de.hub.srcrepo.compress.EmfComparenMeasureVisitor
+import org.json.JSONArray
+import org.json.JSONObject
 
 class CompressMeasureCommand extends AbstractDataCommand {
 	
@@ -16,9 +21,20 @@ class CompressMeasureCommand extends AbstractDataCommand {
 		visitor.close(repo)
 	}
 	
-	override protected run(RepositoryModelDirectory directory, RepositoryModel repo) {
-		repo.traverse(new CompressionMeasureVisitor)
+	override protected addOptions(Options options) {
+		super.addOptions(options)
+		options.addOption(Option.builder().longOpt("emf").desc("Use EMF compare instead our own.").build)
+	}
 	
+	override protected run(RepositoryModelDirectory directory, RepositoryModel repo) {
+		val visitor = if (cl.hasOption("emf")) {
+			new EmfComparenMeasureVisitor
+		} else {
+			new CompressionMeasureVisitor
+		}
+		
+		repo.traverse(visitor)
+				
 		val data = Statistics.reportToJSON.toSummaryData(repo.name, CompressionMeasureVisitor.statNames, cl.hasOption("h")).toArray
 			
 		if (cl.hasOption("h")) {
@@ -27,5 +43,31 @@ class CompressMeasureCommand extends AbstractDataCommand {
 			printHeader(data.toCSVHeader)
 			out.println(data.toCSV(false))
 		}
+		
+		
+		val timePerCountData = new JSONArray()
+		switch(visitor) {
+			EmfComparenMeasureVisitor: {
+				for(datum:visitor.timePerCount) {
+					val object = new JSONObject
+					object.put("count", datum.key)
+					object.put("time", datum.value)
+					timePerCountData.put(object)
+				}		
+			}
+			CompressionMeasureVisitor: {
+				for(pair:visitor.timePerCount.entrySet) {
+					for(datum:pair.value) {
+						val object = new JSONObject
+						object.put("count", datum.key)
+						object.put("time", datum.value)
+						object.put("algorithm", pair.key)
+						timePerCountData.put(object)
+					}					
+				}
+			}
+		}
+		
+		auxOut('''«repo.name»-data''').println(timePerCountData.toCSV)		
 	}
 }
