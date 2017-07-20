@@ -32,6 +32,8 @@ import org.eclipse.gmt.modisco.java.emf.JavaPackage
 
 import static extension de.hub.srcrepo.metrics.AnalysisVisitor.*
 import static extension de.hub.srcrepo.ocl.OclExtensions.*
+import java.util.List
+import java.util.ArrayList
 
 class ModiscoMetrics {
 
@@ -152,6 +154,34 @@ class ModiscoMetrics {
 		} else {
 			return 0
 		}
+	}
+	
+	static def List<AbstractTypeDeclaration> dependencies(AbstractTypeDeclaration source) {
+		val dependencies = new ArrayList<AbstractTypeDeclaration>()
+		val allContentsWithOutAnonymousClasses = #[source].collectAll[it.eAllContentsWithoutAnonymousClasses]
+		dependencies.addAll(allContentsWithOutAnonymousClasses
+			.typeSelect(typeof(MethodInvocation))
+			.collect[it.method?.eTypeSelectContainer(typeof(AbstractTypeDeclaration))].filter[it != null && it != source]			
+		)
+		dependencies.addAll(allContentsWithOutAnonymousClasses
+			.typeSelect(typeof(SingleVariableAccess)).collect[it.variable]
+			.typeSelect(typeof(VariableDeclarationFragment)).collect[it.variablesContainer]
+			.typeSelect(typeof(FieldDeclaration))
+			.collect [
+				it.eTypeSelectContainer(typeof(AbstractTypeDeclaration))
+			].select[it != null && it != source]
+		)
+		
+		dependencies.toList
+	}
+	
+	static def List<AbstractMethodDeclaration> calledMethods(AbstractMethodDeclaration source) {
+		val allContentsWithOutAnonymousClasses = #[source].collectAll[it.eAllContentsWithoutAnonymousClasses]
+		allContentsWithOutAnonymousClasses.typeSelect(typeof(MethodInvocation)).collect[it.method].filter[it != null].toList
+	}
+	
+	static def List<AbstractMethodDeclaration> callingMethods(AbstractMethodDeclaration target) {
+		return target.usages.map[eTypeSelectContainer(typeof(AbstractMethodDeclaration))]
 	}
 
 	private static def qualifiedName(Type element) {

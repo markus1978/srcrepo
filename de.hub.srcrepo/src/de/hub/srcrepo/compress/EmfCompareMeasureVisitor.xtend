@@ -51,10 +51,9 @@ class EmfComparenMeasureVisitor extends AbstractCompressionMeasureVisitor {
 	
 	override protected compare(Rev rev, JavaCompilationUnitRef parentCURef, JavaCompilationUnitRef newCURef, int newRefObjectCount, ()=>void onFail) {
 		val path = newCURef.path
-		if (!path.contains("src-gen") && !path.contains("gen-src") && !blackList.contains(path) && newRefObjectCount < 10000) {		
-		
-			val original = parentCURef.compilationUnitModel.copyWithReferences.normalize
-			val revision = newCURef.compilationUnitModel.copyWithReferences.normalize
+		if (/* !path.contains("src-gen") && !path.contains("gen-src")) && */ !blackList.contains(path) /* && newRefObjectCount < 10000 */) {		
+			val original = parentCURef.compilationUnitModel.javaModel.copyWithReferences.normalize
+			val revision = newCURef.compilationUnitModel.javaModel.copyWithReferences.normalize
 			
 			var timer = compressETStat.timer
 			val comparison = try {
@@ -68,13 +67,9 @@ class EmfComparenMeasureVisitor extends AbstractCompressionMeasureVisitor {
 				} else {
 					timePerCount += newRefObjectCount -> time
 				}
-					
-				var diffSize = 0
-				count = 0
-				for (diff:comarison.differences) {
-					diffSize += diff.size
-				}				
-				deltaSize.track(diffSize)
+								
+				count = 0				
+				deltaSize.track(comarison.size)
 				deltaObjects.track(count)
 				
 				matchedObjects.track(comarison.matches.closure[submatches].size)
@@ -88,8 +83,7 @@ class EmfComparenMeasureVisitor extends AbstractCompressionMeasureVisitor {
 				failedCompares.track(1)
 				onFail.apply();
 				SrcRepoActivator.INSTANCE.error('''Exception on comparing «rev.name»/«newCURef.path»''', e)
-				null
-				
+				null				
 			}
 			
 			comparison?.delete

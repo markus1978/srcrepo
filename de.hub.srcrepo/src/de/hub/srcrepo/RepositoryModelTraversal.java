@@ -36,6 +36,8 @@ public class RepositoryModelTraversal {
 		}		
 	}
 	
+	private int abortAfter = -1;
+	
 	public final static TimeStatistic visitFullETStat = new TimeStatistic(TimeUnit.MICROSECONDS)
 			.with(Summary.class).with(BatchedPlot.class).with(new WindowedPlot(100)).with(Histogram.class)
 			.register(RepositoryModelTraversal.class, "Visit time");
@@ -53,6 +55,10 @@ public class RepositoryModelTraversal {
 		super();
 		this.repositoryModel = repositoryModel;
 		this.visitor = visitor;
+	}
+	
+	public void setAbort(int numberOfRevisions) {
+		abortAfter = numberOfRevisions;		
 	}
 	
 	private Stats stats = new Stats();
@@ -88,7 +94,7 @@ public class RepositoryModelTraversal {
 			Rev rev = branch.firstBranchRev;	
 			Rev lastRev = branch.lastCommonRev;
 			
-			branchLoop: while(true) {
+			branchLoop: while(abortAfter == -1 || abortAfter >= count) {
 				int children = rev.getChildRelations().size();
 				int parents = parentCount(rev);
 				
@@ -172,7 +178,7 @@ public class RepositoryModelTraversal {
 	private void visitRev(Rev rev, Rev traverseParentRev, int number) {
 		Preconditions.checkArgument(!traversedRevs.contains(rev));
 		Timer visitAllTimer = visitFullETStat.timer();
-		visitor.onStartRev(rev,traverseParentRev, number);
+		visitor.onStartRev(rev,traverseParentRev, number);		
 		
 		for (ParentRelation parentRelation: rev.getParentRelations()) {
 			for (Diff diff : parentRelation.getDiffs()) {
@@ -190,6 +196,7 @@ public class RepositoryModelTraversal {
 			}
 		}
 		visitor.onCompleteRev(rev, traverseParentRev);
+		
 		visitAllTimer.track();
 	}	
 

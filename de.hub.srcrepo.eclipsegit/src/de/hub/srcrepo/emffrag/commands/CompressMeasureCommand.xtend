@@ -17,13 +17,18 @@ import org.json.JSONObject
 class CompressMeasureCommand extends AbstractDataCommand {
 	
 	private def traverse(RepositoryModel repo, IRepositoryModelVisitor visitor) {
-		RepositoryModelTraversal.traverse(repo, visitor)
+		val traversal = new RepositoryModelTraversal(repo, visitor)
+		if (cl.hasOption("abort")) {
+			traversal.abort = Integer.parseInt(cl.getOptionValue("abort"))	
+		}
+		traversal.run
 		visitor.close(repo)
 	}
 	
 	override protected addOptions(Options options) {
 		super.addOptions(options)
 		options.addOption(Option.builder().longOpt("emf").desc("Use EMF compare instead our own.").build)
+		options.addOption(Option.builder().longOpt("abort").desc("Number of revisions after which measure should be aborted.").hasArg.build)
 	}
 	
 	override protected run(RepositoryModelDirectory directory, RepositoryModel repo) {

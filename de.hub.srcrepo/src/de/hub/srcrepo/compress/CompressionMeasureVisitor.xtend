@@ -34,12 +34,12 @@ class CompressionMeasureVisitor extends AbstractCompressionMeasureVisitor {
 			override protected id(TypeAccess typeAccess, boolean original) {
 				return id.apply(typeAccess, original)
 			}			
-		}],
-		"Heuristics" -> [j,r,id| new SrcRepoComparerConfigurationFullHeuristics(j,r) {			
-			override protected id(TypeAccess typeAccess, boolean original) {
-				return id.apply(typeAccess, original)
-			}			
-		}]	
+		}]
+//		"Heuristics" -> [j,r,id| new SrcRepoComparerConfigurationFullHeuristics(j,r) {			
+//			override protected id(TypeAccess typeAccess, boolean original) {
+//				return id.apply(typeAccess, original)
+//			}			
+//		}]	
 	]
 	
 	private static def Map<String,ValueStatistic> configurationBasedVS(String name) {
@@ -86,7 +86,7 @@ class CompressionMeasureVisitor extends AbstractCompressionMeasureVisitor {
 				val compressTimer = compressETStat.get(configuration.key).timer
 				var ObjectDelta delta = null
 				val time = try {															
-					delta = comparer.compare(original, revised)
+					delta = comparer.compare(original.javaModel, revised.javaModel)
 					compressTimer.track
 				} catch (Exception e) {
 					SrcRepoActivator.INSTANCE.error('''Exception on comparing («configuration.key») «rev.name»/«newCURef.path»''', e)
@@ -114,16 +114,16 @@ class CompressionMeasureVisitor extends AbstractCompressionMeasureVisitor {
 					deltaSize.get(configuration.key).track(delta.size)
 					deltaObjects.get(configuration.key).track(count)					
 															
-					val patchTimer = patchETState.get(configuration.key).timer
-					try {
-						val patcher = new Patcher
-						patcher.patch(original, delta)	
-						failedPatches.get(configuration.key).track(0)															
-					} catch (Exception e) {
-						SrcRepoActivator.INSTANCE.error('''Exception on patching («configuration.key») «rev.name»/«newCURef.path»''', e)
-						failedPatches.get(configuration.key).track(1)							
-					} 
-					patchTimer.track
+//					val patchTimer = patchETState.get(configuration.key).timer
+//					try {
+//						val patcher = new Patcher
+//						patcher.patch(original, delta)	
+//						failedPatches.get(configuration.key).track(0)															
+//					} catch (Exception e) {
+//						SrcRepoActivator.INSTANCE.error('''Exception on patching («configuration.key») «rev.name»/«newCURef.path»''', e)
+//						failedPatches.get(configuration.key).track(1)							
+//					} 
+//					patchTimer.track
 					failedCompares.get(configuration.key).track(0)
 					compressedRevisions.track(1)
 				} else {
@@ -142,4 +142,13 @@ class CompressionMeasureVisitor extends AbstractCompressionMeasureVisitor {
 			}																	
 		}
 	}
+	
+	override onStartRev(Rev rev, Rev traversalParentRev, int number) {
+		if (number < 10) {
+			super.onStartRev(rev, traversalParentRev, number)		
+		} else {
+			return false
+		}
+	}
+	
 }

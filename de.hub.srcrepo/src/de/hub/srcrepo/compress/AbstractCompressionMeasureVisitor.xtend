@@ -130,12 +130,18 @@ abstract class AbstractCompressionMeasureVisitor extends AbstractRevVisitor {
 				fullSize.track(newCUSize)
 				
 				val parentCURef = parentRefs.get(newCURef)
-				if (parentCURef != null && parentCURef.compilationUnitModel != null) {
+				if (parentCURef != null && parentCURef.compilationUnitModel != null) {										
 					val parentCULines = parentCURef.getData("LOC-metrics").data.get("lines").toInt
-					matchedLines.track(parentCULines - (parentCURef.eContainer as Diff).linesRemoved)
-					addedLines.track((parentCURef.eContainer as Diff).linesAdded)
-					removedLines.track((parentCURef.eContainer as Diff).linesRemoved)	
+					val deltaCULines = newCULines - parentCULines
 					
+					val linesRemoved = (newCURef.eContainer as Diff).linesRemoved
+					// val linesAdded = (parentCURef.eContainer as Diff).linesAdded TODO bug: linesAdded are missing, always = 0					
+					val linesAdded = deltaCULines + linesRemoved
+					
+					matchedLines.track(parentCULines - linesRemoved)
+					addedLines.track(linesAdded)
+					removedLines.track(linesRemoved)
+										
 					compare(rev, parentCURef, newCURef, newCUCount) [
 						compressedRevisions.track(0)
 						uncompressedLines.track(newCULines)
@@ -209,11 +215,13 @@ abstract class AbstractCompressionMeasureVisitor extends AbstractRevVisitor {
 					(feature as EReference).EOpposite == null || 
 					!(feature as EReference).EOpposite.containment
 			)) {
-				if (feature.many) {
-					size += (eObject.eGet(feature) as List<Object>).size*2	
-				} else {
-					val value = eObject.eGet(feature)
-					size += if (value instanceof String) value.length else 2 
+				if (eObject.eIsSet(feature)) {
+					if (feature.many) {
+						size += (eObject.eGet(feature) as List<Object>).size*2	
+					} else {
+						val value = eObject.eGet(feature)
+						size += if (value instanceof String) value.length else 2 
+					}				
 				}
 			}
 		}

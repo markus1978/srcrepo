@@ -19,7 +19,7 @@ importData = function(experiment_id) {
   data <- data[data$X1_cuCount>0,]
 }
 
-data <- importData("16-04-06-big-summary")
+data <- importData("16-04-12-emf-compress")
 
 checkout = data$X3_checkoutTimeSum
 parse = pmax(data$X4_refreshTimeSum+data$X5_importTimeSum-data$X6_writeTimeSum,0)
